@@ -1,0 +1,591 @@
+{
+  "artworkCount": 82,
+  "referenceCoverage": "79/79",
+  "backgroundCoverage": "3/3",
+  "decodedImages": 82,
+  "unchangedOriginalImages": 69,
+  "changedOriginalImages": [
+    "global-gallery:nevermore-map-pack:background:jericho-woods"
+  ],
+  "newLocationImages": 12,
+  "unusedAssets": 0,
+  "allBindingsResolved": true,
+  "artifactBytes": 91087299,
+  "artifactSha256": "d10bef3e1d39945224d3981767fdb4c6a7a018b0710efb7322dd790be0dfd2fa",
+  "images": [
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-altar",
+      "width": 1168,
+      "height": 784,
+      "bytes": 373012,
+      "sha256": "0ba79bbb467caa176a81d7229441d229fd435bbddea46be4e562ec476551ffb4"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-approach",
+      "width": 1168,
+      "height": 784,
+      "bytes": 350357,
+      "sha256": "9b19cc504cf37a3405b20109a57ddcaacb29a182ecbd1e1eaa8b54c7173814a9"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-breath",
+      "width": 1168,
+      "height": 784,
+      "bytes": 331293,
+      "sha256": "ce190a22a4f4d5e21ac38abeaf84d06a316a8790b310e034db151c47ee184fb0"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-chamber-1",
+      "width": 1168,
+      "height": 784,
+      "bytes": 413374,
+      "sha256": "b4aca8e4e69a2c4a02c00a75e1a7330e23bb508bbb9f05677adf615372366c6f"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-chamber-2",
+      "width": 1168,
+      "height": 784,
+      "bytes": 407218,
+      "sha256": "8ff8c00bb5a90d57357890e5ecae28684619adcb25115121c7dcf0d259297293"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-chamber-3",
+      "width": 1168,
+      "height": 784,
+      "bytes": 457679,
+      "sha256": "c8036c7ee453782cf4955e030f825a978b3346b4e6517538e39865f43d73718f"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-covenant",
+      "width": 1168,
+      "height": 784,
+      "bytes": 284948,
+      "sha256": "d0be5b8bb631e372fa6422ccafe2cb997977706f4a9d4f72f6f87fd5fea170fa"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-crawlspace",
+      "width": 784,
+      "height": 1168,
+      "bytes": 317222,
+      "sha256": "f33f57b6a961178a9d01ced4cfa8a33580188c1b59a14966f68fd936b8a08de4"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-door-1",
+      "width": 784,
+      "height": 1168,
+      "bytes": 424112,
+      "sha256": "15cca697a58566bb3d6e94b0d93473b5af8a1a8c38d27ef68f06ed87744dff97"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-door-2",
+      "width": 784,
+      "height": 1168,
+      "bytes": 409351,
+      "sha256": "7a3ce71ec534410265297a347b1702063aeabacaeae53ee22147355b953f4dac"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-door-3",
+      "width": 784,
+      "height": 1168,
+      "bytes": 421365,
+      "sha256": "1298c635cc85f7e1630b8e65b6fe3558d014f25fb40af1eaed2a3163502e805d"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-echo",
+      "width": 784,
+      "height": 1168,
+      "bytes": 288897,
+      "sha256": "5ddf196aa0144870b4c021d3aaa7fdb7c14b86445bbe231ee26457de109b1d08"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-first-rite",
+      "width": 1168,
+      "height": 784,
+      "bytes": 298807,
+      "sha256": "e63de6daeb4811e92a6695515011b2d07034ef4de0642e779b674e2eccc299bd"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-gate",
+      "width": 1168,
+      "height": 784,
+      "bytes": 420355,
+      "sha256": "1c52533861dbd3106d70d5781c02db17493cf8a1e61b0de486eb8bca91c71b1d"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-holding",
+      "width": 1168,
+      "height": 784,
+      "bytes": 331623,
+      "sha256": "6d1de50817ca811ef3d1277488ff98878ac4041760bca82270f5f2fbfcb50330"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-portrait",
+      "width": 784,
+      "height": 1168,
+      "bytes": 418406,
+      "sha256": "4dd088a76d422e9a1700fcf08a02cbbb723f5b5baec06339eabd4d9181a83def"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-second-rite",
+      "width": 1168,
+      "height": 784,
+      "bytes": 362897,
+      "sha256": "60ce9b785ad0afccc80b62dfb064886e43bd894b215a2944289c98d171218220"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-seed",
+      "width": 784,
+      "height": 1168,
+      "bytes": 336753,
+      "sha256": "f0ecf6e1a0b7602b659fd64f7b112652f833cd548e2151d5e9cd6f738a11348e"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-stair-mouth",
+      "width": 784,
+      "height": 1168,
+      "bytes": 302297,
+      "sha256": "3a6108ebc9b35085f3d10a966c9fdeb3cd7904e38e4f89307837192a31806f01"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-threshold",
+      "width": 1168,
+      "height": 784,
+      "bytes": 370367,
+      "sha256": "d69eb618ce4b5a67c2da0c0559824f3ac5fd94c73a4aa584818d9997e6a6f103"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-tunnel-mouth",
+      "width": 1168,
+      "height": 784,
+      "bytes": 315579,
+      "sha256": "ad7e1ae354af225d72360306a1b6444b8f18ca73bba5292ea44d5e3462791702"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-union",
+      "width": 1168,
+      "height": 784,
+      "bytes": 354390,
+      "sha256": "670a82b238acd9da0a2dbca2a2db971570af29a86b17afdc45a20c1a974fbe85"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-vault",
+      "width": 1168,
+      "height": 784,
+      "bytes": 341059,
+      "sha256": "3e11faccd37de24730e8fa3e9b62b4fb8b659d2c2f936bd302d0160a26bffba7"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-vestment",
+      "width": 1168,
+      "height": 784,
+      "bytes": 292356,
+      "sha256": "aad8e3bdce6a85ed8ed03ee3f9bbc9f1eefd7035f0bf45cfa357da8af3659a71"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:dorm-bianca",
+      "width": 1168,
+      "height": 784,
+      "bytes": 213081,
+      "sha256": "747aafb40f6d8478dbb22f376b860dfc690248901a39a29be3737d074062bd6b"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:dorm-nerissa",
+      "width": 1168,
+      "height": 784,
+      "bytes": 228896,
+      "sha256": "25c080ebbb0eb8d21197356390878b91d6e4ae3f195d4b4278b3e8881bb69581"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:dorm-pugsley",
+      "width": 1168,
+      "height": 784,
+      "bytes": 251900,
+      "sha256": "52ee74e6bdf12459200e3ef39131d4e90e3d756d2958e70ba2cb4486697ad659"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:dorm-wednesday-enid",
+      "width": 1168,
+      "height": 784,
+      "bytes": 331893,
+      "sha256": "af5ef12a78362bdaaa872b090d4fffd3ce67953a10e7d8fd843e85d39c25ba75"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:dorms-common",
+      "width": 1168,
+      "height": 784,
+      "bytes": 339851,
+      "sha256": "91040001b0c2c932acb0174bfdc2f80890c59287ce3a4085e54caeb3e2420637"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:dorms-ground",
+      "width": 1168,
+      "height": 784,
+      "bytes": 319080,
+      "sha256": "24c0082d3ce1f0198e2cc70027d339e3f8769ac99f3c9b12681aea08c5f8e222"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:dorms-upper",
+      "width": 1168,
+      "height": 784,
+      "bytes": 287618,
+      "sha256": "cd40c1eebebe074e61b1b41b128a36432eda82d23a5c143056ae1cd8dc851c88"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:jericho-main-street",
+      "width": 1168,
+      "height": 784,
+      "bytes": 310610,
+      "sha256": "4e6c072638a09ab57ea0c30f86c346d688b7f839115db6034f28a3b0cb24bfaa"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:jericho-town",
+      "width": 1168,
+      "height": 784,
+      "bytes": 370575,
+      "sha256": "d599fdc1bf1b8a7b4e613736aa700e24f286cc178f4a619e35d77a993e9ad5a8"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:jericho-woods",
+      "width": 1168,
+      "height": 784,
+      "bytes": 317121,
+      "sha256": "8a106d8b2fa84664244d4f781fffd0d739713d84423a76a2b8c5584c4d2ecc3d"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:main-hall-classrooms",
+      "width": 1168,
+      "height": 784,
+      "bytes": 306483,
+      "sha256": "902e6126e31294274ff52d3b9ca08539ebf14476007c7c0159bee3ae16f2146e"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:main-hall-dining",
+      "width": 1168,
+      "height": 784,
+      "bytes": 336556,
+      "sha256": "3730c01a8f68548cff54679d5f21a9d133d4bfccf904e7178bae954910cb5502"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:main-hall-fencing",
+      "width": 1168,
+      "height": 784,
+      "bytes": 389969,
+      "sha256": "a636477b6de9b38d21b1fd4167a5f8ebbb08f8a663477781d9fdad404b62d9c8"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:main-hall-foyer",
+      "width": 1168,
+      "height": 784,
+      "bytes": 349641,
+      "sha256": "544eb490e2fbb9e4b433a3986e5d65a7366abc81b16bd5a05b74ac0625233ead"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:main-hall-ground",
+      "width": 1168,
+      "height": 784,
+      "bytes": 364679,
+      "sha256": "29b74860557f2bc59aac6c05108a5e2b9867a6be35a3375815e7088b1c6ba571"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:main-hall-upper",
+      "width": 1168,
+      "height": 784,
+      "bytes": 310576,
+      "sha256": "d80ccc57c48335a306b81e409a919c499e08842508d7f71f50635524dc1ce6ef"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:main-hall-weems",
+      "width": 1168,
+      "height": 784,
+      "bytes": 300841,
+      "sha256": "f787d7a59e2dc9f0f19345c825ef0c86bb6e78502a131dda7267e5663e972d02"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-botany",
+      "width": 1168,
+      "height": 784,
+      "bytes": 421468,
+      "sha256": "c154cb0642ec8b1d2e9f122c8fb03ca2847b21d8b44731dedb274b0d1b105fd4"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-cemetery",
+      "width": 1168,
+      "height": 784,
+      "bytes": 474498,
+      "sha256": "8f46d198ec9143c237dce4a3c4cfe36e7ba3af961efb4730b5a65a3503e7d357"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-dead-gardens",
+      "width": 1168,
+      "height": 784,
+      "bytes": 484152,
+      "sha256": "09a97511e529804c6fc713b869897c6f3834e1121cc39a37c8db6114ee8c72fe"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-dorms",
+      "width": 1168,
+      "height": 784,
+      "bytes": 410154,
+      "sha256": "7a306697ce65824331d98756b8b79f96ef75b054be13a80a648c8e37bb149fdd"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-gates",
+      "width": 1168,
+      "height": 784,
+      "bytes": 402531,
+      "sha256": "0ff3c56685400b452fdfe1068ec30ddd452726c9f9d9cbc4480d578691c9ac41"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-grounds",
+      "width": 1168,
+      "height": 784,
+      "bytes": 372525,
+      "sha256": "f25bbf01e5788268cb401599fc185dfe66753ed980926a324f1f47c05672640c"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-lake",
+      "width": 1168,
+      "height": 784,
+      "bytes": 275555,
+      "sha256": "af08fef903716de717ea3021cf9f4fcc6aeb5b92b184bcb51e6dc3aa037babd6"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-main-hall",
+      "width": 1168,
+      "height": 784,
+      "bytes": 320544,
+      "sha256": "5aa0d27afab648638eb7ba9c0a8538b9ad7d084dfb4f4da68bac0c4ed2ad6c54"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-oaks",
+      "width": 1168,
+      "height": 784,
+      "bytes": 470008,
+      "sha256": "e8283da6cbc02cfbb37b9abf27045c76e84e7b44c7eba1f35e072447af7cd812"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-poe-statue",
+      "width": 784,
+      "height": 1168,
+      "bytes": 328494,
+      "sha256": "830db3018cf8f00338529fcf7f2d127eb93d884c2539018d2dc06700675fcb15"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-quad",
+      "width": 1168,
+      "height": 784,
+      "bytes": 369725,
+      "sha256": "933ea8d68e49471548105d8a06c3c7133b8f05bf53b506cc37f9a7dacf72998d"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-basement",
+      "width": 1168,
+      "height": 784,
+      "bytes": 390073,
+      "sha256": "390cdaabf4a36bb0dab2c1b294288725e68b09f2fc5693a19194e599768078f1"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-family",
+      "width": 1168,
+      "height": 784,
+      "bytes": 235874,
+      "sha256": "434ae01a10eca9e7c39f6b2ebebd9ce0d2304e7d822c6ef3536c398a7ff27df4"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-gates",
+      "width": 1168,
+      "height": 784,
+      "bytes": 374457,
+      "sha256": "c1d659f689f0b5acee89743a7d6e415b0039502a4a187e8d173c56746791f143"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-gomez-room",
+      "width": 1168,
+      "height": 784,
+      "bytes": 238112,
+      "sha256": "b63e8fdbabb12d71abe3b6eb6710dce81e9922ef3cadc4021c1d7bf86f4ed2a8"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-greenhouse",
+      "width": 1168,
+      "height": 784,
+      "bytes": 395725,
+      "sha256": "47ecb9588ac7ac12e665f0d4b7930fcd30de91b818a09c43a17530af95d77f18"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-iron-maiden",
+      "width": 784,
+      "height": 1168,
+      "bytes": 322883,
+      "sha256": "104b171c4e517e54a01ea5d78d6f60b644d37bfb71aac579c67d10922c57ce76"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-main",
+      "width": 1168,
+      "height": 784,
+      "bytes": 314467,
+      "sha256": "a7c643ab8e4d3b7d1750dafb65283907cc4a327f706bde0da88986a6336133de"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-manor",
+      "width": 1168,
+      "height": 784,
+      "bytes": 337116,
+      "sha256": "1bbb5aea8df2d7f3bfca2335d887de4deaaf6d35a83ec3e0d45399c701f963ac"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-meditation",
+      "width": 784,
+      "height": 1168,
+      "bytes": 338507,
+      "sha256": "195709ac7b5cdb7d293533a333bfd8e0820e64d03085e95e6643f5e3bef1318d"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-morticia-chamber",
+      "width": 1168,
+      "height": 784,
+      "bytes": 265556,
+      "sha256": "6f0269df7a5a53018b4c38ba2a55715f841984e8a23b1d7e61a949a431cee1f8"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-parlor",
+      "width": 1168,
+      "height": 784,
+      "bytes": 355479,
+      "sha256": "34571bd07e9da345ff57b81301344a456aa0a527ca4edd686ab523a200287ad6"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-spare",
+      "width": 1168,
+      "height": 784,
+      "bytes": 333582,
+      "sha256": "6bde0a16ee2db236f85e4999755c252f1340c7e4431f116f0fbf818e6ce5ba83"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-upper",
+      "width": 1168,
+      "height": 784,
+      "bytes": 274368,
+      "sha256": "e2f35881df8d3258c8eaff0b332a593fb925816ab260673e1e30743e49177106"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-walk",
+      "width": 1168,
+      "height": 784,
+      "bytes": 316880,
+      "sha256": "89e27d3be0a17dd6e6e8ccb66489f7ea60508496cc9d958941ab2f60acd00cb2"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:crypts-labyrinth",
+      "width": 784,
+      "height": 1168,
+      "bytes": 461653,
+      "sha256": "d7202b67ee04609d0c0b69e05531bf725aacd978570602d4d2c1cc7103a77a72"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:background:jericho-town",
+      "width": 1168,
+      "height": 784,
+      "bytes": 470030,
+      "sha256": "af3b6271c3621e4f3630188d88c2c66b81abced03624a69d9e1a6a7b88b476df"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:background:jericho-woods",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3173961,
+      "sha256": "bd611e93ecbfee4cd2de7d6f5daf6c3c6e60eaf4e88f3cc7f7a06bcc8d1a4f46"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:background:nevermore-grounds",
+      "width": 1168,
+      "height": 784,
+      "bytes": 625200,
+      "sha256": "abd352ab2cb009b64974e505121ad361cd3a741871c19b7ed8c56dc23983e9c3"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:woods-blackwater",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3193550,
+      "sha256": "9105cce4810c635201d3982d5a2e8f64e8d59ad4763faadbe859e5a1aa3400d2"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:woods-bridge",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3440848,
+      "sha256": "808692ee6c187c862cc88b08d2b67a2865be0d600adbb3a6538f6edd9f90c8c5"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:woods-cabin",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3287096,
+      "sha256": "776090364621b4e028d65d6c365d7db6cc7bd2528013a411cb276f251c224eb3"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:woods-cellar",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3436048,
+      "sha256": "dd269f7be88846ace304d242cfba29096bfb8ab905539209578b1a858dc049e9"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:woods-clearing",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3846775,
+      "sha256": "adc2d75d642f81d0dfc1e4e2808e197d3b12095f54804e30c56550dfa986856a"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:woods-junction",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3590926,
+      "sha256": "440e1181c8829a8652e589927c135cd13d89a97a5fa567062d23b2a1c09e6ec1"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:woods-lookout",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 2781852,
+      "sha256": "346e57ed580043021d6e5bdbf169b0d0029b5f39387077f0a2272b8b0bb87e51"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:woods-quarry",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3102785,
+      "sha256": "f6b9832632cc5e90ce995221aeeb0f954266779235a589f2fe2a285141213d1f"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:woods-ridge",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3220859,
+      "sha256": "6a0df00c42a744913df158d59dc68282c204aebf75d361c55000b409193d8c61"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:woods-sawmill",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3395006,
+      "sha256": "a9e4400bb418cf517765f3ae525e5df1837f6b0812888844842dabf1f77b4373"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:woods-stones",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3724899,
+      "sha256": "da3270f4ff8784c08c00e63f6ddcd9307a3463d7261455360f153cbf752bec89"
+    },
+    {
+      "sourceImageId": "global-gallery:nevermore-map-pack:reference:woods-western",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 3543877,
+      "sha256": "a4efc1de6a531689411310d47b068b9c16e4b6b513fded3f33cd12be4f334951"
+    }
+  ]
+}

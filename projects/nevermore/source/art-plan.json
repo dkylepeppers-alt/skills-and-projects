@@ -1,0 +1,119 @@
+[
+  {
+    "locationId": "woods-blackwater",
+    "model": "not exposed",
+    "outputHint": "Generated images are saved to /workspace/scratch/67f5fe301ece/generated_images as /workspace/scratch/67f5fe301ece/generated_images/exec-707613e7-ceb4-4cfc-a8e8-acda787740e1.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "prompt": "Create one empty reusable environment plate for the same fictional Nevermore woodland setting. Match the reference's cinematic photorealism, cold overcast late-autumn light, wet natural textures, slate grey and evergreen palette, restrained atmospheric mist. Landscape 3:2. No people, figures, labels, lettering, borders or watermark. This reference supplies style, not identical camera composition. BLACKWATER HOLLOW: eye-level 28mm view beside a narrow dark stream winding through a lower forest drainage. Mossy rounded boulders, leaf-litter banks, alder branches and mature spruce, shallow pools reflecting the pale sky. Water rather than a road leads into the frame. Forest surrounds the entire scene, no castle or buildings visible.",
+    "provider": "OpenAI built-in image generation",
+    "role": "reference",
+    "visualReview": "Reviewed generated output; empty scene and requested landmark present."
+  },
+  {
+    "locationId": "woods-western",
+    "model": "not exposed",
+    "outputHint": "Generated images are saved to /workspace/scratch/67f5fe301ece/generated_images as /workspace/scratch/67f5fe301ece/generated_images/exec-0ededbaa-9cd6-4b51-b144-eac77361a274.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "prompt": "Create one empty reusable environment plate for the same fictional Nevermore woodland setting. Match the reference's cinematic photorealism, cold overcast late-autumn light, wet natural textures, slate grey and evergreen palette, restrained atmospheric mist. Landscape 3:2. No people, figures, labels, lettering, borders or watermark. This reference supplies style, not identical camera composition. WESTERN OLD WOODS: eye-level 28mm view inside old mixed hardwood forest. Massive rooted trunks, a broken dry-stone field boundary leading diagonally into the trees, a barely visible footpath, russet leaves and moss. Dense quiet canopy and soft fog beyond. No ruins, monuments or buildings dominate this sector establishing view.",
+    "provider": "OpenAI built-in image generation",
+    "role": "reference",
+    "visualReview": "Reviewed generated output; empty scene and requested landmark present."
+  },
+  {
+    "locationId": "woods-junction",
+    "model": "not exposed",
+    "outputHint": "Generated images are saved to /workspace/scratch/67f5fe301ece/generated_images as /workspace/scratch/67f5fe301ece/generated_images/exec-47f665c5-c554-49b8-b78f-89523a2708ba.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "prompt": "Create one empty reusable environment plate for the same fictional Nevermore woodland setting. Match the reference's cinematic photorealism, cold overcast late-autumn light, wet natural textures, slate grey and evergreen palette, restrained atmospheric mist. Landscape 3:2. No people, figures, labels, lettering, borders or watermark. This reference supplies style, not identical camera composition. BOUNDARY TRAIL JUNCTION in Ridge Woods: eye-level camera stands at a triangular patch of packed gravel where three narrow forest footpaths meet. A low weathered boundary stone and two plain timber trail posts with no lettering identify the junction. One trail rises between slate outcrops, one descends into spruce, one follows an old boundary wall. No buildings or castle visible. Make the three-way path geometry immediately recognizable.",
+    "provider": "OpenAI built-in image generation",
+    "role": "reference",
+    "visualReview": "Reviewed generated output; empty scene and requested landmark present."
+  },
+  {
+    "locationId": "woods-lookout",
+    "model": "not exposed",
+    "outputHint": "Generated images are saved to /workspace/scratch/67f5fe301ece/generated_images as /workspace/scratch/67f5fe301ece/generated_images/exec-707fa1ac-d8cc-4ae6-85d3-79fea7069fa9.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "prompt": "New empty environment reference plate, cinematic photorealism matching supplied woodland reference. Late-autumn Vermont, cold overcast daylight, slate-grey and deep evergreen palette, damp moss and restrained fog. Landscape 3:2, no people, figures, readable text, labels or borders. RIDGE LOOKOUT: camera at eye level on a broad exposed slate ledge, split boulder and leaning spruce at the edge, valley panorama beyond. Distant Gothic Nevermore academy on a separate ridge at upper right, small town rooftops far lower left in mist. Clear scale and natural perspective; no telescope or installed observation deck.",
+    "provider": "OpenAI built-in image generation",
+    "role": "reference",
+    "visualReview": "Reviewed generated output; empty scene and requested landmark present."
+  },
+  {
+    "locationId": "woods-cabin",
+    "model": "not exposed",
+    "outputHint": "Generated images are saved to /workspace/scratch/67f5fe301ece/generated_images as /workspace/scratch/67f5fe301ece/generated_images/exec-3f3938bc-4231-46dd-9dcc-99c5572133cc.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "prompt": "New empty environment reference plate, cinematic photorealism matching supplied woodland reference. Late-autumn Vermont, cold overcast daylight, slate-grey and deep evergreen palette, damp moss and restrained fog. Landscape 3:2, no people, figures, readable text, labels or borders. WEATHERED RANGER CABIN: eye-level 35mm view from a narrow forest path toward one small weathered timber cabin with shallow porch, rough bench, plain blank noticeboard, old firewood stack and a modest stovepipe. Tall spruce shelter the building, wet leaf litter and a return footpath in the foreground. Closed simple timber door, no artificial light, no occupied-house cues.",
+    "provider": "OpenAI built-in image generation",
+    "role": "reference",
+    "visualReview": "Reviewed generated output; empty scene and requested landmark present."
+  },
+  {
+    "locationId": "woods-bridge",
+    "model": "not exposed",
+    "outputHint": "Generated images are saved to /workspace/scratch/67f5fe301ece/generated_images as /workspace/scratch/67f5fe301ece/generated_images/exec-ce6db3b9-2415-471b-8f7e-499fbe00b4fe.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "prompt": "New empty environment reference plate, cinematic photorealism matching supplied woodland reference. Late-autumn Vermont, cold overcast daylight, slate-grey and deep evergreen palette, damp moss and restrained fog. Landscape 3:2, no people, figures, readable text, labels or borders. OLD STONE BRIDGE: eye-level 35mm view from the townward gravel approach to a narrow single-arch bridge over a small woodland stream. Low moss-covered stone parapets, one visibly cracked capstone in foreground, wet gravel bridge deck leading into forest on the far bank. A real modest rural bridge, no castle or town buildings visible.",
+    "provider": "OpenAI built-in image generation",
+    "role": "reference",
+    "visualReview": "Reviewed generated output; empty scene and requested landmark present."
+  },
+  {
+    "locationId": "woods-sawmill",
+    "model": "not exposed",
+    "outputHint": "Generated images are saved to /workspace/scratch/67f5fe301ece/generated_images as /workspace/scratch/67f5fe301ece/generated_images/exec-19e081ba-5130-4cad-b3fa-9e5c357bdd55.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "prompt": "Create one empty reusable environment reference plate in cinematic photorealistic style matching the supplied image. Cold overcast late-autumn Vermont woods, wet material detail, subdued slate grey, russet leaves and evergreen palette, restrained fog. Landscape 3:2. No people, figures, lettering, labels, borders or watermark. ABANDONED SAWMILL: eye-level 28mm establishing view across a rough loading yard toward a modest roof-broken timber sawmill on a low stone platform. Surviving rafters shelter rusted old machinery; a narrow stone-lined mill channel follows one side. The old track arrives from left foreground, a walking trail climbs into the ridge woods behind, a rutted haul track leads off right. Do not add a modern factory, giant dam or operating machinery.",
+    "provider": "OpenAI built-in image generation",
+    "role": "reference",
+    "visualReview": "Reviewed generated output; empty scene and requested landmark present."
+  },
+  {
+    "locationId": "woods-quarry",
+    "model": "not exposed",
+    "outputHint": "Generated images are saved to /workspace/scratch/67f5fe301ece/generated_images as /workspace/scratch/67f5fe301ece/generated_images/exec-d30eba00-e727-4f21-869d-52739377ff15.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "prompt": "Create one empty reusable environment reference plate in cinematic photorealistic style matching the supplied image. Cold overcast late-autumn Vermont woods, wet material detail, subdued slate grey, russet leaves and evergreen palette, restrained fog. Landscape 3:2. No people, figures, lettering, labels, borders or watermark. FLOODED QUARRY: eye-level wide view from the accessible upper bench of a small abandoned stone quarry. Stepped grey rock faces, old drill scars, a rusted anchor ring close in foreground, dark still water below, sparse birch among spoil heaps. Old rutted haul track returns into forest behind the left foreground. Clearly an excavated industrial cut, not a natural alpine lake. No buildings, machinery in operation or tunnel entrances.",
+    "provider": "OpenAI built-in image generation",
+    "role": "reference",
+    "visualReview": "Reviewed generated output; empty scene and requested landmark present."
+  },
+  {
+    "locationId": "woods-clearing",
+    "model": "not exposed",
+    "outputHint": "Generated images are saved to /workspace/scratch/67f5fe301ece/generated_images as /workspace/scratch/67f5fe301ece/generated_images/exec-ce7dad40-9d25-45aa-8921-10f9560a0f26.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "prompt": "Create one empty reusable environment reference plate in cinematic photorealistic style matching the supplied image. Cold overcast late-autumn Vermont woods, wet material detail, subdued slate grey, russet leaves and evergreen palette, restrained fog. Landscape 3:2. No people, figures, lettering, labels, borders or watermark. CHARCOAL CLEARING: eye-level 28mm view into a modest opening in old mixed hardwood forest. Two low circular earth platforms interrupt the grass and leaf litter, scattered black charcoal visible in foreground soil. A broken field wall at one edge, three understated footpaths through trees. No standing stones or bonfire, no ritual objects; this is an ordinary abandoned working clearing.",
+    "provider": "OpenAI built-in image generation",
+    "role": "reference",
+    "visualReview": "Reviewed generated output; empty scene and requested landmark present."
+  },
+  {
+    "locationId": "woods-ridge",
+    "model": "not exposed",
+    "outputHint": "Generated images are saved to /workspace/scratch/67f5fe301ece/generated_images as /workspace/scratch/67f5fe301ece/generated_images/exec-bf8a0a14-70c9-41fd-a5ef-85e96bb157ac.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "prompt": "Create one new reusable environment reference plate for RIDGE WOODS in the same fictional Nevermore woodland setting as the supplied style reference. The supplied image is visual continuity reference, not an edit target. Match its cinematic photorealistic realism, subdued slate grey and deep evergreen palette, wet late-autumn Vermont woodland, natural fog and cold overcast daylight. New scene: eye-level 28mm lens from a narrow ridge trail, fractured slate outcrops in the foreground, spruce and bare hardwood trunks framing a rising path, distant lower forest fading into mist. A small distant glimpse of the same Gothic academy silhouette far to the right through trees is optional, never a new giant castle. The location is an outdoor woodland sector, not a building or a labeled map. Empty environment, no people or figures, no readable text, no labels, no borders. Landscape approximately 3:2, detailed materials, coherent natural scale. Generate only this single image.",
+    "provider": "OpenAI built-in image generation",
+    "role": "reference",
+    "visualReview": "Reviewed generated output; ridge scene and empty environment match."
+  },
+  {
+    "locationId": "woods-cellar",
+    "role": "reference",
+    "prompt": "Create one empty reusable environment reference plate in cinematic photorealism matching the supplied image. Cold overcast late-autumn Vermont woodland, subdued slate-grey, russet leaves and evergreen palette, wet natural textures, restrained fog. Landscape 3:2. No people, figures, lettering, labels or borders. ROOT CELLAR RUIN: eye-level from the corner of a collapsed modest homestead foundation, low stone rectangles around leaf-filled ground. At one end a short stair leads down beneath a surviving shallow stone barrel vault, visibly a small cellar rather than a cavern or long tunnel. Roots between stones, broken field wall leads back into mixed hardwood forest. No doors with magical symbols, no castle masonry, no treasure.",
+    "outputHint": "Generated images are saved to /workspace/scratch/67f5fe301ece/generated_images as /workspace/scratch/67f5fe301ece/generated_images/exec-559064dc-8d6e-4d31-8ae6-fa10a429d677.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "provider": "OpenAI built-in image generation",
+    "model": "not exposed",
+    "visualReview": "Reviewed generated output; requested scene and empty environment present."
+  },
+  {
+    "locationId": "woods-stones",
+    "role": "reference",
+    "prompt": "Create one empty reusable environment reference plate in cinematic photorealism matching the supplied image. Cold overcast late-autumn Vermont woodland, subdued slate-grey, russet leaves and evergreen palette, wet natural textures, restrained fog. Landscape 3:2. No people, figures, lettering, labels or borders. STANDING-STONE RING: eye-level 35mm view of a loose ring of six rough natural weathered stones, waist- to shoulder-high, set in a quiet pocket of old mixed forest. A fallen seventh stone leaves one obvious gap. Lichen, natural cracks, moss and leaf litter. A faint path returns through trees. Human-scale, no huge Stonehenge pillars, no carved runes, altar, glowing magic or ritual objects.",
+    "outputHint": "Generated images are saved to /workspace/scratch/67f5fe301ece/generated_images as /workspace/scratch/67f5fe301ece/generated_images/exec-4df43ebc-2390-41e5-b408-6a9fabbc55f3.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "provider": "OpenAI built-in image generation",
+    "model": "not exposed",
+    "visualReview": "Reviewed generated output; requested scene and empty environment present."
+  },
+  {
+    "locationId": "jericho-woods",
+    "role": "background",
+    "prompt": "Edit the supplied Jericho Woodlands overview into a broader, coherent regional background for an explorable fictional world map. Keep the same subdued photographic late-autumn forest, wet slate-grey light, mist, winding town-to-academy road, and recognizable Gothic academy silhouette. Use a high oblique aerial landscape view, 3:2. The academy remains one walled campus on the northeast rise at roughly x74%,y24%; preserve its character and do not create a second castle. Add the small ordinary town of Jericho at the lower-left road terminus roughly x20%,y78%, modest clustered New England roofs, not a city. Show three broad woodland areas clearly through terrain: Ridge Woods on the high upper/right side around x87%,y42%; Western Old Woods in the left/upper forest around x27%,y30%; Blackwater Hollow in the lower/middle wooded drainage around x52%,y73%, with a small stream and understated trace of a mill track. These are broad landscape zones, not enclosed compounds. Preserve the original central water as part of the distant landscape rather than introducing extra large lakes. Expand enough forest around the existing main landmarks to accommodate these zones naturally. No inset panels, no labels, no text, no pins, no people, no invented structures dominating the forest. This is an illustrative background; do not draw a precise technical diagram.",
+    "outputHint": "Generated images are saved to /workspace/scratch/67f5fe301ece/generated_images as /workspace/scratch/67f5fe301ece/generated_images/exec-7b30187c-05b2-4b7e-b019-3dc4ee3645f7.png by default.\nIf you need to use a generated image at another path, copy it and leave the original in place unless the user explicitly asks you to delete it.\nThe generated image is already displayed to the user. There is no need to render it in the final response as a Markdown image or file link.",
+    "provider": "OpenAI built-in image generation",
+    "model": "not exposed",
+    "visualReview": "Reviewed generated output; requested scene and empty environment present."
+  }
+]

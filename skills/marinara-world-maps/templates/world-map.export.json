@@ -1,0 +1,261 @@
+{
+  "format": "marinara-hierarchical-map",
+  "formatVersion": 4,
+  "name": "Salt House",
+  "definition": {
+    "schemaVersion": 1,
+    "ownerMode": "roleplay",
+    "enabled": false,
+    "revision": 0,
+    "startingLocationId": "salt-house.ground",
+    "locations": [
+      {
+        "id": "salt-coast",
+        "parentId": null,
+        "name": "Salt Coast",
+        "kind": "region",
+        "description": "A sheltered tidal coast: Salt House stands above the quay, with the open sea to the east. Salt wind carries the harbour bell inland.",
+        "icon": "🌊",
+        "lorebookEntryIds": [],
+        "childPresentation": "map",
+        "links": [],
+        "status": "active",
+        "sortOrder": 0
+      },
+      {
+        "id": "salt-house",
+        "parentId": "salt-coast",
+        "name": "Salt House",
+        "kind": "building",
+        "description": "A converted coastal guesthouse of pale stone and weathered oak, above the quay. The front entry opens onto a ground-floor landing; the upper rooms overlook the harbour.",
+        "icon": "🏠",
+        "lorebookEntryIds": [],
+        "childPresentation": "layers",
+        "links": [],
+        "status": "active",
+        "sortOrder": 0,
+        "placement": {
+          "x": 34,
+          "y": 30
+        }
+      },
+      {
+        "id": "quay",
+        "parentId": "salt-coast",
+        "name": "Bell Quay",
+        "kind": "place",
+        "description": "A granite quay below Salt House, smelling of wet rope and diesel. The uphill stone path reaches the guesthouse; the tide exposes green steps on the eastern edge.",
+        "icon": "⚓",
+        "lorebookEntryIds": [],
+        "childPresentation": "list",
+        "links": [
+          {
+            "targetId": "salt-house",
+            "label": "Uphill Stone Path",
+            "state": "available",
+            "bidirectional": true
+          }
+        ],
+        "status": "active",
+        "sortOrder": 1,
+        "placement": {
+          "x": 68,
+          "y": 72
+        }
+      },
+      {
+        "id": "salt-house.ground",
+        "parentId": "salt-house",
+        "name": "Ground Landing",
+        "kind": "floor",
+        "description": "The ground landing of Salt House is edged with blue floor tiles. A brass tide bell hangs beside the north door; the oak stair rises west. Warm kitchen air escapes from the eastern doorway.",
+        "icon": "🪜",
+        "lorebookEntryIds": ["salt-house-customs"],
+        "childPresentation": "map",
+        "links": [
+          {
+            "targetId": "salt-house.upper",
+            "label": "Oak Stair",
+            "state": "available",
+            "bidirectional": true
+          }
+        ],
+        "status": "active",
+        "sortOrder": 0,
+        "layerOrder": 0
+      },
+      {
+        "id": "salt-house.upper",
+        "parentId": "salt-house",
+        "name": "Upper Landing",
+        "kind": "floor",
+        "description": "Salt House's upper landing overlooks the harbour through a narrow window. Worn oak boards creak by the west stair; a linen cabinet stands opposite the guest bedroom.",
+        "icon": "🪜",
+        "lorebookEntryIds": [],
+        "childPresentation": "list",
+        "links": [],
+        "status": "active",
+        "sortOrder": 1,
+        "layerOrder": 1
+      },
+      {
+        "id": "salt-house.kitchen",
+        "parentId": "salt-house.ground",
+        "name": "Blue-Tile Kitchen",
+        "kind": "room",
+        "description": "At Salt House, blue tiles frame an iron range and a broad oak preparation table. A low window faces the quay. Warm yeast and salt mingle near the open landing door.",
+        "icon": "🚪",
+        "lorebookEntryIds": ["salt-house-customs"],
+        "childPresentation": "list",
+        "links": [
+          {
+            "targetId": "salt-house.parlour",
+            "label": "Serving Door",
+            "state": "available",
+            "bidirectional": true
+          }
+        ],
+        "status": "active",
+        "sortOrder": 0,
+        "placement": {
+          "x": 68,
+          "y": 45
+        },
+        "modelMemory": "This is usually the guesthouse's informal meeting place before supper. Let practical tasks offer openings for conversation; current scene events can change its occupancy."
+      },
+      {
+        "id": "salt-house.parlour",
+        "parentId": "salt-house.ground",
+        "name": "West Parlour",
+        "kind": "room",
+        "description": "Salt House's west parlour holds a low stone fireplace and mismatched upholstered chairs. The kitchen's serving door is east; thick curtains soften harbour noise.",
+        "icon": "🚪",
+        "lorebookEntryIds": [],
+        "childPresentation": "list",
+        "links": [],
+        "status": "active",
+        "sortOrder": 1,
+        "placement": {
+          "x": 30,
+          "y": 45
+        }
+      },
+      {
+        "id": "salt-house.bedroom",
+        "parentId": "salt-house.upper",
+        "name": "Harbour Bedroom",
+        "kind": "room",
+        "description": "A quiet bedroom under Salt House's eaves, with a broad harbour-facing window and a narrow oak writing desk. Rope shadows from the quay move across the pale ceiling.",
+        "icon": "🚪",
+        "lorebookEntryIds": [],
+        "childPresentation": "list",
+        "links": [],
+        "status": "active",
+        "sortOrder": 0
+      }
+    ]
+  },
+  "hierarchyProfile": {
+    "version": 1,
+    "mode": "custom",
+    "name": "Coastal House",
+    "types": [
+      {
+        "id": "coast",
+        "label": "Coast",
+        "baseKind": "region"
+      },
+      {
+        "id": "house",
+        "label": "House",
+        "baseKind": "building"
+      },
+      {
+        "id": "level",
+        "label": "Level",
+        "baseKind": "floor"
+      },
+      {
+        "id": "room",
+        "label": "Room",
+        "baseKind": "room"
+      },
+      {
+        "id": "landing-place",
+        "label": "Landing Place",
+        "baseKind": "place"
+      }
+    ],
+    "locationTypeIds": {
+      "salt-coast": "coast",
+      "salt-house": "house",
+      "quay": "landing-place",
+      "salt-house.ground": "level",
+      "salt-house.upper": "level",
+      "salt-house.kitchen": "room",
+      "salt-house.parlour": "room",
+      "salt-house.bedroom": "room"
+    },
+    "showConnections": true,
+    "linkPresentations": {}
+  },
+  "portableLore": {
+    "schemaVersion": 1,
+    "mode": "linked-entries",
+    "books": [
+      {
+        "key": "book-1",
+        "originalId": "salt-house-lore",
+        "name": "Salt House Lore",
+        "settings": {
+          "description": "Small reusable world facts for the Salt House example.",
+          "category": "world",
+          "enabled": true,
+          "tokenBudget": 1024,
+          "entryLimit": 5
+        },
+        "folders": [],
+        "entries": [
+          {
+            "key": "entry-1",
+            "originalId": "salt-house-customs",
+            "name": "Salt House Customs",
+            "folderKey": null,
+            "fingerprint": "entry-v1:c1c6f7848f0525a6",
+            "data": {
+              "name": "Salt House Customs",
+              "content": "Salt House is a working coastal guesthouse. The tide bell announces harbour changes, not a curfew. Guests commonly help prepare supper; this is an invitation, never a requirement.",
+              "keys": ["Salt House"],
+              "enabled": true,
+              "constant": false,
+              "position": 0,
+              "order": 100,
+              "role": "system",
+              "excludeFromVectorization": false
+            }
+          }
+        ]
+      }
+    ],
+    "references": [
+      {
+        "locationId": "salt-house.ground",
+        "locationName": "Ground Landing",
+        "entryKey": "entry-1",
+        "originalLorebookId": "salt-house-lore",
+        "originalLorebookName": "Salt House Lore",
+        "originalEntryId": "salt-house-customs",
+        "originalEntryName": "Salt House Customs"
+      },
+      {
+        "locationId": "salt-house.kitchen",
+        "locationName": "Blue-Tile Kitchen",
+        "entryKey": "entry-1",
+        "originalLorebookId": "salt-house-lore",
+        "originalLorebookName": "Salt House Lore",
+        "originalEntryId": "salt-house-customs",
+        "originalEntryName": "Salt House Customs"
+      }
+    ]
+  }
+}

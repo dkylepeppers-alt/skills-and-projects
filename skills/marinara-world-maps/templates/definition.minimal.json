@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "ownerMode": "roleplay",
+  "enabled": false,
+  "revision": 0,
+  "startingLocationId": "harbour",
+  "locations": [
+    {
+      "id": "coast",
+      "parentId": null,
+      "name": "Coast",
+      "kind": "region",
+      "description": "A sheltered tidal coast above a working harbour.",
+      "icon": "🌊",
+      "lorebookEntryIds": [],
+      "childPresentation": "map",
+      "links": [],
+      "status": "active",
+      "sortOrder": 0
+    },
+    {
+      "id": "harbour",
+      "parentId": "coast",
+      "name": "Harbour",
+      "kind": "place",
+      "description": "A small working harbour sheltered beneath the coastal cliffs. Stone steps lead west to the shore road.",
+      "icon": "⚓",
+      "lorebookEntryIds": [],
+      "childPresentation": "list",
+      "links": [],
+      "status": "active",
+      "sortOrder": 0,
+      "placement": {
+        "x": 50,
+        "y": 60
+      }
+    }
+  ]
+}

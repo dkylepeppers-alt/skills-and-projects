@@ -1,0 +1,22 @@
+interface:
+  display_name: marinara engine authoring
+  short_description: Author anything that goes into Marinara Engine — lorebooks, character
+    cards, personas, hierarchical maps, prompt presets, regex scripts, custom tools,
+    personal extensions, themes, and downloadable Agent packages — against the real
+    schemas in Pasta-Devs/Marinara-Engine and Pasta-Devs/Marinara-Agents. Use this
+    whenever the user mentions Marinara Engine, Marinara Agents, a `.marinara.json`
+    file, a worldbook or lorebook entry for Marinara, a character card or persona
+    for Marinara, a spatial/hierarchical map, an Outlet entry, a prompt preset or
+    preset variables, or wants to build, convert, port from SillyTavern, validate,
+    or debug any importable Marinara artifact. Use it even when the user only describes
+    the content ("a worldbook for my setting", "a map of this town", "an agent that
+    tracks X") without naming a format.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

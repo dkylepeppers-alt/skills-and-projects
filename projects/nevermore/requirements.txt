@@ -1,0 +1,2 @@
+# Needed only for rebuilding and decoding image assets.
+Pillow==12.3.0

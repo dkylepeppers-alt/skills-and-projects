@@ -1,0 +1,54 @@
+{
+  "file": "nevermore-rebuild/build/Nevermore-Woodlands-Crypts-v2.world-map.json",
+  "ok": true,
+  "evidence": "Structural preflight only; source-pinned checked subset.",
+  "unchecked": [
+    "hierarchy profile normalization",
+    "destination lore API payloads and existing IDs",
+    "full image decoding",
+    "app import/save and live state"
+  ],
+  "errors": [],
+  "warnings": [
+    {
+      "code": "multiple_roots",
+      "message": "5 root locations. A single root keeps breadcrumbs readable and travel connected; use one root unless the worlds are genuinely unlinked.",
+      "where": "$.locations"
+    },
+    {
+      "code": "known_index_truncated",
+      "message": "79 active locations; the first 50 in definition order enter the known-name index. This is not a storage, destination, or server lookup limit, and does not adapt to proximity.",
+      "where": "$.locations"
+    },
+    {
+      "code": "single_child_chain",
+      "message": "\"jericho-town\" has one child. Keep it if it has a distinct scene, artwork or organizational purpose; otherwise consider merging.",
+      "where": "locations[1] \"jericho-town\""
+    },
+    {
+      "code": "siblings_unlinked",
+      "message": "No available cross-links among the 4 branches under \"dorms-upper\". Containment still connects active parents and children. Add physical routes if useful; graph hops are not universally user turns.",
+      "where": "locations[20] \"dorms-upper\""
+    },
+    {
+      "code": "siblings_unlinked",
+      "message": "No available cross-links among the 3 branches under \"ravencroft-family\". Containment still connects active parents and children. Add physical routes if useful; graph hops are not universally user turns.",
+      "where": "locations[27] \"ravencroft-family\""
+    },
+    {
+      "code": "single_child_chain",
+      "message": "\"ravencroft-upper\" has one child. Keep it if it has a distinct scene, artwork or organizational purpose; otherwise consider merging.",
+      "where": "locations[61] \"ravencroft-upper\""
+    },
+    {
+      "code": "unreachable_locations",
+      "message": "25 active location(s) cannot be reached from the starting location by parent/child steps or available links: crypts-labyrinth, crypts-holding, crypts-first-rite, crypts-chamber-1, crypts-door-1, crypts-second-rite, crypts-chamber-2, crypts-door-2 …. Route planning will refuse them.",
+      "where": "$.locations"
+    },
+    {
+      "code": "destination_sprawl",
+      "message": "13 one-move destinations. Long destination lists dilute the model's choice-making and eat prompt space.",
+      "where": "locations[3] \"nevermore-grounds\""
+    }
+  ]
+}

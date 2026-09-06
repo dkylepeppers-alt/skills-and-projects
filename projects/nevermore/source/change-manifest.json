@@ -1,0 +1,2698 @@
+{
+  "sourceSha256": "714a90f306a8a8ba4af47e3bc8e8888441d8c3eb2470eb32676bbac60ea60472",
+  "changes": [
+    {
+      "id": "jericho-woods",
+      "fields": {
+        "description": {
+          "before": "Remote Vermont woodland. A two-lane road threads the trees toward the town of Jericho; a longer private drive climbs north-east to Nevermore Academy. Fog sits in the hollows even in dry weather. The woods are old, the oaks older, and the academy's stone does not belong to New England so much as it was willed into it.",
+          "after": "Remote Vermont woodland. A two-lane road threads the trees toward the town of Jericho; a longer private drive climbs north-east to Nevermore Academy. Fog sits in the hollows even in dry weather. The woods are old, the oaks older, and the academy's stone does not belong to New England so much as it was willed into it. Ridge Woods occupy the higher academy approach; Blackwater Hollow is the lower townward drainage; Western Old Woods lie beyond the academy’s western boundary. The maintained town-to-academy road and the old woodland tracks are separate routes."
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "mYfUaxUUp-lZFVl5W9WK0"
+          ],
+          "after": [
+            "nevermore-directory-v2-woods",
+            "mYfUaxUUp-lZFVl5W9WK0"
+          ]
+        }
+      }
+    },
+    {
+      "id": "jericho-town",
+      "fields": {
+        "description": {
+          "before": "A small Vermont town at the foot of the wooded ridge. Storefronts, a diner, a sheriff who has learned which questions not to ask about the school on the hill. Students come down on sanctioned trips and come back before dark, officially.",
+          "after": "A small Vermont town at the foot of the wooded ridge. Storefronts, a diner, a sheriff who has learned which questions not to ask about the school on the hill. Students come down on sanctioned trips and come back before dark, officially. An old track leaves toward Old Stone Bridge and the abandoned mill in Blackwater Hollow."
+        },
+        "links": {
+          "before": [
+            {
+              "targetId": "nevermore-gates",
+              "label": "the ridge road up to Nevermore",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "nevermore-gates",
+              "label": "the ridge road up to Nevermore",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "woods-bridge",
+              "label": "Old town track",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "mYfUaxUUp-lZFVl5W9WK0"
+          ],
+          "after": [
+            "nevermore-directory-v2-woods",
+            "mYfUaxUUp-lZFVl5W9WK0"
+          ]
+        },
+        "placement": {
+          "before": {
+            "x": 28,
+            "y": 72
+          },
+          "after": {
+            "x": 16,
+            "y": 74
+          }
+        }
+      }
+    },
+    {
+      "id": "jericho-main-street",
+      "fields": {
+        "lorebookEntryIds": {
+          "before": [
+            "mYfUaxUUp-lZFVl5W9WK0"
+          ],
+          "after": [
+            "nevermore-directory-v2-woods",
+            "mYfUaxUUp-lZFVl5W9WK0"
+          ]
+        }
+      }
+    },
+    {
+      "id": "nevermore-grounds",
+      "fields": {
+        "lorebookEntryIds": {
+          "before": [
+            "n_rYk1EIrauNJrk2ltzKO",
+            "7ckvAS-DAsFSW0vbnvJlF",
+            "BElmSYs8bzA85Fe7re12Z"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "n_rYk1EIrauNJrk2ltzKO",
+            "7ckvAS-DAsFSW0vbnvJlF",
+            "BElmSYs8bzA85Fe7re12Z"
+          ]
+        },
+        "placement": {
+          "before": {
+            "x": 64,
+            "y": 34
+          },
+          "after": {
+            "x": 76,
+            "y": 17
+          }
+        }
+      }
+    },
+    {
+      "id": "nevermore-gates",
+      "fields": {
+        "description": {
+          "before": "Wrought-iron gates in an ivy wall. The drive from Jericho ends here. Gargoyles on the pillars watch with the patience of things that have already judged you.",
+          "after": "Wrought-iron gates in an ivy wall. The drive from Jericho ends here. Gargoyles on the pillars watch with the patience of things that have already judged you. A woodland footpath from Boundary Trail Junction meets the approach outside these gates."
+        },
+        "links": {
+          "before": [
+            {
+              "targetId": "jericho-town",
+              "label": "the ridge road down to Jericho",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-quad",
+              "label": "the drive up to the quad",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "jericho-town",
+              "label": "the ridge road down to Jericho",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-quad",
+              "label": "the drive up to the quad",
+              "bidirectional": false,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "n_rYk1EIrauNJrk2ltzKO",
+            "7ckvAS-DAsFSW0vbnvJlF"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "n_rYk1EIrauNJrk2ltzKO",
+            "7ckvAS-DAsFSW0vbnvJlF"
+          ]
+        }
+      }
+    },
+    {
+      "id": "nevermore-quad",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "nevermore-gates",
+              "label": "the drive to the gates",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-poe-statue",
+              "label": "across the stones to the Poe statue",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-main-hall",
+              "label": "north into the main hall",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-dorms",
+              "label": "east toward the dormitories",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-lake",
+              "label": "south downhill to the lake",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-oaks",
+              "label": "the path through the oaks",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-dead-gardens",
+              "label": "west into the dead gardens",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "nevermore-gates",
+              "label": "the drive to the gates",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-poe-statue",
+              "label": "across the stones to the Poe statue",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-main-hall",
+              "label": "north into the main hall",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-dorms",
+              "label": "east toward the dormitories",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-lake",
+              "label": "south downhill to the lake",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-oaks",
+              "label": "the path through the oaks",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-dead-gardens",
+              "label": "west into the dead gardens",
+              "bidirectional": false,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "n_rYk1EIrauNJrk2ltzKO",
+            "7ckvAS-DAsFSW0vbnvJlF"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "n_rYk1EIrauNJrk2ltzKO",
+            "7ckvAS-DAsFSW0vbnvJlF"
+          ]
+        }
+      }
+    },
+    {
+      "id": "nevermore-poe-statue",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "nevermore-quad",
+              "label": "back onto the quad",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-stair-mouth",
+              "label": "the concealed stair behind the plinth",
+              "bidirectional": true,
+              "state": "hidden"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "nevermore-quad",
+              "label": "back onto the quad",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-stair-mouth",
+              "label": "Concealed passage: Poe Stair-Mouth",
+              "bidirectional": true,
+              "state": "hidden"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "n_rYk1EIrauNJrk2ltzKO",
+            "kgb9TZFKAi76k_WS1XGKe",
+            "ip_IdAbOuzBNe3y9zStfu"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "n_rYk1EIrauNJrk2ltzKO",
+            "kgb9TZFKAi76k_WS1XGKe",
+            "ip_IdAbOuzBNe3y9zStfu"
+          ]
+        }
+      }
+    },
+    {
+      "id": "nevermore-lake",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "nevermore-quad",
+              "label": "uphill to the quad",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-oaks",
+              "label": "along the tree line",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "nevermore-quad",
+              "label": "uphill to the quad",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-oaks",
+              "label": "along the tree line",
+              "bidirectional": false,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "n_rYk1EIrauNJrk2ltzKO"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "n_rYk1EIrauNJrk2ltzKO"
+          ]
+        }
+      }
+    },
+    {
+      "id": "nevermore-oaks",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "nevermore-quad",
+              "label": "the path back to the quad",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-lake",
+              "label": "down toward the lake",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-botany",
+              "label": "the gravel cut to botany",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "nevermore-quad",
+              "label": "the path back to the quad",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-lake",
+              "label": "down toward the lake",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-botany",
+              "label": "the gravel cut to botany",
+              "bidirectional": false,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "n_rYk1EIrauNJrk2ltzKO"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "n_rYk1EIrauNJrk2ltzKO"
+          ]
+        }
+      }
+    },
+    {
+      "id": "nevermore-cemetery",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "nevermore-dead-gardens",
+              "label": "the path through the dead gardens",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "ravencroft-gates",
+              "label": "the service path up to Ravencroft",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "nevermore-dead-gardens",
+              "label": "the path through the dead gardens",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "ravencroft-gates",
+              "label": "the service path up to Ravencroft",
+              "bidirectional": false,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "TJF1YhMonWKX8ZYMW77pH",
+            "iE6G75LbMienV_xzASCUU"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "TJF1YhMonWKX8ZYMW77pH",
+            "iE6G75LbMienV_xzASCUU"
+          ]
+        }
+      }
+    },
+    {
+      "id": "nevermore-dead-gardens",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "nevermore-quad",
+              "label": "east back to the quad",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "ravencroft-gates",
+              "label": "west to Ravencroft's gates",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-cemetery",
+              "label": "south toward the cemetery",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "nevermore-quad",
+              "label": "east back to the quad",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "ravencroft-gates",
+              "label": "west to Ravencroft's gates",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-cemetery",
+              "label": "south toward the cemetery",
+              "bidirectional": false,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "TJF1YhMonWKX8ZYMW77pH",
+            "iE6G75LbMienV_xzASCUU"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "TJF1YhMonWKX8ZYMW77pH",
+            "iE6G75LbMienV_xzASCUU"
+          ]
+        }
+      }
+    },
+    {
+      "id": "nevermore-botany",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "nevermore-oaks",
+              "label": "the gravel cut through the oaks",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "nevermore-oaks",
+              "label": "the gravel cut through the oaks",
+              "bidirectional": false,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "n_rYk1EIrauNJrk2ltzKO",
+            "7ckvAS-DAsFSW0vbnvJlF"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "n_rYk1EIrauNJrk2ltzKO",
+            "7ckvAS-DAsFSW0vbnvJlF"
+          ]
+        }
+      }
+    },
+    {
+      "id": "nevermore-main-hall",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "nevermore-quad",
+              "label": "south out onto the quad",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "nevermore-quad",
+              "label": "south out onto the quad",
+              "bidirectional": false,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "aFv2LbazQ96NEpPVr_0ZT",
+            "7ckvAS-DAsFSW0vbnvJlF"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "aFv2LbazQ96NEpPVr_0ZT",
+            "7ckvAS-DAsFSW0vbnvJlF"
+          ]
+        }
+      }
+    },
+    {
+      "id": "nevermore-dorms",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "nevermore-quad",
+              "label": "west to the quad",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "nevermore-quad",
+              "label": "west to the quad",
+              "bidirectional": false,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "aNjV2yTAAK6YB1ZNJmrP4",
+            "7ckvAS-DAsFSW0vbnvJlF"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "aNjV2yTAAK6YB1ZNJmrP4",
+            "7ckvAS-DAsFSW0vbnvJlF"
+          ]
+        }
+      }
+    },
+    {
+      "id": "main-hall-foyer",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "nevermore-quad",
+              "label": "the front doors onto the quad",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "main-hall-weems",
+              "label": "the principal's office",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "main-hall-dining",
+              "label": "through to the dining hall",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "main-hall-upper",
+              "label": "the stair to the upper floor",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "nevermore-quad",
+              "label": "the front doors onto the quad",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "main-hall-weems",
+              "label": "the principal's office",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "main-hall-dining",
+              "label": "through to the dining hall",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "main-hall-upper",
+              "label": "the stair to the upper floor",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "aFv2LbazQ96NEpPVr_0ZT"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "aFv2LbazQ96NEpPVr_0ZT"
+          ]
+        }
+      }
+    },
+    {
+      "id": "main-hall-weems",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "main-hall-foyer",
+              "label": "the foyer outside",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "main-hall-foyer",
+              "label": "the foyer outside",
+              "bidirectional": false,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "aFv2LbazQ96NEpPVr_0ZT",
+            "DXSIAQyH7a5BjMqnL3Qsp",
+            "BElmSYs8bzA85Fe7re12Z"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "aFv2LbazQ96NEpPVr_0ZT",
+            "DXSIAQyH7a5BjMqnL3Qsp",
+            "BElmSYs8bzA85Fe7re12Z"
+          ]
+        }
+      }
+    },
+    {
+      "id": "main-hall-dining",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "main-hall-foyer",
+              "label": "back to the foyer",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "main-hall-foyer",
+              "label": "back to the foyer",
+              "bidirectional": false,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "aFv2LbazQ96NEpPVr_0ZT"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "aFv2LbazQ96NEpPVr_0ZT"
+          ]
+        }
+      }
+    },
+    {
+      "id": "main-hall-classrooms",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "main-hall-foyer",
+              "label": "the stair down to the foyer",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "main-hall-fencing",
+              "label": "the salle at the end of the hall",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "main-hall-foyer",
+              "label": "the stair down to the foyer",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "main-hall-fencing",
+              "label": "the salle at the end of the hall",
+              "bidirectional": false,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "aFv2LbazQ96NEpPVr_0ZT"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "aFv2LbazQ96NEpPVr_0ZT"
+          ]
+        }
+      }
+    },
+    {
+      "id": "main-hall-fencing",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "main-hall-classrooms",
+              "label": "the classroom corridor",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "main-hall-classrooms",
+              "label": "the classroom corridor",
+              "bidirectional": false,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "aFv2LbazQ96NEpPVr_0ZT"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "aFv2LbazQ96NEpPVr_0ZT"
+          ]
+        }
+      }
+    },
+    {
+      "id": "dorms-common",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "nevermore-quad",
+              "label": "out toward the quad",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "dorms-upper",
+              "label": "the stair to the rooms",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-crawlspace",
+              "label": "a vent Thing uses as if it were a hallway",
+              "bidirectional": true,
+              "state": "hidden"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "nevermore-quad",
+              "label": "out toward the quad",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "dorms-upper",
+              "label": "the stair to the rooms",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-crawlspace",
+              "label": "Concealed passage: Crawlspace Mouth",
+              "bidirectional": true,
+              "state": "hidden"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "aNjV2yTAAK6YB1ZNJmrP4"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "aNjV2yTAAK6YB1ZNJmrP4"
+          ]
+        },
+        "modelMemory": {
+          "before": null,
+          "after": "A low service grille near the mail slots carries an intermittent cool draught and fine stone dust. Thing knows the crawlspace route behind it. This is the near-side clue to Crawlspace Mouth; the entrance remains concealed until deliberately revealed and its hidden connection is made available."
+        }
+      }
+    },
+    {
+      "id": "dorms-upper",
+      "fields": {
+        "description": {
+          "before": "A corridor of student rooms. Wednesday and Enid at one end, Pugsley in a single faculty inspect for scorch marks, Bianca and Nerissa further down the same hall. Cliques mix more than they admit.",
+          "after": "The shared upper corridor reached from the common-room stair. Wednesday and Enid’s door is at one end; Pugsley’s single, Bianca’s room and Nerissa’s room open from the same hall. Ordinary visits use this corridor, not connecting doors between bedrooms."
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "aNjV2yTAAK6YB1ZNJmrP4"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "aNjV2yTAAK6YB1ZNJmrP4"
+          ]
+        }
+      }
+    },
+    {
+      "id": "dorm-wednesday-enid",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "dorms-common",
+              "label": "the corridor down to the common room",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "dorm-pugsley",
+              "label": "next door toward Pugsley's room",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "dorm-bianca",
+              "label": "down the hall toward Bianca",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": []
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "aNjV2yTAAK6YB1ZNJmrP4",
+            "CvmzKzAZcsJxd48pMZuqD",
+            "UvYMZqpn4czDr472aqNDF"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "aNjV2yTAAK6YB1ZNJmrP4",
+            "CvmzKzAZcsJxd48pMZuqD",
+            "UvYMZqpn4czDr472aqNDF"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ravencroft-gates",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "nevermore-dead-gardens",
+              "label": "east through the dead gardens",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-cemetery",
+              "label": "the service path to the cemetery",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "ravencroft-manor",
+              "label": "through the gates to the house",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "nevermore-dead-gardens",
+              "label": "east through the dead gardens",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "nevermore-cemetery",
+              "label": "the service path to the cemetery",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "ravencroft-manor",
+              "label": "through the gates to the house",
+              "bidirectional": false,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "iE6G75LbMienV_xzASCUU",
+            "TJF1YhMonWKX8ZYMW77pH"
+          ],
+          "after": [
+            "nevermore-directory-v2-ravencroft",
+            "iE6G75LbMienV_xzASCUU",
+            "TJF1YhMonWKX8ZYMW77pH"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ravencroft-manor",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "ravencroft-gates",
+              "label": "out through the crest gates",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "ravencroft-gates",
+              "label": "out through the crest gates",
+              "bidirectional": false,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "iE6G75LbMienV_xzASCUU",
+            "nPZtleNlF6_eQazEqjPDu",
+            "BElmSYs8bzA85Fe7re12Z"
+          ],
+          "after": [
+            "nevermore-directory-v2-ravencroft",
+            "iE6G75LbMienV_xzASCUU",
+            "nPZtleNlF6_eQazEqjPDu",
+            "BElmSYs8bzA85Fe7re12Z"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ravencroft-basement",
+      "fields": {
+        "lorebookEntryIds": {
+          "before": [
+            "nPZtleNlF6_eQazEqjPDu",
+            "kgb9TZFKAi76k_WS1XGKe",
+            "ip_IdAbOuzBNe3y9zStfu"
+          ],
+          "after": [
+            "nevermore-directory-v2-ravencroft",
+            "nPZtleNlF6_eQazEqjPDu",
+            "kgb9TZFKAi76k_WS1XGKe",
+            "ip_IdAbOuzBNe3y9zStfu"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ravencroft-iron-maiden",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "ravencroft-meditation",
+              "label": "back toward the meditation chamber",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-tunnel-mouth",
+              "label": "the tunnel behind the maiden",
+              "bidirectional": true,
+              "state": "hidden"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "ravencroft-meditation",
+              "label": "back toward the meditation chamber",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-tunnel-mouth",
+              "label": "Concealed passage: Ravencroft Tunnel-Mouth",
+              "bidirectional": true,
+              "state": "hidden"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "nPZtleNlF6_eQazEqjPDu",
+            "ip_IdAbOuzBNe3y9zStfu"
+          ],
+          "after": [
+            "nevermore-directory-v2-ravencroft",
+            "nPZtleNlF6_eQazEqjPDu",
+            "ip_IdAbOuzBNe3y9zStfu"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ravencroft-parlor",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "ravencroft-gates",
+              "label": "the front hall out to the gates",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "ravencroft-greenhouse",
+              "label": "through to the greenhouse",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "ravencroft-basement",
+              "label": "the stair down",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "ravencroft-family",
+              "label": "the stair up to the family wing",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "ravencroft-gates",
+              "label": "the front hall out to the gates",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "ravencroft-greenhouse",
+              "label": "through to the greenhouse",
+              "bidirectional": false,
+              "state": "available"
+            },
+            {
+              "targetId": "ravencroft-basement",
+              "label": "the stair down",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "ravencroft-family",
+              "label": "the stair up to the family wing",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "nPZtleNlF6_eQazEqjPDu",
+            "4tRmJ-h6xHh651CyKLYlM"
+          ],
+          "after": [
+            "nevermore-directory-v2-ravencroft",
+            "nPZtleNlF6_eQazEqjPDu",
+            "4tRmJ-h6xHh651CyKLYlM"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ravencroft-family",
+      "fields": {
+        "links": {
+          "before": [],
+          "after": [
+            {
+              "targetId": "ravencroft-upper",
+              "label": "Stair between family gallery and roof landing",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "nPZtleNlF6_eQazEqjPDu"
+          ],
+          "after": [
+            "nevermore-directory-v2-ravencroft",
+            "nPZtleNlF6_eQazEqjPDu"
+          ]
+        },
+        "modelMemory": {
+          "before": "Gomez does not automatically share Morticia's bed. The cooled marriage is architecture here. No children's room. Wednesday and Pugsley sleep in the dorms.",
+          "after": "Gomez does not automatically share Morticia's bed. The cooled marriage is architecture here. No children's room. Wednesday and Pugsley sleep in the dorms. The gallery connects the bedrooms and the stair to the roof landing; the roof route does not pass through Morticia’s private room."
+        }
+      }
+    },
+    {
+      "id": "ravencroft-morticia-chamber",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "ravencroft-parlor",
+              "label": "the stair down to the parlor",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "ravencroft-gomez-room",
+              "label": "across the hall to Gomez's visiting room",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "ravencroft-spare",
+              "label": "along the gallery to the spare room",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "ravencroft-upper",
+              "label": "the narrow stair to the widow's walk",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": []
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "nPZtleNlF6_eQazEqjPDu",
+            "4tRmJ-h6xHh651CyKLYlM"
+          ],
+          "after": [
+            "nevermore-directory-v2-ravencroft",
+            "nPZtleNlF6_eQazEqjPDu",
+            "4tRmJ-h6xHh651CyKLYlM"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ravencroft-walk",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "ravencroft-morticia-chamber",
+              "label": "the stair down to the family wing",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": []
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "nPZtleNlF6_eQazEqjPDu"
+          ],
+          "after": [
+            "nevermore-directory-v2-ravencroft",
+            "nPZtleNlF6_eQazEqjPDu"
+          ]
+        }
+      }
+    },
+    {
+      "id": "crypts-labyrinth",
+      "fields": {
+        "lorebookEntryIds": {
+          "before": [
+            "kgb9TZFKAi76k_WS1XGKe",
+            "cWowJdGQyZYMaIC79KpTn"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "kgb9TZFKAi76k_WS1XGKe",
+            "cWowJdGQyZYMaIC79KpTn"
+          ]
+        },
+        "modelMemory": {
+          "before": "Five floors: Threshold, First Rite, Second Rite, Union, Covenant. Each ritual door is a room separate from its performance chamber. Doors open only on genuine completed desire — not performance, not coercion. No false-turning room; a failed attempt stays on that floor. Morticia and Gomez descended in youth. Thing has mapped every mouth.",
+          "after": "Physical order: Threshold, First Rite, Second Rite, Union, Covenant. Chamber precedes its progression door on each ritual level. Threshold and First Rite form the initial connected group; later stages are separate map roots to prevent parent-traversal bypasses. Their physical setting remains underground beneath Nevermore. Three concealed surface entrances require explicit reveal edits; narrative discovery does not change stored links. Preserve the existing stage requirements. No failed attempt relocates the party to another stage."
+        },
+        "parentId": {
+          "before": "nevermore-grounds",
+          "after": null
+        },
+        "placement": {
+          "before": {
+            "x": 50,
+            "y": 56
+          },
+          "after": null
+        }
+      }
+    },
+    {
+      "id": "crypts-holding",
+      "fields": {
+        "awarenessSummary": {
+          "before": "Threshold standing-room after the Portrait.",
+          "after": "Arrival hall with portrait, preparation alcove and the route to First Rite."
+        },
+        "description": {
+          "before": "The rest of the arrival chamber after the Portrait. Blue flame, warm stone underfoot, nowhere to sit that is not a ledge. People stand here flushed and decide whether to go on.",
+          "after": "The main arrival chamber immediately inside the Iron Gate. Blue-flame sconces mark an open stone floor and a low waiting ledge. The Living Portrait hangs on the left-hand wall; the Vestment Alcove opens to one side. A descending passage leads toward the First Rite chamber. The entrance mouths lie beyond the gate behind you."
+        },
+        "links": {
+          "before": [
+            {
+              "targetId": "crypts-portrait",
+              "label": "back to the Portrait",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-gate",
+              "label": "back to the iron gate",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-door-1",
+              "label": "the descent to the first door",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "crypts-portrait",
+              "label": "Portrait recess on the hall’s left wall",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-vestment",
+              "label": "Preparation alcove",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-chamber-1",
+              "label": "Stair between Threshold Hall and First Rite",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "ip_IdAbOuzBNe3y9zStfu"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "ip_IdAbOuzBNe3y9zStfu"
+          ]
+        },
+        "name": {
+          "before": "Holding Dark",
+          "after": "Threshold Hall"
+        }
+      }
+    },
+    {
+      "id": "crypts-first-rite",
+      "fields": {
+        "description": {
+          "before": "The first ritual floor. Stone warmer than the Threshold. One iron door, one chamber behind it, a short passage once the door has opened.",
+          "after": "The first ritual level below Threshold Hall: a landing opening into the Chamber of Caresses, then the Door of First Touch at its far exit. Beyond that door the Breath Passage descends to Second Rite."
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "O_n4faQZCivBtRfyAL8yu",
+            "cWowJdGQyZYMaIC79KpTn"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "O_n4faQZCivBtRfyAL8yu",
+            "cWowJdGQyZYMaIC79KpTn"
+          ]
+        }
+      }
+    },
+    {
+      "id": "crypts-chamber-1",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "crypts-door-1",
+              "label": "back to the first door",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-breath",
+              "label": "the Breath Passage, once the door has opened",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "crypts-door-1",
+              "label": "First chamber’s far exit",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "O_n4faQZCivBtRfyAL8yu",
+            "cWowJdGQyZYMaIC79KpTn"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "O_n4faQZCivBtRfyAL8yu",
+            "cWowJdGQyZYMaIC79KpTn"
+          ]
+        },
+        "modelMemory": {
+          "before": "Tender, exploratory, kissing, hands. Completion here is what opens the Breath Passage.",
+          "after": "The First Rite takes place here before the Door of First Touch. Apply the attached First Rite requirements. Completion satisfies that exit door, leading to Breath Passage; it does not satisfy any later stage."
+        },
+        "sortOrder": {
+          "before": 1,
+          "after": 0
+        }
+      }
+    },
+    {
+      "id": "crypts-door-1",
+      "fields": {
+        "description": {
+          "before": "A massive iron door. Bas-relief of tender, exploratory caresses and passionate kissing. The runes warm when someone stands close with actual intent. The chamber beyond is visible only as heat through the seams until the door accepts the rite.",
+          "after": "A massive iron door at the far end of the Chamber of Caresses. Its carved relief belongs to the first stage. The runes warm in response to completion within this chamber; beyond the threshold lies the descending Breath Passage."
+        },
+        "links": {
+          "before": [
+            {
+              "targetId": "crypts-portrait",
+              "label": "back up toward the Portrait",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-holding",
+              "label": "back to the holding dark",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-chamber-1",
+              "label": "into the Chamber of Caresses",
+              "bidirectional": true,
+              "state": "blocked"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "crypts-breath",
+              "label": "Progression door: Door of First Touch",
+              "bidirectional": true,
+              "state": "blocked"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "O_n4faQZCivBtRfyAL8yu",
+            "cWowJdGQyZYMaIC79KpTn"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "O_n4faQZCivBtRfyAL8yu",
+            "cWowJdGQyZYMaIC79KpTn"
+          ]
+        },
+        "modelMemory": {
+          "before": "The lock is the act: authentic desire, emotional intensity, mutual completion. Half-hearted, coerced, or mechanical attempts fail with illusions or petty curses. Success opens this door with a resonant, almost orgasmic groan. Until then the link into the chamber is blocked.",
+          "after": "This is the exit from the first chamber, not its entrance. The established First Rite requirement is completed in the Chamber of Caresses. Success satisfies this door only. The onward connection leads to Breath Passage and begins blocked; the map owner must explicitly make it available. Retreat within First Rite remains possible."
+        },
+        "sortOrder": {
+          "before": 0,
+          "after": 1
+        }
+      }
+    },
+    {
+      "id": "crypts-second-rite",
+      "fields": {
+        "layerOrder": {
+          "before": 2,
+          "after": null
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "lviqc57Vx1BgY-qwyWbxt",
+            "cWowJdGQyZYMaIC79KpTn"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "lviqc57Vx1BgY-qwyWbxt",
+            "cWowJdGQyZYMaIC79KpTn"
+          ]
+        },
+        "parentId": {
+          "before": "crypts-labyrinth",
+          "after": null
+        }
+      }
+    },
+    {
+      "id": "crypts-chamber-2",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "crypts-door-2",
+              "label": "back to the Door of Worship",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-echo",
+              "label": "through to the Echo Niche",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "crypts-echo",
+              "label": "Side recess",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-door-2",
+              "label": "Second chamber’s far exit",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "lviqc57Vx1BgY-qwyWbxt",
+            "cWowJdGQyZYMaIC79KpTn"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "lviqc57Vx1BgY-qwyWbxt",
+            "cWowJdGQyZYMaIC79KpTn"
+          ]
+        },
+        "modelMemory": {
+          "before": "Mutual oral worship, heated embraces. Completion opens the way to the Echo Niche.",
+          "after": "The Second Rite takes place here before the Door of Worship. Completion satisfies that exit door toward the Chamber of Harmonies. Echo Niche is an optional side recess, freely accessible from this chamber; entering it is not another stage."
+        }
+      }
+    },
+    {
+      "id": "crypts-door-2",
+      "fields": {
+        "description": {
+          "before": "The second iron door. Pictograms of mutual oral worship and bodies locked together. The stone here has a pulse you can mistake for your own.",
+          "after": "The second carved iron door stands at the far exit of the Chamber of Mouths. The room and its side recess lie behind it; the stair toward the Chamber of Harmonies lies beyond. Warmth gathers at the seams."
+        },
+        "links": {
+          "before": [
+            {
+              "targetId": "crypts-breath",
+              "label": "back up the Breath Passage",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-chamber-2",
+              "label": "into the Chamber of Mouths",
+              "bidirectional": true,
+              "state": "blocked"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "crypts-chamber-3",
+              "label": "Progression door: Door of Worship",
+              "bidirectional": true,
+              "state": "blocked"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "lviqc57Vx1BgY-qwyWbxt",
+            "cWowJdGQyZYMaIC79KpTn"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "lviqc57Vx1BgY-qwyWbxt",
+            "cWowJdGQyZYMaIC79KpTn"
+          ]
+        },
+        "modelMemory": {
+          "before": "Same lock as every door: genuine desire and mutual completion. Escalation is required. Until satisfied, the chamber link stays blocked.",
+          "after": "This is the exit from Second Rite. The established Second Rite requirement is completed in the Chamber of Mouths. Success satisfies this door only. Its connection to the Chamber of Harmonies begins blocked and needs an explicit owner edit. Echo Niche is a side recess, not the route onward."
+        },
+        "sortOrder": {
+          "before": 0,
+          "after": 2
+        }
+      }
+    },
+    {
+      "id": "crypts-union",
+      "fields": {
+        "layerOrder": {
+          "before": 3,
+          "after": null
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "oaz4jkf1n_QgP-Sq_epJ6",
+            "cWowJdGQyZYMaIC79KpTn"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "oaz4jkf1n_QgP-Sq_epJ6",
+            "cWowJdGQyZYMaIC79KpTn"
+          ]
+        },
+        "parentId": {
+          "before": "crypts-labyrinth",
+          "after": null
+        }
+      }
+    },
+    {
+      "id": "crypts-chamber-3",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "crypts-door-3",
+              "label": "back to the Door of Three",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-vestment",
+              "label": "the vestment alcove at the side",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-approach",
+              "label": "down the approach toward the altar",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "crypts-door-3",
+              "label": "Union chamber’s far exit",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "oaz4jkf1n_QgP-Sq_epJ6",
+            "cWowJdGQyZYMaIC79KpTn"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "oaz4jkf1n_QgP-Sq_epJ6",
+            "cWowJdGQyZYMaIC79KpTn"
+          ]
+        },
+        "modelMemory": {
+          "before": "Synchronized penetration, shared climax, mutual attention. Generous endowment is assumed in the reliefs. This floor does not grant the altar boon.",
+          "after": "The Union stage takes place here before the Door of Three. Apply its attached requirements. Completion satisfies that exit door toward Approach Hall; the final boon belongs at the Obsidian Altar. Vestment Alcove is upstairs beside Threshold Hall, not on this level."
+        },
+        "sortOrder": {
+          "before": 1,
+          "after": 0
+        }
+      }
+    },
+    {
+      "id": "crypts-door-3",
+      "fields": {
+        "description": {
+          "before": "The third iron door. Three bodies in the carving, configured and reconfigured as the eye moves. Heat comes through the seams in waves.",
+          "after": "The third carved iron door occupies the far exit of the Chamber of Harmonies. Its three-figure relief faces into the chamber. Beyond the sealed threshold, a descending stair leads to Covenant and Approach Hall."
+        },
+        "links": {
+          "before": [
+            {
+              "targetId": "crypts-echo",
+              "label": "back up to the Echo Niche",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-chamber-3",
+              "label": "into the Chamber of Harmonies",
+              "bidirectional": true,
+              "state": "blocked"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "crypts-approach",
+              "label": "Progression door: Door of Three",
+              "bidirectional": true,
+              "state": "blocked"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "oaz4jkf1n_QgP-Sq_epJ6",
+            "cWowJdGQyZYMaIC79KpTn"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "oaz4jkf1n_QgP-Sq_epJ6",
+            "cWowJdGQyZYMaIC79KpTn"
+          ]
+        },
+        "modelMemory": {
+          "before": "Lock is a completed, harmonious rite matching the carving. Often two women and one man; the magic wants genuine arrangement, not a headcount. Chamber link blocked until then.",
+          "after": "This is the exit from Union. The established Union requirement is completed in the Chamber of Harmonies. Success satisfies the Door of Three and permits the descent to Approach Hall after the owner opens its link. Physical admission to Covenant does not itself grant the altar boon."
+        },
+        "sortOrder": {
+          "before": 0,
+          "after": 1
+        }
+      }
+    },
+    {
+      "id": "crypts-covenant",
+      "fields": {
+        "layerOrder": {
+          "before": 4,
+          "after": null
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "I8MjOJKPBSgcZ6uN_x5sp",
+            "cWowJdGQyZYMaIC79KpTn"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "I8MjOJKPBSgcZ6uN_x5sp",
+            "cWowJdGQyZYMaIC79KpTn"
+          ]
+        },
+        "parentId": {
+          "before": "crypts-labyrinth",
+          "after": null
+        }
+      }
+    },
+    {
+      "id": "crypts-altar",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "crypts-approach",
+              "label": "back into the approach hall",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-vault",
+              "label": "the relic vault off the altar",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-seed",
+              "label": "the seed niche behind the altar",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "crypts-vault",
+              "label": "Side vault",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-seed",
+              "label": "Niche behind the altar",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "I8MjOJKPBSgcZ6uN_x5sp",
+            "cWowJdGQyZYMaIC79KpTn",
+            "LIfMiWh7cCv4qha5Az8EL"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "I8MjOJKPBSgcZ6uN_x5sp",
+            "cWowJdGQyZYMaIC79KpTn",
+            "LIfMiWh7cCv4qha5Az8EL"
+          ]
+        }
+      }
+    },
+    {
+      "id": "woods-ridge",
+      "operation": "add",
+      "parentId": "jericho-woods"
+    },
+    {
+      "id": "woods-blackwater",
+      "operation": "add",
+      "parentId": "jericho-woods"
+    },
+    {
+      "id": "woods-western",
+      "operation": "add",
+      "parentId": "jericho-woods"
+    },
+    {
+      "id": "woods-junction",
+      "operation": "add",
+      "parentId": "woods-ridge"
+    },
+    {
+      "id": "woods-bridge",
+      "operation": "add",
+      "parentId": "woods-blackwater"
+    },
+    {
+      "id": "woods-sawmill",
+      "operation": "add",
+      "parentId": "woods-blackwater"
+    },
+    {
+      "id": "woods-lookout",
+      "operation": "add",
+      "parentId": "woods-ridge"
+    },
+    {
+      "id": "main-hall-ground",
+      "fields": {
+        "lorebookEntryIds": {
+          "before": [
+            "aFv2LbazQ96NEpPVr_0ZT"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "aFv2LbazQ96NEpPVr_0ZT"
+          ]
+        }
+      }
+    },
+    {
+      "id": "main-hall-upper",
+      "fields": {
+        "lorebookEntryIds": {
+          "before": [
+            "aFv2LbazQ96NEpPVr_0ZT"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "aFv2LbazQ96NEpPVr_0ZT"
+          ]
+        }
+      }
+    },
+    {
+      "id": "dorms-ground",
+      "fields": {
+        "lorebookEntryIds": {
+          "before": [
+            "aNjV2yTAAK6YB1ZNJmrP4"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "aNjV2yTAAK6YB1ZNJmrP4"
+          ]
+        }
+      }
+    },
+    {
+      "id": "dorm-pugsley",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "dorm-wednesday-enid",
+              "label": "next door to Wednesday and Enid",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "dorm-nerissa",
+              "label": "further down the same hall",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": []
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "aNjV2yTAAK6YB1ZNJmrP4",
+            "5LBs-qv-D9m-xndz9Ot58"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "aNjV2yTAAK6YB1ZNJmrP4",
+            "5LBs-qv-D9m-xndz9Ot58"
+          ]
+        }
+      }
+    },
+    {
+      "id": "dorm-bianca",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "dorm-wednesday-enid",
+              "label": "down the hall toward Wednesday and Enid",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "dorm-nerissa",
+              "label": "the next door, Nerissa's",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": []
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "aNjV2yTAAK6YB1ZNJmrP4",
+            "Aqn7raa1iEqpD7mGnmvFP"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "aNjV2yTAAK6YB1ZNJmrP4",
+            "Aqn7raa1iEqpD7mGnmvFP"
+          ]
+        }
+      }
+    },
+    {
+      "id": "dorm-nerissa",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "dorm-bianca",
+              "label": "the next door, Bianca's",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "dorm-pugsley",
+              "label": "down the hall toward Pugsley",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": []
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "aNjV2yTAAK6YB1ZNJmrP4",
+            "qC-2X7e12UQww19UqT9N5"
+          ],
+          "after": [
+            "nevermore-directory-v2-campus",
+            "aNjV2yTAAK6YB1ZNJmrP4",
+            "qC-2X7e12UQww19UqT9N5"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ravencroft-meditation",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "ravencroft-iron-maiden",
+              "label": "the passage to the iron maiden",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "ravencroft-iron-maiden",
+              "label": "the passage to the iron maiden",
+              "bidirectional": false,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "nPZtleNlF6_eQazEqjPDu",
+            "4tRmJ-h6xHh651CyKLYlM"
+          ],
+          "after": [
+            "nevermore-directory-v2-ravencroft",
+            "nPZtleNlF6_eQazEqjPDu",
+            "4tRmJ-h6xHh651CyKLYlM"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ravencroft-main",
+      "fields": {
+        "lorebookEntryIds": {
+          "before": [
+            "nPZtleNlF6_eQazEqjPDu",
+            "iE6G75LbMienV_xzASCUU"
+          ],
+          "after": [
+            "nevermore-directory-v2-ravencroft",
+            "nPZtleNlF6_eQazEqjPDu",
+            "iE6G75LbMienV_xzASCUU"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ravencroft-greenhouse",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "ravencroft-parlor",
+              "label": "back into the parlor",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "ravencroft-parlor",
+              "label": "back into the parlor",
+              "bidirectional": false,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "nPZtleNlF6_eQazEqjPDu",
+            "4tRmJ-h6xHh651CyKLYlM"
+          ],
+          "after": [
+            "nevermore-directory-v2-ravencroft",
+            "nPZtleNlF6_eQazEqjPDu",
+            "4tRmJ-h6xHh651CyKLYlM"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ravencroft-gomez-room",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "ravencroft-morticia-chamber",
+              "label": "across the hall to Morticia",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "ravencroft-spare",
+              "label": "along the gallery to the spare room",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": []
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "nPZtleNlF6_eQazEqjPDu",
+            "V8bjf4Q4Y-B3ieeLS1sf7"
+          ],
+          "after": [
+            "nevermore-directory-v2-ravencroft",
+            "nPZtleNlF6_eQazEqjPDu",
+            "V8bjf4Q4Y-B3ieeLS1sf7"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ravencroft-spare",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "ravencroft-morticia-chamber",
+              "label": "along the gallery to Morticia",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "ravencroft-gomez-room",
+              "label": "along the gallery to Gomez",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": []
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "nPZtleNlF6_eQazEqjPDu"
+          ],
+          "after": [
+            "nevermore-directory-v2-ravencroft",
+            "nPZtleNlF6_eQazEqjPDu"
+          ]
+        }
+      }
+    },
+    {
+      "id": "ravencroft-upper",
+      "fields": {
+        "lorebookEntryIds": {
+          "before": [
+            "nPZtleNlF6_eQazEqjPDu"
+          ],
+          "after": [
+            "nevermore-directory-v2-ravencroft",
+            "nPZtleNlF6_eQazEqjPDu"
+          ]
+        }
+      }
+    },
+    {
+      "id": "crypts-threshold",
+      "fields": {
+        "lorebookEntryIds": {
+          "before": [
+            "kgb9TZFKAi76k_WS1XGKe",
+            "ip_IdAbOuzBNe3y9zStfu",
+            "htp4JkccoBm6ZN4ufNeXJ"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "kgb9TZFKAi76k_WS1XGKe",
+            "ip_IdAbOuzBNe3y9zStfu",
+            "htp4JkccoBm6ZN4ufNeXJ"
+          ]
+        },
+        "modelMemory": {
+          "before": "Mouths: Nightshade stair from the Poe statue, family tunnel from Ravencroft's iron maiden, one crawlspace Thing mapped from the dorm vents. The Portrait is the gentlest trial and it is not optional if you look at it.",
+          "after": "Arrival floor only. Three entrance mouths converge at the Iron Gate and Threshold Hall. The Living Portrait occupies the left wall inside; the Vestment Alcove branches from the hall. First Rite is below. No progression rite is performed on this floor."
+        }
+      }
+    },
+    {
+      "id": "crypts-gate",
+      "fields": {
+        "description": {
+          "before": "The first iron gate after the last honest stair. Runes along the arch. Beyond it the chamber opens; behind it, whichever mouth you used.",
+          "after": "An ordinary iron gate beneath a rune-cut arch, between the three arrival mouths and Threshold Hall. Beyond it the hall opens, with the Living Portrait on the left. This entrance gate is distinct from the three progression doors deeper below."
+        },
+        "links": {
+          "before": [
+            {
+              "targetId": "crypts-stair-mouth",
+              "label": "the Nightshade stair-mouth",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-tunnel-mouth",
+              "label": "the Ravencroft tunnel-mouth",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-crawlspace",
+              "label": "the crawlspace mouth",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-portrait",
+              "label": "ten paces left, to the Portrait",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-holding",
+              "label": "into the holding dark",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "crypts-holding",
+              "label": "Iron Gate and Threshold Hall",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "ip_IdAbOuzBNe3y9zStfu",
+            "kgb9TZFKAi76k_WS1XGKe"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "ip_IdAbOuzBNe3y9zStfu",
+            "kgb9TZFKAi76k_WS1XGKe"
+          ]
+        }
+      }
+    },
+    {
+      "id": "crypts-stair-mouth",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "nevermore-poe-statue",
+              "label": "up the concealed stair to the statue",
+              "bidirectional": true,
+              "state": "hidden"
+            },
+            {
+              "targetId": "crypts-gate",
+              "label": "through to the iron gate",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "crypts-gate",
+              "label": "Poe entrance passage",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "ip_IdAbOuzBNe3y9zStfu",
+            "n_rYk1EIrauNJrk2ltzKO"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "ip_IdAbOuzBNe3y9zStfu",
+            "n_rYk1EIrauNJrk2ltzKO"
+          ]
+        }
+      }
+    },
+    {
+      "id": "crypts-tunnel-mouth",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "ravencroft-iron-maiden",
+              "label": "back through the maiden",
+              "bidirectional": true,
+              "state": "hidden"
+            },
+            {
+              "targetId": "crypts-gate",
+              "label": "through to the iron gate",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "crypts-gate",
+              "label": "Ravencroft entrance passage",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "ip_IdAbOuzBNe3y9zStfu",
+            "nPZtleNlF6_eQazEqjPDu"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "ip_IdAbOuzBNe3y9zStfu",
+            "nPZtleNlF6_eQazEqjPDu"
+          ]
+        }
+      }
+    },
+    {
+      "id": "crypts-crawlspace",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "dorms-common",
+              "label": "the vent back to the dorm common room",
+              "bidirectional": true,
+              "state": "hidden"
+            },
+            {
+              "targetId": "crypts-gate",
+              "label": "out into the gate chamber",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "crypts-gate",
+              "label": "Crawlspace entrance passage",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "ip_IdAbOuzBNe3y9zStfu"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "ip_IdAbOuzBNe3y9zStfu"
+          ]
+        }
+      }
+    },
+    {
+      "id": "crypts-portrait",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "crypts-gate",
+              "label": "back toward the iron gate",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-holding",
+              "label": "away from the canvas, into the holding dark",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-door-1",
+              "label": "deeper, to the first ritual door",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": []
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "htp4JkccoBm6ZN4ufNeXJ",
+            "ip_IdAbOuzBNe3y9zStfu"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "htp4JkccoBm6ZN4ufNeXJ",
+            "ip_IdAbOuzBNe3y9zStfu"
+          ]
+        }
+      }
+    },
+    {
+      "id": "crypts-breath",
+      "fields": {
+        "description": {
+          "before": "A short stone hall after the first chamber. The air is thicker. Echoes of the rite linger a few seconds longer than physics allows.",
+          "after": "A short descending stone hall immediately beyond the Door of First Touch. The air grows warmer between the first and second levels. Back up is the first door; ahead the passage opens into the Chamber of Mouths."
+        },
+        "links": {
+          "before": [
+            {
+              "targetId": "crypts-chamber-1",
+              "label": "back to the Chamber of Caresses",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-door-2",
+              "label": "down to the Door of Worship",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "crypts-chamber-2",
+              "label": "Breath Passage and second chamber",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "O_n4faQZCivBtRfyAL8yu",
+            "ip_IdAbOuzBNe3y9zStfu"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "O_n4faQZCivBtRfyAL8yu",
+            "ip_IdAbOuzBNe3y9zStfu"
+          ]
+        },
+        "parentId": {
+          "before": "crypts-first-rite",
+          "after": "crypts-second-rite"
+        },
+        "sortOrder": {
+          "before": 2,
+          "after": 0
+        }
+      }
+    },
+    {
+      "id": "crypts-echo",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "crypts-chamber-2",
+              "label": "back into the Chamber of Mouths",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-door-3",
+              "label": "down to the Door of Three",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": []
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "lviqc57Vx1BgY-qwyWbxt",
+            "ip_IdAbOuzBNe3y9zStfu"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "lviqc57Vx1BgY-qwyWbxt",
+            "ip_IdAbOuzBNe3y9zStfu"
+          ]
+        },
+        "sortOrder": {
+          "before": 2,
+          "after": 3
+        }
+      }
+    },
+    {
+      "id": "crypts-vestment",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "crypts-chamber-3",
+              "label": "back into the Chamber of Harmonies",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": []
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "oaz4jkf1n_QgP-Sq_epJ6",
+            "ip_IdAbOuzBNe3y9zStfu"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "kgb9TZFKAi76k_WS1XGKe",
+            "ip_IdAbOuzBNe3y9zStfu"
+          ]
+        },
+        "modelMemory": {
+          "before": "Thing's preferred station when she 'assists' a party. Not a rite room.",
+          "after": "Preparation and recovery alcove off Threshold Hall. Shelves hold the existing wraps, oils and belongings. It is not a rite chamber and does not lead around any progression door."
+        },
+        "parentId": {
+          "before": "crypts-union",
+          "after": "crypts-threshold"
+        },
+        "sortOrder": {
+          "before": 2,
+          "after": 6
+        }
+      }
+    },
+    {
+      "id": "crypts-approach",
+      "fields": {
+        "description": {
+          "before": "A long hall into the last chamber. Blue flame here is almost white. Footsteps come back wrong.",
+          "after": "A long, damp stone hall reached by descending beyond the Door of Three. Blue flame here is almost white. Behind lies Union; ahead the hall opens onto the Obsidian Altar. Footsteps return with an unfamiliar delay."
+        },
+        "links": {
+          "before": [
+            {
+              "targetId": "crypts-chamber-3",
+              "label": "back up to the Chamber of Harmonies",
+              "bidirectional": true,
+              "state": "available"
+            },
+            {
+              "targetId": "crypts-altar",
+              "label": "on to the obsidian altar",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": [
+            {
+              "targetId": "crypts-altar",
+              "label": "Sanctuary approach",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ]
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "I8MjOJKPBSgcZ6uN_x5sp",
+            "cWowJdGQyZYMaIC79KpTn"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "I8MjOJKPBSgcZ6uN_x5sp",
+            "cWowJdGQyZYMaIC79KpTn"
+          ]
+        }
+      }
+    },
+    {
+      "id": "crypts-vault",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "crypts-altar",
+              "label": "back to the altar",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": []
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "I8MjOJKPBSgcZ6uN_x5sp"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "I8MjOJKPBSgcZ6uN_x5sp"
+          ]
+        }
+      }
+    },
+    {
+      "id": "crypts-seed",
+      "fields": {
+        "links": {
+          "before": [
+            {
+              "targetId": "crypts-altar",
+              "label": "back to the altar",
+              "bidirectional": true,
+              "state": "available"
+            }
+          ],
+          "after": []
+        },
+        "lorebookEntryIds": {
+          "before": [
+            "I8MjOJKPBSgcZ6uN_x5sp"
+          ],
+          "after": [
+            "nevermore-directory-v2-crypt",
+            "I8MjOJKPBSgcZ6uN_x5sp"
+          ]
+        }
+      }
+    },
+    {
+      "id": "woods-cabin",
+      "operation": "add",
+      "parentId": "woods-ridge"
+    },
+    {
+      "id": "woods-quarry",
+      "operation": "add",
+      "parentId": "woods-blackwater"
+    },
+    {
+      "id": "woods-clearing",
+      "operation": "add",
+      "parentId": "woods-western"
+    },
+    {
+      "id": "woods-cellar",
+      "operation": "add",
+      "parentId": "woods-western"
+    },
+    {
+      "id": "woods-stones",
+      "operation": "add",
+      "parentId": "woods-western"
+    }
+  ],
+  "controlledEntrances": [
+    [
+      "nevermore-poe-statue",
+      "crypts-stair-mouth"
+    ],
+    [
+      "ravencroft-iron-maiden",
+      "crypts-tunnel-mouth"
+    ],
+    [
+      "dorms-common",
+      "crypts-crawlspace"
+    ]
+  ],
+  "progressionGates": [
+    [
+      "crypts-door-1",
+      "crypts-breath"
+    ],
+    [
+      "crypts-door-2",
+      "crypts-chamber-3"
+    ],
+    [
+      "crypts-door-3",
+      "crypts-approach"
+    ]
+  ]
+}

@@ -1,0 +1,14 @@
+interface:
+  display_name: Marinara World Maps
+  short_description: Build coherent worlds, map art and portable packs
+  default_prompt: Use $marinara-world-maps to build an offline-authored hierarchical
+    world with source-verified mechanics, coherent artwork and portable lore.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

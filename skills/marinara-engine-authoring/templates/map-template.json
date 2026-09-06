@@ -1,0 +1,157 @@
+{
+  "version": 1,
+  "definition": {
+    "schemaVersion": 1,
+    "ownerMode": "roleplay",
+    "enabled": false,
+    "revision": 0,
+    "startingLocationId": "hollow-town-square",
+    "locations": [
+      {
+        "id": "ashen-vale",
+        "parentId": null,
+        "name": "The Ashen Vale",
+        "kind": "region",
+        "description": "A basin of grey farmland under a sky that never fully clears. Ash from the northern ridge settles on everything.",
+        "modelMemory": "Ash fall is constant but harmless. Locals brush it off doorsteps every morning without comment.",
+        "awarenessSummary": "A grey farming basin under permanent ashfall.",
+        "icon": "mountain",
+        "lorebookEntryIds": [],
+        "childPresentation": "map",
+        "links": [],
+        "status": "active",
+        "sortOrder": 0
+      },
+      {
+        "id": "hollow-town",
+        "parentId": "ashen-vale",
+        "name": "Hollow",
+        "kind": "settlement",
+        "description": "The only town in the vale. Two hundred people, one road in, one road out.",
+        "awarenessSummary": "A small farming town of two hundred.",
+        "icon": "home",
+        "lorebookEntryIds": [],
+        "childPresentation": "map",
+        "placement": { "x": 48, "y": 55 },
+        "links": [],
+        "status": "active",
+        "sortOrder": 0
+      },
+      {
+        "id": "hollow-town-square",
+        "parentId": "hollow-town",
+        "name": "Town Square",
+        "kind": "place",
+        "description": "A packed-dirt square with a dry fountain at its center and a noticeboard nobody reads.",
+        "awarenessSummary": "The town's open square, with a dry fountain.",
+        "icon": "map-pin",
+        "lorebookEntryIds": [],
+        "childPresentation": "list",
+        "placement": { "x": 50, "y": 50 },
+        "links": [
+          { "targetId": "hollow-tavern", "label": "across the square", "bidirectional": true, "state": "available" },
+          { "targetId": "hollow-mill", "label": "down the east lane", "bidirectional": true, "state": "available" }
+        ],
+        "status": "active",
+        "sortOrder": 0
+      },
+      {
+        "id": "hollow-tavern",
+        "parentId": "hollow-town",
+        "name": "The Sifted Grain",
+        "kind": "building",
+        "description": "A low tavern with a slate roof. The common room is the warmest place in Hollow.",
+        "modelMemory": "The innkeeper, Bel, keeps a ledger of who owes what and never forgets a debt.",
+        "awarenessSummary": "The town tavern and inn.",
+        "icon": "beer",
+        "lorebookEntryIds": [],
+        "childPresentation": "layers",
+        "placement": { "x": 62, "y": 44 },
+        "links": [],
+        "status": "active",
+        "sortOrder": 1
+      },
+      {
+        "id": "hollow-tavern-common",
+        "parentId": "hollow-tavern",
+        "name": "Common Room",
+        "kind": "floor",
+        "description": "Ground floor. Long tables, a hearth, and the bar along the back wall.",
+        "lorebookEntryIds": [],
+        "childPresentation": "list",
+        "layerOrder": 0,
+        "links": [],
+        "status": "active",
+        "sortOrder": 0
+      },
+      {
+        "id": "hollow-tavern-rooms",
+        "parentId": "hollow-tavern",
+        "name": "Upstairs Rooms",
+        "kind": "floor",
+        "description": "Four rented rooms off a narrow landing.",
+        "lorebookEntryIds": [],
+        "childPresentation": "list",
+        "layerOrder": 1,
+        "links": [],
+        "status": "active",
+        "sortOrder": 1
+      },
+      {
+        "id": "hollow-mill",
+        "parentId": "hollow-town",
+        "name": "The Old Mill",
+        "kind": "building",
+        "description": "A stone mill on the creek. The wheel has not turned in six years.",
+        "awarenessSummary": "A disused stone mill on the creek.",
+        "icon": "cog",
+        "lorebookEntryIds": [],
+        "childPresentation": "list",
+        "placement": { "x": 33, "y": 61 },
+        "links": [
+          { "targetId": "hollow-cellar", "label": "trapdoor in the floor", "bidirectional": true, "state": "hidden" }
+        ],
+        "status": "active",
+        "sortOrder": 2
+      },
+      {
+        "id": "hollow-cellar",
+        "parentId": "hollow-mill",
+        "name": "Flooded Cellar",
+        "kind": "room",
+        "description": "Ankle-deep water and a door that does not belong to the mill.",
+        "modelMemory": "The far door is older than the mill and is not on any survey of the vale.",
+        "lorebookEntryIds": [],
+        "childPresentation": "list",
+        "links": [],
+        "status": "active",
+        "sortOrder": 0
+      }
+    ]
+  },
+  "hierarchyProfile": {
+    "version": 1,
+    "mode": "template",
+    "name": "Default location types",
+    "showConnections": true,
+    "types": [
+      { "id": "type_region", "label": "Region", "baseKind": "region" },
+      { "id": "type_settlement", "label": "Settlement", "baseKind": "settlement" },
+      { "id": "type_place", "label": "Place", "baseKind": "place" },
+      { "id": "type_building", "label": "Building", "baseKind": "building" },
+      { "id": "type_floor", "label": "Floor", "baseKind": "floor" },
+      { "id": "type_room", "label": "Room", "baseKind": "room" }
+    ],
+    "locationTypeIds": {
+      "ashen-vale": "type_region",
+      "hollow-town": "type_settlement",
+      "hollow-town-square": "type_place",
+      "hollow-tavern": "type_building",
+      "hollow-tavern-common": "type_floor",
+      "hollow-tavern-rooms": "type_floor",
+      "hollow-mill": "type_building",
+      "hollow-cellar": "type_room"
+    },
+    "linkPresentations": {}
+  }
+}

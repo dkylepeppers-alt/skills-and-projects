@@ -1,0 +1,61 @@
+{
+  "note": "Companion authoring manifest, NOT a native map envelope field. Repeat records for every location including floors and rooms. Null means not recorded, not verified.",
+  "project": "Salt House",
+  "styleBible": "style-bible.md",
+  "locations": [
+    {
+      "locationId": "salt-house.ground",
+      "referencePolicy": "required",
+      "backgroundPolicy": "required",
+      "reason": "Ground-floor landing hosts scenes; map presentation needs a floor canvas.",
+      "assets": [
+        {
+          "role": "reference",
+          "sourcePath": "art/reference/salt-house.ground.png",
+          "sourceImageId": null,
+          "status": "planned",
+          "camera": "Eye-level at stair arrival; wide enough to show both doors.",
+          "prompt": "Use approved Salt House material and light grammar. Show the worn oak stair, blue tile border and brass tide bell. Empty reusable landing; no text.",
+          "invariants": [
+            "oak stair on west wall",
+            "blue floor-tile border",
+            "bell beside north doorway"
+          ],
+          "referenceSources": [],
+          "provider": null,
+          "model": null,
+          "seed": null,
+          "width": null,
+          "height": null,
+          "sha256": null,
+          "revision": 1,
+          "provenanceAndLicense": null,
+          "visualReview": "pending",
+          "runtimeDisplayCheck": "not-run"
+        },
+        {
+          "role": "background",
+          "sourcePath": "art/background/salt-house.ground.png",
+          "status": "planned",
+          "camera": "Exact authored top-down floor layout; texture may be illustrated.",
+          "prompt": "Preserve the approved floor geometry. Keep marker zones calm and omit baked-in labels.",
+          "placementReview": "pending"
+        }
+      ]
+    },
+    {
+      "locationId": "salt-house.kitchen",
+      "referencePolicy": "required",
+      "backgroundPolicy": "intentionally-none",
+      "reason": "Playable room with list presentation and no child-map canvas.",
+      "assets": [
+        {
+          "role": "reference",
+          "sourcePath": "art/reference/salt-house.kitchen.png",
+          "status": "planned",
+          "prompt": "Write a camera-specific prompt after approving the style bible."
+        }
+      ]
+    }
+  ]
+}

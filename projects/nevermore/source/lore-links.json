@@ -1,0 +1,757 @@
+{
+  "jericho-woods": [
+    {
+      "id": "nevermore-directory-v2-woods"
+    },
+    {
+      "id": "mYfUaxUUp-lZFVl5W9WK0"
+    }
+  ],
+  "jericho-town": [
+    {
+      "id": "nevermore-directory-v2-woods"
+    },
+    {
+      "id": "mYfUaxUUp-lZFVl5W9WK0"
+    }
+  ],
+  "jericho-main-street": [
+    {
+      "id": "nevermore-directory-v2-woods"
+    },
+    {
+      "id": "mYfUaxUUp-lZFVl5W9WK0"
+    }
+  ],
+  "nevermore-grounds": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "n_rYk1EIrauNJrk2ltzKO"
+    },
+    {
+      "id": "7ckvAS-DAsFSW0vbnvJlF"
+    },
+    {
+      "id": "BElmSYs8bzA85Fe7re12Z"
+    }
+  ],
+  "nevermore-gates": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "n_rYk1EIrauNJrk2ltzKO"
+    },
+    {
+      "id": "7ckvAS-DAsFSW0vbnvJlF"
+    }
+  ],
+  "nevermore-quad": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "n_rYk1EIrauNJrk2ltzKO"
+    },
+    {
+      "id": "7ckvAS-DAsFSW0vbnvJlF"
+    }
+  ],
+  "nevermore-poe-statue": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "n_rYk1EIrauNJrk2ltzKO"
+    },
+    {
+      "id": "kgb9TZFKAi76k_WS1XGKe"
+    },
+    {
+      "id": "ip_IdAbOuzBNe3y9zStfu"
+    }
+  ],
+  "nevermore-lake": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "n_rYk1EIrauNJrk2ltzKO"
+    }
+  ],
+  "nevermore-oaks": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "n_rYk1EIrauNJrk2ltzKO"
+    }
+  ],
+  "nevermore-cemetery": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "TJF1YhMonWKX8ZYMW77pH"
+    },
+    {
+      "id": "iE6G75LbMienV_xzASCUU"
+    }
+  ],
+  "nevermore-dead-gardens": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "TJF1YhMonWKX8ZYMW77pH"
+    },
+    {
+      "id": "iE6G75LbMienV_xzASCUU"
+    }
+  ],
+  "nevermore-botany": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "n_rYk1EIrauNJrk2ltzKO"
+    },
+    {
+      "id": "7ckvAS-DAsFSW0vbnvJlF"
+    }
+  ],
+  "nevermore-main-hall": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "aFv2LbazQ96NEpPVr_0ZT"
+    },
+    {
+      "id": "7ckvAS-DAsFSW0vbnvJlF"
+    }
+  ],
+  "nevermore-dorms": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "aNjV2yTAAK6YB1ZNJmrP4"
+    },
+    {
+      "id": "7ckvAS-DAsFSW0vbnvJlF"
+    }
+  ],
+  "main-hall-foyer": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "aFv2LbazQ96NEpPVr_0ZT"
+    }
+  ],
+  "main-hall-weems": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "aFv2LbazQ96NEpPVr_0ZT"
+    },
+    {
+      "id": "DXSIAQyH7a5BjMqnL3Qsp"
+    },
+    {
+      "id": "BElmSYs8bzA85Fe7re12Z"
+    }
+  ],
+  "main-hall-dining": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "aFv2LbazQ96NEpPVr_0ZT"
+    }
+  ],
+  "main-hall-classrooms": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "aFv2LbazQ96NEpPVr_0ZT"
+    }
+  ],
+  "main-hall-fencing": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "aFv2LbazQ96NEpPVr_0ZT"
+    }
+  ],
+  "dorms-common": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "aNjV2yTAAK6YB1ZNJmrP4"
+    }
+  ],
+  "dorms-upper": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "aNjV2yTAAK6YB1ZNJmrP4"
+    }
+  ],
+  "dorm-wednesday-enid": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "aNjV2yTAAK6YB1ZNJmrP4"
+    },
+    {
+      "id": "CvmzKzAZcsJxd48pMZuqD"
+    },
+    {
+      "id": "UvYMZqpn4czDr472aqNDF"
+    }
+  ],
+  "ravencroft-gates": [
+    {
+      "id": "nevermore-directory-v2-ravencroft"
+    },
+    {
+      "id": "iE6G75LbMienV_xzASCUU"
+    },
+    {
+      "id": "TJF1YhMonWKX8ZYMW77pH"
+    }
+  ],
+  "ravencroft-manor": [
+    {
+      "id": "nevermore-directory-v2-ravencroft"
+    },
+    {
+      "id": "iE6G75LbMienV_xzASCUU"
+    },
+    {
+      "id": "nPZtleNlF6_eQazEqjPDu"
+    },
+    {
+      "id": "BElmSYs8bzA85Fe7re12Z"
+    }
+  ],
+  "ravencroft-basement": [
+    {
+      "id": "nevermore-directory-v2-ravencroft"
+    },
+    {
+      "id": "nPZtleNlF6_eQazEqjPDu"
+    },
+    {
+      "id": "kgb9TZFKAi76k_WS1XGKe"
+    },
+    {
+      "id": "ip_IdAbOuzBNe3y9zStfu"
+    }
+  ],
+  "ravencroft-iron-maiden": [
+    {
+      "id": "nevermore-directory-v2-ravencroft"
+    },
+    {
+      "id": "nPZtleNlF6_eQazEqjPDu"
+    },
+    {
+      "id": "ip_IdAbOuzBNe3y9zStfu"
+    }
+  ],
+  "ravencroft-parlor": [
+    {
+      "id": "nevermore-directory-v2-ravencroft"
+    },
+    {
+      "id": "nPZtleNlF6_eQazEqjPDu"
+    },
+    {
+      "id": "4tRmJ-h6xHh651CyKLYlM"
+    }
+  ],
+  "ravencroft-family": [
+    {
+      "id": "nevermore-directory-v2-ravencroft"
+    },
+    {
+      "id": "nPZtleNlF6_eQazEqjPDu"
+    }
+  ],
+  "ravencroft-morticia-chamber": [
+    {
+      "id": "nevermore-directory-v2-ravencroft"
+    },
+    {
+      "id": "nPZtleNlF6_eQazEqjPDu"
+    },
+    {
+      "id": "4tRmJ-h6xHh651CyKLYlM"
+    }
+  ],
+  "ravencroft-walk": [
+    {
+      "id": "nevermore-directory-v2-ravencroft"
+    },
+    {
+      "id": "nPZtleNlF6_eQazEqjPDu"
+    }
+  ],
+  "crypts-labyrinth": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "kgb9TZFKAi76k_WS1XGKe"
+    },
+    {
+      "id": "cWowJdGQyZYMaIC79KpTn"
+    }
+  ],
+  "crypts-holding": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "ip_IdAbOuzBNe3y9zStfu"
+    }
+  ],
+  "crypts-first-rite": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "O_n4faQZCivBtRfyAL8yu"
+    },
+    {
+      "id": "cWowJdGQyZYMaIC79KpTn"
+    }
+  ],
+  "crypts-chamber-1": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "O_n4faQZCivBtRfyAL8yu"
+    },
+    {
+      "id": "cWowJdGQyZYMaIC79KpTn"
+    }
+  ],
+  "crypts-door-1": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "O_n4faQZCivBtRfyAL8yu"
+    },
+    {
+      "id": "cWowJdGQyZYMaIC79KpTn"
+    }
+  ],
+  "crypts-second-rite": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "lviqc57Vx1BgY-qwyWbxt"
+    },
+    {
+      "id": "cWowJdGQyZYMaIC79KpTn"
+    }
+  ],
+  "crypts-chamber-2": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "lviqc57Vx1BgY-qwyWbxt"
+    },
+    {
+      "id": "cWowJdGQyZYMaIC79KpTn"
+    }
+  ],
+  "crypts-door-2": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "lviqc57Vx1BgY-qwyWbxt"
+    },
+    {
+      "id": "cWowJdGQyZYMaIC79KpTn"
+    }
+  ],
+  "crypts-union": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "oaz4jkf1n_QgP-Sq_epJ6"
+    },
+    {
+      "id": "cWowJdGQyZYMaIC79KpTn"
+    }
+  ],
+  "crypts-chamber-3": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "oaz4jkf1n_QgP-Sq_epJ6"
+    },
+    {
+      "id": "cWowJdGQyZYMaIC79KpTn"
+    }
+  ],
+  "crypts-door-3": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "oaz4jkf1n_QgP-Sq_epJ6"
+    },
+    {
+      "id": "cWowJdGQyZYMaIC79KpTn"
+    }
+  ],
+  "crypts-covenant": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "I8MjOJKPBSgcZ6uN_x5sp"
+    },
+    {
+      "id": "cWowJdGQyZYMaIC79KpTn"
+    }
+  ],
+  "crypts-altar": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "I8MjOJKPBSgcZ6uN_x5sp"
+    },
+    {
+      "id": "cWowJdGQyZYMaIC79KpTn"
+    },
+    {
+      "id": "LIfMiWh7cCv4qha5Az8EL"
+    }
+  ],
+  "woods-ridge": [
+    {
+      "id": "nevermore-directory-v2-woods"
+    }
+  ],
+  "woods-blackwater": [
+    {
+      "id": "nevermore-directory-v2-woods"
+    }
+  ],
+  "woods-western": [
+    {
+      "id": "nevermore-directory-v2-woods"
+    }
+  ],
+  "woods-junction": [
+    {
+      "id": "nevermore-directory-v2-woods"
+    }
+  ],
+  "woods-bridge": [
+    {
+      "id": "nevermore-directory-v2-woods"
+    }
+  ],
+  "woods-sawmill": [
+    {
+      "id": "nevermore-directory-v2-woods"
+    }
+  ],
+  "woods-lookout": [
+    {
+      "id": "nevermore-directory-v2-woods"
+    }
+  ],
+  "main-hall-ground": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "aFv2LbazQ96NEpPVr_0ZT"
+    }
+  ],
+  "main-hall-upper": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "aFv2LbazQ96NEpPVr_0ZT"
+    }
+  ],
+  "dorms-ground": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "aNjV2yTAAK6YB1ZNJmrP4"
+    }
+  ],
+  "dorm-pugsley": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "aNjV2yTAAK6YB1ZNJmrP4"
+    },
+    {
+      "id": "5LBs-qv-D9m-xndz9Ot58"
+    }
+  ],
+  "dorm-bianca": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "aNjV2yTAAK6YB1ZNJmrP4"
+    },
+    {
+      "id": "Aqn7raa1iEqpD7mGnmvFP"
+    }
+  ],
+  "dorm-nerissa": [
+    {
+      "id": "nevermore-directory-v2-campus"
+    },
+    {
+      "id": "aNjV2yTAAK6YB1ZNJmrP4"
+    },
+    {
+      "id": "qC-2X7e12UQww19UqT9N5"
+    }
+  ],
+  "ravencroft-meditation": [
+    {
+      "id": "nevermore-directory-v2-ravencroft"
+    },
+    {
+      "id": "nPZtleNlF6_eQazEqjPDu"
+    },
+    {
+      "id": "4tRmJ-h6xHh651CyKLYlM"
+    }
+  ],
+  "ravencroft-main": [
+    {
+      "id": "nevermore-directory-v2-ravencroft"
+    },
+    {
+      "id": "nPZtleNlF6_eQazEqjPDu"
+    },
+    {
+      "id": "iE6G75LbMienV_xzASCUU"
+    }
+  ],
+  "ravencroft-greenhouse": [
+    {
+      "id": "nevermore-directory-v2-ravencroft"
+    },
+    {
+      "id": "nPZtleNlF6_eQazEqjPDu"
+    },
+    {
+      "id": "4tRmJ-h6xHh651CyKLYlM"
+    }
+  ],
+  "ravencroft-gomez-room": [
+    {
+      "id": "nevermore-directory-v2-ravencroft"
+    },
+    {
+      "id": "nPZtleNlF6_eQazEqjPDu"
+    },
+    {
+      "id": "V8bjf4Q4Y-B3ieeLS1sf7"
+    }
+  ],
+  "ravencroft-spare": [
+    {
+      "id": "nevermore-directory-v2-ravencroft"
+    },
+    {
+      "id": "nPZtleNlF6_eQazEqjPDu"
+    }
+  ],
+  "ravencroft-upper": [
+    {
+      "id": "nevermore-directory-v2-ravencroft"
+    },
+    {
+      "id": "nPZtleNlF6_eQazEqjPDu"
+    }
+  ],
+  "crypts-threshold": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "kgb9TZFKAi76k_WS1XGKe"
+    },
+    {
+      "id": "ip_IdAbOuzBNe3y9zStfu"
+    },
+    {
+      "id": "htp4JkccoBm6ZN4ufNeXJ"
+    }
+  ],
+  "crypts-gate": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "ip_IdAbOuzBNe3y9zStfu"
+    },
+    {
+      "id": "kgb9TZFKAi76k_WS1XGKe"
+    }
+  ],
+  "crypts-stair-mouth": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "ip_IdAbOuzBNe3y9zStfu"
+    },
+    {
+      "id": "n_rYk1EIrauNJrk2ltzKO"
+    }
+  ],
+  "crypts-tunnel-mouth": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "ip_IdAbOuzBNe3y9zStfu"
+    },
+    {
+      "id": "nPZtleNlF6_eQazEqjPDu"
+    }
+  ],
+  "crypts-crawlspace": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "ip_IdAbOuzBNe3y9zStfu"
+    }
+  ],
+  "crypts-portrait": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "htp4JkccoBm6ZN4ufNeXJ"
+    },
+    {
+      "id": "ip_IdAbOuzBNe3y9zStfu"
+    }
+  ],
+  "crypts-breath": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "O_n4faQZCivBtRfyAL8yu"
+    },
+    {
+      "id": "ip_IdAbOuzBNe3y9zStfu"
+    }
+  ],
+  "crypts-echo": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "lviqc57Vx1BgY-qwyWbxt"
+    },
+    {
+      "id": "ip_IdAbOuzBNe3y9zStfu"
+    }
+  ],
+  "crypts-vestment": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "kgb9TZFKAi76k_WS1XGKe"
+    },
+    {
+      "id": "ip_IdAbOuzBNe3y9zStfu"
+    }
+  ],
+  "crypts-approach": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "I8MjOJKPBSgcZ6uN_x5sp"
+    },
+    {
+      "id": "cWowJdGQyZYMaIC79KpTn"
+    }
+  ],
+  "crypts-vault": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "I8MjOJKPBSgcZ6uN_x5sp"
+    }
+  ],
+  "crypts-seed": [
+    {
+      "id": "nevermore-directory-v2-crypt"
+    },
+    {
+      "id": "I8MjOJKPBSgcZ6uN_x5sp"
+    }
+  ],
+  "woods-cabin": [
+    {
+      "id": "nevermore-directory-v2-woods"
+    }
+  ],
+  "woods-quarry": [
+    {
+      "id": "nevermore-directory-v2-woods"
+    }
+  ],
+  "woods-clearing": [
+    {
+      "id": "nevermore-directory-v2-woods"
+    }
+  ],
+  "woods-cellar": [
+    {
+      "id": "nevermore-directory-v2-woods"
+    }
+  ],
+  "woods-stones": [
+    {
+      "id": "nevermore-directory-v2-woods"
+    }
+  ]
+}

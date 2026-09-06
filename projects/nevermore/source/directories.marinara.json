@@ -1,0 +1,70 @@
+{
+  "lorebook": {
+    "id": "nevermore-v2-directories",
+    "name": "Nevermore Regional Directories v2",
+    "enabled": true,
+    "tokenBudget": 4096,
+    "entryLimit": 4,
+    "recursiveScanning": false,
+    "maxRecursionDepth": 1
+  },
+  "entries": [
+    {
+      "id": "nevermore-directory-v2-woods",
+      "name": "Jericho Woodlands Directory",
+      "content": "Outdoor sectors of Jericho Woodlands: Ridge Woods [woods-ridge], Blackwater Hollow [woods-blackwater], Western Old Woods [woods-western]. Main woodland loop: Jericho > Old Stone Bridge [woods-bridge] > Abandoned Sawmill [woods-sawmill] > Boundary Trail Junction [woods-junction] > Academy Gates. Ridge branches: Ridge Lookout [woods-lookout], Weathered Ranger Cabin [woods-cabin]. Sawmill haul track: Flooded Quarry [woods-quarry]. Western branch: Charcoal Clearing [woods-clearing], then Root Cellar Ruin [woods-cellar] or Standing-Stone Ring [woods-stones]. Ravencroft remains inside academy grounds. These woods add no crypt entrances.",
+      "folderId": null,
+      "enabled": true,
+      "constant": false,
+      "keys": [],
+      "position": 0,
+      "order": 100,
+      "preventRecursion": true,
+      "excludeRecursion": true,
+      "probability": 100
+    },
+    {
+      "id": "nevermore-directory-v2-campus",
+      "name": "Nevermore Campus Directory",
+      "content": "Nevermore: Academy Gates [nevermore-gates], Quad [nevermore-quad], Poe Statue [nevermore-poe-statue], Lake [nevermore-lake], Old Oaks [nevermore-oaks], Dead Gardens [nevermore-dead-gardens], Cemetery [nevermore-cemetery], Botany Houses [nevermore-botany]. Main Academic Hall: Foyer, Weems’s Office, Dining Hall; upper Classroom Corridor and Fencing Salle. Dorm Common Room [dorms-common] leads to Dorm Upper Floor [dorms-upper], the shared corridor for Wednesday and Enid [dorm-wednesday-enid], Pugsley [dorm-pugsley], Bianca [dorm-bianca], Nerissa [dorm-nerissa]. Ravencroft occupies western academy land. Boundary Trail Junction [woods-junction] joins the approach outside Academy Gates.",
+      "folderId": null,
+      "enabled": true,
+      "constant": false,
+      "keys": [],
+      "position": 0,
+      "order": 100,
+      "preventRecursion": true,
+      "excludeRecursion": true,
+      "probability": 100
+    },
+    {
+      "id": "nevermore-directory-v2-ravencroft",
+      "name": "Ravencroft Directory",
+      "content": "One house on western Nevermore grounds. Gates [ravencroft-gates] connect to Dead Gardens and Cemetery. Main floor: Parlor [ravencroft-parlor], Morticia’s Greenhouse [ravencroft-greenhouse]. Basement [ravencroft-basement]: Meditation Chamber [ravencroft-meditation], Iron Maiden Closet [ravencroft-iron-maiden]. Family Wing [ravencroft-family] is the shared gallery for Morticia [ravencroft-morticia-chamber], Gomez [ravencroft-gomez-room], Spare Chamber [ravencroft-spare]; it connects to the roof landing [ravencroft-upper] and Widow’s Walk [ravencroft-walk]. Bedrooms have no connecting doors. Wednesday and Pugsley live in the dorms.",
+      "folderId": null,
+      "enabled": true,
+      "constant": false,
+      "keys": [],
+      "position": 0,
+      "order": 100,
+      "preventRecursion": true,
+      "excludeRecursion": true,
+      "probability": 100
+    },
+    {
+      "id": "nevermore-directory-v2-crypt",
+      "name": "Crypt Route and Stage Directory",
+      "content": "One underground complex with five physical levels. Arrival mouths converge at Iron Gate, then Threshold Hall [crypts-holding]; Living Portrait and Vestment Alcove branch here. Descent: Chamber of Caresses [crypts-chamber-1] > Door of First Touch [crypts-door-1] > Breath Passage [crypts-breath] > Chamber of Mouths [crypts-chamber-2] > Door of Worship [crypts-door-2] > Chamber of Harmonies [crypts-chamber-3] > Door of Three [crypts-door-3] > Approach Hall [crypts-approach] > Obsidian Altar [crypts-altar]. Echo Niche branches from the second chamber. Relic Vault and Seed Niche branch from the altar. Each stage satisfies only its exit door; reaching the altar is not the boon. Later map roots preserve gate boundaries; stored hidden/blocked links need explicit owner edits.",
+      "folderId": null,
+      "enabled": true,
+      "constant": false,
+      "keys": [],
+      "position": 0,
+      "order": 100,
+      "preventRecursion": true,
+      "excludeRecursion": true,
+      "probability": 100
+    }
+  ],
+  "folders": []
+}

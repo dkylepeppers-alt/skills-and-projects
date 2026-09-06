@@ -1,0 +1,29 @@
+[
+  {
+    "id": "your-package-id",
+    "name": "Your Package Name",
+    "description": "One or two sentences describing what the agent does. The builder appends the activation sentence from scripts/catalog-package-guidance.mjs.",
+    "phase": "post_processing",
+    "enabledByDefault": false,
+    "defaultInjectAsSection": true,
+    "category": "tracker",
+    "modeAllowlist": [
+      "roleplay"
+    ],
+    "defaultTools": [],
+    "author": "Pasta Devs",
+    "defaultSettings": {
+      "defaultPromptTemplateName": "Default Preset Name",
+      "defaultPromptTemplateDescription": "One line describing the built-in default."
+    },
+    "defaultPromptTemplate": "Track <WHAT> after the latest assistant message. Respond ONLY with valid JSON.\nRecord only <WHAT COUNTS>. Do not record <WHAT DOES NOT COUNT>. Preserve existing state when the latest turn does not change it.\nWhen updating an existing record, copy its <keyField> EXACTLY as it appears in the current list — do not reword, recapitalize, or paraphrase it, or you will create a duplicate instead of updating.\nWhen you send <listField> on an update, include the COMPLETE list (carry over the unchanged entries too), because the list you send replaces the stored one.\nOutput format:\n{\n  \"updates\": [\n    {\n      \"action\": \"create|update|remove\",\n      \"<keyField>\": \"string\",\n      \"<listField>\": [\"string\"],\n      \"notes\": \"string — any relevant context\"\n    }\n  ]\n}\nIf nothing changed this turn, return: { \"updates\": [] }",
+    "promptTemplates": [
+      {
+        "id": "custom",
+        "name": "Custom",
+        "description": "A starter you edit in agent settings. Replace the [YOUR INSTRUCTIONS] line with your own rules; keep the output format below so the tracker keeps working.",
+        "promptTemplate": "[YOUR INSTRUCTIONS]\nRespond ONLY with valid JSON.\nOutput format:\n{\n  \"updates\": [\n    {\n      \"action\": \"create|update|remove\",\n      \"<keyField>\": \"string\",\n      \"<listField>\": [\"string\"],\n      \"notes\": \"string\"\n    }\n  ]\n}\nIf nothing changed this turn, return: { \"updates\": [] }"
+      }
+    ]
+  }
+]

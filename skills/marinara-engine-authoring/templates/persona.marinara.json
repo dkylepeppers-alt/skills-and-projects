@@ -1,0 +1,19 @@
+{
+  "type": "marinara_persona",
+  "version": 1,
+  "exportedAt": "2026-01-01T00:00:00.000Z",
+  "data": {
+    "name": "Wren",
+    "phoneticName": "Ren",
+    "description": "A surveyor sent to map the vale for a road that will probably never be built.",
+    "personality": "Observant, dry, slow to commit to an opinion out loud.",
+    "backstory": "Six years of survey work in three provinces. This is the first posting nobody competed for.",
+    "appearance": "Travel coat, ink-stained cuffs, a satchel of rolled paper that never leaves their shoulder.",
+    "scenario": "",
+    "creatorNotes": "Default player persona for the Ashen Vale setting.",
+    "tags": ["ashen-vale", "surveyor"],
+    "personaVersion": "1.0",
+    "versioningEnabled": true,
+    "savedStatusOptions": ["Surveying", "At the Sifted Grain", "Following the creek"]
+  }
+}

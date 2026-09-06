@@ -1,0 +1,92 @@
+{
+  "engineRevision": "f6efd5ee607b2f084ac48ee30807aef04ea8d34f",
+  "agentsRevision": "fc5efce8439a0aa3e20a7b475e8d8d083ffefe15",
+  "locations": 79,
+  "originalIdsPreserved": 67,
+  "knownNames": 50,
+  "omittedKnownNames": 29,
+  "defaultReachable": 54,
+  "controlledCryptLocations": 25,
+  "routeCases": 63,
+  "stages": [
+    {
+      "entrance": "nevermore-poe-statue",
+      "allOpenReachable": 79,
+      "altarRoute": [
+        "dorms-upper",
+        "dorms-common",
+        "nevermore-quad",
+        "nevermore-poe-statue",
+        "crypts-stair-mouth",
+        "crypts-gate",
+        "crypts-holding",
+        "crypts-chamber-1",
+        "crypts-door-1",
+        "crypts-breath",
+        "crypts-chamber-2",
+        "crypts-door-2",
+        "crypts-chamber-3",
+        "crypts-door-3",
+        "crypts-approach",
+        "crypts-altar"
+      ]
+    },
+    {
+      "entrance": "ravencroft-iron-maiden",
+      "allOpenReachable": 79,
+      "altarRoute": [
+        "dorms-upper",
+        "nevermore-dorms",
+        "nevermore-grounds",
+        "ravencroft-manor",
+        "ravencroft-basement",
+        "ravencroft-iron-maiden",
+        "crypts-tunnel-mouth",
+        "crypts-gate",
+        "crypts-holding",
+        "crypts-chamber-1",
+        "crypts-door-1",
+        "crypts-breath",
+        "crypts-chamber-2",
+        "crypts-door-2",
+        "crypts-chamber-3",
+        "crypts-door-3",
+        "crypts-approach",
+        "crypts-altar"
+      ]
+    },
+    {
+      "entrance": "dorms-common",
+      "allOpenReachable": 79,
+      "altarRoute": [
+        "dorms-upper",
+        "dorms-common",
+        "crypts-crawlspace",
+        "crypts-gate",
+        "crypts-holding",
+        "crypts-chamber-1",
+        "crypts-door-1",
+        "crypts-breath",
+        "crypts-chamber-2",
+        "crypts-door-2",
+        "crypts-chamber-3",
+        "crypts-door-3",
+        "crypts-approach",
+        "crypts-altar"
+      ]
+    }
+  ],
+  "portableLoreEntries": 30,
+  "sourceEntriesRecovered": 26,
+  "allLoreBindingsRemapped": true,
+  "changedLore": [
+    "Crypt laterals",
+    "First Rite",
+    "Ravencroft wings",
+    "Second Rite",
+    "The Crypts of Nevermore",
+    "Union"
+  ],
+  "sourceSchemasPassed": true,
+  "runtimeImported": false
+}

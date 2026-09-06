@@ -10,6 +10,35 @@ and honest about what the app implements. Default to authoring outside the app:
 editable map, lore, art sources and manifests first; an importable JSON pack second.
 Operate independently of the general Marinara authoring skill. Leave that skill unchanged.
 
+## Private skills and projects workflow
+
+Use [dkylepeppers-alt/skills-and-projects](https://github.com/dkylepeppers-alt/skills-and-projects)
+as the user's canonical private home for these skills and their project sources.
+Read its current `AGENTS.md`, relevant README, and existing files before editing;
+compare repository and installed skill revisions before reconciling differences.
+
+- Maintain reusable packages under `skills/marinara-engine-authoring/` and
+  `skills/marinara-world-maps/`; keep project-specific content under
+  `projects/<short-name>/`.
+- For Nevermore, use `projects/nevermore/source/` for source material and
+  `projects/nevermore/art/` for artwork. Inspect the project guide and release
+  history to identify the current baseline; do not assume an old chat attachment
+  or a hard-coded release version is current.
+- Follow the repository's branch, validation and Git LFS conventions. Build in
+  ignored `build/` folders and preserve released snapshots under
+  `projects/<short-name>/releases/<version>/`. Treat Nevermore's `toolkit/`
+  as a release-specific snapshot.
+- Keep repository skill copies and installed personal skills aligned when
+  updating a skill; verify each save separately and report any access or sync gap.
+  Preserve source IDs, lore bindings, artwork and unfinished-work status.
+- The private repository owns authored project history; the upstream Engine and
+  Agents implementations remain authoritative for schemas and runtime behavior.
+  Keep upstream checkouts read-only during personal content work.
+- A request for an explanation or review does not authorize project edits.
+  Make task-scoped changes when requested; do not silently change maps, regenerate
+  art, publish publicly, or treat this workflow as blanket merge permission.
+  If repository access fails, state the gap and use supplied files provisionally.
+
 ## Source authority
 
 Read [source-truth.md](references/source-truth.md) before making technical claims.

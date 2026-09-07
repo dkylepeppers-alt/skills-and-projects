@@ -5,7 +5,7 @@
   "distinctFrom": "live-http-engine-receipt",
   "status": "PASS",
   "baseSha": "6b303a99ef97bbab63414bb81b90003ba3b7b079",
-  "featureSha": "0b02031e514a0d10b6d0398b9d88a58b1c9e177e",
+  "featureSha": "5bb138dcb834c7d349204d4c4734f7f6e6e8709b",
   "cases": [
     "false-rumor",
     "stale-sighting",
@@ -17,7 +17,13 @@
     "journal-facts-vs-leads",
     "tracker-duplicate-quest-and-scale-conflict",
     "service-override-closed",
-    "honesty-labels-proposed"
+    "honesty-labels-proposed",
+    "player-unknown-npc-no-placement-leak",
+    "player-character-omit-falseClaim",
+    "appointment-journal-link",
+    "tracker-nativeItemId-nativeBondId-one-clock-per-pair",
+    "communicateReport-updates-rumored",
+    "stale-freshness-in-projection"
   ],
   "companionHostBridge": "PROPOSED",
   "spatialOwner": "PROPOSED",
@@ -26,7 +32,7 @@
   "capabilityDocumentStore": false,
   "archivePresetsFrozen": true,
   "secretsInPlayerView": false,
-  "knowledgeTests": 11,
-  "fullSuitePass": 104,
-  "ranAt": "2026-09-07T18:46:25.500Z"
+  "knowledgeTests": 17,
+  "fullSuitePass": 110,
+  "ranAt": "2026-09-07T19:03:34.188Z"
 }

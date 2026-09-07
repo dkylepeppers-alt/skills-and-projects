@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
   "purpose": "Pinned source revisions for World Map Companion (Task 8 observation/consequences). Inspected checkout SHAs, not a claim about any installed Engine build.",
-  "lockedAt": "2026-09-07T18:50:00Z",
+  "lockedAt": "2026-09-07T19:03:34Z",
   "companion": {
     "repository": "dkylepeppers-alt/skills-and-projects",
     "implementationBranch": "implementation/world-map-companion",
     "implementationTip": "6b303a99ef97bbab63414bb81b90003ba3b7b079",
     "taskBranch": "wmc/task-8-knowledge",
-    "taskTip": "0b02031e514a0d10b6d0398b9d88a58b1c9e177e"
+    "taskTip": "5bb138dcb834c7d349204d4c4734f7f6e6e8709b"
   },
   "engine": {
     "repository": "Pasta-Devs/Marinara-Engine",
@@ -22,7 +22,7 @@
   "notes": [
     "Do not invent Engine remapped IDs or runtimeObservation here.",
     "Task 1-7 evidence remains recorded; user desktop install fields remain UNKNOWN.",
-    "taskTip is pinned to the Task 8 feature commit on wmc/task-8-knowledge after commit.",
+    "taskTip is pinned to the Task 8 Mentor HOLD fix commit on wmc/task-8-knowledge (ancestor of tip).",
     "implementationTip is origin/implementation/world-map-companion @ 6b303a9 (Tasks 1\u20137 merged).",
     "CompanionHostBridge remains PROPOSED adapter; not upstream Engine API.",
     "Spatial-owner adapter remains PROPOSED; no desktop package activate claimed.",

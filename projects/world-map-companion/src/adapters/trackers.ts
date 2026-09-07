@@ -247,6 +247,23 @@ export function linkObjectToInventory(
       },
     };
   }
+  // One native item identity — reject the same nativeItemId on two objects.
+  for (const [objectId, link] of Object.entries(registry.inventoryLinks)) {
+    if (
+      link.nativeItemId === input.nativeItem.nativeItemId &&
+      objectId !== input.object.objectId
+    ) {
+      return {
+        registry,
+        result: {
+          ok: false,
+          honesty: TRACKER_ADAPTER_HONESTY,
+          reason: `duplicate nativeItemId ${input.nativeItem.nativeItemId}: already linked to object ${objectId}`,
+          nativeOwnerInvoked: false,
+        },
+      };
+    }
+  }
   const link: TrackerLink & { kind: "inventory" } = {
     kind: "inventory",
     companionObjectId: input.object.objectId,
@@ -285,8 +302,9 @@ function bondPairKey(a: string, b: string): string {
 }
 
 /**
- * Link a faction clock to a native bond. Rejects conflicting scales for the
- * same actor/target pair.
+ * Link a faction clock to a native bond. One clock per bond-pair is the rule;
+ * rejects a second clock on the same pair (any scale), conflicting scales, and
+ * duplicate nativeBondId across clocks.
  */
 export function linkFactionClockToBond(
   registry: TrackerRegistry,
@@ -312,16 +330,49 @@ export function linkFactionClockToBond(
   }
   const pair = bondPairKey(input.bond.actorId, input.bond.targetId);
   const existingScale = registry.bondScaleByPair[pair];
-  if (existingScale && existingScale !== input.bond.scale) {
+  const existingForThisClock = registry.bondLinks[input.clock.clockId];
+  // One clock per bond-pair (parallel clocks are not intentional).
+  if (existingScale && !existingForThisClock) {
     return {
       registry,
       result: {
         ok: false,
         honesty: TRACKER_ADAPTER_HONESTY,
-        reason: `conflicting bond scale for ${pair}: have ${existingScale}, got ${input.bond.scale}`,
+        reason:
+          existingScale !== input.bond.scale
+            ? `conflicting bond scale for ${pair}: have ${existingScale}, got ${input.bond.scale}`
+            : `one clock per bond-pair: ${pair} already linked (scale ${existingScale})`,
         nativeOwnerInvoked: false,
       },
     };
+  }
+  if (existingForThisClock && existingForThisClock.nativeBondId !== input.bond.nativeBondId) {
+    return {
+      registry,
+      result: {
+        ok: false,
+        honesty: TRACKER_ADAPTER_HONESTY,
+        reason: `clock ${input.clock.clockId} already linked to ${existingForThisClock.nativeBondId}`,
+        nativeOwnerInvoked: false,
+      },
+    };
+  }
+  // Same nativeBondId must not attach to two clocks.
+  for (const [clockId, link] of Object.entries(registry.bondLinks)) {
+    if (
+      link.nativeBondId === input.bond.nativeBondId &&
+      clockId !== input.clock.clockId
+    ) {
+      return {
+        registry,
+        result: {
+          ok: false,
+          honesty: TRACKER_ADAPTER_HONESTY,
+          reason: `duplicate nativeBondId ${input.bond.nativeBondId}: already linked to clock ${clockId}`,
+          nativeOwnerInvoked: false,
+        },
+      };
+    }
   }
   const link: TrackerLink & { kind: "bond" } = {
     kind: "bond",

@@ -96,6 +96,11 @@ export type LocalServiceDef = {
   forcedClosedReason?: string;
 };
 
+export type ServiceOverrideMap = Record<
+  string,
+  { closed: boolean; reason: string; locationId: StableId }
+>;
+
 export type AffordanceContext = {
   knowledge: WorldKnowledgeState;
   observerId: StableId;
@@ -108,6 +113,8 @@ export type AffordanceContext = {
   physicallyOpen: boolean;
   permissionGranted: boolean;
   affordances: AffordanceDef[];
+  /** Consequence serviceOverrides — applied in evaluateServiceOpen. */
+  serviceOverrides?: ServiceOverrideMap;
 };
 
 export function listAffordances(ctx: AffordanceContext): AffordanceAvailability[] {
@@ -144,7 +151,7 @@ export function listAffordances(ctx: AffordanceContext): AffordanceAvailability[
         if (!service) {
           return unavailable(affordance, "no matching service at location");
         }
-        const open = evaluateServiceOpen(service, ctx.clock);
+        const open = evaluateServiceOpen(service, ctx.clock, ctx.serviceOverrides);
         if (!open.open) {
           return unavailable(affordance, open.reason);
         }
@@ -184,7 +191,15 @@ function unavailable(affordance: AffordanceDef, reason: string): AffordanceAvail
 export function evaluateServiceOpen(
   service: LocalServiceDef,
   clock: CompanionStoryClock,
+  serviceOverrides?: ServiceOverrideMap,
 ): { open: boolean; reason: string } {
+  const override = serviceOverrides?.[service.serviceId];
+  if (override?.closed) {
+    return {
+      open: false,
+      reason: override.reason || "service forced closed",
+    };
+  }
   if (service.forcedClosed) {
     return {
       open: false,

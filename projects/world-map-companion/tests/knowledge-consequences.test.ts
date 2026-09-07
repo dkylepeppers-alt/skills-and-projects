@@ -27,6 +27,7 @@ import {
   journalFacts,
   journalLeads,
   leaveObject,
+  linkAppointmentToJournal,
   listAffordances,
   projectForAudience,
   projectPlacement,
@@ -54,7 +55,7 @@ import {
 } from "../src/adapters/trackers.ts";
 import { SPATIAL_OWNER_ADAPTER_HONESTY } from "../src/adapters/spatial-owner.ts";
 import { createStoryClock, storyMinutesFromParts } from "../src/simulation/clock.ts";
-import type { ScheduleExpectation } from "../src/simulation/schedules.ts";
+import type { AppointmentDef, ScheduleExpectation } from "../src/simulation/schedules.ts";
 
 const PLAYER = "obs:player";
 const NPC_WED = "npc:wednesday-addams";
@@ -568,10 +569,234 @@ test("service override consequence closes business independently of hours", () =
     locationId: LOC_SHOP,
     label: "Jericho General Store",
     hours: { openMinuteOfDay: 9 * 60, closeMinuteOfDay: 18 * 60, certainty: "sourced" },
-    forcedClosed: consequences.serviceOverrides["svc:general-store"]!.closed,
-    forcedClosedReason: consequences.serviceOverrides["svc:general-store"]!.reason,
   };
-  const check = evaluateServiceOpen(service, clock);
+  // Overrides from setServiceOverride must affect evaluation without hand-copying forcedClosed.
+  const check = evaluateServiceOpen(service, clock, consequences.serviceOverrides);
   assert.equal(check.open, false);
   assert.match(check.reason, /padlocked|forced closed/i);
+});
+
+
+test("player/character projection omits unknown NPC placement rows (no actualPlacements leak)", () => {
+  const UNKNOWN = "npc:unknown-nevermore";
+  let state = baseKnowledge();
+  // Actual world has Wednesday + an unknown NPC the player has never heard of
+  state = setActualPlacement(state, UNKNOWN, { kind: "at", locationId: LOC_DINING });
+  state = setExpectedPlacement(state, {
+    npcId: UNKNOWN,
+    windowId: "win:unknown",
+    locationId: LOC_DINING,
+    activity: "lurk",
+    priority: "routine",
+    certainty: "assumption",
+    isSighting: false,
+  });
+
+  const playerView = projectForAudience(state, "player", PLAYER);
+  const charView = projectForAudience(state, "character", PLAYER);
+  const authorView = projectForAudience(state, "author", PLAYER);
+
+  assert.equal(
+    playerView.placements.some((p) => p.npcId === UNKNOWN),
+    false,
+    "player must not see unknown NPC placement row",
+  );
+  assert.equal(
+    charView.placements.some((p) => p.npcId === UNKNOWN),
+    false,
+    "character must not see unknown NPC placement row",
+  );
+  assert.ok(
+    authorView.placements.some((p) => p.npcId === UNKNOWN),
+    "author may iterate actual placements",
+  );
+  assert.ok(!playerView.knownNpcIds.includes(UNKNOWN));
+  assert.ok(!JSON.stringify(playerView.placements).includes(UNKNOWN));
+  assert.ok(!JSON.stringify(charView.placements).includes(UNKNOWN));
+});
+
+test("player and character reports omit falseClaim; author may include it", () => {
+  let state = baseKnowledge();
+  state = recordRumor(state, {
+    reportId: "rpt:false-claim-proof",
+    holderObserverId: PLAYER,
+    sourceObserverId: "obs:enid",
+    npcId: NPC_WED,
+    claimedLocationId: LOC_DINING,
+    storyMinutes: 110,
+    summary: "False dining rumor",
+    falseClaim: true,
+  });
+  const playerView = projectForAudience(state, "player", PLAYER);
+  const charView = projectForAudience(state, "character", PLAYER);
+  const authorView = projectForAudience(state, "author", PLAYER);
+  const playerRpt = playerView.reports.find((r) => r.reportId === "rpt:false-claim-proof");
+  const charRpt = charView.reports.find((r) => r.reportId === "rpt:false-claim-proof");
+  const authorRpt = authorView.reports.find((r) => r.reportId === "rpt:false-claim-proof");
+  assert.ok(playerRpt);
+  assert.ok(charRpt);
+  assert.ok(authorRpt);
+  assert.equal("falseClaim" in playerRpt!, false, "player must not learn rumor is false");
+  assert.equal("falseClaim" in charRpt!, false, "character must not learn rumor is false");
+  assert.equal(authorRpt!.falseClaim, true);
+});
+
+test("appointment coding path links appointment into location journal", () => {
+  const appointment: AppointmentDef = {
+    appointmentId: "appt:weems-office",
+    npcId: "npc:weems",
+    locationId: LOC_PRIVATE,
+    dueStoryMinutes: 480,
+    graceMinutes: 15,
+    label: "Meeting with Weems",
+    priority: "appointment",
+  };
+  let journal = createJournal(LOC_PRIVATE);
+  journal = linkAppointmentToJournal(journal, appointment, PLAYER, "je:appt-1");
+  const entry = journal.entries.find((e) => e.entryId === "je:appt-1");
+  assert.ok(entry);
+  assert.equal(entry!.kind, "appointment");
+  assert.equal(entry!.linkedAppointmentId, "appt:weems-office");
+  assert.equal(entry!.summary, "Meeting with Weems");
+  assert.equal(entry!.storyMinutes, 480);
+  assert.equal(entry!.established, true);
+});
+
+test("tracker rejects duplicate nativeItemId and nativeBondId; one clock per bond-pair", () => {
+  let registry = createTrackerRegistry();
+  let consequences = createConsequenceState({
+    campaignId: "campaign:test",
+    branchId: "branch:main",
+  });
+  consequences = leaveObject(consequences, {
+    objectId: "obj:a",
+    locationId: LOC_DORM,
+    label: "object A",
+    storyMinutes: 1,
+    searchable: true,
+  });
+  consequences = leaveObject(consequences, {
+    objectId: "obj:b",
+    locationId: LOC_DINING,
+    label: "object B",
+    storyMinutes: 2,
+    searchable: true,
+  });
+  const first = linkObjectToInventory(registry, {
+    object: consequences.objects["obj:a"]!,
+    nativeItem: { nativeItemId: "inv:shared", label: "shared", quantity: 1 },
+  });
+  assert.equal(first.result.ok, true);
+  registry = first.registry;
+  const dupItem = linkObjectToInventory(registry, {
+    object: consequences.objects["obj:b"]!,
+    nativeItem: { nativeItemId: "inv:shared", label: "shared", quantity: 1 },
+  });
+  assert.equal(dupItem.result.ok, false);
+  if (!dupItem.result.ok) assert.match(dupItem.result.reason, /duplicate nativeItemId/);
+
+  consequences = upsertFactionClock(consequences, {
+    clockId: "clock:pair-1",
+    factionId: "faction:nightshades",
+    label: "c1",
+    segments: 4,
+    filled: 0,
+  });
+  consequences = upsertFactionClock(consequences, {
+    clockId: "clock:pair-2",
+    factionId: "faction:nightshades",
+    label: "c2",
+    segments: 4,
+    filled: 0,
+  });
+  const bond1 = linkFactionClockToBond(registry, {
+    clock: consequences.factionClocks["clock:pair-1"]!,
+    bond: {
+      nativeBondId: "bond:shared",
+      actorId: PLAYER,
+      targetId: "faction:nightshades",
+      scale: "0-100",
+      value: 1,
+    },
+  });
+  assert.equal(bond1.result.ok, true);
+  registry = bond1.registry;
+
+  // Same pair + same scale still rejected — one clock per bond-pair
+  const parallel = linkFactionClockToBond(registry, {
+    clock: consequences.factionClocks["clock:pair-2"]!,
+    bond: {
+      nativeBondId: "bond:other",
+      actorId: PLAYER,
+      targetId: "faction:nightshades",
+      scale: "0-100",
+      value: 2,
+    },
+  });
+  assert.equal(parallel.result.ok, false);
+  if (!parallel.result.ok) assert.match(parallel.result.reason, /one clock per bond-pair|conflicting/);
+
+  // Duplicate nativeBondId on a different pair/clock
+  consequences = upsertFactionClock(consequences, {
+    clockId: "clock:other-faction",
+    factionId: "faction:other",
+    label: "other",
+    segments: 3,
+    filled: 0,
+  });
+  const dupBond = linkFactionClockToBond(registry, {
+    clock: consequences.factionClocks["clock:other-faction"]!,
+    bond: {
+      nativeBondId: "bond:shared",
+      actorId: PLAYER,
+      targetId: "faction:other",
+      scale: "letters",
+      value: 0,
+    },
+  });
+  assert.equal(dupBond.result.ok, false);
+  if (!dupBond.result.ok) assert.match(dupBond.result.reason, /duplicate nativeBondId/);
+});
+
+test("communicateReport updates recipient rumored placement and knownNpcIds", () => {
+  let state = baseKnowledge();
+  state = communicateReport(state, {
+    reportId: "rpt:comm-place",
+    fromObserverId: "obs:enid",
+    toObserverId: PLAYER,
+    subjectId: NPC_WED,
+    claimedLocationId: LOC_DINING,
+    summary: "Enid says Wednesday is dining",
+    storyMinutes: 250,
+  });
+  const player = state.observers[PLAYER]!;
+  assert.ok(player.knownNpcIds.includes(NPC_WED));
+  const rumored = player.rumoredNpcPlacements[NPC_WED];
+  assert.equal(rumored?.kind, "at");
+  if (rumored?.kind === "at") assert.equal(rumored.locationId, LOC_DINING);
+  const proj = projectPlacement(state, NPC_WED, PLAYER);
+  assert.equal(proj.known?.kind, "at");
+  if (proj.known?.kind === "at") assert.equal(proj.known.locationId, LOC_DINING);
+  assert.equal(proj.labels.known, "communicated");
+});
+
+test("stale sighting freshness clears actual/last-seen in player projection", () => {
+  let state = baseKnowledge();
+  state = recordSighting(state, {
+    reportId: "rpt:fresh-1",
+    observerId: PLAYER,
+    npcId: NPC_WED,
+    locationId: LOC_DORM,
+    storyMinutes: 60,
+  });
+  // Still at dorm — would match known, but age exceeds window
+  const staleView = projectForAudience(state, "player", PLAYER, {
+    currentStoryMinutes: 60 + 500,
+    maxAgeMinutes: 120,
+  });
+  const row = staleView.placements.find((p) => p.npcId === NPC_WED);
+  assert.ok(row);
+  assert.equal(row!.actual, null);
+  assert.equal(row!.lastSeen, null);
+  assert.equal(row!.labels.lastSeen, "none");
 });

@@ -353,6 +353,15 @@ export function communicateReport(
   if (input.clueId && !to.knownClueIds.includes(input.clueId)) {
     to.knownClueIds = [...to.knownClueIds, input.clueId];
   }
+  if (!to.knownNpcIds.includes(input.subjectId)) {
+    to.knownNpcIds = [...to.knownNpcIds, input.subjectId];
+  }
+  if (input.claimedLocationId) {
+    to.rumoredNpcPlacements = {
+      ...to.rumoredNpcPlacements,
+      [input.subjectId]: { kind: "at", locationId: input.claimedLocationId },
+    };
+  }
   return {
     ...next,
     observers: { ...next.observers, [input.toObserverId]: to },
@@ -455,31 +464,75 @@ export function projectPlacement(
   };
 }
 
+export type ProjectionFreshness = {
+  currentStoryMinutes: number;
+  maxAgeMinutes: number;
+};
+
+/** Subjects the observer already knows about — never seed from actual world. */
+function observerKnownSubjectIds(
+  state: WorldKnowledgeState,
+  observerId: StableId,
+  obs: ObserverKnowledgeState,
+): Set<string> {
+  const npcIds = new Set<string>([
+    ...obs.knownNpcIds,
+    ...Object.keys(obs.rumoredNpcPlacements),
+    ...Object.keys(obs.lastSeen),
+  ]);
+  for (const r of Object.values(state.reports)) {
+    if (r.holderObserverId === observerId) npcIds.add(r.subjectId);
+  }
+  return npcIds;
+}
+
 export function projectForAudience(
   state: WorldKnowledgeState,
   audience: ViewAudience,
   observerId: StableId | null,
+  freshness?: ProjectionFreshness,
 ): FilteredProjection {
   const obs = observerId ? state.observers[observerId] : null;
-  const npcIds = new Set<string>([
-    ...Object.keys(state.actualPlacements),
-    ...(obs?.knownNpcIds ?? []),
-  ]);
+  // Author may iterate the actual world; player/character must NOT seed from actualPlacements.
+  const npcIds =
+    audience === "author"
+      ? new Set<string>([
+          ...Object.keys(state.actualPlacements),
+          ...(obs?.knownNpcIds ?? []),
+          ...Object.keys(obs?.rumoredNpcPlacements ?? {}),
+          ...Object.keys(obs?.lastSeen ?? {}),
+        ])
+      : observerId && obs
+        ? observerKnownSubjectIds(state, observerId, obs)
+        : new Set<string>();
 
   const placements: PlacementProjection[] = [];
   for (const npcId of npcIds) {
     if (audience === "author") {
       placements.push(projectPlacement(state, npcId, observerId ?? "obs:author"));
     } else if (observerId) {
-      const p = projectPlacement(state, npcId, observerId);
-      if (p.labels.known !== "confirmed" && p.labels.known !== "sighting") {
-        placements.push({ ...p, actual: null });
+      let p = projectPlacement(state, npcId, observerId);
+      const stale =
+        freshness !== undefined
+          ? isSightingStale(p, freshness.currentStoryMinutes, freshness.maxAgeMinutes)
+          : { stale: false, reason: "no freshness window" };
+      if (stale.stale) {
+        // Stale last-seen must not surface as actual; clear last-seen visibility.
+        p = {
+          ...p,
+          actual: null,
+          lastSeen: null,
+          labels: { ...p.labels, lastSeen: "none" },
+        };
+      } else if (p.labels.known !== "confirmed" && p.labels.known !== "sighting") {
+        p = { ...p, actual: null };
       } else {
-        placements.push({
+        p = {
           ...p,
           actual: p.known && p.actual && placementEquals(p.known, p.actual) ? p.actual : null,
-        });
+        };
       }
+      placements.push(p);
     }
   }
 
@@ -499,8 +552,9 @@ export function projectForAudience(
         certainty: r.certainty,
         storyMinutes: r.storyMinutes,
       };
-      if (audience === "character") return base;
-      return { ...base, falseClaim: r.falseClaim };
+      // falseClaim is author-only — player/character must not learn a rumor is false.
+      if (audience === "author") return { ...base, falseClaim: r.falseClaim };
+      return base;
     });
 
   const secrets: SecretFact[] = audience === "author" ? Object.values(state.secrets) : [];

@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "path": "source/presets/ff54-agent-gating.original.marinara.json",
+    "sha256": "43801992b7e07ffb24c0395f32ce87b4ea4f3a40aed929eb0462e3e41b7adc93",
+    "presetId": "QT6ABwAN4X1hQEGhGSGjs"
+  },
+  "engine": {
+    "repository": "Pasta-Devs/Marinara-Engine",
+    "revision": "9bbee87d1a44c33f704977bd8c25aafbec9b85aa",
+    "presetImport": "POST /api/import/marinara",
+    "presetReadback": "GET /api/prompts/{newPresetId}/full",
+    "presetExport": "GET /api/prompts/{newPresetId}/export",
+    "regexImport": "POST /api/regex-scripts/import",
+    "regexReadback": "GET /api/regex-scripts"
+  },
+  "fields": {
+    "envelope": {
+      "type": {
+        "disposition": "native",
+        "destination": "import dispatcher type"
+      },
+      "version": {
+        "disposition": "native",
+        "destination": "import dispatcher version guard"
+      },
+      "exportedAt": {
+        "disposition": "sidecar",
+        "destination": "immutable source envelope; Engine export stamps a new time"
+      },
+      "data": {
+        "disposition": "native",
+        "destination": "preset importer data payload"
+      },
+      "extensions": {
+        "disposition": "translated",
+        "destination": "immutable source plus separate regex import calls"
+      }
+    },
+    "preset": {
+      "id": {
+        "disposition": "remapped",
+        "destination": "prompt_presets.id"
+      },
+      "name": {
+        "disposition": "native",
+        "destination": "prompt_presets.name"
+      },
+      "description": {
+        "disposition": "native",
+        "destination": "prompt_presets.description"
+      },
+      "imagePath": {
+        "disposition": "default-equivalent",
+        "destination": "prompt_presets.imagePath; source null equals importer default"
+      },
+      "conversationPrompt": {
+        "disposition": "native",
+        "destination": "prompt_presets.conversationPrompt"
+      },
+      "gamePrompt": {
+        "disposition": "native",
+        "destination": "prompt_presets.gamePrompt"
+      },
+      "sectionOrder": {
+        "disposition": "remapped",
+        "destination": "prompt_presets.sectionOrder with new section IDs"
+      },
+      "groupOrder": {
+        "disposition": "remapped",
+        "destination": "prompt_presets.groupOrder with new group IDs"
+      },
+      "variableGroups": {
+        "disposition": "normalized",
+        "destination": "prompt_presets.variableGroups JSON string"
+      },
+      "variableValues": {
+        "disposition": "normalized",
+        "destination": "prompt_presets.variableValues JSON string"
+      },
+      "wrapFormat": {
+        "disposition": "native",
+        "destination": "prompt_presets.wrapFormat"
+      },
+      "defaultChoices": {
+        "disposition": "normalized",
+        "destination": "prompt_presets.defaultChoices JSON string"
+      },
+      "isDefault": {
+        "disposition": "default-equivalent",
+        "destination": "prompt_presets.isDefault; source false equals safe importer default"
+      },
+      "author": {
+        "disposition": "native",
+        "destination": "prompt_presets.author"
+      },
+      "embedding": {
+        "disposition": "sidecar",
+        "destination": "immutable source; user-supplied embeddings are not trusted or imported"
+      },
+      "createdAt": {
+        "disposition": "native",
+        "destination": "prompt_presets.createdAt timestamp override"
+      },
+      "updatedAt": {
+        "disposition": "sidecar",
+        "destination": "immutable source; final native import update stamps installation time"
+      }
+    },
+    "section": {
+      "id": {
+        "disposition": "remapped",
+        "destination": "prompt_sections.id"
+      },
+      "presetId": {
+        "disposition": "remapped",
+        "destination": "prompt_sections.presetId"
+      },
+      "identifier": {
+        "disposition": "native",
+        "destination": "prompt_sections.identifier"
+      },
+      "name": {
+        "disposition": "native",
+        "destination": "prompt_sections.name"
+      },
+      "content": {
+        "disposition": "native",
+        "destination": "prompt_sections.content"
+      },
+      "role": {
+        "disposition": "native",
+        "destination": "prompt_sections.role"
+      },
+      "enabled": {
+        "disposition": "normalized",
+        "destination": "prompt_sections.enabled string boolean"
+      },
+      "isMarker": {
+        "disposition": "normalized",
+        "destination": "prompt_sections.isMarker string boolean"
+      },
+      "groupId": {
+        "disposition": "remapped",
+        "destination": "prompt_sections.groupId"
+      },
+      "markerConfig": {
+        "disposition": "normalized",
+        "destination": "prompt_sections.markerConfig JSON string"
+      },
+      "injectionPosition": {
+        "disposition": "native",
+        "destination": "prompt_sections.injectionPosition"
+      },
+      "injectionDepth": {
+        "disposition": "native",
+        "destination": "prompt_sections.injectionDepth"
+      },
+      "injectionOrder": {
+        "disposition": "native",
+        "destination": "prompt_sections.injectionOrder"
+      },
+      "wrapInXml": {
+        "disposition": "default-equivalent",
+        "destination": "legacy prompt_sections.wrapInXml; all 69 source values are false and importer defaults false"
+      },
+      "xmlTagName": {
+        "disposition": "default-equivalent",
+        "destination": "legacy prompt_sections.xmlTagName; all 69 source values are empty and importer defaults empty"
+      },
+      "forbidOverrides": {
+        "disposition": "normalized",
+        "destination": "prompt_sections.forbidOverrides string boolean"
+      }
+    },
+    "group": {
+      "id": {
+        "disposition": "remapped",
+        "destination": "prompt_groups.id"
+      },
+      "presetId": {
+        "disposition": "remapped",
+        "destination": "prompt_groups.presetId"
+      },
+      "name": {
+        "disposition": "native",
+        "destination": "prompt_groups.name"
+      },
+      "parentGroupId": {
+        "disposition": "remapped",
+        "destination": "prompt_groups.parentGroupId"
+      },
+      "order": {
+        "disposition": "native",
+        "destination": "prompt_groups.order"
+      },
+      "enabled": {
+        "disposition": "normalized",
+        "destination": "prompt_groups.enabled string boolean"
+      },
+      "createdAt": {
+        "disposition": "sidecar",
+        "destination": "immutable source; group create API stamps installation time"
+      }
+    },
+    "choiceBlock": {
+      "id": {
+        "disposition": "remapped",
+        "destination": "choice_blocks.id"
+      },
+      "presetId": {
+        "disposition": "remapped",
+        "destination": "choice_blocks.presetId"
+      },
+      "variableName": {
+        "disposition": "native",
+        "destination": "choice_blocks.variableName"
+      },
+      "question": {
+        "disposition": "native",
+        "destination": "choice_blocks.question"
+      },
+      "options": {
+        "disposition": "normalized",
+        "destination": "choice_blocks.options JSON string"
+      },
+      "multiSelect": {
+        "disposition": "normalized",
+        "destination": "choice_blocks.multiSelect string boolean"
+      },
+      "separator": {
+        "disposition": "native",
+        "destination": "choice_blocks.separator"
+      },
+      "randomPick": {
+        "disposition": "normalized",
+        "destination": "choice_blocks.randomPick string boolean"
+      },
+      "displayMode": {
+        "disposition": "native",
+        "destination": "choice_blocks.displayMode"
+      },
+      "optionSort": {
+        "disposition": "native",
+        "destination": "choice_blocks.optionSort"
+      },
+      "sortOrder": {
+        "disposition": "default-equivalent",
+        "destination": "choice_blocks.sortOrder; importer assigns the same 100-step order for this source"
+      },
+      "createdAt": {
+        "disposition": "sidecar",
+        "destination": "immutable source; choice create API stamps installation time"
+      }
+    },
+    "legacyRegex": {
+      "id": {
+        "disposition": "remapped",
+        "destination": "regex_scripts.id"
+      },
+      "scriptName": {
+        "disposition": "translated",
+        "destination": "regex_scripts.name"
+      },
+      "findRegex": {
+        "disposition": "translated",
+        "destination": "regex_scripts.findRegex plus regex_scripts.flags after delimiter split"
+      },
+      "replaceString": {
+        "disposition": "native",
+        "destination": "regex_scripts.replaceString"
+      },
+      "trimStrings": {
+        "disposition": "native",
+        "destination": "regex_scripts.trimStrings"
+      },
+      "placement": {
+        "disposition": "translated",
+        "destination": "regex_scripts.placement: 2 to ai_output, 1 to user_input"
+      },
+      "disabled": {
+        "disposition": "translated",
+        "destination": "regex_scripts.enabled with boolean inversion"
+      },
+      "markdownOnly": {
+        "disposition": "translated",
+        "destination": "regex_scripts.applyMode display/both"
+      },
+      "promptOnly": {
+        "disposition": "translated",
+        "destination": "regex_scripts.applyMode prompt/both and derived promptOnly"
+      },
+      "runOnEdit": {
+        "disposition": "sidecar",
+        "destination": "immutable source; all values false and require no edit-time mutation"
+      },
+      "substituteRegex": {
+        "disposition": "sidecar",
+        "destination": "immutable source; all values zero and select ordinary replacement"
+      },
+      "minDepth": {
+        "disposition": "native",
+        "destination": "regex_scripts.minDepth"
+      },
+      "maxDepth": {
+        "disposition": "native",
+        "destination": "regex_scripts.maxDepth"
+      }
+    }
+  },
+  "artifactSpecificEquivalences": {
+    "sectionWrapping": "All 69 optional wrapInXml/xmlTagName pairs equal Engine defaults; the legacy columns are unused by the assembler.",
+    "editBehavior": "All 25 runOnEdit values are false. The adapter refuses a true value because the pinned Engine schema exposes no equivalent.",
+    "substitutionMode": "All 25 substituteRegex values are 0. The adapter refuses a nonzero value because the pinned Engine schema exposes no equivalent.",
+    "regexScope": "The source-level embedded collection is installed as global rows scoped to the remapped preset ID, so it cannot affect unrelated presets."
+  },
+  "runtimeObservation": {
+    "status": "pending",
+    "note": "Populated only by an isolated import/export run against the pinned Engine; no runtime IDs are invented."
+  }
+}

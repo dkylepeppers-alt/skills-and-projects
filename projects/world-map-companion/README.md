@@ -24,3 +24,18 @@ Archive integrity is separate from Engine import and behavior verification. Pass
 - Private implementation branch: `implementation/world-map-companion`
 
 Upstream source checkouts and dependencies stay outside this repository. Nevermore source IDs, lore, topology, and artwork remain under their existing project paths.
+
+## Compatibility adapter
+
+`compatibility/preset-compatibility.ts` imports through an `EnginePresetApi` adapter, records native ID remaps, and installs the 25 embedded scripts through the separate regex API. It preserves the complete original envelope as its source sidecar. The field ledger records native values, documented normalization, and sidecar-only metadata.
+
+All regexes are scoped to the new preset. Installation preflights executable fields, requires exact text preservation, checks one-to-one object identities and parent relationships, and compares every translated regex field against readback. It never enables disabled preset markers.
+
+Pass an asynchronous `checkpoint(receipt)` callback backed by durable storage; resume with the saved `resume` receipt after interruption. A failed checkpoint stops further writes. A receipt belongs to one exact source and imported preset. Retrying a complete receipt verifies and reuses its records. The native preset-create API has no idempotency key: if that first response is lost before any receipt exists, inspect the host's imported presets before starting another installation.
+
+```sh
+cd projects/world-map-companion
+npm test
+```
+
+These local tests verify adapter failure handling and preservation contracts. Separate source-runtime checks are required before compatibility is release-ready.

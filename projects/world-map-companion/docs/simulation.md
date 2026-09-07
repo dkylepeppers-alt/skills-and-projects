@@ -63,9 +63,11 @@ Covered in `tests/simulation.test.ts`:
 
 - Does **not** activate CompanionHostBridge or prove live Engine clock APIs.
 - Does **not** invent campus hours or route durations.
-- Does **not** implement Task 8 observation/consequences projections.
+- Task 8 knowledge/consequences: `docs/knowledge-consequences.md` (earned-knowledge filter).
 
 ## Related
+
+- Knowledge / consequences: `docs/knowledge-consequences.md`
 
 - Travel / topology (Task 6): `docs/travel-topology.md`
 - Pack gaps (hours UNKNOWN): `docs/nevermore-pack.md`

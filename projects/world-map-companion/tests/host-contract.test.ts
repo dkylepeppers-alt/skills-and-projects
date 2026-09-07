@@ -13,9 +13,9 @@ const lifecycleObservationPath = `${root}/compatibility/lifecycle-observation.js
 const EXPECTED_ENGINE = "9bbee87d1a44c33f704977bd8c25aafbec9b85aa";
 const EXPECTED_AGENTS = "ee1a4a01d1091a9f5e4086c58f608e401aa1d879";
 const EXPECTED_NATIVE_PRESET = "pLwe7NpVlr3mtoYe34-jD";
-const EXPECTED_IMPLEMENTATION_TIP = "7df59b75d9366d12ce52bc001b3b95f93879d1fa";
+const EXPECTED_IMPLEMENTATION_TIP = "7c8881192f4c48cc681d210c1d108d18f4f856fc";
 // taskTip pinned after bridge commit; tests that need exact tip read from lock after pin step
-const EXPECTED_TASK_BRANCH = "wmc/task-2-bridge";
+const EXPECTED_TASK_BRANCH = "wmc/task-3-contracts";
 
 const REQUIRED_HOST_CONTRACT_SECTIONS = [
   "## 1. Pins",

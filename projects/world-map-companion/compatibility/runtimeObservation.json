@@ -1,0 +1,553 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-07T15:33:52.171Z",
+  "mode": "in-process-engine-import",
+  "honesty": {
+    "fullHttpServer": false,
+    "path": "Exercised pinned Engine importMarinara + prompts/regex storage via createFileNativeDB (same code as POST /api/import/marinara, GET /api/prompts/:id/full, GET export builder, POST /api/regex-scripts/import).",
+    "nodeVersion": "v26.3.0",
+    "nodeEngineWanted": ">=24 <27",
+    "nodeNote": "Matches Engine engines field."
+  },
+  "pins": {
+    "engine": "9bbee87d1a44c33f704977bd8c25aafbec9b85aa",
+    "agents": "ee1a4a01d1091a9f5e4086c58f608e401aa1d879",
+    "engineCheckoutHead": "9bbee87d1a44c33f704977bd8c25aafbec9b85aa"
+  },
+  "source": {
+    "path": "source/presets/ff54-agent-gating.original.marinara.json",
+    "sha256": "43801992b7e07ffb24c0395f32ce87b4ea4f3a40aed929eb0462e3e41b7adc93",
+    "sourcePresetId": "QT6ABwAN4X1hQEGhGSGjs",
+    "bytes": 187861,
+    "counts": {
+      "sections": 69,
+      "groups": 12,
+      "choiceBlocks": 11,
+      "regexScripts": 25
+    }
+  },
+  "installation": {
+    "complete": true,
+    "presetId": "pLwe7NpVlr3mtoYe34-jD",
+    "idMap": {
+      "sections": {
+        "qsDOjc98dm7VY9hL33FDY": "MZ4k4Dbi3rETMAREnhcSl",
+        "Fyvu413Otw-o720uhJZaE": "KZmkgdeoWgga6jHk0VXp7",
+        "WevQjpVZ65V9MeQwCgbSV": "MmD7096VH1zFLvaeeSaAZ",
+        "YgXJH5JK4lhUiadVueL6A": "oUhQWEx2uwOsyI8L1hfuK",
+        "iA7HTajF2E9LXyvCEODuA": "0TovlHapF4w5BRmmusSph",
+        "IEZIZd3ePIHdhej5PTEF4": "9a29kCXakdX-3ZndRZEsy",
+        "L0JBkS7rhrJHV4Riw3KdT": "691wy3PKiamnK3y5rnfSz",
+        "7jjvayROPADtkkDfVEKvl": "2GdWiDOGraEephP8nzdmN",
+        "tMPXky_mXyMoLfZ1RnrBr": "kKmIUziq0QbdMG1uX7ejr",
+        "0Dnlks352tH7Igld6xNfe": "dOM6al0FktvZRggXATtq4",
+        "afhQc0_9rh4WtpN1-N-Nc": "oZcgTUOKgWK1B_NyD-pjH",
+        "8IIgv1bNnJR-t1BT6QZls": "xuMBJDJgzu8EqrCoxvQXW",
+        "LNRafhLy2riut4mZFdGhw": "yxtoECHv390Bh97qubNOA",
+        "AKxNLaZB8q-LaEGZlF4_v": "ckY89hiuvPEsE4THijFBa",
+        "Bo6gAwM988Bm1ZkccnjM4": "dsnbRmcDZm5RpjXPtc2t-",
+        "MPwQZqZoldZu5jqGJ6QUN": "PMKTwwf-KkcT__HlfU2ce",
+        "ruLbuSezWETBlcGEtBwwV": "MJtXsz-v0xGZOFaudKKBv",
+        "aum1WVIdyrFepZx-4jayD": "TfdC8OI6bUGPqdbmPG9Gf",
+        "OyiUSn68t36yjTTFjVNiM": "41IBLraH-4f0cfE168k0T",
+        "Y8PQDhoe_yubWI4oBZXfV": "UdJ20KAb1ySz21MCiTIeg",
+        "oh_K1LlawqS-kSW_3p0qP": "rJ59mlSB3uDPFBmKYmxBz",
+        "oW96ntck4JGzKXgdUVxwZ": "4C6TIbFzB8-poRKHA1WRE",
+        "N0IHXxa5DFUy9eBRIM6KJ": "eSdCWgCRCu-fwGas42tsh",
+        "IliwXQggzhX6Df0klOYiM": "wbtN4p_K5olDKccHG427t",
+        "wjh6aDKBR-zmHNdAhqBEP": "GfCxn11Etpw1lhqiY8wzR",
+        "M40Q3f6jz1yZQE5CPigZu": "PwT-QC1dLSt2rK9uAb4ae",
+        "Z1Hgc_5OZ9bGtMNlEXx7M": "MLRFXFgVcTwB5RcvRxqq7",
+        "sb62DAVTPAfH4Mp0mc85J": "hPnRDiQ7Ku266JtgasQEt",
+        "Dky_7L1VY5L0PG5Po_Yqo": "o3I5Rd4mlJUCEqSlhy10I",
+        "5Hc9V0RzpANyH8YxDNokJ": "j1RDBQyA668sYt_45k082",
+        "XbY6g-Rlmc9wElJqVRUrn": "hUngUA2pUoj03AnfuhYpe",
+        "qF7IE6CT9N2mr7wat8mN3": "WEOld9PLl5-UR0TUDelFd",
+        "MyZFEx1rURe2T3C84J8LG": "tlsPrJGJpXklQjim9En86",
+        "Gn84ZKXV8lpvMFZTJoiqP": "3C_SPDPxgyGSYm5mDQCog",
+        "rvhEDCxrKlWAtX4OkwZZW": "TINKfKe4YkWT_ts60iqnl",
+        "qNYuyzTGsfltFYzlHFKi5": "2lmHUpgmLmCcXtVkwUSdb",
+        "nfaHvzUi-IhASrepliIR2": "jLG_tO46oFoPFJMNZyNBP",
+        "daTf79UXt2RAuXuBm5QDo": "Pz7m1I8iWg-uNvqJvR86B",
+        "g0TZuj_z_JAea2Q6zMiSp": "hPj8-DbP6xFGyypYtrzeC",
+        "WY8us-akl5DopZoJ2aT43": "Ds2invmTmTpy_jGj6cGQy",
+        "7fZ5ZQGod8LBBSw34A4RN": "Ao8onxFIlSpT-AfGdyJ9C",
+        "QC2xSDQQUKGY6P2nNz7-2": "YUwUwW6LFya_clrkJCo1O",
+        "16HrigivW7o4CMJlNzKgK": "uPqDy9BCZinuscOchGCfn",
+        "IuAspxUQTpcaWFOiPtiNB": "rDnu34AtPkrwWyMZ9hQph",
+        "-vDKHl48Le8KZ0mj0epr-": "WJGvGPSY3a70RNgOr6blc",
+        "PoMLDGNgTK_bbL1ThZr_M": "ZplGZAul-uxJQkmLt7bYd",
+        "4xbbnK8NIPDv38Y7j1oY9": "GV_okeNxSaB1ylTSzFPP5",
+        "Bi043ztZsUqXfSXJuAPye": "r1NWjtR1b7fPcmGyapHWq",
+        "tmfWvQVeZC-JIgxYFel-x": "HCN9jRILEIL-1nJZqxbEE",
+        "qbBXq2fx1R4ois3mSWtQ4": "8Uu90lCnqjMPfyWiqb36r",
+        "mVFgjDwXZPmwK1v31jTpT": "LBiDxx7jlDt64qFvJfdco",
+        "ZDrz_C7-R4VNy5zYuMQ1t": "TpTyBedlL5oF23WuyYFaA",
+        "oxqE6DBUlcLY3k0n4wvMB": "-Gz2PONZB-jhZPd3cPxaH",
+        "R31nXEzlHyVSQQcxOsym_": "JrFMJafzc7h6rSnqL7kDi",
+        "IPh87UHK1iV0wLIc22mL9": "_2uKjYnAq8-SYU86l60ZH",
+        "PDN9z6Hfg1E5fjRGhw9vA": "RV8x-zSjmdD0n8JrCCA6c",
+        "js-YoNJY3XeRkt4fsEH_F": "uAHQbv2JqGRdQlJFAXegA",
+        "-8-Xfq1iMl-7jzxB9rX5e": "b43Qo7z54eZXhparGeh7X",
+        "YJsfSLCxISy8Ht-rVvzrI": "AELp7Ft3MsrE16D4DPmrq",
+        "R7nTWr8hB5cp9dq_utcEQ": "llXND6cHVxoGjznVPhXC1",
+        "6-0h0MaX_3RwWZoh5V3De": "O0HTnwbil5_1zKOL4n331",
+        "LrXXJ2CqEg8hWn0-GHGtM": "pZ0wsBaBqvQLPziaYPTAT",
+        "rU8WE7huwUEVfKnxZcLXs": "wZpJ0Db38scNAX1csa5rU",
+        "UZOlz_fCrq2giKcQZC49j": "ksgrUxDF9m9WTM3xxOoln",
+        "5YzZ7p-zxp843LztMEtAd": "OPfmAP2J4lxp9245NpnFQ",
+        "GVU6QahLcSoQar7yOSjg-": "0Ap_gP8G3woWOnpvRqSsQ",
+        "aW7ogrZ2TADc4jDXpP7Bq": "lpTSGZsAzMfAPbR78QZnY",
+        "1OzbwvWU4WK1lo7rqjqv5": "OPWYRlvlztOVlE-cWjZNH",
+        "2qpdsn4byOZSdSouqdIgs": "hgosgrvCqdfP6qZ9B4HUP"
+      },
+      "groups": {
+        "ghtpzGcV5Urkwz6jMRdPG": "o7gZ8eehms1oQnGR84D0D",
+        "1XYaqT1dG1DQ5fNQqcOT8": "NFFwcmNNfE1zQqRfO2lYC",
+        "2EhRUJJ5OVkPv9DhQDgJA": "9L0IHVXpEoxnJVmtg3tbI",
+        "qa5o5EMpH41s8XxA0vBsY": "G_fbesaFDKkOpJs-8OLk9",
+        "pD_gctpx9OZ5KGYOeVnPe": "1E-NmOXCJbtr3ZCNRac3M",
+        "Sa8ObIwmD4JWKIr4iPrG_": "6FymDPTELMB742rUBXEv0",
+        "yrtlIj5jBYHAdIn2BfA64": "EdYJhlIAqnaM-8D-xrjPw",
+        "ooq0OH0oBbOHFtTVu6dNF": "0L4OnPnQFOc3ioOc7x6x-",
+        "QEGxvX2w7qMxuKd8DtP3d": "qAKRti2CR5_aMGJWPZiJK",
+        "aRy-_IoYtQN8SAXsDtzk3": "4H1KWy0jhCdVTltCfXswN",
+        "yp6ZmMKUn6DSZoGNpPtVf": "S0Ig6i4H11mEL6ysu4Sje",
+        "V4ET81B0huSCCnNDHz84T": "6CPJPsrh4ervekVp-ahjW"
+      },
+      "choiceBlocks": {
+        "mM6LmCXFbcIisz5JW03Iy": "fnD45qi03r8Lww1EFpOYW",
+        "B0-WSj6jvqp5GIF44Pilb": "aVxB0BfSbEZkyvqguT9eC",
+        "kKJZdaD5cLIdfFQv8oYmP": "_vRBuYLRAPe8RhIe1-bkO",
+        "utORgst27woYyr2o74szM": "HVrJoYwUv5g8u0jVjU0zB",
+        "EHhp4Lfpar14b9WnpUshV": "QWLwOknCzMPKJrkCzBm6v",
+        "7a4HBU5uuN_W0RyWrd40q": "06sDHxRIHNY6-Bd0_hU2T",
+        "COzyi_ZcYZGtOuLcWjbTm": "QFqrhY4kl8DjoVlA5PNhL",
+        "wepeRPEp3HCmtXz_muAvu": "qMIpB-wZoiWQgvfphlWNH",
+        "Q90hB11jq168yA_mHJdAB": "u0-dSQrUBFaoXQ4ExSQ8r",
+        "4-a-mRaVJFne8yMME4NS3": "ckHZQYJQLFdsdJTK7X2KM",
+        "GjPWaPcnEm7FqfnAKpELK": "1rT5laBXDZPnLS2se066O"
+      },
+      "regexScripts": {
+        "3bad7420-8728-4203-810a-d35113ac4bf3": "Clf1ojssB2TVEirWI_LVq",
+        "76dcebc7-37b1-406b-8eda-b534d436b7dc": "WYAq_YeIzj0a0WmIxSVvN",
+        "7a87fcb9-d1a4-48e0-ade9-11730a8ca26c": "oc-C7_q99J2Y_p-2-nzT4",
+        "e991449e-de29-4c58-9cbf-e9094d20338d": "R1bX2I4m9yj_A058Vf0AS",
+        "91debb2f-d33f-4494-ac20-a0c638919eb8": "wV2dIQiLBIAvsloQT4fVe",
+        "03213b2a-c77a-478a-acc4-bff328988db7": "mWvF0glRO4dg-sc5p11Yu",
+        "987587e8-fb6b-41b4-85f1-1298ef8dc952": "rdPg__lusYZ31-ExmCXpZ",
+        "4ba81455-1734-4497-ad20-8d2764442157": "Fd2Rkgs4-VWSF4rrf-Qw8",
+        "be685dc9-2899-4b3e-9987-9a8e564ba7a8": "5UJ4_UCtm7PrJxC3hz_NI",
+        "8b07039f-96ae-4cdc-b6d7-37d3fe37fae8": "UDmU3bdLVWAaL9FGv8qpu",
+        "f6f25ad6-7a94-4cee-ab5b-98eb249cee61": "uBx8tlZ6Q_7-r0nK7InI9",
+        "6e5ac64f-a45f-473f-97fd-bd9739d25474": "nCbXLxLzQy_hjeTEBdSCh",
+        "eae34bdd-b4ab-4c79-9180-ca233c2df71c": "3UOg6TGi2Zgq7FHDCTazc",
+        "52361ef6-7f5a-4133-a6d3-318fa2bb2c66": "qjTixKG3ck9RMopsJAhlV",
+        "01fc1ded-fe52-4c79-9d0c-dd73f13e3d80": "YY6NDbTYkLMZVhaviP5Qv",
+        "d5b6e422-0bb1-4521-b61d-d37384fcfcc5": "vmjtFTP9eslnn5ddMcM-C",
+        "7c42e558-ea6d-499e-83a6-7172ef047afa": "-AUKCKc4f6wXc48TIJV7g",
+        "1b0c846e-ad41-4e5f-8b2b-33b557b96a29": "FEGrZ1LluRkiSZCCdCPfZ",
+        "42556cd4-2da6-4d97-a9f1-3108a88e9e1e": "r0gxNBMe0Hsy_fUGR3dMG",
+        "347724ab-dc55-4496-a53d-c3adf1a566df": "4TCR5FuKuMF2Xo6ypVHsm",
+        "80752bf7-a31d-4e36-9afa-864cbb6efcc0": "zCF6gHalqs3v9xnX9mIW4",
+        "ed2b5877-c3ca-4dc4-9aee-c3ee0ad5e0de": "IcevBdStENgbuOetQ6jrK",
+        "dd6ae0af-b011-41ff-9307-0aa747b8482f": "gse3m-8nTLR3xSnlbqkAV",
+        "a27d2163-0c3f-469d-83ce-a8ffcb9f3d06": "DwHMPdzu3R2a3gvJSsOOb",
+        "0e8eccfa-6273-4d10-9fdf-522f8e01d536": "qU94GLFXI9knX3YupirZu"
+      }
+    },
+    "issues": [
+      {
+        "sourceId": "3bad7420-8728-4203-810a-d35113ac4bf3",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "3bad7420-8728-4203-810a-d35113ac4bf3",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "76dcebc7-37b1-406b-8eda-b534d436b7dc",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "76dcebc7-37b1-406b-8eda-b534d436b7dc",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "7a87fcb9-d1a4-48e0-ade9-11730a8ca26c",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "7a87fcb9-d1a4-48e0-ade9-11730a8ca26c",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "e991449e-de29-4c58-9cbf-e9094d20338d",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "e991449e-de29-4c58-9cbf-e9094d20338d",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "91debb2f-d33f-4494-ac20-a0c638919eb8",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "91debb2f-d33f-4494-ac20-a0c638919eb8",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "03213b2a-c77a-478a-acc4-bff328988db7",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "03213b2a-c77a-478a-acc4-bff328988db7",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "987587e8-fb6b-41b4-85f1-1298ef8dc952",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "987587e8-fb6b-41b4-85f1-1298ef8dc952",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "4ba81455-1734-4497-ad20-8d2764442157",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "4ba81455-1734-4497-ad20-8d2764442157",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "be685dc9-2899-4b3e-9987-9a8e564ba7a8",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "be685dc9-2899-4b3e-9987-9a8e564ba7a8",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "8b07039f-96ae-4cdc-b6d7-37d3fe37fae8",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "8b07039f-96ae-4cdc-b6d7-37d3fe37fae8",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "f6f25ad6-7a94-4cee-ab5b-98eb249cee61",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "f6f25ad6-7a94-4cee-ab5b-98eb249cee61",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "6e5ac64f-a45f-473f-97fd-bd9739d25474",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "6e5ac64f-a45f-473f-97fd-bd9739d25474",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "eae34bdd-b4ab-4c79-9180-ca233c2df71c",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "eae34bdd-b4ab-4c79-9180-ca233c2df71c",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "52361ef6-7f5a-4133-a6d3-318fa2bb2c66",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "52361ef6-7f5a-4133-a6d3-318fa2bb2c66",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "01fc1ded-fe52-4c79-9d0c-dd73f13e3d80",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "01fc1ded-fe52-4c79-9d0c-dd73f13e3d80",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "d5b6e422-0bb1-4521-b61d-d37384fcfcc5",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "d5b6e422-0bb1-4521-b61d-d37384fcfcc5",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "7c42e558-ea6d-499e-83a6-7172ef047afa",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "7c42e558-ea6d-499e-83a6-7172ef047afa",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "1b0c846e-ad41-4e5f-8b2b-33b557b96a29",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "1b0c846e-ad41-4e5f-8b2b-33b557b96a29",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "42556cd4-2da6-4d97-a9f1-3108a88e9e1e",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "42556cd4-2da6-4d97-a9f1-3108a88e9e1e",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "347724ab-dc55-4496-a53d-c3adf1a566df",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "347724ab-dc55-4496-a53d-c3adf1a566df",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "80752bf7-a31d-4e36-9afa-864cbb6efcc0",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "80752bf7-a31d-4e36-9afa-864cbb6efcc0",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "ed2b5877-c3ca-4dc4-9aee-c3ee0ad5e0de",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "ed2b5877-c3ca-4dc4-9aee-c3ee0ad5e0de",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "dd6ae0af-b011-41ff-9307-0aa747b8482f",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "dd6ae0af-b011-41ff-9307-0aa747b8482f",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "a27d2163-0c3f-469d-83ce-a8ffcb9f3d06",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "a27d2163-0c3f-469d-83ce-a8ffcb9f3d06",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      },
+      {
+        "sourceId": "0e8eccfa-6273-4d10-9fdf-522f8e01d536",
+        "field": "runOnEdit",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; false requires no edit-time mutation."
+      },
+      {
+        "sourceId": "0e8eccfa-6273-4d10-9fdf-522f8e01d536",
+        "field": "substituteRegex",
+        "severity": "info",
+        "message": "Preserved in the legacy sidecar; zero selects ordinary regex replacement."
+      }
+    ],
+    "failures": [],
+    "verificationComplete": true,
+    "verificationUnaccounted": [],
+    "receiptCheckpoints": 26
+  },
+  "postInstallVerification": {
+    "complete": true,
+    "unaccounted": []
+  },
+  "regex": {
+    "scopedToPreset": 25,
+    "expected": 25,
+    "ids": {
+      "3bad7420-8728-4203-810a-d35113ac4bf3": "Clf1ojssB2TVEirWI_LVq",
+      "76dcebc7-37b1-406b-8eda-b534d436b7dc": "WYAq_YeIzj0a0WmIxSVvN",
+      "7a87fcb9-d1a4-48e0-ade9-11730a8ca26c": "oc-C7_q99J2Y_p-2-nzT4",
+      "e991449e-de29-4c58-9cbf-e9094d20338d": "R1bX2I4m9yj_A058Vf0AS",
+      "91debb2f-d33f-4494-ac20-a0c638919eb8": "wV2dIQiLBIAvsloQT4fVe",
+      "03213b2a-c77a-478a-acc4-bff328988db7": "mWvF0glRO4dg-sc5p11Yu",
+      "987587e8-fb6b-41b4-85f1-1298ef8dc952": "rdPg__lusYZ31-ExmCXpZ",
+      "4ba81455-1734-4497-ad20-8d2764442157": "Fd2Rkgs4-VWSF4rrf-Qw8",
+      "be685dc9-2899-4b3e-9987-9a8e564ba7a8": "5UJ4_UCtm7PrJxC3hz_NI",
+      "8b07039f-96ae-4cdc-b6d7-37d3fe37fae8": "UDmU3bdLVWAaL9FGv8qpu",
+      "f6f25ad6-7a94-4cee-ab5b-98eb249cee61": "uBx8tlZ6Q_7-r0nK7InI9",
+      "6e5ac64f-a45f-473f-97fd-bd9739d25474": "nCbXLxLzQy_hjeTEBdSCh",
+      "eae34bdd-b4ab-4c79-9180-ca233c2df71c": "3UOg6TGi2Zgq7FHDCTazc",
+      "52361ef6-7f5a-4133-a6d3-318fa2bb2c66": "qjTixKG3ck9RMopsJAhlV",
+      "01fc1ded-fe52-4c79-9d0c-dd73f13e3d80": "YY6NDbTYkLMZVhaviP5Qv",
+      "d5b6e422-0bb1-4521-b61d-d37384fcfcc5": "vmjtFTP9eslnn5ddMcM-C",
+      "7c42e558-ea6d-499e-83a6-7172ef047afa": "-AUKCKc4f6wXc48TIJV7g",
+      "1b0c846e-ad41-4e5f-8b2b-33b557b96a29": "FEGrZ1LluRkiSZCCdCPfZ",
+      "42556cd4-2da6-4d97-a9f1-3108a88e9e1e": "r0gxNBMe0Hsy_fUGR3dMG",
+      "347724ab-dc55-4496-a53d-c3adf1a566df": "4TCR5FuKuMF2Xo6ypVHsm",
+      "80752bf7-a31d-4e36-9afa-864cbb6efcc0": "zCF6gHalqs3v9xnX9mIW4",
+      "ed2b5877-c3ca-4dc4-9aee-c3ee0ad5e0de": "IcevBdStENgbuOetQ6jrK",
+      "dd6ae0af-b011-41ff-9307-0aa747b8482f": "gse3m-8nTLR3xSnlbqkAV",
+      "a27d2163-0c3f-469d-83ce-a8ffcb9f3d06": "DwHMPdzu3R2a3gvJSsOOb",
+      "0e8eccfa-6273-4d10-9fdf-522f8e01d536": "qU94GLFXI9knX3YupirZu"
+    },
+    "readbackSample": [
+      {
+        "id": "Clf1ojssB2TVEirWI_LVq",
+        "name": "FF5 Delete - Untagged Thoughts",
+        "order": 0,
+        "applyMode": "prompt",
+        "enabled": "true",
+        "targetPromptPresetIds": "[\"pLwe7NpVlr3mtoYe34-jD\"]"
+      },
+      {
+        "id": "WYAq_YeIzj0a0WmIxSVvN",
+        "name": "FF5 Catch - Untagged Thoughts",
+        "order": 1,
+        "applyMode": "display",
+        "enabled": "true",
+        "targetPromptPresetIds": "[\"pLwe7NpVlr3mtoYe34-jD\"]"
+      },
+      {
+        "id": "oc-C7_q99J2Y_p-2-nzT4",
+        "name": "FF5 UI - Collapse Detail Spacing",
+        "order": 2,
+        "applyMode": "display",
+        "enabled": "true",
+        "targetPromptPresetIds": "[\"pLwe7NpVlr3mtoYe34-jD\"]"
+      }
+    ]
+  },
+  "export": {
+    "type": "marinara_preset",
+    "version": 1,
+    "exportedAt": "2026-09-07T15:33:52.171Z",
+    "remappedPresetId": "pLwe7NpVlr3mtoYe34-jD",
+    "counts": {
+      "sections": 69,
+      "groups": 12,
+      "choiceBlocks": 11
+    },
+    "normalizedPresetFields": {
+      "isDefault": "false",
+      "variableGroupsType": "string",
+      "variableValuesType": "string",
+      "defaultChoicesType": "string",
+      "sectionOrderType": "string",
+      "groupOrderType": "string",
+      "wrapFormat": "none",
+      "scopedRegexMode": "disabled",
+      "createdAt": "2026-08-31T00:27:46.000Z",
+      "updatedAt": "2026-09-07T15:33:52.165Z",
+      "imagePath": null
+    },
+    "envelopePath": "compatibility/runtime-export.marinara.json"
+  },
+  "fileStorageDir": "/tmp/wmc-ff54-engine-cngmP1"
+}

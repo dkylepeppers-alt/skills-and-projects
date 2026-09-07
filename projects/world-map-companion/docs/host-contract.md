@@ -1,8 +1,8 @@
 # World Map Companion — Host Integration Contract (Task 2)
 
 **Date:** 2026-09-07  
-**Scope:** Host contract discovery + Task 2 no-op lifecycle observation proof (in-process). No full CompanionHostBridge, no package activation on a desktop host, no preset byte changes, no invented remapped IDs.  
-**Status:** Source-traced against pinned checkouts. Task 1 import + Task 2 lifecycle observation **recorded** in-process (`lifecycle-observation.json`); user-desktop install fields remain UNKNOWN (`installed-runtime` PARTIAL).
+**Scope:** Host contract discovery + Task 2 no-op lifecycle observation (in-process) + **PROPOSED** `CompanionHostBridge` adapter under `src/host/`. No Engine package-facing lifecycle APIs invented as upstream; no desktop `activatePackage`; no preset byte changes; no invented remapped IDs.  
+**Status:** Source-traced against pinned checkouts. Task 1 import + Task 2 lifecycle observation **recorded**; companion-owned bridge adapter **IMPLEMENTED as PROPOSED** (unit-tested). User-desktop install / `activatePackage` remain **UNVERIFIED** (`installed-runtime` PARTIAL).
 
 ## 1. Pins
 
@@ -10,8 +10,8 @@
 |---|---|---|
 | Marinara Engine (staging) | `9bbee87d1a44c33f704977bd8c25aafbec9b85aa` | `/workspace/repos/Marinara-Engine` |
 | Marinara Agents (staging) | `ee1a4a01d1091a9f5e4086c58f608e401aa1d879` | `/workspace/repos/Marinara-Agents` |
-| Companion implementation branch tip (includes Task 1 PR #5) | `fd0ea02d2fe80b53d4abbfda414af490840a2acf` | `implementation/world-map-companion` |
-| Companion task branch | `wmc/task-2-host-contract` | see `compatibility/source-lock.json` |
+| Companion implementation branch tip (includes Task 2 PR #6) | `7df59b75d9366d12ce52bc001b3b95f93879d1fa` | `implementation/world-map-companion` |
+| Companion task branch | `wmc/task-2-bridge` | see `compatibility/source-lock.json` |
 
 Machine-readable copy: `compatibility/source-lock.json`.  
 Installed build versions: `compatibility/installed-runtime.json` (Task 1 import + Task 2 lifecycle **recorded** in-process; user desktop install fields still **UNKNOWN** → status PARTIAL).  
@@ -26,6 +26,7 @@ World Maps package inspected at Agents pin: `hierarchical-maps` manifest `versio
 
 - **VERIFIED:** Symbol/path observed in the pinned Engine/Agents checkout.
 - **PROPOSED:** Companion-owned API from plan Section 5; does **not** exist upstream.
+- **IMPLEMENTED (proposed adapter):** Companion code exists in this repo and is unit-tested; still **not** an Engine export and not proven via desktop package activation.
 - **UNVERIFIED:** Required for Task 2 exit or later integration, but not proven against a live Engine process / installed runtime in this workspace.
 
 ## 3. Package / capability APIs (VERIFIED)
@@ -202,11 +203,24 @@ Storage: `chats.storage.ts` → `addSwipe` (~L2128), `setActiveSwipe` (~L2174), 
 
 **UNVERIFIED:** Companion event tombstones / projection repair after deletion mid-history.
 
-## 6. Proposed CompanionHostBridge (PROPOSED — plan Section 5)
+## 6. CompanionHostBridge (PROPOSED adapter — IMPLEMENTED in companion repo)
 
-> **PROPOSED API — not present in Marinara Engine.** To be implemented later as an explicit host bridge / patch at the verified owners above. Do not treat these methods as upstream exports.
+> **PROPOSED API — not present in Marinara Engine.** Companion-owned adapter at `src/host/` (`createProposedCompanionHostBridge`). Do **not** treat these methods as upstream exports or package-facing `activate(context)` hooks. Engine patches that call into this bridge at the §5 owners remain future work.
+
+**Status legend for this section**
+
+| Surface | Status |
+|---|---|
+| `prepareTurn` / `finalizeTurn` / `cancelTurn` / `selectHistory` | **IMPLEMENTED (proposed adapter)** — observation-only path unit-tested; no campaign writes |
+| Field-ownership arbitration stub | **IMPLEMENTED (proposed adapter)** — refuses companion↔native dual-write |
+| Resolved preset `state_mode` + companion profile (no display-text parse) | **IMPLEMENTED (proposed adapter)** — reads `chatChoices` / preset defaults by `variableName` |
+| Read-only prompt contributor registration | **IMPLEMENTED (proposed adapter)** — injects VERIFIED `registerCapabilityPromptContext` when provided; else local PROPOSED registry |
+| Supported-version detection vs pinned `supportedCapabilityApi` 1.15 | **IMPLEMENTED (proposed adapter)** — fail closed on missing/mismatch |
+| Wire into live `generate.routes` / chats HTTP at §5 owners | **UNVERIFIED** / not done (adapter accepts injected abort registry + observe hooks only) |
+| Desktop `activatePackage` / private install | **UNVERIFIED** |
 
 ```ts
+// src/host/types.ts + src/host/companion-host-bridge.ts (PROPOSED)
 type TurnAnchor = {
   chatId: string;
   messageId: string;
@@ -236,20 +250,19 @@ interface CompanionHostBridge {
   selectHistory(input: HistorySelection): Promise<StateCursor>;
 }
 
-// Domain DTOs (TurnInput, AcceptedResponse, CommitResult, HistorySelection)
-// are defined in contracts.ts during Task 3.
+// Domain DTOs expand in contracts.ts during Task 3; Task 2 ships minimal stubs for TurnTicket.
 ```
 
-**Intended wiring (future, not implemented in Task 2):**
+**Intended wiring at verified owners (§5) — adapter-ready, Engine instrumentation still open:**
 
 | Bridge method | Primary verified owners to instrument |
 |---|---|
 | `prepareTurn` | Before prompt assembly / contributor collection in `generate.routes.ts`; read-only projection for `registerPromptContext`. |
 | `finalizeTurn` | After accepted persist (`createMessage` / `addSwipe` / continue update) and before/at `assistant_message_ready`. |
-| `cancelTurn` | `POST /api/generate/abort` + disconnect abort paths. |
+| `cancelTurn` | `POST /api/generate/abort` + disconnect abort paths (harness: same AbortController registry as no-op observation). |
 | `selectHistory` | `setActiveSwipe`, branch create, message edit/delete, regenerate swipe add. |
 
-Field-ownership arbitration and preset mode/profile exposure without parsing display text remain **future bridge work** (plan Task 2 bullets beyond this scaffold).
+Tests: `tests/companion-host-bridge.test.ts` (no state writes on no-op path; cancel clears ticket; version mismatch fails closed; dual-write refused; prompt path proposed vs wired).
 
 ## 7. Prompt contributor usage rules (for eventual no-op / live modes)
 
@@ -260,6 +273,8 @@ Field-ownership arbitration and preset mode/profile exposure without parsing dis
 - Must not run simulation, model calls, or commits inside the contributor.
 
 Companion briefing assembly belongs **outside** the contributor (prepareTurn / cached projection); the contributor only reads the prepared text.
+
+**IMPLEMENTED (proposed adapter):** `src/host/prompt-contributor.ts` → `registerReadOnlyPromptContributor`. When `registerCapabilityPromptContext` is injected, status is `wired`; otherwise `proposed-adapter` (local registry). Desktop package activation that performs this registration remains **UNVERIFIED**.
 
 ## 8. Task 2 lifecycle observation (RECORDED in-process) + remaining gaps
 
@@ -284,20 +299,27 @@ Evidence: `compatibility/lifecycle-observation.json` (`evidence.task2LifecycleOb
 - **Disable / re-enable:** `observer.disable()` clears prompt-contribution flag and ignores further events; `enable()` restores listening; counts remain exactly once each.
 - **Honesty:** same standard as Task 1 — in-process Engine modules / storage paths, **not** full HTTP generate SSE + LLM, **not** private package `activatePackage` on a user desktop.
 
-### 8.2 Still UNVERIFIED / outside this Task 2 proof
+### 8.2 Still UNVERIFIED / outside the proposed-adapter proof
 
 1. **User-desktop installed-runtime fill-in** of remaining UNKNOWN fields (Engine version string, hierarchical-maps install version, capability API reported by host).
-2. **Private package install / `activatePackage` / `deactivatePackage`** on a real host (observer disable/re-enable simulates cleanup only).
-3. **Live HTTP generate abort** with an in-flight model stream (cancel here uses the same AbortController pattern, without Fastify + provider).
-4. **Supported-version detection** refusing hosts outside tested `capabilityApi` / engine range.
-5. **CompanionHostBridge implementation** at the verified owners (PROPOSED §6 — do not invent beyond no-op observation).
+2. **Private package install / `activatePackage` / `deactivatePackage`** on a real host (observer disable/re-enable + bridge unregister simulate cleanup only).
+3. **Live HTTP generate abort** with an in-flight model stream (cancel uses the same AbortController pattern, without Fastify + provider).
+4. **Engine route instrumentation** calling the proposed bridge at §5 owners (adapter + unit tests exist; generate.routes patches do not).
 
-`installed-runtime.json` status remains **PARTIAL** while desktop unknowns remain — but `task2LifecycleObservation` is **recorded**.
+### 8.3 Now IMPLEMENTED as PROPOSED companion adapter (not Engine)
+
+1. **Supported-version detection** (`src/host/supported-version.ts`) — fail closed vs pinned `1.15`.
+2. **CompanionHostBridge** (`src/host/companion-host-bridge.ts`) — prepare/finalize/cancel/selectHistory; observation-only no writes; cancel clears ticket.
+3. **Field-ownership arbitration stub** + **preset mode/profile resolution** without parsing display labels.
+4. **Read-only prompt contributor** registration path (Engine inject or proposed local adapter).
+
+`installed-runtime.json` status remains **PARTIAL** while desktop unknowns / `activatePackage` remain — but `task2LifecycleObservation` is **recorded** and the bridge adapter is present under `src/host/`.
 
 ## 9. Out of scope / non-goals
 
 - Modifying `source/presets/*` bytes.
 - Inventing remapped IDs beyond Task 1 `runtimeObservation`.
-- Implementing Engine patches or full CompanionHostBridge behavior beyond no-op observation.
+- Implementing Engine patches that instrument `generate.routes` / chats HTTP (bridge adapter only).
+- Claiming the PROPOSED bridge is an upstream Engine export or that desktop `activatePackage` was proven.
 - Claiming Task 3 contracts/state work.
 - Claiming a user-desktop package install or full HTTP generate lifecycle.

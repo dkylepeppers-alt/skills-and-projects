@@ -26,3 +26,27 @@ export {
   type CommitBatchResult,
   type RepositoryHooks,
 } from "./repository.ts";
+
+export {
+  HistoryStore,
+  HistoryError,
+  PROCESSING_VERSION,
+  applyHistorySelection,
+  dedupKeyHash,
+  eventMatchesBinding,
+  formatDedupKey,
+  turnDedupKeyFromAnchor,
+  type ChatSelectionState,
+  type CommittedTurn,
+  type HistoryErrorCode,
+  type PendingJob,
+  type PendingJobStatus,
+} from "./history.ts";
+
+export {
+  CheckpointStore,
+  checkpointIdFor,
+  replayFromCheckpoint,
+  type CheckpointRecord,
+} from "./checkpoints.ts";
+

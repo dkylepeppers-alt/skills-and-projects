@@ -379,6 +379,112 @@ export class CampaignRepository {
     }
   }
 
+  /**
+   * Replace the active event log + projection with an ordered lineage (Task 4).
+   * Used when history selection switches swipe/branch: alternate swipe events
+   * remain in the history archive; only the selected lineage is live.
+   * Does not claim Engine CapabilityDocumentStore — companion file-backed only.
+   */
+  rebuildActiveLineage(campaignId: string, events: CompanionEvent[]): CommitBatchResult {
+    this.recoverIfNeeded(campaignId);
+    const opened = this.open(campaignId);
+    if (!opened) {
+      throw new RepositoryError("NOT_FOUND", `campaign ${campaignId} does not exist`);
+    }
+    const { meta } = opened;
+    for (const ev of events) {
+      if (ev.campaignId !== campaignId) {
+        throw new ReduceError("CROSS_CAMPAIGN", `lineage event ${ev.eventId} campaign mismatch`, {
+          eventId: ev.eventId,
+          eventCampaignId: ev.campaignId,
+          repositoryCampaignId: campaignId,
+        });
+      }
+      if (ev.branchId !== meta.branchId) {
+        throw new ReduceError("CROSS_BRANCH", `lineage event ${ev.eventId} branch mismatch`, {
+          eventId: ev.eventId,
+          eventBranchId: ev.branchId,
+          repositoryBranchId: meta.branchId,
+        });
+      }
+    }
+
+    const { projection, stateHash } = events.length
+      ? replayEvents(events)
+      : { projection: emptyProjection(campaignId, meta.branchId), stateHash: hashProjection(emptyProjection(campaignId, meta.branchId)) };
+
+    if (events.length && (projection.campaignId !== campaignId || projection.branchId !== meta.branchId)) {
+      throw new RepositoryError(
+        "CORRUPT_STATE",
+        `replayed projection identity mismatch for ${campaignId}`,
+      );
+    }
+
+    const p = this.paths(campaignId);
+    if (existsSync(p.txn)) {
+      rmSync(p.txn, { recursive: true, force: true });
+    }
+    mkdirSync(join(p.txn, "events"), { recursive: true });
+
+    const stagedEventIds: string[] = [];
+    for (const ev of events) {
+      const name = `${String(ev.expectedRevision).padStart(8, "0")}_${ev.eventId}.json`;
+      atomicWriteJson(join(p.txn, "events", name), ev);
+      stagedEventIds.push(ev.eventId);
+    }
+    atomicWriteJson(join(p.txn, "projection.json"), projection);
+    const now = new Date().toISOString();
+    const nextMeta: CampaignMeta = {
+      ...meta,
+      revision: projection.revision,
+      headEventId: projection.headEventId,
+      updatedAt: now,
+    };
+    atomicWriteJson(join(p.txn, "meta.json"), nextMeta);
+    atomicWriteJson(join(p.txn, "ready.json"), {
+      formatVersion: PACKAGE_DOCUMENT_FORMAT_VERSION,
+      stagedEventIds,
+      stateHash,
+      rebuild: true,
+      at: now,
+    });
+
+    // Replace live events directory entirely on rebuild
+    if (existsSync(p.events)) {
+      rmSync(p.events, { recursive: true, force: true });
+    }
+    mkdirSync(p.events, { recursive: true });
+    this.publishTxn(campaignId);
+
+    return {
+      cursor: {
+        campaignId,
+        branchId: projection.branchId,
+        headEventId: projection.headEventId,
+        revision: projection.revision,
+      },
+      projection,
+      stateHash,
+      narrowRef: this.toNarrowRef(nextMeta),
+    };
+  }
+
+  readSnapshot(campaignId: string, snapshotId: string): CampaignSnapshot | null {
+    const p = this.paths(campaignId);
+    const path = join(p.snapshots, `${snapshotId}.json`);
+    if (!existsSync(path)) return null;
+    return readJson(path) as CampaignSnapshot;
+  }
+
+  listSnapshotIds(campaignId: string): string[] {
+    const p = this.paths(campaignId);
+    if (!existsSync(p.snapshots)) return [];
+    return readdirSync(p.snapshots)
+      .filter((f) => f.endsWith(".json"))
+      .map((f) => f.replace(/\.json$/, ""))
+      .sort();
+  }
+
   writeSnapshot(input: {
     campaignId: string;
     snapshotId: string;

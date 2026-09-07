@@ -56,3 +56,14 @@ export type {
   TurnInput,
   TurnTicket,
 } from "./types.ts";
+
+export {
+  createLifecycleHelpers,
+  finalizeHistoryTurn,
+  prepareHistoryTurn,
+  recoverAfterRestart,
+  selectHistoryAuthoritative,
+  type LifecycleContext,
+  type PreparedLifecycleTurn,
+} from "./lifecycle.ts";
+

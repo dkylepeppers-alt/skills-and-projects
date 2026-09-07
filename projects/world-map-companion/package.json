@@ -13,6 +13,7 @@
     "validate:world-pack": "python3 scripts/validate-world-pack.py",
     "test:world-pack": "node --test tests/world-pack.test.ts",
     "test:travel": "node --test tests/travel-gates.test.ts",
-    "test:simulation": "node --test tests/simulation.test.ts"
+    "test:simulation": "node --test tests/simulation.test.ts",
+    "test:knowledge": "node --test tests/knowledge-consequences.test.ts"
   }
 }

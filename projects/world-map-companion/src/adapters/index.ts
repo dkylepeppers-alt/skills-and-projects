@@ -1,5 +1,6 @@
 /**
- * Host / map adapters (Task 6+).
- * Spatial-owner wiring is PROPOSED — see spatial-owner.ts honesty labels.
+ * Host / map / tracker adapters (Tasks 6, 8).
+ * Spatial-owner and tracker wiring are PROPOSED — see honesty labels.
  */
 export * from "./spatial-owner.ts";
+export * from "./trackers.ts";

@@ -7,7 +7,7 @@
     "implementationBranch": "implementation/world-map-companion",
     "implementationTip": "28d13991464abf6251e532d5e3da0c3cac756ef5",
     "taskBranch": "wmc/task-2-host-contract",
-    "taskTip": "PENDING_COMMIT"
+    "taskTip": "76b4c42db427690bd6565d7b2c8bfdc99be45566"
   },
   "engine": {
     "repository": "Pasta-Devs/Marinara-Engine",

@@ -239,10 +239,14 @@ test("translated regexes retain the full legacy record alongside Engine input", 
   assert.equal(both.input.promptOnly, false);
 });
 
-test("field ledger and runtime observation document the blocked Engine round-trip", () => {
-  assert.equal(fieldMap.runtimeObservation.status, "blocked");
-  assert.equal(fieldMap.runtimeObservation.pinnedRevisions.engine, "9bbee87d1a44c33f704977bd8c25aafbec9b85aa");
-  assert.equal(fieldMap.runtimeObservation.pinnedRevisions.agents, "ee1a4a01d1091a9f5e4086c58f608e401aa1d879");
+test("field ledger and runtime observation document the recorded Engine round-trip", () => {
+  assert.equal(fieldMap.runtimeObservation.status, "recorded");
+  assert.equal(fieldMap.runtimeObservation.mode, "in-process-engine-import");
+  assert.equal(fieldMap.runtimeObservation.nativePresetId, "pLwe7NpVlr3mtoYe34-jD");
+  assert.equal(fieldMap.runtimeObservation.pins.engine, "9bbee87d1a44c33f704977bd8c25aafbec9b85aa");
+  assert.equal(fieldMap.runtimeObservation.pins.agents, "ee1a4a01d1091a9f5e4086c58f608e401aa1d879");
+  assert.equal(fieldMap.runtimeObservation.verification.unaccounted, 0);
+  assert.equal(fieldMap.runtimeObservation.verification.regexScoped, "25/25");
   assert.equal(fieldMap.fields.section.wrapInXml.disposition, "default-equivalent");
   assert.equal(fieldMap.fields.legacyRegex.runOnEdit.disposition, "sidecar");
   assert.match(fieldMap.artifactSpecificEquivalences.sectionWrapping, /69/);

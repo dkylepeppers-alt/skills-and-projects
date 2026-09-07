@@ -76,17 +76,48 @@ test('an altered baseline is rejected and an output report cannot overwrite eith
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
-test('enabling a disabled agent marker fails the pinned archive inventory', () => {
-  const dir = mkdtempSync(join(tmpdir(), 'ff54-audit-'));
-  try {
-    // Keep archive size/hash path by using --source with a copy that still fails
-    // the byte/hash gate first; also prove the dedicated marker path via baseline
-    // order mismatch is not needed — auditor rejects before field compare when
-    // bytes differ. Here we only assert the live report lists the seven markers.
-    const result = audit();
-    assert.equal(result.status, 0, result.stderr);
-    const report = JSON.parse(result.stdout);
-    assert.equal(report.disabledAgentMarkers.every((row: { enabled: string }) => row.enabled === 'false'), true);
-    assert.equal(report.disabledAgentMarkers.map((row: { id: string }) => row.id).length, 7);
-  } finally { rmSync(dir, { recursive: true, force: true }); }
+test('archive integrity rejects enabling each disabled agent marker', async (t) => {
+  const beforeSource = readFileSync(source);
+  const beforeBaseline = readFileSync(baseline);
+  const sourceText = beforeSource.toString('utf8');
+  const original = JSON.parse(sourceText);
+
+  for (const agentType of EXPECTED_DISABLED) {
+    await t.test(agentType, () => {
+      const dir = mkdtempSync(join(tmpdir(), 'ff54-audit-'));
+      try {
+        const expected = structuredClone(original);
+        const marker = expected.data.sections.find((row: { markerConfig: string | { type?: string; agentType?: string } | null }) => {
+          const config = typeof row.markerConfig === 'string' ? JSON.parse(row.markerConfig) : row.markerConfig;
+          return config?.type === 'agent_data' && config.agentType === agentType;
+        });
+        assert.ok(marker, `Missing ${agentType} marker in the test source`);
+        assert.equal(marker.enabled, 'false');
+        marker.enabled = 'true';
+
+        const markerStart = sourceText.indexOf(`"id": "${marker.id}"`);
+        assert.notEqual(markerStart, -1);
+        const disabledField = '"enabled": "false"';
+        const fieldStart = sourceText.indexOf(disabledField, markerStart);
+        assert.notEqual(fieldStart, -1);
+        // One padding space preserves the byte count while changing only this
+        // marker's JSON value. The archive hash must reject it before inventory.
+        const altered = sourceText.slice(0, fieldStart) + '"enabled": "true" ' +
+          sourceText.slice(fieldStart + disabledField.length);
+        assert.equal(Buffer.byteLength(altered), beforeSource.length);
+        assert.deepEqual(JSON.parse(altered), expected);
+
+        const path = join(dir, 'enabled-marker.json');
+        writeFileSync(path, altered);
+        const result = audit(['--source', path]);
+        assert.equal(result.status, 1, result.stderr);
+        assert.match(result.stderr, /source does not match the archived SHA-256/);
+        assert.equal(result.stdout, '', 'Rejected source must not produce an inventory');
+      } finally {
+        rmSync(dir, { recursive: true, force: true });
+        assert.deepEqual(readFileSync(source), beforeSource);
+        assert.deepEqual(readFileSync(baseline), beforeBaseline);
+      }
+    });
+  }
 });

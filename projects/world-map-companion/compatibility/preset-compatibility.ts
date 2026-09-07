@@ -233,6 +233,12 @@ function same(left: unknown, right: unknown, field: string): boolean {
   return isDeepStrictEqual(normalize(left), normalize(right));
 }
 
+/** Legacy export columns the pinned importer ignores; missing native equals documented default. */
+function defaultEquivalent(expected: unknown, observed: unknown, fallback: unknown, field: string): boolean {
+  const effectiveObserved = observed === undefined || observed === null ? fallback : observed;
+  return same(expected ?? fallback, effectiveObserved, field);
+}
+
 function uniqueIndex(rows: any[], key: (row: any) => string): Map<string, any> {
   const result = new Map<string, any>();
   const ids = new Set<string>();
@@ -286,13 +292,20 @@ export function verifyInstalledPreset(plan: ReturnType<typeof buildCompatibility
   check("data.preset.groupOrder", (parseJson(source.preset.groupOrder) as string[]).map((id: string) => idMap.groups[id]), actual.preset.groupOrder);
 
   const sectionsById = new Map(actual.sections.map((item: any) => [item.id, item]));
-  const sectionFields = ["identifier", "name", "content", "role", "enabled", "isMarker", "markerConfig", "injectionPosition", "injectionDepth", "injectionOrder", "wrapInXml", "xmlTagName", "forbidOverrides"];
+  const sectionFields = ["identifier", "name", "content", "role", "enabled", "isMarker", "markerConfig", "injectionPosition", "injectionDepth", "injectionOrder", "forbidOverrides"];
   for (const item of source.sections) {
     const observed: any = sectionsById.get(idMap.sections[item.id]);
     if (!observed) { unaccounted.push({ sourcePath: `data.sections[${item.id}]`, expected: "installed", actual: null }); continue; }
     check(`data.sections[${item.id}].presetId`, actual.preset.id, observed.presetId);
     check(`data.sections[${item.id}].groupId`, item.groupId ? idMap.groups[item.groupId] : null, observed.groupId);
     for (const field of sectionFields) check(`data.sections[${item.id}].${field}`, item[field], observed[field]);
+    // wrapInXml / xmlTagName do not round-trip through the pinned importer.
+    if (!defaultEquivalent(item.wrapInXml, observed.wrapInXml, false, "wrapInXml")) {
+      unaccounted.push({ sourcePath: `data.sections[${item.id}].wrapInXml`, expected: item.wrapInXml, actual: observed.wrapInXml });
+    }
+    if (!defaultEquivalent(item.xmlTagName, observed.xmlTagName, "", "xmlTagName")) {
+      unaccounted.push({ sourcePath: `data.sections[${item.id}].xmlTagName`, expected: item.xmlTagName, actual: observed.xmlTagName });
+    }
   }
 
   const groupsById = new Map(actual.groups.map((item: any) => [item.id, item]));

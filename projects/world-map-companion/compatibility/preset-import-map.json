@@ -315,7 +315,24 @@
     "regexScope": "The source-level embedded collection is installed as global rows scoped to the remapped preset ID, so it cannot affect unrelated presets."
   },
   "runtimeObservation": {
-    "status": "pending",
-    "note": "Populated only by an isolated import/export run against the pinned Engine; no runtime IDs are invented."
+    "status": "blocked",
+    "reason": "No Marinara Engine checkout is available in this workspace for a live import/export round-trip.",
+    "pinnedRevisions": {
+      "engine": "9bbee87d1a44c33f704977bd8c25aafbec9b85aa",
+      "agents": "ee1a4a01d1091a9f5e4086c58f608e401aa1d879"
+    },
+    "requiredWhenUnblocked": [
+      "POST /api/import/marinara with the immutable FF5.4 envelope",
+      "GET /api/prompts/{newPresetId}/full and compare against verifyInstalledPreset",
+      "GET /api/prompts/{newPresetId}/export and record remapped IDs / normalized values without altering source bytes",
+      "POST /api/regex-scripts/import for all 25 translated scripts scoped to the new preset ID",
+      "GET /api/regex-scripts readback field-by-field against convertLegacyRegexScript outputs"
+    ],
+    "localProofsStrengthened": [
+      "scripts/audit-preset.py pins SHA-256, order arrays, wrapFormat, wrapping fields, and seven disabled agent markers",
+      "compatibility/preset-compatibility.ts treats wrapInXml/xmlTagName as default-equivalent to missing native columns",
+      "tests cover regex scopes, disabled flags, flag suffixes, edit/substitute refusals, depth limits, and legacy sidecar retention"
+    ],
+    "note": "Populated runtime IDs must come from an isolated import/export against the pinned Engine; none are invented here."
   }
 }

@@ -204,3 +204,65 @@ test('an interrupted install resumes the same preset and does not duplicate ackn
     resume: { ...resumed.receipt, sourceHash: 'wrong' },
   }), /receipt/i);
 });
+
+test("wrapping fields are default-equivalent when the native readback omits them", () => {
+  const plan = buildCompatibilityPlan(source);
+  const fake = createFakeEngine(source);
+  for (const section of fake.fullPreset.sections) {
+    delete section.wrapInXml;
+    delete section.xmlTagName;
+  }
+  assert.equal(verifyInstalledPreset(plan, fake.fullPreset).complete, true);
+  fake.fullPreset.sections[0].wrapInXml = "true";
+  assert.equal(verifyInstalledPreset(plan, fake.fullPreset).complete, false);
+});
+
+test("translated regexes retain the full legacy record alongside Engine input", () => {
+  const legacy = source.extensions.regex_scripts;
+  assert.equal(legacy.length, 25);
+  for (const [index, script] of legacy.entries()) {
+    const converted = convertLegacyRegexScript(script, { order: index, targetPresetId: "preset-x" });
+    assert.deepEqual(converted.preservedLegacy, script);
+    assert.equal(converted.input.targetPromptPresetIds[0], "preset-x");
+    assert.equal(typeof converted.input.flags, "string");
+    assert.ok(converted.input.placement.every((value: string) => value === "ai_output" || value === "user_input"));
+    assert.equal(converted.input.enabled, !script.disabled);
+    assert.equal(converted.preservedLegacy.runOnEdit, false);
+    assert.equal(converted.preservedLegacy.substituteRegex, 0);
+  }
+  const substituteBlocked = convertLegacyRegexScript({ ...legacy[0], substituteRegex: 1 }, { order: 0 });
+  assert.ok(substituteBlocked.issues.some((issue: any) => issue.field === "substituteRegex" && issue.severity === "blocking"));
+  const depthPair = convertLegacyRegexScript({ ...legacy[0], minDepth: 5, maxDepth: 2 }, { order: 0 });
+  assert.ok(depthPair.issues.some((issue: any) => issue.field === "maxDepth" && issue.severity === "blocking"));
+  const both = convertLegacyRegexScript({ ...legacy[0], markdownOnly: false, promptOnly: false }, { order: 0 });
+  assert.equal(both.input.applyMode, "both");
+  assert.equal(both.input.promptOnly, false);
+});
+
+test("field ledger and runtime observation document the blocked Engine round-trip", () => {
+  assert.equal(fieldMap.runtimeObservation.status, "blocked");
+  assert.equal(fieldMap.runtimeObservation.pinnedRevisions.engine, "9bbee87d1a44c33f704977bd8c25aafbec9b85aa");
+  assert.equal(fieldMap.runtimeObservation.pinnedRevisions.agents, "ee1a4a01d1091a9f5e4086c58f608e401aa1d879");
+  assert.equal(fieldMap.fields.section.wrapInXml.disposition, "default-equivalent");
+  assert.equal(fieldMap.fields.legacyRegex.runOnEdit.disposition, "sidecar");
+  assert.match(fieldMap.artifactSpecificEquivalences.sectionWrapping, /69/);
+});
+
+test("disabled agent marker sections stay disabled through verification", () => {
+  const plan = buildCompatibilityPlan(source);
+  const fake = createFakeEngine(source);
+  const disabledIds = source.data.sections
+    .filter((row: any) => {
+      const marker = typeof row.markerConfig === "string" ? JSON.parse(row.markerConfig) : row.markerConfig;
+      return marker?.type === "agent_data" && row.enabled === "false";
+    })
+    .map((row: any) => row.id);
+  assert.equal(disabledIds.length, 7);
+  const verification = verifyInstalledPreset(plan, fake.fullPreset);
+  assert.equal(verification.complete, true);
+  for (const sourceId of disabledIds) {
+    const nativeId = verification.idMap.sections[sourceId];
+    const observed = fake.fullPreset.sections.find((row: any) => row.id === nativeId);
+    assert.equal(observed.enabled, "false");
+  }
+});

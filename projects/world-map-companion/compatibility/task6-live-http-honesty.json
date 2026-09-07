@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "task": 6,
+  "kind": "live-http-honesty-receipt",
+  "distinctFrom": "topology-unit-proof",
+  "status": "NOT_RUN",
+  "engineLiveUrl": "http://127.0.0.1:7860",
+  "enginePin": "9bbee87",
+  "usedForTask6Topology": false,
+  "notes": [
+    "Live HTTP spatial-owner adapter checks are optional for Task 6 exit.",
+    "Prefer unit tests against Nevermore pack.",
+    "This file stays separate so a missing live Engine cannot be mistaken for a topology failure."
+  ]
+}

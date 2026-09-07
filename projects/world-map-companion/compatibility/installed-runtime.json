@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "status": "UNKNOWN",
+  "purpose": "Template for recording the user's actual installed Engine/Agents/package runtime. Do not invent versions or remapped IDs.",
+  "updatedAt": null,
+  "evidence": {
+    "task1LiveImport": "absent",
+    "task2LifecycleObservation": "absent",
+    "notes": "Live Engine import → readback → export and no-op companion lifecycle observation have not been proven in this workspace. Fill this file only from real installer/runtime evidence."
+  },
+  "engine": {
+    "version": "UNKNOWN",
+    "commit": "UNKNOWN",
+    "buildBranch": "UNKNOWN",
+    "localModifications": "UNKNOWN"
+  },
+  "agents": {
+    "hierarchicalMaps": {
+      "packageId": "hierarchical-maps",
+      "version": "UNKNOWN",
+      "status": "UNKNOWN",
+      "sourceRevisionInspected": "ee1a4a01d1091a9f5e4086c58f608e401aa1d879"
+    }
+  },
+  "capabilityApi": {
+    "supportedByInspectedSource": { "major": 1, "minor": 15 },
+    "installedHostReports": "UNKNOWN"
+  },
+  "packages": {
+    "world-map-companion": {
+      "installed": false,
+      "version": null,
+      "activationStatus": "not-installed",
+      "permissionsDeclared": []
+    }
+  },
+  "runtimeObservation": null
+}

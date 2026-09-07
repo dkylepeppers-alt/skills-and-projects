@@ -44,4 +44,4 @@ npm test
 
 These local tests verify adapter failure handling and preservation contracts. Separate source-runtime checks are required before compatibility is release-ready.
 
-Live Engine import/export for Task 1 is **blocked** in this workspace (no Engine checkout). See `compatibility/engine-import-status.md` and the pinned Engine/Agents revisions above.
+Task 1 in-process Engine round-trip is recorded in `compatibility/engine-import-status.md`. A separate live Fastify HTTP import honesty receipt (Engine `2.4.5` @ `9bbee87` on `http://127.0.0.1:7860`) is in `compatibility/live-http-status.md` — it does not supersede Task 1, and package activate / CompanionHostBridge remain unavailable on that host.

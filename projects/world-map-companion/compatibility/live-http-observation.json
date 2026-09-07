@@ -1,0 +1,355 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-07T17:03:31.042Z",
+  "recordedAtLocal": "2026-09-07T12:03:31-05:00",
+  "mode": "live-http-engine-import",
+  "honesty": {
+    "fullHttpServer": true,
+    "notUserDesktopInstall": true,
+    "notPackageActivation": true,
+    "task1Superseded": false,
+    "task6Topology": false,
+    "path": "Live Fastify HTTP against http://127.0.0.1:7860 (workspace Engine start.sh). POST /api/import/marinara with the frozen FF5.4 envelope, then GET /api/prompts/{id}/full and GET /api/prompts/{id}/export. Not in-process createFileNativeDB. Not Task 6 travel/topology proofs.",
+    "dataDir": "workspace Engine default packages/server/data (no DATA_DIR override). Before import the host had only the stock Marinara Universal Preset plus two seed regex scripts \u2014 not a populated user desktop library.",
+    "regexImport": {
+      "attempted": false,
+      "reason": "POST /api/regex-scripts/import would insert 25 scripts into the live Engine regex collection. Skipped to avoid mutating the running host beyond one imported preset. GET /api/regex-scripts still showed only the two seed scripts after preset import \u2014 confirming native marinara_preset import still does not install envelope.extensions.regex_scripts (same gap as Task 1).",
+      "getAfterImport": [
+        {
+          "id": "default-clean-html",
+          "name": "Clean HTML (Outgoing Prompt)"
+        },
+        {
+          "id": "default-collapse-newlines",
+          "name": "Collapse Excess Newlines"
+        }
+      ]
+    },
+    "sourcePresetsUntouched": true,
+    "task1ReceiptsUntouched": [
+      "compatibility/runtimeObservation.json",
+      "compatibility/installation-receipt.json",
+      "compatibility/runtime-export.marinara.json",
+      "compatibility/installed-runtime.json"
+    ]
+  },
+  "pins": {
+    "engineCheckout": "9bbee87d1a44c33f704977bd8c25aafbec9b85aa",
+    "engineHealthCommit": "9bbee87d1a44",
+    "engineHealthVersion": "2.4.5",
+    "engineHealthBuild": "2.4.5+9bbee87d1a44",
+    "agentsInspected": "ee1a4a01d1091a9f5e4086c58f608e401aa1d879",
+    "implementationTip": "740cdee2cb618969a540d827800a8ef2043a30d3",
+    "implementationTipNote": "origin/implementation/world-map-companion after PR #11 (Task 5 Nevermore pack) merge. This receipt is independent of Task 6 topology work."
+  },
+  "host": {
+    "baseUrl": "http://127.0.0.1:7860",
+    "health": {
+      "status": "ok",
+      "version": "2.4.5",
+      "commit": "9bbee87d1a44",
+      "build": "2.4.5+9bbee87d1a44",
+      "capabilityPackages": {
+        "status": "ok",
+        "packages": []
+      }
+    },
+    "csrfOriginStatus": {
+      "path": "GET /api/csrf/origin-status",
+      "trusted": true,
+      "origin": "http://127.0.0.1:7860",
+      "source": "origin"
+    }
+  },
+  "source": {
+    "path": "source/presets/ff54-agent-gating.original.marinara.json",
+    "sha256": "43801992b7e07ffb24c0395f32ce87b4ea4f3a40aed929eb0462e3e41b7adc93",
+    "bytes": 187861,
+    "sourcePresetId": "QT6ABwAN4X1hQEGhGSGjs",
+    "counts": {
+      "sections": 69,
+      "groups": 12,
+      "choiceBlocks": 11,
+      "regexScriptsInEnvelope": 25
+    }
+  },
+  "http": {
+    "import": {
+      "method": "POST",
+      "path": "/api/import/marinara",
+      "status": 200,
+      "body": {
+        "success": true,
+        "type": "marinara_preset",
+        "id": "qCr4WA0FVIdyjxgOs2l2m",
+        "name": "Freaky Frankenstein 5.4 (Marinara) \u2014 Internal States & Agents \u2014 Agent Gating Fix"
+      }
+    },
+    "full": {
+      "method": "GET",
+      "path": "/api/prompts/qCr4WA0FVIdyjxgOs2l2m/full",
+      "status": 200,
+      "bytes": 135213,
+      "sha256": "e156a0e8738cb14c946c12fff73b9c0e752bfe32da3354f56b655ef83f6d174e",
+      "counts": {
+        "sections": 69,
+        "groups": 12,
+        "choiceBlocks": 11
+      }
+    },
+    "export": {
+      "method": "GET",
+      "path": "/api/prompts/qCr4WA0FVIdyjxgOs2l2m/export",
+      "status": 200,
+      "bytes": 135266,
+      "sha256": "78dedae3627861e828e4273a4ca63660714ac2cd24958de388c3777616d2c343",
+      "type": "marinara_preset",
+      "exportedPresetId": "qCr4WA0FVIdyjxgOs2l2m",
+      "note": "Native Engine export of the remapped live-HTTP install. Not the frozen source archive. Not checked into this receipt (hash only)."
+    },
+    "promptsList": {
+      "method": "GET",
+      "path": "/api/prompts",
+      "status": 200,
+      "items": [
+        {
+          "id": "qCr4WA0FVIdyjxgOs2l2m",
+          "name": "Freaky Frankenstein 5.4 (Marinara) \u2014 Internal States & Agents \u2014 Agent Gating Fix"
+        },
+        {
+          "id": "rCRUvIz4xHJi89wf2-1uM",
+          "name": "Marinara's Universal Preset"
+        }
+      ]
+    },
+    "regexScripts": {
+      "method": "GET",
+      "path": "/api/regex-scripts",
+      "status": 200,
+      "items": [
+        {
+          "id": "default-clean-html",
+          "name": "Clean HTML (Outgoing Prompt)"
+        },
+        {
+          "id": "default-collapse-newlines",
+          "name": "Collapse Excess Newlines"
+        }
+      ]
+    }
+  },
+  "capabilityPackages": {
+    "healthPackages": {
+      "status": "ok",
+      "packages": []
+    },
+    "installed": {
+      "method": "GET",
+      "path": "/api/capability-packages/installed",
+      "status": 200,
+      "body": []
+    },
+    "catalog": {
+      "method": "GET",
+      "path": "/api/capability-packages/catalog",
+      "status": 200,
+      "packageCount": 36,
+      "worldMapCompanionPresent": false,
+      "hierarchicalMaps": {
+        "id": "hierarchical-maps",
+        "name": "World Maps",
+        "version": "1.4.2",
+        "capabilityApi": {
+          "major": 1,
+          "minor": 4
+        },
+        "installedOnThisHost": false
+      }
+    },
+    "missingRoutes": [
+      {
+        "method": "GET",
+        "path": "/api/companion-host-bridge",
+        "status": 404,
+        "body": {
+          "error": "Not Found"
+        }
+      },
+      {
+        "method": "GET",
+        "path": "/api/companion/host-bridge",
+        "status": 404,
+        "body": {
+          "error": "Not Found"
+        }
+      },
+      {
+        "method": "GET",
+        "path": "/api/capability-packages/world-map-companion/client",
+        "status": 404,
+        "body": {
+          "error": "Active client package not found"
+        }
+      },
+      {
+        "method": "GET",
+        "path": "/api/capability-packages/world-map-companion/activate",
+        "status": 404,
+        "body": {
+          "error": "Not Found"
+        }
+      },
+      {
+        "method": "POST",
+        "path": "/api/capability-packages/world-map-companion/activate",
+        "status": 404,
+        "body": {
+          "error": "Not Found"
+        }
+      }
+    ],
+    "companionHostBridge": {
+      "onThisHost": false,
+      "engineHttpSurface": "absent",
+      "note": "CompanionHostBridge remains a companion-owned PROPOSED adapter (src/host/companion-host-bridge.ts). Live host advertised capabilityPackages.packages=[] and has no activatePackage HTTP route. Catalog lists hierarchical-maps 1.4.2 but it is not installed. world-map-companion is not in the catalog."
+    }
+  },
+  "installation": {
+    "complete": true,
+    "presetId": "qCr4WA0FVIdyjxgOs2l2m",
+    "sourcePresetId": "QT6ABwAN4X1hQEGhGSGjs",
+    "idMap": {
+      "preset": {
+        "QT6ABwAN4X1hQEGhGSGjs": "qCr4WA0FVIdyjxgOs2l2m"
+      },
+      "sections": {
+        "qsDOjc98dm7VY9hL33FDY": "7kXnPVm2tONxVFzdmQQzR",
+        "Fyvu413Otw-o720uhJZaE": "GeLcF5e1kgyGufi3SvRIU",
+        "WevQjpVZ65V9MeQwCgbSV": "dbw3yWhUVwAGWjYaAJdnP",
+        "YgXJH5JK4lhUiadVueL6A": "rufghQwkfEUTWnqHWDvNG",
+        "iA7HTajF2E9LXyvCEODuA": "_8D5gicc1saKzfWDZpQRY",
+        "IEZIZd3ePIHdhej5PTEF4": "WHKEQawB95220CZmHeSU0",
+        "L0JBkS7rhrJHV4Riw3KdT": "IRGYQY9e1t6UyRefZiDU9",
+        "7jjvayROPADtkkDfVEKvl": "XHiTHtpFeYDqVRq4Xq0FR",
+        "tMPXky_mXyMoLfZ1RnrBr": "9Qlcd4cb1Fk4bZ_626GnT",
+        "0Dnlks352tH7Igld6xNfe": "lBHuwnJ_ae6kscs0bH1G1",
+        "afhQc0_9rh4WtpN1-N-Nc": "Wk59v8ppYw21bW_16Mcqe",
+        "8IIgv1bNnJR-t1BT6QZls": "RFI4PF9T-ds2q1H1tAQ68",
+        "LNRafhLy2riut4mZFdGhw": "LZCcOa8Zxxut73ZrXb6tM",
+        "AKxNLaZB8q-LaEGZlF4_v": "cI63I2YzY4rYC8pQjZmB-",
+        "Bo6gAwM988Bm1ZkccnjM4": "Kyh2UdKziQSO6htcDWkuQ",
+        "MPwQZqZoldZu5jqGJ6QUN": "l2tAVF58qFvZsHECRB5I0",
+        "ruLbuSezWETBlcGEtBwwV": "MLVISEwYNVplOk5LsHUYi",
+        "aum1WVIdyrFepZx-4jayD": "1g4WP87e6p3I_YmcUoh-a",
+        "OyiUSn68t36yjTTFjVNiM": "kQjAd0SRhbAPaz4PnKoak",
+        "Y8PQDhoe_yubWI4oBZXfV": "5jhMynrSt45Eavk7mV-Gg",
+        "oh_K1LlawqS-kSW_3p0qP": "RKQwYZ6Nss6doYklsL3Wb",
+        "oW96ntck4JGzKXgdUVxwZ": "3iO1mhycE22NkFW3wZ0Pu",
+        "N0IHXxa5DFUy9eBRIM6KJ": "GuHRxs-MKJWkjOghjoev1",
+        "IliwXQggzhX6Df0klOYiM": "SjzIIhz3U1m_en0nyAVbl",
+        "wjh6aDKBR-zmHNdAhqBEP": "0CJiEHBm1jqUe9LFWrp5Y",
+        "M40Q3f6jz1yZQE5CPigZu": "QybE-okcXXbRgrdVvATXv",
+        "Z1Hgc_5OZ9bGtMNlEXx7M": "6UBCZ5ltIStWQq4YgMIG7",
+        "sb62DAVTPAfH4Mp0mc85J": "h0XWT0RPofRfV4eRRcENS",
+        "Dky_7L1VY5L0PG5Po_Yqo": "9jjgKT4292Fh9BgjUhJu2",
+        "5Hc9V0RzpANyH8YxDNokJ": "sy08GlW3q-px9dM2_0kHe",
+        "XbY6g-Rlmc9wElJqVRUrn": "JaPDCnzRJe7odPdt314fS",
+        "qF7IE6CT9N2mr7wat8mN3": "KoE7SX-Jzhf8dAIeyOsOV",
+        "MyZFEx1rURe2T3C84J8LG": "9cCYuZBd7ncW9KIA4tVg4",
+        "Gn84ZKXV8lpvMFZTJoiqP": "ib96hmCW_IrRDty4PGmyI",
+        "rvhEDCxrKlWAtX4OkwZZW": "3bvZc80WVXkembnmfI5jV",
+        "qNYuyzTGsfltFYzlHFKi5": "MmyURSIY0-Ss_8nk-X_Jt",
+        "nfaHvzUi-IhASrepliIR2": "i1bIGOVUPUAo--nyybB9O",
+        "daTf79UXt2RAuXuBm5QDo": "FFnH5bo8PjAV6IHIQ43oN",
+        "g0TZuj_z_JAea2Q6zMiSp": "MB0wZF0hnAjA-Z7JGal5k",
+        "WY8us-akl5DopZoJ2aT43": "oSnwxvoH46V9fsRyWUw1E",
+        "7fZ5ZQGod8LBBSw34A4RN": "n1DdkEJdbbi0wcjSAB5Dl",
+        "QC2xSDQQUKGY6P2nNz7-2": "Go6V9VR8P8qjNVVS6byPz",
+        "16HrigivW7o4CMJlNzKgK": "vAwHJWKZ4rF3rYOaIIe1g",
+        "IuAspxUQTpcaWFOiPtiNB": "559xd-fbBHxB3raBjTnc4",
+        "-vDKHl48Le8KZ0mj0epr-": "8KRi4EZfHpJDRWdmUYnlW",
+        "PoMLDGNgTK_bbL1ThZr_M": "QxP0GLb5fGWTzpQK78SVx",
+        "4xbbnK8NIPDv38Y7j1oY9": "o4nSyU2Rw2jWDFL0Pm1s2",
+        "Bi043ztZsUqXfSXJuAPye": "uLSOmTJ6MmG4MlWH-v-b6",
+        "tmfWvQVeZC-JIgxYFel-x": "_D1ZgEOwFQDEaReb59OMC",
+        "qbBXq2fx1R4ois3mSWtQ4": "B0saozyDpr9krEU2kM_sH",
+        "mVFgjDwXZPmwK1v31jTpT": "A3lktNy0XeCJRhe41VAD-",
+        "ZDrz_C7-R4VNy5zYuMQ1t": "3GNyP0gk9x0Nw7A_NWSGr",
+        "oxqE6DBUlcLY3k0n4wvMB": "aFKByuzTfnZhBJijn7hCC",
+        "R31nXEzlHyVSQQcxOsym_": "IpzK1jm90fcYMeymMcYoH",
+        "IPh87UHK1iV0wLIc22mL9": "iG7eaAG3Gx1TPfiLIhE2N",
+        "PDN9z6Hfg1E5fjRGhw9vA": "71VN43HIwrisD7MulfofX",
+        "js-YoNJY3XeRkt4fsEH_F": "7BzRbxzkZAXvluxb5RdZU",
+        "-8-Xfq1iMl-7jzxB9rX5e": "QF-FWGLN2th0qKGVkSOW5",
+        "YJsfSLCxISy8Ht-rVvzrI": "OoU3zc1TqiBiFNDR-9GXO",
+        "R7nTWr8hB5cp9dq_utcEQ": "PRC-1j3GTU5BS5WZYdrFb",
+        "6-0h0MaX_3RwWZoh5V3De": "XD-sg3QepHyYL_Mh4JHZZ",
+        "LrXXJ2CqEg8hWn0-GHGtM": "KqvmHpQ3Pi1cEEZX2sl96",
+        "rU8WE7huwUEVfKnxZcLXs": "InHuohGMr-KQQIy1lQvv6",
+        "UZOlz_fCrq2giKcQZC49j": "lYYq0DdJnxrtp0KPrHGED",
+        "5YzZ7p-zxp843LztMEtAd": "j7ma8jkc98X04SUuoV5_4",
+        "GVU6QahLcSoQar7yOSjg-": "snFF9GrI3ZLoP14NtZabU",
+        "aW7ogrZ2TADc4jDXpP7Bq": "TOzF1xs0PjpyRm7pBh9KD",
+        "1OzbwvWU4WK1lo7rqjqv5": "QqZuPYJ9oIafBBAsyupzs",
+        "2qpdsn4byOZSdSouqdIgs": "mJWrv-6s2QyWa0u1G7NvX"
+      },
+      "groups": {
+        "ghtpzGcV5Urkwz6jMRdPG": "jt8XFz8hYiv24Ju1tVzTw",
+        "1XYaqT1dG1DQ5fNQqcOT8": "aO4yVQ6rYpudTUtmJkkzG",
+        "2EhRUJJ5OVkPv9DhQDgJA": "apIuURzIujLfiGJeFnEmp",
+        "qa5o5EMpH41s8XxA0vBsY": "gfGVvPnQZmvUwMPyVIkLj",
+        "pD_gctpx9OZ5KGYOeVnPe": "QOpzFk7VviC3m1gDF3xRR",
+        "Sa8ObIwmD4JWKIr4iPrG_": "pW3zaz6KzPNncIagweYUR",
+        "yrtlIj5jBYHAdIn2BfA64": "VR6nibr769exFjGbaxp3e",
+        "ooq0OH0oBbOHFtTVu6dNF": "SelwyjzUByaP7hhxwfatx",
+        "QEGxvX2w7qMxuKd8DtP3d": "gH7bUlnxRxLZVCCrcNveg",
+        "aRy-_IoYtQN8SAXsDtzk3": "dosGcQ0urtdnGysfOzRSj",
+        "yp6ZmMKUn6DSZoGNpPtVf": "xHMz26P8R82bHD5OsWDAv",
+        "V4ET81B0huSCCnNDHz84T": "LXbIh69OUQgvhXmQciq3j"
+      },
+      "choiceBlocks": {
+        "mM6LmCXFbcIisz5JW03Iy": "tkIezIYhNjzwSE1LIP9Jh",
+        "B0-WSj6jvqp5GIF44Pilb": "U7xzgt5qcz7e0-yoY7HQt",
+        "kKJZdaD5cLIdfFQv8oYmP": "hFc95Ea1JaoW6FFwagihT",
+        "utORgst27woYyr2o74szM": "cMQq9ZmB5YEvlzg8w1iLw",
+        "EHhp4Lfpar14b9WnpUshV": "EI1Hazd4lymFwjAF_hxXZ",
+        "7a4HBU5uuN_W0RyWrd40q": "a3P1vw4664MH03-NqNkbr",
+        "COzyi_ZcYZGtOuLcWjbTm": "BG_ncCTel4mB8eEH7dpBx",
+        "wepeRPEp3HCmtXz_muAvu": "gPUFCp7R7T0eXPnNBRqUQ",
+        "Q90hB11jq168yA_mHJdAB": "eDoai3a9gt8-r-cJGNG-7",
+        "4-a-mRaVJFne8yMME4NS3": "Ru6BAfUmZ8ERS2abQe5lQ",
+        "GjPWaPcnEm7FqfnAKpELK": "q2N2ROz8Hvf_uU7PbyDHO"
+      }
+    },
+    "countsMatched": {
+      "sections": true,
+      "groups": true,
+      "choiceBlocks": true
+    },
+    "unmatched": {
+      "sections": [],
+      "groups": [],
+      "choiceBlocks": []
+    },
+    "parentGroupRemapOk": true,
+    "parentGroupIssues": [],
+    "sectionGroupRemapOk": true,
+    "sectionGroupIssues": [],
+    "contentNameEnabledMarkerMismatches": [],
+    "disabledSections": 19,
+    "markerSections": 15,
+    "regexScriptsInstalledViaPresetImport": 0
+  },
+  "stillInProcessOnly": [
+    "Task 1 verifyInstalledPreset + 25/25 regex import/readback (runtimeObservation.json / installation-receipt.json)",
+    "Task 2 no-op lifecycle observation against createChatsStorage + abort registry (lifecycle-observation.json)",
+    "CompanionHostBridge unit tests and adapter wiring (not an Engine export; no desktop activatePackage)",
+    "POST /api/regex-scripts/import for the 25 FF5.4 scripts (skipped on this live host)"
+  ],
+  "blockers": [
+    "capabilityPackages.packages is empty on this live 2.4.5/9bbee87 host \u2014 no world-map-companion or hierarchical-maps activation.",
+    "No HTTP CompanionHostBridge or activatePackage route.",
+    "Native marinara_preset import still does not install envelope.extensions.regex_scripts.",
+    "This live HTTP receipt does not replace Task 1 in-process remaps (different native IDs: Task 1 preset pLwe7NpVlr3mtoYe34-jD vs live HTTP qCr4WA0FVIdyjxgOs2l2m)."
+  ]
+}

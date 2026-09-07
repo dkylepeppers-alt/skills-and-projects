@@ -25,6 +25,11 @@ Archive integrity is separate from Engine import and behavior verification. Pass
 
 Upstream source checkouts and dependencies stay outside this repository. Nevermore source IDs, lore, topology, and artwork remain under their existing project paths.
 
+## Travel & simulation (Tasks 6–7)
+
+- Effective topology + travel: [`docs/travel-topology.md`](docs/travel-topology.md) (merged PR #13). Spatial-owner adapter stays PROPOSED.
+- Story clock, schedules, event director: [`docs/simulation.md`](docs/simulation.md) (merged PR #16 at tip `6b303a9`). No per-NPC polling; bridge stays PROPOSED.
+
 ## History selection (Task 4)
 
 Authoritative swipe/edit/delete/branch/checkpoint selection and durable pending-job recovery live in `src/state/history.ts` and `src/state/checkpoints.ts`, backed by the Task 3 file repository (not Engine `CapabilityDocumentStore`). Contract and status: [`docs/history-selection.md`](docs/history-selection.md). Merged at `4008b1e`. Live Engine `selectHistory` wire-up remains PROPOSED / UNVERIFIED.

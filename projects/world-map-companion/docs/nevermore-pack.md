@@ -93,13 +93,15 @@ Authored assumptions (also in manifest): school-day circulation without exact cl
 
 ## Non-claims
 
-- Does **not** prove Task 6 effective topology or native spatial-owner transactions.
+- Task 6 travel/topology is documented separately in `docs/travel-topology.md` (spatial-owner still PROPOSED).
 - Does **not** activate CompanionHostBridge or prove desktop `activatePackage`.
 - Does **not** supersede Task 1 in-process import receipt or live HTTP honesty observation.
 - Does **not** invent native UUIDs, extra faculty, or sealed-boundary bypasses.
 
 ## Related docs
 
+- Travel / topology: `docs/travel-topology.md`
+- Simulation: `docs/simulation.md`
 - Pack skim README: `projects/nevermore/companion/README.md`
 - Host / bridge contract: `docs/host-contract.md`
 - History selection (Task 4): `docs/history-selection.md`

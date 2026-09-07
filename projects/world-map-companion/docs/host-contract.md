@@ -1,8 +1,8 @@
 # World Map Companion — Host Integration Contract (Task 2)
 
 **Date:** 2026-09-07  
-**Scope:** Discovery + scaffold only. No Engine bridge implementation, no package activation, no preset byte changes, no invented remapped IDs / `runtimeObservation`.  
-**Status:** Source-traced against pinned checkouts. Live installed-runtime and no-op lifecycle observation remain open exit proofs.
+**Scope:** Host contract discovery + Task 2 no-op lifecycle observation proof (in-process). No full CompanionHostBridge, no package activation on a desktop host, no preset byte changes, no invented remapped IDs.  
+**Status:** Source-traced against pinned checkouts. Task 1 import + Task 2 lifecycle observation **recorded** in-process (`lifecycle-observation.json`); user-desktop install fields remain UNKNOWN (`installed-runtime` PARTIAL).
 
 ## 1. Pins
 
@@ -10,11 +10,12 @@
 |---|---|---|
 | Marinara Engine (staging) | `9bbee87d1a44c33f704977bd8c25aafbec9b85aa` | `/workspace/repos/Marinara-Engine` |
 | Marinara Agents (staging) | `ee1a4a01d1091a9f5e4086c58f608e401aa1d879` | `/workspace/repos/Marinara-Agents` |
-| Companion implementation branch tip (branched from) | `28d13991464abf6251e532d5e3da0c3cac756ef5` | `implementation/world-map-companion` |
+| Companion implementation branch tip (includes Task 1 PR #5) | `fd0ea02d2fe80b53d4abbfda414af490840a2acf` | `implementation/world-map-companion` |
 | Companion task branch | `wmc/task-2-host-contract` | see `compatibility/source-lock.json` |
 
 Machine-readable copy: `compatibility/source-lock.json`.  
-Installed build versions: `compatibility/installed-runtime.json` (Task 1 in-process import **recorded**; user desktop install fields still **UNKNOWN**; Task 2 lifecycle still absent).
+Installed build versions: `compatibility/installed-runtime.json` (Task 1 import + Task 2 lifecycle **recorded** in-process; user desktop install fields still **UNKNOWN** → status PARTIAL).  
+Lifecycle evidence: `compatibility/lifecycle-observation.json` (`task2LifecycleObservation`).
 
 Inspected capability API surface in Engine shared schema: `supportedCapabilityApi = { major: 1, minor: 15 }`  
 (`packages/shared/src/schemas/capability-package.schema.ts` → `supportedCapabilityApi`).
@@ -260,25 +261,43 @@ Field-ownership arbitration and preset mode/profile exposure without parsing dis
 
 Companion briefing assembly belongs **outside** the contributor (prepareTurn / cached projection); the contributor only reads the prepared text.
 
-## 8. Proofs still required for Task 2 exit
+## 8. Task 2 lifecycle observation (RECORDED in-process) + remaining gaps
 
 Task 2 exit (from plan): *a no-op companion observes each required lifecycle event exactly once in a real roleplay chat, makes no state changes, and survives disable/re-enable.*
 
-Still **UNVERIFIED / blocking exit**:
+### 8.1 Recorded (in-process Engine checkout)
 
-1. **User-desktop installed-runtime fill-in** of remaining UNKNOWN fields in `compatibility/installed-runtime.json` (Engine version string, hierarchical-maps install version, capability API reported by host) — Task 1 in-process pin evidence is present; real installer still required.
-2. **No-op companion package** activated on a real host (private install path), registering only observation hooks / prompt no-op.
-3. **Exactly-once observation** of: accepted response, cancel/abort, retry/regen, edit, active swipe change, branch, message deletion — against the owners in §5.
-4. **Disable / re-enable cleanup** via `deactivatePackage` / `activatePackage` with no leftover prompt contribution or listeners.
-5. **Supported-version detection** refusing hosts outside tested `capabilityApi` / engine range.
-6. **Bridge implementation** at the verified owners (explicitly out of scope for this scaffold commit).
+Harness: `scripts/engine-lifecycle-observation.ts` + `compatibility/noop-lifecycle-observer.ts`  
+Evidence: `compatibility/lifecycle-observation.json` (`evidence.task2LifecycleObservation` in `installed-runtime.json`).
 
-This document + `source-lock.json` + `installed-runtime.json` (PARTIAL: Task 1 recorded) + `tests/host-contract.test.ts` satisfy the **discovery/scaffold** portion only — Task 2 exit proofs remain open.
+| Event | Count | Owner exercised |
+|---|---|---|
+| accept | 1 | `chats.storage.createMessage` |
+| cancel | 1 | in-process AbortController registry mirroring `POST /api/generate/abort` |
+| retry | 1 | `chats.storage.addSwipe` |
+| edit | 1 | `chats.storage.updateMessageContent` |
+| swipe | 1 | `chats.storage.setActiveSwipe` |
+| branch | 1 | `create` + `createMessagesBatch` + `patchMetadata` |
+| delete | 1 | `chats.storage.removeMessage` |
 
-## 9. Out of scope / non-goals for this commit
+- **Zero companion state writes:** no `capabilityDocuments` creates for `world-map-companion`; observer `writeCampaignDocument` unused (`companionStateWrites: 0`).
+- **Disable / re-enable:** `observer.disable()` clears prompt-contribution flag and ignores further events; `enable()` restores listening; counts remain exactly once each.
+- **Honesty:** same standard as Task 1 — in-process Engine modules / storage paths, **not** full HTTP generate SSE + LLM, **not** private package `activatePackage` on a user desktop.
+
+### 8.2 Still UNVERIFIED / outside this Task 2 proof
+
+1. **User-desktop installed-runtime fill-in** of remaining UNKNOWN fields (Engine version string, hierarchical-maps install version, capability API reported by host).
+2. **Private package install / `activatePackage` / `deactivatePackage`** on a real host (observer disable/re-enable simulates cleanup only).
+3. **Live HTTP generate abort** with an in-flight model stream (cancel here uses the same AbortController pattern, without Fastify + provider).
+4. **Supported-version detection** refusing hosts outside tested `capabilityApi` / engine range.
+5. **CompanionHostBridge implementation** at the verified owners (PROPOSED §6 — do not invent beyond no-op observation).
+
+`installed-runtime.json` status remains **PARTIAL** while desktop unknowns remain — but `task2LifecycleObservation` is **recorded**.
+
+## 9. Out of scope / non-goals
 
 - Modifying `source/presets/*` bytes.
-- Inventing remapped IDs or `runtimeObservation`.
-- Implementing Engine patches, CompanionHostBridge runtime, or package activation.
-- Claiming Task 2 exit complete (no-op lifecycle still absent).
-- Opening/merging a PR that asserts Task 1 or Task 2 exit proofs.
+- Inventing remapped IDs beyond Task 1 `runtimeObservation`.
+- Implementing Engine patches or full CompanionHostBridge behavior beyond no-op observation.
+- Claiming Task 3 contracts/state work.
+- Claiming a user-desktop package install or full HTTP generate lifecycle.

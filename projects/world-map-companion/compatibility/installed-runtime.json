@@ -2,17 +2,17 @@
   "schemaVersion": 1,
   "status": "PARTIAL",
   "purpose": "Records Task 1 in-process Engine checkout evidence and leaves user desktop install fields UNKNOWN until a real installer/runtime is observed. Do not invent remapped IDs.",
-  "updatedAt": "2026-09-07T15:33:52.171Z",
+  "updatedAt": "2026-09-07T15:58:04.002Z",
   "honesty": {
     "kind": "in-process-engine-checkout-exercise",
     "notUserDesktopInstall": true,
     "fullHttpServer": false,
-    "note": "Task 1 exercised pinned Engine importMarinara + prompts/regex storage via createFileNativeDB in a checkout workspace \u2014 not proof of a user's installed Marinara desktop app or package activation."
+    "note": "Task 1 exercised pinned Engine importMarinara + prompts/regex storage via createFileNativeDB in a checkout workspace — not proof of a user's installed Marinara desktop app or package activation."
   },
   "evidence": {
     "task1LiveImport": "recorded",
-    "task2LifecycleObservation": "absent",
-    "notes": "Task 1 live in-process round-trip is recorded (unaccounted=0, regex 25/25). Task 2 no-op companion lifecycle observation is still absent. Hierarchical-maps / companion package install fields remain UNKNOWN until a real host installer reports them."
+    "task2LifecycleObservation": "recorded",
+    "notes": "Task 1 live in-process round-trip recorded. Task 2 no-op lifecycle observation recorded in-process (seven events ×1, zero companion document writes, disable/re-enable cleanup). Hierarchical-maps / companion package install fields remain UNKNOWN until a real host installer reports them."
   },
   "engine": {
     "version": "UNKNOWN",
@@ -60,6 +60,33 @@
       "unaccounted": 0,
       "regexScoped": "25/25"
     },
-    "note": "Remapped IDs live only in runtimeObservation.json / installation-receipt.json; source archive frozen. Summary only \u2014 do not invent IDs here."
+    "note": "Remapped IDs live only in runtimeObservation.json / installation-receipt.json; source archive frozen. Summary only — do not invent IDs here."
+  },
+  "lifecycleObservation": {
+    "status": "recorded",
+    "mode": "in-process-engine-lifecycle",
+    "path": "compatibility/lifecycle-observation.json",
+    "counts": {
+      "accept": 1,
+      "cancel": 1,
+      "retry": 1,
+      "edit": 1,
+      "swipe": 1,
+      "branch": 1,
+      "delete": 1
+    },
+    "companionStateWrites": 0,
+    "disableReenable": {
+      "disabledClearedPromptContribution": true,
+      "ignoredWhileDisabled": 1,
+      "countsUnchangedWhileDisabled": true,
+      "reenabledListening": true,
+      "countsStillExactlyOnceAfterReenable": true
+    },
+    "pins": {
+      "engine": "9bbee87d1a44c33f704977bd8c25aafbec9b85aa",
+      "agents": "ee1a4a01d1091a9f5e4086c58f608e401aa1d879"
+    },
+    "note": "In-process harness at Engine storage/abort owners — not full HTTP generate or package activation."
   }
 }

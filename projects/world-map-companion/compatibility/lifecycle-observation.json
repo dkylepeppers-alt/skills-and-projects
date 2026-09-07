@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 1,
+  "recordedAt": "2026-09-07T15:58:04.001Z",
+  "mode": "in-process-engine-lifecycle",
+  "status": "recorded",
+  "honesty": {
+    "kind": "in-process-engine-checkout-exercise",
+    "fullHttpServer": false,
+    "fullLlmGenerate": false,
+    "notUserDesktopInstall": true,
+    "notPackageActivation": true,
+    "path": "Exercised pinned Engine createChatsStorage + AbortController abort registry via createFileNativeDB. Same storage/abort owners as HTTP routes; not a live Fastify generate SSE + model call.",
+    "nodeVersion": "v26.3.0",
+    "runner": "bun 1.4.2"
+  },
+  "pins": {
+    "engine": "9bbee87d1a44c33f704977bd8c25aafbec9b85aa",
+    "agents": "ee1a4a01d1091a9f5e4086c58f608e401aa1d879"
+  },
+  "owners": {
+    "accept": "chats.storage.createMessage (generate.routes persist path)",
+    "cancel": "AbortController.abort via in-process registry mirroring POST /api/generate/abort",
+    "retry": "chats.storage.addSwipe (regenerateMessageId / retry persist path)",
+    "edit": "chats.storage.updateMessageContent (PATCH .../messages/:id)",
+    "swipe": "chats.storage.setActiveSwipe (PUT .../active-swipe)",
+    "branch": "chats.storage.create + createMessagesBatch + patchMetadata (POST .../branch)",
+    "delete": "chats.storage.removeMessage (DELETE .../messages/:id)"
+  },
+  "events": {
+    "accept": {
+      "count": 1,
+      "owner": "chats.storage.createMessage (generate.routes persist path)"
+    },
+    "cancel": {
+      "count": 1,
+      "owner": "AbortController.abort via in-process registry mirroring POST /api/generate/abort"
+    },
+    "retry": {
+      "count": 1,
+      "owner": "chats.storage.addSwipe (regenerateMessageId / retry persist path)"
+    },
+    "edit": {
+      "count": 1,
+      "owner": "chats.storage.updateMessageContent (PATCH .../messages/:id)"
+    },
+    "swipe": {
+      "count": 1,
+      "owner": "chats.storage.setActiveSwipe (PUT .../active-swipe)"
+    },
+    "branch": {
+      "count": 1,
+      "owner": "chats.storage.create + createMessagesBatch + patchMetadata (POST .../branch)"
+    },
+    "delete": {
+      "count": 1,
+      "owner": "chats.storage.removeMessage (DELETE .../messages/:id)"
+    }
+  },
+  "counts": {
+    "accept": 1,
+    "cancel": 1,
+    "retry": 1,
+    "edit": 1,
+    "swipe": 1,
+    "branch": 1,
+    "delete": 1
+  },
+  "companionStateWrites": 0,
+  "documentCreateAttempts": 0,
+  "packageDocumentsListed": 0,
+  "disableReenable": {
+    "disabledClearedPromptContribution": true,
+    "ignoredWhileDisabled": 1,
+    "countsUnchangedWhileDisabled": true,
+    "reenabledListening": true,
+    "countsStillExactlyOnceAfterReenable": true
+  },
+  "log": [
+    {
+      "event": "accept",
+      "at": "2026-09-07T15:58:03.994Z",
+      "detail": {
+        "chatId": "nU1d5u17S4RIx6Wvlg-vO",
+        "messageId": "_rY7hOnn12KCTjJf_Ue2w",
+        "owner": "chats.storage.createMessage (generate.routes persist path)"
+      }
+    },
+    {
+      "event": "cancel",
+      "at": "2026-09-07T15:58:03.995Z",
+      "detail": {
+        "chatId": "nU1d5u17S4RIx6Wvlg-vO",
+        "aborted": true,
+        "owner": "AbortController.abort via in-process registry mirroring POST /api/generate/abort",
+        "note": "In-process AbortController path; not full HTTP generate + LLM stream"
+      }
+    },
+    {
+      "event": "retry",
+      "at": "2026-09-07T15:58:03.996Z",
+      "detail": {
+        "chatId": "nU1d5u17S4RIx6Wvlg-vO",
+        "messageId": "_rY7hOnn12KCTjJf_Ue2w",
+        "swipeIndex": 1,
+        "owner": "chats.storage.addSwipe (regenerateMessageId / retry persist path)"
+      }
+    },
+    {
+      "event": "edit",
+      "at": "2026-09-07T15:58:03.997Z",
+      "detail": {
+        "chatId": "nU1d5u17S4RIx6Wvlg-vO",
+        "messageId": "_rY7hOnn12KCTjJf_Ue2w",
+        "owner": "chats.storage.updateMessageContent (PATCH .../messages/:id)"
+      }
+    },
+    {
+      "event": "swipe",
+      "at": "2026-09-07T15:58:03.998Z",
+      "detail": {
+        "chatId": "nU1d5u17S4RIx6Wvlg-vO",
+        "messageId": "_rY7hOnn12KCTjJf_Ue2w",
+        "activeSwipeIndex": 0,
+        "owner": "chats.storage.setActiveSwipe (PUT .../active-swipe)"
+      }
+    },
+    {
+      "event": "branch",
+      "at": "2026-09-07T15:58:04.000Z",
+      "detail": {
+        "chatId": "nU1d5u17S4RIx6Wvlg-vO",
+        "branchChatId": "aPGhnWqlalFphbAcIUE4M",
+        "groupId": "A3w-Gck4D8aU7o1Rfwgd-",
+        "owner": "chats.storage.create + createMessagesBatch + patchMetadata (POST .../branch)"
+      }
+    },
+    {
+      "event": "delete",
+      "at": "2026-09-07T15:58:04.001Z",
+      "detail": {
+        "chatId": "nU1d5u17S4RIx6Wvlg-vO",
+        "messageId": "G51zJIGcdaIiI34RV4s7o",
+        "owner": "chats.storage.removeMessage (DELETE .../messages/:id)"
+      }
+    }
+  ],
+  "blockers": [
+    "No package-facing lifecycle registration on activate(context); observation is harness-wired at verified storage/abort owners (PROPOSED CompanionHostBridge still absent).",
+    "Cancel observed via in-process AbortController registry mirroring POST /api/generate/abort — not a live HTTP generate stream + provider abort.",
+    "Not a private capability-package install/activate on a user desktop; deactivatePackage/activatePackage cleanup is simulated by observer.disable/enable.",
+    "User-desktop Engine version / hierarchical-maps install fields remain UNKNOWN."
+  ]
+}

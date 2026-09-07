@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "task": 6,
+  "kind": "topology-unit-proof",
+  "distinctFrom": "live-http-engine-receipt",
+  "status": "PASS",
+  "baseSha": "740cdee2cb618969a540d827800a8ef2043a30d3",
+  "routeCases": 63,
+  "defaultReachable": 54,
+  "allOpenReachable": 79,
+  "sealedBoundariesHold": true,
+  "ranAt": "2026-09-07T17:07:15.104Z"
+}

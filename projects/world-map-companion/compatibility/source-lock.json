@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "purpose": "Pinned source revisions for World Map Companion (Task 3 contracts/state). Inspected checkout SHAs, not a claim about any installed Engine build.",
-  "lockedAt": "2026-09-07T16:25:00Z",
+  "purpose": "Pinned source revisions for World Map Companion (Task 6 travel/effective topology). Inspected checkout SHAs, not a claim about any installed Engine build.",
+  "lockedAt": "2026-09-07T17:10:00Z",
   "companion": {
     "repository": "dkylepeppers-alt/skills-and-projects",
     "implementationBranch": "implementation/world-map-companion",
-    "implementationTip": "7c8881192f4c48cc681d210c1d108d18f4f856fc",
-    "taskBranch": "wmc/task-3-contracts",
-    "taskTip": "d8568b792e09fdf3277478a9ccf18388320eccdc"
+    "implementationTip": "740cdee2cb618969a540d827800a8ef2043a30d3",
+    "taskBranch": "wmc/task-6-travel",
+    "taskTip": "740cdee2cb618969a540d827800a8ef2043a30d3"
   },
   "engine": {
     "repository": "Pasta-Devs/Marinara-Engine",
@@ -21,9 +21,12 @@
   },
   "notes": [
     "Do not invent Engine remapped IDs or runtimeObservation here.",
-    "Task 1\u20132 evidence remains recorded; user desktop install fields remain UNKNOWN.",
-    "taskTip is the Task 3 contracts/state commit SHA on wmc/task-3-contracts.",
-    "implementationTip is origin/implementation/world-map-companion after PR #7 (Task 2 bridge) merge.",
-    "CompanionHostBridge remains PROPOSED adapter; not upstream Engine API."
+    "Task 1-2 evidence remains recorded; user desktop install fields remain UNKNOWN.",
+    "taskTip is pinned to the Task 6 feature commit on wmc/task-6-travel after commit.",
+    "implementationTip is origin/implementation/world-map-companion after PR #11 (Task 5) merge (740cdee).",
+    "CompanionHostBridge remains PROPOSED adapter; not upstream Engine API.",
+    "Task 6: effective-map + travel unit proofs against Nevermore pack; live HTTP receipts are separate files.",
+    "Spatial-owner adapter and CompanionHostBridge remain PROPOSED; no desktop package activate claimed.",
+    "Archive presets and Nevermore v2 release bytes remain frozen."
   ]
 }

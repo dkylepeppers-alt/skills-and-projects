@@ -11,6 +11,7 @@
     "audit:preset": "python3 scripts/audit-preset.py",
     "observe:lifecycle": "bun scripts/engine-lifecycle-observation.ts",
     "validate:world-pack": "python3 scripts/validate-world-pack.py",
-    "test:world-pack": "node --test tests/world-pack.test.ts"
+    "test:world-pack": "node --test tests/world-pack.test.ts",
+    "test:travel": "node --test tests/travel-gates.test.ts"
   }
 }

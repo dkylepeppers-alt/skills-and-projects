@@ -13,15 +13,16 @@ const lifecycleObservationPath = `${root}/compatibility/lifecycle-observation.js
 const EXPECTED_ENGINE = "9bbee87d1a44c33f704977bd8c25aafbec9b85aa";
 const EXPECTED_AGENTS = "ee1a4a01d1091a9f5e4086c58f608e401aa1d879";
 const EXPECTED_NATIVE_PRESET = "pLwe7NpVlr3mtoYe34-jD";
-const EXPECTED_IMPLEMENTATION_TIP = "fd0ea02d2fe80b53d4abbfda414af490840a2acf";
-const EXPECTED_TASK_TIP = "616db3bdcd0a41e1a15771b5574ddf81241bd711";
+const EXPECTED_IMPLEMENTATION_TIP = "7df59b75d9366d12ce52bc001b3b95f93879d1fa";
+// taskTip pinned after bridge commit; tests that need exact tip read from lock after pin step
+const EXPECTED_TASK_BRANCH = "wmc/task-2-bridge";
 
 const REQUIRED_HOST_CONTRACT_SECTIONS = [
   "## 1. Pins",
   "## 3. Package / capability APIs (VERIFIED)",
   "## 4. Import / export paths (VERIFIED)",
   "## 5. Roleplay lifecycle map (VERIFIED owners)",
-  "## 6. Proposed CompanionHostBridge (PROPOSED — plan Section 5)",
+  "## 6. CompanionHostBridge (PROPOSED adapter — IMPLEMENTED in companion repo)",
   "## 8. Task 2 lifecycle observation (RECORDED in-process) + remaining gaps",
   "CompanionHostBridge",
   "prepareTurn",
@@ -29,12 +30,15 @@ const REQUIRED_HOST_CONTRACT_SECTIONS = [
   "cancelTurn",
   "selectHistory",
   "UNVERIFIED",
+  "IMPLEMENTED (proposed adapter)",
+  "src/host/",
   "POST /api/import/marinara",
   "GET /api/prompts/:id/full",
   "GET /api/prompts/:id/export",
   "POST /api/regex-scripts/import",
   "lifecycle-observation.json",
   "task2LifecycleObservation",
+  "activatePackage",
 ];
 
 test("source-lock pins Engine and Agents to the inspected staging SHAs", () => {
@@ -42,9 +46,11 @@ test("source-lock pins Engine and Agents to the inspected staging SHAs", () => {
   const lock = JSON.parse(readFileSync(sourceLockPath, "utf8"));
   assert.equal(lock.engine.revision, EXPECTED_ENGINE);
   assert.equal(lock.agents.revision, EXPECTED_AGENTS);
-  assert.equal(lock.companion.taskBranch, "wmc/task-2-host-contract");
+  assert.equal(lock.companion.taskBranch, EXPECTED_TASK_BRANCH);
   assert.equal(lock.companion.implementationTip, EXPECTED_IMPLEMENTATION_TIP);
-  assert.equal(lock.companion.taskTip, EXPECTED_TASK_TIP);
+  assert.equal(typeof lock.companion.taskTip, "string");
+  assert.ok(lock.companion.taskTip.length >= 7, "taskTip must be a commit SHA");
+  assert.notEqual(lock.companion.taskTip, "PENDING_COMMIT");
 });
 
 test("installed-runtime records Task 1 import and Task 2 lifecycle; remains PARTIAL for desktop unknowns", () => {
@@ -74,6 +80,10 @@ test("installed-runtime records Task 1 import and Task 2 lifecycle; remains PART
   assert.equal(runtime.engine.version, "UNKNOWN");
   assert.equal(runtime.capabilityApi.installedHostReports, "UNKNOWN");
   assert.equal(runtime.packages["world-map-companion"].installed, false);
+  assert.equal(runtime.evidence.task2CompanionHostBridge, "proposed-adapter-implemented");
+  assert.equal(runtime.companionHostBridge.status, "proposed-adapter-implemented");
+  assert.equal(runtime.companionHostBridge.engineExport, false);
+  assert.equal(runtime.companionHostBridge.desktopActivatePackage, "UNVERIFIED");
 });
 
 test("host-contract.md exists and contains required discovery sections", () => {
@@ -83,6 +93,8 @@ test("host-contract.md exists and contains required discovery sections", () => {
     assert.ok(text.includes(needle), `host-contract.md must contain: ${needle}`);
   }
   assert.ok(text.includes("PROPOSED"), "proposed CompanionHostBridge must be labeled");
+  assert.ok(text.includes("IMPLEMENTED (proposed adapter)"), "bridge adapter must be marked implemented as proposed");
+  assert.ok(text.includes("src/host/"), "host-contract must point at src/host/");
   assert.ok(text.includes("9bbee87d1a44c33f704977bd8c25aafbec9b85aa"));
   assert.ok(text.includes("ee1a4a01d1091a9f5e4086c58f608e401aa1d879"));
   assert.ok(

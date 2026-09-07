@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "packId": "world-pack:nevermore-v2",
+  "worldId": "world:nevermore",
+  "displayName": "Nevermore — Woodlands and Crypt Progression v2",
+  "task": 5,
+  "sourceMap": {
+    "path": "projects/nevermore/releases/v2/Nevermore-Woodlands-Crypts-v2.world-map.json",
+    "mapName": "Nevermore — Woodlands and Crypt Progression v2",
+    "format": "marinara-hierarchical-map",
+    "formatVersion": 4,
+    "revision": 0,
+    "startingLocationId": "dorm-wednesday-enid",
+    "ownerMode": "roleplay",
+    "contentHash": "d10bef3e1d39945224d3981767fdb4c6a7a018b0710efb7322dd790be0dfd2fa",
+    "locationCount": 79,
+    "assetCount": 82,
+    "edgeRecordCount": 79
+  },
+  "files": {
+    "locations": "locations.json",
+    "npcs": "npcs.json",
+    "aliases": "aliases.json",
+    "schedules": "schedules.json",
+    "services": "services.json",
+    "events": "events.json",
+    "profiles": "profiles.json"
+  },
+  "coverage": {
+    "locations": "79/79",
+    "assets": "82/82",
+    "edges": 79,
+    "recurringNpcsCensus": 12,
+    "npcCensusComplete": true,
+    "regionsCovered": [
+      "town",
+      "campus",
+      "residences",
+      "ravencroft",
+      "woodland",
+      "crypt-all-components"
+    ]
+  },
+  "preservation": {
+    "doNotEdit": [
+      "projects/nevermore/source/original.world-map.json",
+      "projects/nevermore/releases/v2/",
+      "projects/world-map-companion/source/presets/"
+    ],
+    "joinByIdOnly": true,
+    "unknownFactsPolicy": "explicit UNCERTAIN/UNKNOWN/ASSUMPTION markers; never invent canon"
+  },
+  "gaps": [
+    "Exact class/meal/office hours are UNKNOWN across campus services.",
+    "Sheriff of Jericho is mentioned in lore but has no character entry — excluded from recurring NPC census.",
+    "Faculty beyond Principal Weems: no additional named faculty character entries in supplied lorebook.",
+    "Native character UUIDs not bound (HANDOFF: no invented UUID remapping).",
+    "Ophelia / Esmeralda / Belladonna permanent residences UNKNOWN.",
+    "Gomez continuous vs visiting presence UNCERTAIN.",
+    "Thing's vent routes are narrative, not map edges.",
+    "Travel durations between all edges UNKNOWN (no authored route-cost table in source).",
+    "Living Portrait is a location + lore object, not classified as a recurring NPC.",
+    "Full original FF5.4 character cards outside this lorebook were not available in this checkout for deeper census."
+  ],
+  "authoredAssumptions": [
+    "School-day class/meal circulation exists without exact clocks.",
+    "Dorm bedroom IDs imply home bases for named students when map provides them.",
+    "Visitor NPCs without homes use Ravencroft Manor as visit target only."
+  ]
+}

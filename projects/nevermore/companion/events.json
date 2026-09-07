@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "description": "Authored setting event templates and gate catalog for Nevermore v2. Not campaign history.",
+  "controlledEntrances": [
+    {
+      "eventTemplateId": "evt-tmpl:reveal-poe-stair",
+      "fromId": "nevermore-poe-statue",
+      "toId": "crypts-stair-mouth",
+      "defaultState": "hidden",
+      "revealState": "available",
+      "bidirectional": true,
+      "notes": "HANDOFF: edit link on source location from hidden to available.",
+      "sourceRefs": [
+        "handoff:controlledEntrances",
+        "map:v2-link"
+      ]
+    },
+    {
+      "eventTemplateId": "evt-tmpl:reveal-ravencroft-tunnel",
+      "fromId": "ravencroft-iron-maiden",
+      "toId": "crypts-tunnel-mouth",
+      "defaultState": "hidden",
+      "revealState": "available",
+      "bidirectional": true,
+      "notes": "HANDOFF: independent discovery from other entrances.",
+      "sourceRefs": [
+        "handoff:controlledEntrances",
+        "map:v2-link"
+      ]
+    },
+    {
+      "eventTemplateId": "evt-tmpl:reveal-dorm-crawlspace",
+      "fromId": "dorms-common",
+      "toId": "crypts-crawlspace",
+      "defaultState": "hidden",
+      "revealState": "available",
+      "bidirectional": true,
+      "notes": "HANDOFF: independent discovery from other entrances.",
+      "sourceRefs": [
+        "handoff:controlledEntrances",
+        "map:v2-link"
+      ]
+    }
+  ],
+  "progressionGates": [
+    {
+      "eventTemplateId": "evt-tmpl:open-door-1",
+      "fromId": "crypts-door-1",
+      "toId": "crypts-breath",
+      "defaultState": "blocked",
+      "openState": "available",
+      "bidirectional": true,
+      "stageChamberId": "crypts-chamber-1",
+      "notes": "Do not add parallel reverse available link; canonical bidirectional handles return.",
+      "sourceRefs": [
+        "handoff:progressionGates"
+      ]
+    },
+    {
+      "eventTemplateId": "evt-tmpl:open-door-2",
+      "fromId": "crypts-door-2",
+      "toId": "crypts-chamber-3",
+      "defaultState": "blocked",
+      "openState": "available",
+      "bidirectional": true,
+      "stageChamberId": "crypts-chamber-2",
+      "notes": "Do not add parallel reverse available link.",
+      "sourceRefs": [
+        "handoff:progressionGates"
+      ]
+    },
+    {
+      "eventTemplateId": "evt-tmpl:open-door-3",
+      "fromId": "crypts-door-3",
+      "toId": "crypts-approach",
+      "defaultState": "blocked",
+      "openState": "available",
+      "bidirectional": true,
+      "stageChamberId": "crypts-chamber-3",
+      "notes": "Reaching altar does not itself establish its boon (HANDOFF).",
+      "sourceRefs": [
+        "handoff:progressionGates"
+      ]
+    }
+  ],
+  "intentionalTopology": {
+    "roots": [
+      "jericho-woods",
+      "crypts-labyrinth",
+      "crypts-second-rite",
+      "crypts-union",
+      "crypts-covenant"
+    ],
+    "notes": [
+      "Four crypt containment components + surface world = five roots (HANDOFF).",
+      "Do not reparent crypt components to simplify display.",
+      "Echo Niche is a side recess, not an onward route.",
+      "No woodland location establishes a new crypt entrance (STYLE-AND-CANON)."
+    ]
+  }
+}

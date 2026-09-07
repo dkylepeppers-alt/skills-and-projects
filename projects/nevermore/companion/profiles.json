@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "profiles": [
+    {
+      "id": "freeform",
+      "displayName": "Freeform",
+      "eventFrequency": "low",
+      "timeGranularity": "scene",
+      "briefingEmphasis": [
+        "current-scene",
+        "known-occupants",
+        "exits"
+      ],
+      "notes": "Minimal schedule pressure; does not overwrite FF5.4 writing choices."
+    },
+    {
+      "id": "social-schedule",
+      "displayName": "Social / Schedule",
+      "eventFrequency": "medium",
+      "timeGranularity": "appointment",
+      "briefingEmphasis": [
+        "appointments",
+        "npc-routines",
+        "services-hours",
+        "current-scene"
+      ],
+      "notes": "Emphasizes school-day routines with UNKNOWN clocks left explicit."
+    },
+    {
+      "id": "exploration-mystery",
+      "displayName": "Exploration / Mystery",
+      "eventFrequency": "medium",
+      "timeGranularity": "discovery",
+      "briefingEmphasis": [
+        "clues",
+        "hidden-entrances-known-to-observer",
+        "leads",
+        "journal"
+      ],
+      "notes": "Does not leak undiscovered crypt entrances into player briefing."
+    },
+    {
+      "id": "tactical-travel",
+      "displayName": "Tactical Travel",
+      "eventFrequency": "high-on-travel",
+      "timeGranularity": "route-leg",
+      "briefingEmphasis": [
+        "route",
+        "travel-time-uncertainty",
+        "gates",
+        "companions",
+        "interruptions"
+      ],
+      "notes": "Pixel distances are not real-world measurements; durations remain UNKNOWN unless authored."
+    }
+  ]
+}

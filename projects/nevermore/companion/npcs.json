@@ -1,0 +1,464 @@
+{
+  "schemaVersion": 1,
+  "worldId": "world:nevermore",
+  "censusPolicy": "Recurring NPCs = character entries in revised-lore (Addams Household, Frump Line, Students, Faculty, Thing). Location/setting entries excluded. Unnamed sheriff excluded.",
+  "npcCount": 12,
+  "npcs": [
+    {
+      "npcId": "npc:wednesday-addams",
+      "displayName": "Wednesday Addams",
+      "loreEntryId": "CvmzKzAZcsJxd48pMZuqD",
+      "aliases": [
+        "Wednesday",
+        "Wednesday Addams",
+        "Addams girl"
+      ],
+      "homeLocationIds": [
+        "dorm-wednesday-enid"
+      ],
+      "workLocationIds": [],
+      "initialPlacement": {
+        "kind": "at",
+        "locationId": "dorm-wednesday-enid",
+        "notes": "SOURCE: sleeps in the dorm; starting map location is Wednesday and Enid's Room.",
+        "certainty": "sourced"
+      },
+      "goals": [
+        "SOURCE: treats Nightshade Society and Poe-quad rumors as leads.",
+        "ASSUMPTION: pursues investigation leads when not committed elsewhere; specific agenda UNKNOWN."
+      ],
+      "scheduleIds": [
+        "sched:wednesday-school-day"
+      ],
+      "factionIds": [
+        "faction:addams-household",
+        "faction:nevermore-students"
+      ],
+      "sourceRefs": [
+        "lore:revised:CvmzKzAZcsJxd48pMZuqD",
+        "lore:name:Wednesday Addams"
+      ],
+      "nativeCharacterIds": [],
+      "nativeCharacterBinding": "UNKNOWN — portable lore does not promise character UUID remapping (HANDOFF)."
+    },
+    {
+      "npcId": "npc:enid-sinclair",
+      "displayName": "Enid Sinclair",
+      "loreEntryId": "UvYMZqpn4czDr472aqNDF",
+      "aliases": [
+        "Enid",
+        "Enid Sinclair",
+        "Sinclair",
+        "werewolf"
+      ],
+      "homeLocationIds": [
+        "dorm-wednesday-enid"
+      ],
+      "workLocationIds": [],
+      "initialPlacement": {
+        "kind": "unknown",
+        "notes": "SOURCE: roommate of Wednesday; exact opening position beyond shared room UNCERTAIN.",
+        "certainty": "uncertain"
+      },
+      "goals": [
+        "SOURCE: self-declared best friend / emotional counterweight to Wednesday.",
+        "ASSUMPTION: ordinary student social/academic routines; timetable UNKNOWN."
+      ],
+      "scheduleIds": [
+        "sched:enid-school-day"
+      ],
+      "factionIds": [
+        "faction:nevermore-students"
+      ],
+      "sourceRefs": [
+        "lore:revised:UvYMZqpn4czDr472aqNDF",
+        "lore:name:Enid Sinclair"
+      ],
+      "nativeCharacterIds": [],
+      "nativeCharacterBinding": "UNKNOWN — portable lore does not promise character UUID remapping (HANDOFF)."
+    },
+    {
+      "npcId": "npc:pugsley-addams",
+      "displayName": "Pugsley Addams",
+      "loreEntryId": "5LBs-qv-D9m-xndz9Ot58",
+      "aliases": [
+        "Pugsley",
+        "Pugsley Addams",
+        "brother"
+      ],
+      "homeLocationIds": [
+        "dorm-pugsley"
+      ],
+      "workLocationIds": [],
+      "initialPlacement": {
+        "kind": "unknown",
+        "locationId": "dorm-pugsley",
+        "notes": "ASSUMPTION: dorm room is home base; presence at campaign start UNCERTAIN.",
+        "certainty": "assumption"
+      },
+      "goals": [
+        "SOURCE: enrolled at Nevermore; affinity for demolition/pyrotechnics fits unconventional curriculum."
+      ],
+      "scheduleIds": [
+        "sched:pugsley-school-day"
+      ],
+      "factionIds": [
+        "faction:addams-household",
+        "faction:nevermore-students"
+      ],
+      "sourceRefs": [
+        "lore:revised:5LBs-qv-D9m-xndz9Ot58",
+        "lore:name:Pugsley Addams"
+      ],
+      "nativeCharacterIds": [],
+      "nativeCharacterBinding": "UNKNOWN — portable lore does not promise character UUID remapping (HANDOFF)."
+    },
+    {
+      "npcId": "npc:bianca-barclay",
+      "displayName": "Bianca Barclay",
+      "loreEntryId": "Aqn7raa1iEqpD7mGnmvFP",
+      "aliases": [
+        "Bianca",
+        "Bianca Barclay",
+        "siren"
+      ],
+      "homeLocationIds": [
+        "dorm-bianca"
+      ],
+      "workLocationIds": [],
+      "initialPlacement": {
+        "kind": "unknown",
+        "notes": "Map provides dorm-bianca; opening presence UNCERTAIN.",
+        "certainty": "uncertain"
+      },
+      "goals": [
+        "SOURCE: popular/influential student; selective about closeness.",
+        "ASSUMPTION: campus social presence; exact routine UNKNOWN."
+      ],
+      "scheduleIds": [
+        "sched:bianca-school-day"
+      ],
+      "factionIds": [
+        "faction:nevermore-students"
+      ],
+      "sourceRefs": [
+        "lore:revised:Aqn7raa1iEqpD7mGnmvFP",
+        "lore:name:Bianca Barclay"
+      ],
+      "nativeCharacterIds": [],
+      "nativeCharacterBinding": "UNKNOWN — portable lore does not promise character UUID remapping (HANDOFF)."
+    },
+    {
+      "npcId": "npc:nerissa-vale",
+      "displayName": "Nerissa Vale",
+      "loreEntryId": "qC-2X7e12UQww19UqT9N5",
+      "aliases": [
+        "Nerissa",
+        "Nerissa Vale"
+      ],
+      "homeLocationIds": [
+        "dorm-nerissa"
+      ],
+      "workLocationIds": [],
+      "initialPlacement": {
+        "kind": "unknown",
+        "notes": "Map provides dorm-nerissa; opening presence UNCERTAIN.",
+        "certainty": "uncertain"
+      },
+      "goals": [
+        "SOURCE: closest confidante / occasional rival with Bianca; watches campus politics."
+      ],
+      "scheduleIds": [
+        "sched:nerissa-school-day"
+      ],
+      "factionIds": [
+        "faction:nevermore-students"
+      ],
+      "sourceRefs": [
+        "lore:revised:qC-2X7e12UQww19UqT9N5",
+        "lore:name:Nerissa Vale"
+      ],
+      "nativeCharacterIds": [],
+      "nativeCharacterBinding": "UNKNOWN — portable lore does not promise character UUID remapping (HANDOFF)."
+    },
+    {
+      "npcId": "npc:larissa-weems",
+      "displayName": "Principal Larissa Weems",
+      "loreEntryId": "DXSIAQyH7a5BjMqnL3Qsp",
+      "aliases": [
+        "Weems",
+        "Principal Weems",
+        "Larissa",
+        "Larissa Weems",
+        "principal",
+        "shapeshifter"
+      ],
+      "homeLocationIds": [],
+      "workLocationIds": [
+        "main-hall-weems"
+      ],
+      "initialPlacement": {
+        "kind": "unknown",
+        "notes": "SOURCE: principal of Nevermore; office is main-hall-weems. Residence and off-hours location UNKNOWN.",
+        "certainty": "uncertain"
+      },
+      "goals": [
+        "SOURCE: protect students; complex respectful relationship with Addams family; clashes with Wednesday over rule-breaking."
+      ],
+      "scheduleIds": [
+        "sched:weems-workday"
+      ],
+      "factionIds": [
+        "faction:nevermore-faculty"
+      ],
+      "sourceRefs": [
+        "lore:revised:DXSIAQyH7a5BjMqnL3Qsp",
+        "lore:name:Principal Larissa Weems"
+      ],
+      "nativeCharacterIds": [],
+      "nativeCharacterBinding": "UNKNOWN — portable lore does not promise character UUID remapping (HANDOFF)."
+    },
+    {
+      "npcId": "npc:morticia-addams",
+      "displayName": "Morticia Addams",
+      "loreEntryId": "4tRmJ-h6xHh651CyKLYlM",
+      "aliases": [
+        "Morticia",
+        "Morticia Addams",
+        "Mama",
+        "Cara Mia",
+        "mother"
+      ],
+      "homeLocationIds": [
+        "ravencroft-morticia-chamber",
+        "ravencroft-manor"
+      ],
+      "workLocationIds": [
+        "ravencroft-greenhouse"
+      ],
+      "initialPlacement": {
+        "kind": "unknown",
+        "locationId": "ravencroft-manor",
+        "notes": "SOURCE: resides at Ravencroft Manor on grounds. Exact room at campaign start UNCERTAIN.",
+        "certainty": "uncertain"
+      },
+      "goals": [
+        "SOURCE: remain close to children at Nevermore without annexing Wednesday's independence."
+      ],
+      "scheduleIds": [
+        "sched:morticia-ravencroft"
+      ],
+      "factionIds": [
+        "faction:addams-household"
+      ],
+      "sourceRefs": [
+        "lore:revised:4tRmJ-h6xHh651CyKLYlM",
+        "lore:name:Morticia Addams"
+      ],
+      "nativeCharacterIds": [],
+      "nativeCharacterBinding": "UNKNOWN — portable lore does not promise character UUID remapping (HANDOFF)."
+    },
+    {
+      "npcId": "npc:gomez-addams",
+      "displayName": "Gomez Addams",
+      "loreEntryId": "V8bjf4Q4Y-B3ieeLS1sf7",
+      "aliases": [
+        "Gomez",
+        "Gomez Addams",
+        "Mr. Addams",
+        "papa",
+        "dad",
+        "father",
+        "Cara Mia"
+      ],
+      "homeLocationIds": [
+        "ravencroft-gomez-room",
+        "ravencroft-manor"
+      ],
+      "workLocationIds": [],
+      "initialPlacement": {
+        "kind": "unknown",
+        "notes": "SOURCE: visiting room at Ravencroft; presence timing UNCERTAIN (visiting vs continuous).",
+        "certainty": "uncertain"
+      },
+      "goals": [
+        "SOURCE: keep children near Morticia's watchful residence; fencing partner; marriage cooling unexplained."
+      ],
+      "scheduleIds": [
+        "sched:gomez-visiting"
+      ],
+      "factionIds": [
+        "faction:addams-household"
+      ],
+      "sourceRefs": [
+        "lore:revised:V8bjf4Q4Y-B3ieeLS1sf7",
+        "lore:name:Gomez Addams"
+      ],
+      "nativeCharacterIds": [],
+      "nativeCharacterBinding": "UNKNOWN — portable lore does not promise character UUID remapping (HANDOFF)."
+    },
+    {
+      "npcId": "npc:thing-t-thing",
+      "displayName": "Thing T. Thing",
+      "loreEntryId": "j-PuSwITD51uYmfH4uUjQ",
+      "aliases": [
+        "Thing",
+        "Thing T. Thing",
+        "the hand",
+        "hand",
+        "disembodied",
+        "familiar"
+      ],
+      "homeLocationIds": [
+        "ravencroft-manor"
+      ],
+      "workLocationIds": [],
+      "initialPlacement": {
+        "kind": "unknown",
+        "locationId": "ravencroft-manor",
+        "notes": "SOURCE: nest is antique jewelry box on the mantle at Ravencroft Manor; roams campus via vents. Exact start UNCERTAIN.",
+        "certainty": "uncertain"
+      },
+      "goals": [
+        "SOURCE: oldest companion/trusted operative for Wednesday; campus roaming and mischief."
+      ],
+      "scheduleIds": [
+        "sched:thing-roaming"
+      ],
+      "factionIds": [
+        "faction:addams-household"
+      ],
+      "sourceRefs": [
+        "lore:revised:j-PuSwITD51uYmfH4uUjQ",
+        "lore:name:Thing T. Thing"
+      ],
+      "nativeCharacterIds": [],
+      "nativeCharacterBinding": "UNKNOWN — portable lore does not promise character UUID remapping (HANDOFF)."
+    },
+    {
+      "npcId": "npc:ophelia-addams",
+      "displayName": "Ophelia Addams",
+      "loreEntryId": "wrJ6PKo2MuivM20PMaGGF",
+      "aliases": [
+        "Ophelia",
+        "Ophelia Addams",
+        "Grandmother",
+        "Gomez's mother",
+        "Abuela"
+      ],
+      "homeLocationIds": [],
+      "workLocationIds": [],
+      "initialPlacement": {
+        "kind": "unknown",
+        "notes": "SOURCE: visits Ravencroft Manor with dramatic flair; permanent residence UNKNOWN.",
+        "certainty": "unknown"
+      },
+      "goals": [
+        "SOURCE: family meddling/visits; finds Nevermore atmosphere entertaining."
+      ],
+      "scheduleIds": [
+        "sched:ophelia-visits"
+      ],
+      "factionIds": [
+        "faction:addams-household"
+      ],
+      "sourceRefs": [
+        "lore:revised:wrJ6PKo2MuivM20PMaGGF",
+        "lore:name:Ophelia Addams"
+      ],
+      "nativeCharacterIds": [],
+      "nativeCharacterBinding": "UNKNOWN — portable lore does not promise character UUID remapping (HANDOFF)."
+    },
+    {
+      "npcId": "npc:esmeralda-frump",
+      "displayName": "Grandmama Frump (Esmeralda Frump)",
+      "loreEntryId": "cbr4XqQ0xMk3DYLuluznn",
+      "aliases": [
+        "Grandmama Frump",
+        "Esmeralda",
+        "Esmeralda Frump",
+        "grandmother Frump",
+        "grand-mère",
+        "Grandmama",
+        "Morticia's mother"
+      ],
+      "homeLocationIds": [],
+      "workLocationIds": [],
+      "initialPlacement": {
+        "kind": "unknown",
+        "notes": "SOURCE: associated with Morticia/Nevermore proximity; permanent location UNKNOWN.",
+        "certainty": "unknown"
+      },
+      "goals": [
+        "SOURCE: herbalism/witchcraft; greenhouse botanicals mentioned; exact Nevermore presence schedule UNKNOWN."
+      ],
+      "scheduleIds": [
+        "sched:esmeralda-visits"
+      ],
+      "factionIds": [
+        "faction:frump-line"
+      ],
+      "sourceRefs": [
+        "lore:revised:cbr4XqQ0xMk3DYLuluznn",
+        "lore:name:Grandmama Frump (Esmeralda Frump)"
+      ],
+      "nativeCharacterIds": [],
+      "nativeCharacterBinding": "UNKNOWN — portable lore does not promise character UUID remapping (HANDOFF)."
+    },
+    {
+      "npcId": "npc:belladonna-frump",
+      "displayName": "Belladonna Frump",
+      "loreEntryId": "TtW5nSnc9ns42tnfy-uDL",
+      "aliases": [
+        "Belladonna",
+        "Belladonna Frump",
+        "Aunt Belladonna",
+        "aunt"
+      ],
+      "homeLocationIds": [],
+      "workLocationIds": [],
+      "initialPlacement": {
+        "kind": "unknown",
+        "notes": "SOURCE: visits Ravencroft Manor frequently; home base UNKNOWN.",
+        "certainty": "unknown"
+      },
+      "goals": [
+        "SOURCE: enjoys sister's proximity to Nevermore; commentary on Morticia's marriage."
+      ],
+      "scheduleIds": [
+        "sched:belladonna-visits"
+      ],
+      "factionIds": [
+        "faction:frump-line"
+      ],
+      "sourceRefs": [
+        "lore:revised:TtW5nSnc9ns42tnfy-uDL",
+        "lore:name:Belladonna Frump"
+      ],
+      "nativeCharacterIds": [],
+      "nativeCharacterBinding": "UNKNOWN — portable lore does not promise character UUID remapping (HANDOFF)."
+    }
+  ],
+  "factions": [
+    {
+      "factionId": "faction:addams-household",
+      "displayName": "Addams Household",
+      "certainty": "sourced-grouping"
+    },
+    {
+      "factionId": "faction:frump-line",
+      "displayName": "Frump Line",
+      "certainty": "sourced-grouping"
+    },
+    {
+      "factionId": "faction:nevermore-students",
+      "displayName": "Nevermore Students",
+      "certainty": "sourced-grouping"
+    },
+    {
+      "factionId": "faction:nevermore-faculty",
+      "displayName": "Nevermore Faculty",
+      "certainty": "sourced-grouping"
+    }
+  ]
+}

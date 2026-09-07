@@ -2,6 +2,9 @@
 
 Machine-readable campaign pack for World Map Companion, joined to Nevermore v2 by location/asset ID.
 
+Canonical contract: [`projects/world-map-companion/docs/nevermore-pack.md`](../../world-map-companion/docs/nevermore-pack.md).
+
+
 See manifest.json for coverage and gaps. Validate with:
 
 ```

@@ -1,6 +1,6 @@
 ---
 name: marinara-engine-authoring
-description: Author anything that goes into Marinara Engine — lorebooks, character cards, personas, hierarchical maps, prompt presets, regex scripts, custom tools, personal extensions, themes, and downloadable Agent packages — against the real schemas in Pasta-Devs/Marinara-Engine and Pasta-Devs/Marinara-Agents. Use this whenever the user mentions Marinara Engine, Marinara Agents, a `.marinara.json` file, a worldbook or lorebook entry for Marinara, a character card or persona for Marinara, a spatial/hierarchical map, an Outlet entry, a prompt preset or preset variables, or wants to build, convert, port from SillyTavern, validate, or debug any importable Marinara artifact. Use it even when the user only describes the content ("a worldbook for my setting", "a map of this town", "an agent that tracks X") without naming a format.
+description: Use when authoring anything that goes into Marinara Engine — lorebooks, character cards, personas, character portrait packages, hierarchical maps, prompt presets, regex scripts, custom tools, personal extensions, themes, and downloadable Agent packages — against the real schemas in Pasta-Devs/Marinara-Engine and Pasta-Devs/Marinara-Agents. Trigger whenever the user mentions Marinara Engine, Marinara Agents, a `.marinara.json` file, a worldbook or lorebook entry for Marinara, a character card or persona for Marinara, identity sheets, expression or full-body sprites, a spatial/hierarchical map, an Outlet entry, a prompt preset or preset variables, or wants to build, convert, port from SillyTavern, validate, or debug any importable Marinara artifact. Use it even when the user describes the content without naming a format.
 ---
 
 # Marinara Engine Authoring
@@ -45,6 +45,7 @@ compare repository and installed skill revisions before reconciling differences.
 |---|---|
 | A lorebook / worldbook, entries, keys, timing, Outlets | `references/lorebooks.md` |
 | A character card, persona, or group | `references/characters-personas.md` |
+| A character identity sheet, facial-expression portraits, matching full-body portraits, sprite filenames, or a portable portrait package | `references/portrait-workflow.md` and, when packaging a native character file, `references/characters-personas.md` |
 | A hierarchical / spatial map | `references/maps.md` |
 | A prompt preset, sections, markers, generation parameters | `references/presets-and-prompts.md` |
 | Macros, `{{#if}}` conditionals, preset variables | `references/macros.md` |

@@ -24,3 +24,6 @@ Harness: `scripts/engine-ff54-roundtrip.ts` via Bun against the Engine pin. Syst
 | Export | `compatibility/runtime-export.marinara.json` |
 | Observation / receipt | `runtimeObservation.json`, `installation-receipt.json` |
 
+## Live HTTP follow-up (does not supersede Task 1)
+
+A separate live Fastify HTTP exercise against `http://127.0.0.1:7860` (Engine `2.4.5` / `9bbee87d1a44`) is recorded in `live-http-status.md` and `live-http-observation.json` (2026-09-07). That path imported the same frozen FF5.4 envelope via `POST /api/import/marinara` and read it back via `GET /api/prompts/{id}/full` + `/export`. It does **not** replace this Task 1 in-process receipt; remapped IDs differ (`qCr4WA0FVIdyjxgOs2l2m` live HTTP vs `pLwe7NpVlr3mtoYe34-jD` in-process). Regex HTTP import was skipped on the live host. Capability packages remained `[]`.

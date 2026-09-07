@@ -19,6 +19,23 @@ EXPECTED_BYTES = 187_861
 EXPECTED_SHA256 = '43801992b7e07ffb24c0395f32ce87b4ea4f3a40aed929eb0462e3e41b7adc93'
 BASELINE_SHA256 = 'e44c05139bde61779ac15402dab71d36c531fbd38f6adc2c338eba8f74c91de8'
 COUNTS = {'sections': 69, 'groups': 12, 'choiceBlocks': 11, 'regexScripts': 25}
+EXPECTED_WRAP_FORMAT = 'none'
+EXPECTED_DISABLED_AGENT_MARKERS = [
+    {'id': 'qbBXq2fx1R4ois3mSWtQ4', 'name': 'Persona Stats (Agent)',
+     'agentType': 'persona-stats', 'enabled': 'false'},
+    {'id': 'mVFgjDwXZPmwK1v31jTpT', 'name': 'Character Tracker (Agent)',
+     'agentType': 'character-tracker', 'enabled': 'false'},
+    {'id': 'ZDrz_C7-R4VNy5zYuMQ1t', 'name': 'Custom Tracker (Agent)',
+     'agentType': 'custom-tracker', 'enabled': 'false'},
+    {'id': 'oxqE6DBUlcLY3k0n4wvMB', 'name': 'Beholder (Agent)',
+     'agentType': 'beholder', 'enabled': 'false'},
+    {'id': 'R31nXEzlHyVSQQcxOsym_', 'name': 'Quest Tracker (Agent)',
+     'agentType': 'quest', 'enabled': 'false'},
+    {'id': 'IPh87UHK1iV0wLIc22mL9', 'name': 'World State (Agent)',
+     'agentType': 'world-state', 'enabled': 'false'},
+    {'id': 'PDN9z6Hfg1E5fjRGhw9vA', 'name': 'Inventory Tracker (Agent)',
+     'agentType': 'inventory-tracker', 'enabled': 'false'},
+]
 
 
 def digest(value: bytes) -> str:
@@ -28,6 +45,12 @@ def digest(value: bytes) -> str:
 def canonical_digest(value: Any) -> str:
     return digest(json.dumps(value, ensure_ascii=False, sort_keys=True,
                              separators=(',', ':')).encode('utf-8'))
+
+
+def parse_marker(value: Any) -> Any:
+    if isinstance(value, str):
+        return json.loads(value)
+    return value
 
 
 def audit(source_path: Path, baseline_path: Path) -> dict[str, Any]:
@@ -54,23 +77,82 @@ def audit(source_path: Path, baseline_path: Path) -> dict[str, Any]:
             if (row['id'] != archived['id'] or list(row) != archived['fields'] or
                     canonical_digest(row) != archived['sha256_canonical_json']):
                 raise ValueError(f'{key} record {row["id"]} differs from the baseline')
+
+    # Order arrays, defaults, and wrapFormat are part of the freeze contract.
+    if preset.get('sectionOrder') != baseline['sectionOrderRaw']:
+        raise ValueError('sectionOrder differs from the baseline raw order array')
+    if preset.get('groupOrder') != baseline['groupOrderRaw']:
+        raise ValueError('groupOrder differs from the baseline raw order array')
+    if preset.get('defaultChoices') != baseline['defaultChoicesRaw']:
+        raise ValueError('defaultChoices differ from the baseline raw choices')
+    if json.loads(preset['defaultChoices']) != baseline['defaultChoices']:
+        raise ValueError('parsed defaultChoices differ from the baseline')
+    if preset.get('wrapFormat') != EXPECTED_WRAP_FORMAT:
+        raise ValueError(f'wrapFormat is {preset.get("wrapFormat")!r}; expected {EXPECTED_WRAP_FORMAT!r}')
+
+    wrapping = []
+    for row in data['sections']:
+        wrap_in_xml, xml_tag = row.get('wrapInXml'), row.get('xmlTagName')
+        if wrap_in_xml not in (False, 'false') or xml_tag not in ('', None):
+            raise ValueError(f'section {row["id"]} wrapping fields are not the archived defaults')
+        wrapping.append({
+            'id': row['id'],
+            'wrapInXml': wrap_in_xml,
+            'xmlTagName': xml_tag if xml_tag is not None else '',
+        })
+    if len(wrapping) != COUNTS['sections']:
+        raise ValueError('wrapping field inventory is incomplete')
+
     disabled = []
     for row in data['sections']:
-        marker = row.get('markerConfig')
-        marker = json.loads(marker) if isinstance(marker, str) else marker
+        marker = parse_marker(row.get('markerConfig'))
         if marker and marker.get('type') == 'agent_data' and row['enabled'] in (False, 'false'):
-            disabled.append({'id': row['id'], 'name': row['name'],
-                             'agentType': marker.get('agentType'), 'enabled': row['enabled']})
-    if len(disabled) != 7:
-        raise ValueError('disabled agent marker count differs from the baseline')
+            disabled.append({
+                'id': row['id'],
+                'name': row['name'],
+                'agentType': marker.get('agentType'),
+                'enabled': row['enabled'],
+            })
+    if disabled != EXPECTED_DISABLED_AGENT_MARKERS:
+        raise ValueError('disabled agent markers differ from the pinned archive list')
+
+    regex_summary = []
+    for row in records['regexScripts']:
+        regex_summary.append({
+            'id': row['id'],
+            'scriptName': row.get('scriptName'),
+            'disabled': row.get('disabled'),
+            'markdownOnly': row.get('markdownOnly'),
+            'promptOnly': row.get('promptOnly'),
+            'runOnEdit': row.get('runOnEdit'),
+            'substituteRegex': row.get('substituteRegex'),
+            'placement': row.get('placement'),
+            'minDepth': row.get('minDepth'),
+            'maxDepth': row.get('maxDepth'),
+            'findRegex': row.get('findRegex'),
+        })
+
     return {
         'schemaVersion': 1,
         'purpose': 'Archive integrity and field accounting; runtime behavior is verified separately.',
         'archive': {'bytes': len(raw), 'sha256': digest(raw)},
         'baseline': {'sha256': digest(baseline_raw)},
         'counts': COUNTS,
-        'defaultChoices': json.loads(preset['defaultChoices']),
+        'defaultChoices': baseline['defaultChoices'],
+        'wrapFormat': EXPECTED_WRAP_FORMAT,
+        'wrappingFields': {
+            'sectionsChecked': len(wrapping),
+            'allWrapInXmlFalse': all(item['wrapInXml'] in (False, 'false') for item in wrapping),
+            'allXmlTagNameEmpty': all(item['xmlTagName'] == '' for item in wrapping),
+        },
+        'orderArrays': {
+            'sectionOrderIds': json.loads(baseline['sectionOrderRaw']),
+            'groupOrderIds': json.loads(baseline['groupOrderRaw']),
+            'sectionOrderCount': len(json.loads(baseline['sectionOrderRaw'])),
+            'groupOrderCount': len(json.loads(baseline['groupOrderRaw'])),
+        },
         'disabledAgentMarkers': disabled,
+        'regexExecutableSummary': regex_summary,
         'records': {key: baseline[key] for key in records},
     }
 
@@ -97,7 +179,7 @@ def main() -> int:
             args.output.write_text(rendered, encoding='utf-8')
         sys.stdout.write(rendered)
         return 0
-    except (OSError, ValueError, KeyError, TypeError) as error:
+    except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError) as error:
         print(f'preset audit failed: {error}', file=sys.stderr)
         return 1
 

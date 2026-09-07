@@ -39,3 +39,5 @@ npm test
 ```
 
 These local tests verify adapter failure handling and preservation contracts. Separate source-runtime checks are required before compatibility is release-ready.
+
+Live Engine import/export for Task 1 is **blocked** in this workspace (no Engine checkout). See `compatibility/engine-import-status.md` and the pinned Engine/Agents revisions above.

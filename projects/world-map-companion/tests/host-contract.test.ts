@@ -13,7 +13,7 @@ const lifecycleObservationPath = `${root}/compatibility/lifecycle-observation.js
 const EXPECTED_ENGINE = "9bbee87d1a44c33f704977bd8c25aafbec9b85aa";
 const EXPECTED_AGENTS = "ee1a4a01d1091a9f5e4086c58f608e401aa1d879";
 const EXPECTED_NATIVE_PRESET = "pLwe7NpVlr3mtoYe34-jD";
-const EXPECTED_IMPLEMENTATION_TIP = "cbed996047b6c4b7c5f2bf8b1f33beafa6a4991a";
+const EXPECTED_IMPLEMENTATION_TIP = "40f057a3eb0b245b1a4b785fd3d36a9ac8b850f5";
 // taskTip pinned after Task 9 commit; tests that need exact tip read from lock after pin step
 const EXPECTED_TASK_BRANCH = "wmc/task-9-prompt-modules";
 

@@ -4,8 +4,8 @@
   "kind": "prompt-modules-unit-proof",
   "distinctFrom": "live-http-engine-receipt",
   "status": "PASS",
-  "baseSha": "cbed996047b6c4b7c5f2bf8b1f33beafa6a4991a",
-  "featureSha": "PENDING",
+  "baseSha": "40f057a3eb0b245b1a4b785fd3d36a9ac8b850f5",
+  "featureSha": "5429c0847246b4fba6b01c4b9df8a0af7f27b269",
   "cases": [
     "archive-untouched",
     "prompt-modules-present",
@@ -40,5 +40,5 @@
   "archiveSha256": "43801992b7e07ffb24c0395f32ce87b4ea4f3a40aed929eb0462e3e41b7adc93",
   "companionOffParity": true,
   "wholeWorldBeyondFirst50": true,
-  "ranAt": "2026-09-07T19:30:40.017Z"
+  "ranAt": "2026-09-07T19:30:56.792Z"
 }

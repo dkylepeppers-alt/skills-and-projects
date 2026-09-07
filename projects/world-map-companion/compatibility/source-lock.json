@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "purpose": "Pinned source revisions for World Map Companion host-contract discovery (Task 2). These are inspected checkout SHAs, not a claim about any installed Engine build.",
-  "lockedAt": "2026-09-07T16:10:00Z",
+  "purpose": "Pinned source revisions for World Map Companion (Task 3 contracts/state). Inspected checkout SHAs, not a claim about any installed Engine build.",
+  "lockedAt": "2026-09-07T16:25:00Z",
   "companion": {
     "repository": "dkylepeppers-alt/skills-and-projects",
     "implementationBranch": "implementation/world-map-companion",
-    "implementationTip": "7df59b75d9366d12ce52bc001b3b95f93879d1fa",
-    "taskBranch": "wmc/task-2-bridge",
-    "taskTip": "64e1967467b346d12abeb72bfa88946134b18921"
+    "implementationTip": "7c8881192f4c48cc681d210c1d108d18f4f856fc",
+    "taskBranch": "wmc/task-3-contracts",
+    "taskTip": "d8568b792e09fdf3277478a9ccf18388320eccdc"
   },
   "engine": {
     "repository": "Pasta-Devs/Marinara-Engine",
@@ -21,8 +21,9 @@
   },
   "notes": [
     "Do not invent Engine remapped IDs or runtimeObservation here.",
-    "Task 1 in-process import and Task 2 in-process lifecycle observation are recorded; user desktop install fields remain UNKNOWN.",
-    "taskTip is the CompanionHostBridge proposed-adapter commit SHA on wmc/task-2-bridge.",
-    "implementationTip is origin/implementation/world-map-companion after PR #6 (Task 2 lifecycle) merge."
+    "Task 1\u20132 evidence remains recorded; user desktop install fields remain UNKNOWN.",
+    "taskTip is the Task 3 contracts/state commit SHA on wmc/task-3-contracts.",
+    "implementationTip is origin/implementation/world-map-companion after PR #7 (Task 2 bridge) merge.",
+    "CompanionHostBridge remains PROPOSED adapter; not upstream Engine API."
   ]
 }

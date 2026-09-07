@@ -25,6 +25,10 @@ Archive integrity is separate from Engine import and behavior verification. Pass
 
 Upstream source checkouts and dependencies stay outside this repository. Nevermore source IDs, lore, topology, and artwork remain under their existing project paths.
 
+## History selection (Task 4)
+
+Authoritative swipe/edit/delete/branch/checkpoint selection and durable pending-job recovery live in `src/state/history.ts` and `src/state/checkpoints.ts`, backed by the Task 3 file repository (not Engine `CapabilityDocumentStore`). Contract and status: [`docs/history-selection.md`](docs/history-selection.md). Merged at `4008b1e`. Live Engine `selectHistory` wire-up remains PROPOSED / UNVERIFIED.
+
 ## Compatibility adapter
 
 `compatibility/preset-compatibility.ts` imports through an `EnginePresetApi` adapter, records native ID remaps, and installs the 25 embedded scripts through the separate regex API. It preserves the complete original envelope as its source sidecar. The field ledger records native values, documented normalization, and sidecar-only metadata.

@@ -1,0 +1,3173 @@
+{
+  "schemaVersion": 1,
+  "worldId": "world:nevermore",
+  "sourceMapContentHash": "d10bef3e1d39945224d3981767fdb4c6a7a018b0710efb7322dd790be0dfd2fa",
+  "locationCount": 79,
+  "edgeRecordCount": 79,
+  "assetCount": 82,
+  "locations": [
+    {
+      "locationId": "jericho-woods",
+      "displayName": "Jericho Woodlands",
+      "mapKind": "region",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:jericho-woods",
+        "art-inventory:jericho-woods"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:jericho-woods",
+      "mapBackgroundImageId": "global-gallery:nevermore-map-pack:background:jericho-woods",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-woods",
+        "mYfUaxUUp-lZFVl5W9WK0"
+      ],
+      "childPresentation": "map",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "jericho-town",
+      "displayName": "Jericho",
+      "mapKind": "settlement",
+      "parentId": "jericho-woods",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:jericho-town",
+        "art-inventory:jericho-town"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:jericho-town",
+      "mapBackgroundImageId": "global-gallery:nevermore-map-pack:background:jericho-town",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-woods",
+        "mYfUaxUUp-lZFVl5W9WK0"
+      ],
+      "childPresentation": "map",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "jericho-main-street",
+      "displayName": "Main Street",
+      "mapKind": "place",
+      "parentId": "jericho-town",
+      "status": "active",
+      "kind": "circulation",
+      "affordances": [
+        "ask-directions",
+        "meet",
+        "observe",
+        "observe-town",
+        "pass-through"
+      ],
+      "timeAssumptions": "SOURCE: shops close early when outcasts come down the hill; exact hours UNKNOWN (Jericho lore).",
+      "sourceRefs": [
+        "map:v2:jericho-main-street",
+        "art-inventory:jericho-main-street"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:jericho-main-street",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-woods",
+        "mYfUaxUUp-lZFVl5W9WK0"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "nevermore-grounds",
+      "displayName": "Nevermore Academy Grounds",
+      "mapKind": "settlement",
+      "parentId": "jericho-woods",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:nevermore-grounds",
+        "art-inventory:nevermore-grounds"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-grounds",
+      "mapBackgroundImageId": "global-gallery:nevermore-map-pack:background:nevermore-grounds",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "n_rYk1EIrauNJrk2ltzKO",
+        "7ckvAS-DAsFSW0vbnvJlF",
+        "BElmSYs8bzA85Fe7re12Z"
+      ],
+      "childPresentation": "map",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "nevermore-gates",
+      "displayName": "Academy Gates",
+      "mapKind": "place",
+      "parentId": "nevermore-grounds",
+      "status": "active",
+      "kind": "boundary-gate",
+      "affordances": [
+        "approach",
+        "check-access",
+        "travel"
+      ],
+      "accessNotes": "Campus boundary; connects town ridge road and woodland loop (HANDOFF/directories).",
+      "sourceRefs": [
+        "map:v2:nevermore-gates",
+        "art-inventory:nevermore-gates"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-gates",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "n_rYk1EIrauNJrk2ltzKO",
+        "7ckvAS-DAsFSW0vbnvJlF"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "nevermore-quad",
+      "displayName": "The Quad",
+      "mapKind": "place",
+      "parentId": "nevermore-grounds",
+      "status": "active",
+      "kind": "circulation",
+      "affordances": [
+        "pass-through",
+        "meet",
+        "observe"
+      ],
+      "sourceRefs": [
+        "map:v2:nevermore-quad",
+        "art-inventory:nevermore-quad"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-quad",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "n_rYk1EIrauNJrk2ltzKO",
+        "7ckvAS-DAsFSW0vbnvJlF"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "nevermore-poe-statue",
+      "displayName": "Poe Statue",
+      "mapKind": "place",
+      "parentId": "nevermore-grounds",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "sourceRefs": [
+        "map:v2:nevermore-poe-statue",
+        "art-inventory:nevermore-poe-statue"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-poe-statue",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "n_rYk1EIrauNJrk2ltzKO",
+        "kgb9TZFKAi76k_WS1XGKe",
+        "ip_IdAbOuzBNe3y9zStfu"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "nevermore-lake",
+      "displayName": "The Lake",
+      "mapKind": "place",
+      "parentId": "nevermore-grounds",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "sourceRefs": [
+        "map:v2:nevermore-lake",
+        "art-inventory:nevermore-lake"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-lake",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "n_rYk1EIrauNJrk2ltzKO"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "nevermore-oaks",
+      "displayName": "The Old Oaks",
+      "mapKind": "place",
+      "parentId": "nevermore-grounds",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "sourceRefs": [
+        "map:v2:nevermore-oaks",
+        "art-inventory:nevermore-oaks"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-oaks",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "n_rYk1EIrauNJrk2ltzKO"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "nevermore-cemetery",
+      "displayName": "Academy Cemetery",
+      "mapKind": "place",
+      "parentId": "nevermore-grounds",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "sourceRefs": [
+        "map:v2:nevermore-cemetery",
+        "art-inventory:nevermore-cemetery"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-cemetery",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "TJF1YhMonWKX8ZYMW77pH",
+        "iE6G75LbMienV_xzASCUU"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "nevermore-dead-gardens",
+      "displayName": "Dead Gardens",
+      "mapKind": "place",
+      "parentId": "nevermore-grounds",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "sourceRefs": [
+        "map:v2:nevermore-dead-gardens",
+        "art-inventory:nevermore-dead-gardens"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-dead-gardens",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "TJF1YhMonWKX8ZYMW77pH",
+        "iE6G75LbMienV_xzASCUU"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "nevermore-botany",
+      "displayName": "Botany Houses",
+      "mapKind": "building",
+      "parentId": "nevermore-grounds",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "sourceRefs": [
+        "map:v2:nevermore-botany",
+        "art-inventory:nevermore-botany"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-botany",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "n_rYk1EIrauNJrk2ltzKO",
+        "7ckvAS-DAsFSW0vbnvJlF"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "nevermore-main-hall",
+      "displayName": "Main Academic Hall",
+      "mapKind": "building",
+      "parentId": "nevermore-grounds",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:nevermore-main-hall",
+        "art-inventory:nevermore-main-hall"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-main-hall",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "aFv2LbazQ96NEpPVr_0ZT",
+        "7ckvAS-DAsFSW0vbnvJlF"
+      ],
+      "childPresentation": "layers",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "nevermore-dorms",
+      "displayName": "Dormitories",
+      "mapKind": "building",
+      "parentId": "nevermore-grounds",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:nevermore-dorms",
+        "art-inventory:nevermore-dorms"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:nevermore-dorms",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "aNjV2yTAAK6YB1ZNJmrP4",
+        "7ckvAS-DAsFSW0vbnvJlF"
+      ],
+      "childPresentation": "layers",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "main-hall-foyer",
+      "displayName": "Foyer",
+      "mapKind": "room",
+      "parentId": "main-hall-ground",
+      "status": "active",
+      "kind": "circulation",
+      "affordances": [
+        "pass-through",
+        "meet",
+        "observe"
+      ],
+      "sourceRefs": [
+        "map:v2:main-hall-foyer",
+        "art-inventory:main-hall-foyer"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:main-hall-foyer",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "aFv2LbazQ96NEpPVr_0ZT"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "main-hall-weems",
+      "displayName": "Principal Weems's Office",
+      "mapKind": "room",
+      "parentId": "main-hall-ground",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "timeAssumptions": "ASSUMPTION: office hours during school day; exact hours UNKNOWN.",
+      "npcAssociations": [
+        "npc:larissa-weems"
+      ],
+      "sourceRefs": [
+        "map:v2:main-hall-weems",
+        "art-inventory:main-hall-weems"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:main-hall-weems",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "aFv2LbazQ96NEpPVr_0ZT",
+        "DXSIAQyH7a5BjMqnL3Qsp",
+        "BElmSYs8bzA85Fe7re12Z"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "main-hall-dining",
+      "displayName": "Dining Hall",
+      "mapKind": "room",
+      "parentId": "main-hall-ground",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "meet",
+        "rest",
+        "search",
+        "wait"
+      ],
+      "timeAssumptions": "ASSUMPTION: meal service follows ordinary school-day cadence; exact hours UNKNOWN in source.",
+      "sourceRefs": [
+        "map:v2:main-hall-dining",
+        "art-inventory:main-hall-dining"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:main-hall-dining",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "aFv2LbazQ96NEpPVr_0ZT"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "main-hall-classrooms",
+      "displayName": "Classroom Corridor",
+      "mapKind": "room",
+      "parentId": "main-hall-upper",
+      "status": "active",
+      "kind": "circulation",
+      "affordances": [
+        "pass-through",
+        "meet",
+        "observe"
+      ],
+      "timeAssumptions": "ASSUMPTION: class periods exist on school days; exact timetable UNKNOWN in source.",
+      "sourceRefs": [
+        "map:v2:main-hall-classrooms",
+        "art-inventory:main-hall-classrooms"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:main-hall-classrooms",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "aFv2LbazQ96NEpPVr_0ZT"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "main-hall-fencing",
+      "displayName": "Fencing Salle",
+      "mapKind": "room",
+      "parentId": "main-hall-upper",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "timeAssumptions": "ASSUMPTION: salle used for instruction/practice; schedule UNKNOWN.",
+      "sourceRefs": [
+        "map:v2:main-hall-fencing",
+        "art-inventory:main-hall-fencing"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:main-hall-fencing",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "aFv2LbazQ96NEpPVr_0ZT"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "dorms-common",
+      "displayName": "Dorm Common Room",
+      "mapKind": "room",
+      "parentId": "dorms-ground",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "meet",
+        "rest",
+        "search",
+        "wait"
+      ],
+      "timeAssumptions": "ASSUMPTION: common room usable outside class hours; exact curfew UNKNOWN.",
+      "sourceRefs": [
+        "map:v2:dorms-common",
+        "art-inventory:dorms-common"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:dorms-common",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "aNjV2yTAAK6YB1ZNJmrP4"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "dorms-upper",
+      "displayName": "Dorm Upper Floor",
+      "mapKind": "floor",
+      "parentId": "nevermore-dorms",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:dorms-upper",
+        "art-inventory:dorms-upper"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:dorms-upper",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "aNjV2yTAAK6YB1ZNJmrP4"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "dorm-wednesday-enid",
+      "displayName": "Wednesday and Enid's Room",
+      "mapKind": "room",
+      "parentId": "dorms-upper",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "npcAssociations": [
+        "npc:wednesday-addams",
+        "npc:enid-sinclair"
+      ],
+      "sourceRefs": [
+        "map:v2:dorm-wednesday-enid",
+        "art-inventory:dorm-wednesday-enid"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:dorm-wednesday-enid",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "aNjV2yTAAK6YB1ZNJmrP4",
+        "CvmzKzAZcsJxd48pMZuqD",
+        "UvYMZqpn4czDr472aqNDF"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "ravencroft-gates",
+      "displayName": "Ravencroft Gates",
+      "mapKind": "place",
+      "parentId": "nevermore-grounds",
+      "status": "active",
+      "kind": "boundary-gate",
+      "affordances": [
+        "approach",
+        "check-access",
+        "travel"
+      ],
+      "accessNotes": "House boundary on academy land; connects Dead Gardens/Cemetery (HANDOFF).",
+      "sourceRefs": [
+        "map:v2:ravencroft-gates",
+        "art-inventory:ravencroft-gates"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-gates",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-ravencroft",
+        "iE6G75LbMienV_xzASCUU",
+        "TJF1YhMonWKX8ZYMW77pH"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "ravencroft-manor",
+      "displayName": "Ravencroft Manor",
+      "mapKind": "building",
+      "parentId": "nevermore-grounds",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "npcAssociations": [
+        "npc:thing-t-thing"
+      ],
+      "sourceRefs": [
+        "map:v2:ravencroft-manor",
+        "art-inventory:ravencroft-manor"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-manor",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-ravencroft",
+        "iE6G75LbMienV_xzASCUU",
+        "nPZtleNlF6_eQazEqjPDu",
+        "BElmSYs8bzA85Fe7re12Z"
+      ],
+      "childPresentation": "layers",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "ravencroft-basement",
+      "displayName": "Ravencroft Basement",
+      "mapKind": "floor",
+      "parentId": "ravencroft-manor",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:ravencroft-basement",
+        "art-inventory:ravencroft-basement"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-basement",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-ravencroft",
+        "nPZtleNlF6_eQazEqjPDu",
+        "kgb9TZFKAi76k_WS1XGKe",
+        "ip_IdAbOuzBNe3y9zStfu"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "ravencroft-iron-maiden",
+      "displayName": "Iron Maiden Closet",
+      "mapKind": "room",
+      "parentId": "ravencroft-basement",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "sourceRefs": [
+        "map:v2:ravencroft-iron-maiden",
+        "art-inventory:ravencroft-iron-maiden"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-iron-maiden",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-ravencroft",
+        "nPZtleNlF6_eQazEqjPDu",
+        "ip_IdAbOuzBNe3y9zStfu"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "ravencroft-parlor",
+      "displayName": "Parlor",
+      "mapKind": "room",
+      "parentId": "ravencroft-main",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "npcAssociations": [
+        "npc:morticia-addams"
+      ],
+      "sourceRefs": [
+        "map:v2:ravencroft-parlor",
+        "art-inventory:ravencroft-parlor"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-parlor",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-ravencroft",
+        "nPZtleNlF6_eQazEqjPDu",
+        "4tRmJ-h6xHh651CyKLYlM"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "ravencroft-family",
+      "displayName": "Family Wing",
+      "mapKind": "floor",
+      "parentId": "ravencroft-manor",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:ravencroft-family",
+        "art-inventory:ravencroft-family"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-family",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-ravencroft",
+        "nPZtleNlF6_eQazEqjPDu"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "ravencroft-morticia-chamber",
+      "displayName": "Morticia's Bedchamber",
+      "mapKind": "room",
+      "parentId": "ravencroft-family",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "npcAssociations": [
+        "npc:morticia-addams"
+      ],
+      "sourceRefs": [
+        "map:v2:ravencroft-morticia-chamber",
+        "art-inventory:ravencroft-morticia-chamber"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-morticia-chamber",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-ravencroft",
+        "nPZtleNlF6_eQazEqjPDu",
+        "4tRmJ-h6xHh651CyKLYlM"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "ravencroft-walk",
+      "displayName": "Widow's Walk",
+      "mapKind": "room",
+      "parentId": "ravencroft-upper",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "sourceRefs": [
+        "map:v2:ravencroft-walk",
+        "art-inventory:ravencroft-walk"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-walk",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-ravencroft",
+        "nPZtleNlF6_eQazEqjPDu"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-labyrinth",
+      "displayName": "The Crypts of Nevermore",
+      "mapKind": "place",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-labyrinth",
+        "art-inventory:crypts-labyrinth"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-labyrinth",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "kgb9TZFKAi76k_WS1XGKe",
+        "cWowJdGQyZYMaIC79KpTn"
+      ],
+      "childPresentation": "layers",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-holding",
+      "displayName": "Threshold Hall",
+      "mapKind": "room",
+      "parentId": "crypts-threshold",
+      "status": "active",
+      "kind": "circulation",
+      "affordances": [
+        "pass-through",
+        "meet",
+        "observe"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-holding",
+        "art-inventory:crypts-holding"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-holding",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "ip_IdAbOuzBNe3y9zStfu"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-first-rite",
+      "displayName": "First Rite",
+      "mapKind": "floor",
+      "parentId": "crypts-labyrinth",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-first-rite",
+        "art-inventory:crypts-first-rite"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-first-rite",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "O_n4faQZCivBtRfyAL8yu",
+        "cWowJdGQyZYMaIC79KpTn"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-chamber-1",
+      "displayName": "Chamber of Caresses",
+      "mapKind": "room",
+      "parentId": "crypts-first-rite",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "investigate",
+        "rest",
+        "rite-stage-if-applicable",
+        "search"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-chamber-1",
+        "art-inventory:crypts-chamber-1"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-chamber-1",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "O_n4faQZCivBtRfyAL8yu",
+        "cWowJdGQyZYMaIC79KpTn"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-door-1",
+      "displayName": "Door of First Touch",
+      "mapKind": "room",
+      "parentId": "crypts-first-rite",
+      "status": "active",
+      "kind": "boundary-gate",
+      "affordances": [
+        "approach",
+        "check-access",
+        "travel"
+      ],
+      "accessNotes": "Progression gate to crypts-breath; default blocked until stage completion (HANDOFF).",
+      "sourceRefs": [
+        "map:v2:crypts-door-1",
+        "art-inventory:crypts-door-1"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-door-1",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "O_n4faQZCivBtRfyAL8yu",
+        "cWowJdGQyZYMaIC79KpTn"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-second-rite",
+      "displayName": "Second Rite",
+      "mapKind": "floor",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-second-rite",
+        "art-inventory:crypts-second-rite"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-second-rite",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "lviqc57Vx1BgY-qwyWbxt",
+        "cWowJdGQyZYMaIC79KpTn"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-chamber-2",
+      "displayName": "Chamber of Mouths",
+      "mapKind": "room",
+      "parentId": "crypts-second-rite",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "investigate",
+        "rest",
+        "rite-stage-if-applicable",
+        "search"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-chamber-2",
+        "art-inventory:crypts-chamber-2"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-chamber-2",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "lviqc57Vx1BgY-qwyWbxt",
+        "cWowJdGQyZYMaIC79KpTn"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-door-2",
+      "displayName": "Door of Worship",
+      "mapKind": "room",
+      "parentId": "crypts-second-rite",
+      "status": "active",
+      "kind": "boundary-gate",
+      "affordances": [
+        "approach",
+        "check-access",
+        "travel"
+      ],
+      "accessNotes": "Progression gate to crypts-chamber-3; default blocked until stage completion (HANDOFF).",
+      "sourceRefs": [
+        "map:v2:crypts-door-2",
+        "art-inventory:crypts-door-2"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-door-2",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "lviqc57Vx1BgY-qwyWbxt",
+        "cWowJdGQyZYMaIC79KpTn"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-union",
+      "displayName": "Union",
+      "mapKind": "floor",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-union",
+        "art-inventory:crypts-union"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-union",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "oaz4jkf1n_QgP-Sq_epJ6",
+        "cWowJdGQyZYMaIC79KpTn"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-chamber-3",
+      "displayName": "Chamber of Harmonies",
+      "mapKind": "room",
+      "parentId": "crypts-union",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "investigate",
+        "rest",
+        "rite-stage-if-applicable",
+        "search"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-chamber-3",
+        "art-inventory:crypts-chamber-3"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-chamber-3",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "oaz4jkf1n_QgP-Sq_epJ6",
+        "cWowJdGQyZYMaIC79KpTn"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-door-3",
+      "displayName": "Door of Three",
+      "mapKind": "room",
+      "parentId": "crypts-union",
+      "status": "active",
+      "kind": "boundary-gate",
+      "affordances": [
+        "approach",
+        "check-access",
+        "travel"
+      ],
+      "accessNotes": "Progression gate to crypts-approach; default blocked until stage completion (HANDOFF).",
+      "sourceRefs": [
+        "map:v2:crypts-door-3",
+        "art-inventory:crypts-door-3"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-door-3",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "oaz4jkf1n_QgP-Sq_epJ6",
+        "cWowJdGQyZYMaIC79KpTn"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-covenant",
+      "displayName": "Covenant",
+      "mapKind": "floor",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-covenant",
+        "art-inventory:crypts-covenant"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-covenant",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "I8MjOJKPBSgcZ6uN_x5sp",
+        "cWowJdGQyZYMaIC79KpTn"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-altar",
+      "displayName": "Obsidian Altar",
+      "mapKind": "room",
+      "parentId": "crypts-covenant",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "investigate",
+        "rest",
+        "rite-stage-if-applicable",
+        "search"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-altar",
+        "art-inventory:crypts-altar"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-altar",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "I8MjOJKPBSgcZ6uN_x5sp",
+        "cWowJdGQyZYMaIC79KpTn",
+        "LIfMiWh7cCv4qha5Az8EL"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "woods-ridge",
+      "displayName": "Ridge Woods",
+      "mapKind": "region",
+      "parentId": "jericho-woods",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:woods-ridge",
+        "art-inventory:woods-ridge"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:woods-ridge",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-woods"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "woods-blackwater",
+      "displayName": "Blackwater Hollow",
+      "mapKind": "region",
+      "parentId": "jericho-woods",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:woods-blackwater",
+        "art-inventory:woods-blackwater"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:woods-blackwater",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-woods"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "woods-western",
+      "displayName": "Western Old Woods",
+      "mapKind": "region",
+      "parentId": "jericho-woods",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:woods-western",
+        "art-inventory:woods-western"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:woods-western",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-woods"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "woods-junction",
+      "displayName": "Boundary Trail Junction",
+      "mapKind": "place",
+      "parentId": "woods-ridge",
+      "status": "active",
+      "kind": "boundary-gate",
+      "affordances": [
+        "approach",
+        "check-access",
+        "travel"
+      ],
+      "accessNotes": "Boundary Trail Junction; western forest access branches here; no new crypt entrance asserted (STYLE-AND-CANON).",
+      "sourceRefs": [
+        "map:v2:woods-junction",
+        "art-inventory:woods-junction"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:woods-junction",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-woods"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "woods-bridge",
+      "displayName": "Old Stone Bridge",
+      "mapKind": "place",
+      "parentId": "woods-blackwater",
+      "status": "active",
+      "kind": "circulation",
+      "affordances": [
+        "pass-through",
+        "meet",
+        "observe"
+      ],
+      "sourceRefs": [
+        "map:v2:woods-bridge",
+        "art-inventory:woods-bridge"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:woods-bridge",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-woods"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "woods-sawmill",
+      "displayName": "Abandoned Sawmill",
+      "mapKind": "building",
+      "parentId": "woods-blackwater",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "expedition-pause",
+        "investigate",
+        "rest",
+        "search"
+      ],
+      "sourceRefs": [
+        "map:v2:woods-sawmill",
+        "art-inventory:woods-sawmill"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:woods-sawmill",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-woods"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "woods-lookout",
+      "displayName": "Ridge Lookout",
+      "mapKind": "place",
+      "parentId": "woods-ridge",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "expedition-pause",
+        "investigate",
+        "rest",
+        "search"
+      ],
+      "sourceRefs": [
+        "map:v2:woods-lookout",
+        "art-inventory:woods-lookout"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:woods-lookout",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-woods"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "main-hall-ground",
+      "displayName": "Ground Floor",
+      "mapKind": "floor",
+      "parentId": "nevermore-main-hall",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:main-hall-ground",
+        "art-inventory:main-hall-ground"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:main-hall-ground",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "aFv2LbazQ96NEpPVr_0ZT"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "main-hall-upper",
+      "displayName": "Upper Floor",
+      "mapKind": "floor",
+      "parentId": "nevermore-main-hall",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:main-hall-upper",
+        "art-inventory:main-hall-upper"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:main-hall-upper",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "aFv2LbazQ96NEpPVr_0ZT"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "dorms-ground",
+      "displayName": "Dorm Ground Floor",
+      "mapKind": "floor",
+      "parentId": "nevermore-dorms",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:dorms-ground",
+        "art-inventory:dorms-ground"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:dorms-ground",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "aNjV2yTAAK6YB1ZNJmrP4"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "dorm-pugsley",
+      "displayName": "Pugsley's Room",
+      "mapKind": "room",
+      "parentId": "dorms-upper",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "npcAssociations": [
+        "npc:pugsley-addams"
+      ],
+      "sourceRefs": [
+        "map:v2:dorm-pugsley",
+        "art-inventory:dorm-pugsley"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:dorm-pugsley",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "aNjV2yTAAK6YB1ZNJmrP4",
+        "5LBs-qv-D9m-xndz9Ot58"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "dorm-bianca",
+      "displayName": "Bianca's Room",
+      "mapKind": "room",
+      "parentId": "dorms-upper",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "npcAssociations": [
+        "npc:bianca-barclay"
+      ],
+      "sourceRefs": [
+        "map:v2:dorm-bianca",
+        "art-inventory:dorm-bianca"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:dorm-bianca",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "aNjV2yTAAK6YB1ZNJmrP4",
+        "Aqn7raa1iEqpD7mGnmvFP"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "dorm-nerissa",
+      "displayName": "Nerissa's Room",
+      "mapKind": "room",
+      "parentId": "dorms-upper",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "npcAssociations": [
+        "npc:nerissa-vale"
+      ],
+      "sourceRefs": [
+        "map:v2:dorm-nerissa",
+        "art-inventory:dorm-nerissa"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:dorm-nerissa",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-campus",
+        "aNjV2yTAAK6YB1ZNJmrP4",
+        "qC-2X7e12UQww19UqT9N5"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "ravencroft-meditation",
+      "displayName": "Meditation Chamber",
+      "mapKind": "room",
+      "parentId": "ravencroft-basement",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "sourceRefs": [
+        "map:v2:ravencroft-meditation",
+        "art-inventory:ravencroft-meditation"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-meditation",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-ravencroft",
+        "nPZtleNlF6_eQazEqjPDu",
+        "4tRmJ-h6xHh651CyKLYlM"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "ravencroft-main",
+      "displayName": "Ravencroft Main Floor",
+      "mapKind": "floor",
+      "parentId": "ravencroft-manor",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:ravencroft-main",
+        "art-inventory:ravencroft-main"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-main",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-ravencroft",
+        "nPZtleNlF6_eQazEqjPDu",
+        "iE6G75LbMienV_xzASCUU"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "ravencroft-greenhouse",
+      "displayName": "Morticia's Greenhouse",
+      "mapKind": "room",
+      "parentId": "ravencroft-main",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "npcAssociations": [
+        "npc:morticia-addams"
+      ],
+      "sourceRefs": [
+        "map:v2:ravencroft-greenhouse",
+        "art-inventory:ravencroft-greenhouse"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-greenhouse",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-ravencroft",
+        "nPZtleNlF6_eQazEqjPDu",
+        "4tRmJ-h6xHh651CyKLYlM"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "ravencroft-gomez-room",
+      "displayName": "Gomez's Visiting Room",
+      "mapKind": "room",
+      "parentId": "ravencroft-family",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "npcAssociations": [
+        "npc:gomez-addams"
+      ],
+      "sourceRefs": [
+        "map:v2:ravencroft-gomez-room",
+        "art-inventory:ravencroft-gomez-room"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-gomez-room",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-ravencroft",
+        "nPZtleNlF6_eQazEqjPDu",
+        "V8bjf4Q4Y-B3ieeLS1sf7"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "ravencroft-spare",
+      "displayName": "Spare Chamber",
+      "mapKind": "room",
+      "parentId": "ravencroft-family",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "examine",
+        "converse",
+        "search",
+        "rest"
+      ],
+      "sourceRefs": [
+        "map:v2:ravencroft-spare",
+        "art-inventory:ravencroft-spare"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-spare",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-ravencroft",
+        "nPZtleNlF6_eQazEqjPDu"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "ravencroft-upper",
+      "displayName": "Widow's Walk Level",
+      "mapKind": "floor",
+      "parentId": "ravencroft-manor",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:ravencroft-upper",
+        "art-inventory:ravencroft-upper"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:ravencroft-upper",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-ravencroft",
+        "nPZtleNlF6_eQazEqjPDu"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-threshold",
+      "displayName": "Threshold",
+      "mapKind": "floor",
+      "parentId": "crypts-labyrinth",
+      "status": "active",
+      "kind": "regional-container",
+      "affordances": [
+        "browse-children",
+        "orient"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-threshold",
+        "art-inventory:crypts-threshold"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-threshold",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "kgb9TZFKAi76k_WS1XGKe",
+        "ip_IdAbOuzBNe3y9zStfu",
+        "htp4JkccoBm6ZN4ufNeXJ"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-gate",
+      "displayName": "Iron Gate",
+      "mapKind": "room",
+      "parentId": "crypts-threshold",
+      "status": "active",
+      "kind": "boundary-gate",
+      "affordances": [
+        "approach",
+        "check-access",
+        "travel"
+      ],
+      "accessNotes": "Ordinary Iron Gate inside Threshold — not a progression lock (HANDOFF).",
+      "sourceRefs": [
+        "map:v2:crypts-gate",
+        "art-inventory:crypts-gate"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-gate",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "ip_IdAbOuzBNe3y9zStfu",
+        "kgb9TZFKAi76k_WS1XGKe"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-stair-mouth",
+      "displayName": "Poe Stair-Mouth",
+      "mapKind": "room",
+      "parentId": "crypts-threshold",
+      "status": "active",
+      "kind": "boundary-gate",
+      "affordances": [
+        "approach",
+        "check-access",
+        "travel"
+      ],
+      "accessNotes": "Hidden entrance from nevermore-poe-statue; default link state hidden until revealed (HANDOFF).",
+      "sourceRefs": [
+        "map:v2:crypts-stair-mouth",
+        "art-inventory:crypts-stair-mouth"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-stair-mouth",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "ip_IdAbOuzBNe3y9zStfu",
+        "n_rYk1EIrauNJrk2ltzKO"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-tunnel-mouth",
+      "displayName": "Ravencroft Tunnel-Mouth",
+      "mapKind": "room",
+      "parentId": "crypts-threshold",
+      "status": "active",
+      "kind": "boundary-gate",
+      "affordances": [
+        "approach",
+        "check-access",
+        "travel"
+      ],
+      "accessNotes": "Hidden entrance from ravencroft-iron-maiden; default link state hidden until revealed (HANDOFF).",
+      "sourceRefs": [
+        "map:v2:crypts-tunnel-mouth",
+        "art-inventory:crypts-tunnel-mouth"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-tunnel-mouth",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "ip_IdAbOuzBNe3y9zStfu",
+        "nPZtleNlF6_eQazEqjPDu"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-crawlspace",
+      "displayName": "Crawlspace Mouth",
+      "mapKind": "room",
+      "parentId": "crypts-threshold",
+      "status": "active",
+      "kind": "boundary-gate",
+      "affordances": [
+        "approach",
+        "check-access",
+        "travel"
+      ],
+      "accessNotes": "Hidden entrance from dorms-common; default link state hidden until revealed (HANDOFF).",
+      "sourceRefs": [
+        "map:v2:crypts-crawlspace",
+        "art-inventory:crypts-crawlspace"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-crawlspace",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "ip_IdAbOuzBNe3y9zStfu"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-portrait",
+      "displayName": "The Living Portrait",
+      "mapKind": "room",
+      "parentId": "crypts-threshold",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "investigate",
+        "rest",
+        "rite-stage-if-applicable",
+        "search"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-portrait",
+        "art-inventory:crypts-portrait"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-portrait",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "htp4JkccoBm6ZN4ufNeXJ",
+        "ip_IdAbOuzBNe3y9zStfu"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-breath",
+      "displayName": "Breath Passage",
+      "mapKind": "room",
+      "parentId": "crypts-second-rite",
+      "status": "active",
+      "kind": "circulation",
+      "affordances": [
+        "pass-through",
+        "meet",
+        "observe"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-breath",
+        "art-inventory:crypts-breath"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-breath",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "O_n4faQZCivBtRfyAL8yu",
+        "ip_IdAbOuzBNe3y9zStfu"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-echo",
+      "displayName": "Echo Niche",
+      "mapKind": "room",
+      "parentId": "crypts-second-rite",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "investigate",
+        "rest",
+        "rite-stage-if-applicable",
+        "search"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-echo",
+        "art-inventory:crypts-echo"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-echo",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "lviqc57Vx1BgY-qwyWbxt",
+        "ip_IdAbOuzBNe3y9zStfu"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-vestment",
+      "displayName": "Vestment Alcove",
+      "mapKind": "room",
+      "parentId": "crypts-threshold",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "investigate",
+        "rest",
+        "rite-stage-if-applicable",
+        "search"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-vestment",
+        "art-inventory:crypts-vestment"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-vestment",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "kgb9TZFKAi76k_WS1XGKe",
+        "ip_IdAbOuzBNe3y9zStfu"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-approach",
+      "displayName": "Approach Hall",
+      "mapKind": "room",
+      "parentId": "crypts-covenant",
+      "status": "active",
+      "kind": "circulation",
+      "affordances": [
+        "pass-through",
+        "meet",
+        "observe"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-approach",
+        "art-inventory:crypts-approach"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-approach",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "I8MjOJKPBSgcZ6uN_x5sp",
+        "cWowJdGQyZYMaIC79KpTn"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-vault",
+      "displayName": "Relic Vault",
+      "mapKind": "room",
+      "parentId": "crypts-covenant",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "investigate",
+        "rest",
+        "rite-stage-if-applicable",
+        "search"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-vault",
+        "art-inventory:crypts-vault"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-vault",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "I8MjOJKPBSgcZ6uN_x5sp"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "crypts-seed",
+      "displayName": "Seed Niche",
+      "mapKind": "room",
+      "parentId": "crypts-covenant",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "investigate",
+        "rest",
+        "rite-stage-if-applicable",
+        "search"
+      ],
+      "sourceRefs": [
+        "map:v2:crypts-seed",
+        "art-inventory:crypts-seed"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:crypts-seed",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-crypt",
+        "I8MjOJKPBSgcZ6uN_x5sp"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "woods-cabin",
+      "displayName": "Weathered Ranger Cabin",
+      "mapKind": "building",
+      "parentId": "woods-ridge",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "expedition-pause",
+        "investigate",
+        "rest",
+        "search"
+      ],
+      "sourceRefs": [
+        "map:v2:woods-cabin",
+        "art-inventory:woods-cabin"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:woods-cabin",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-woods"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "woods-quarry",
+      "displayName": "Flooded Quarry",
+      "mapKind": "place",
+      "parentId": "woods-blackwater",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "expedition-pause",
+        "investigate",
+        "rest",
+        "search"
+      ],
+      "sourceRefs": [
+        "map:v2:woods-quarry",
+        "art-inventory:woods-quarry"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:woods-quarry",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-woods"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "woods-clearing",
+      "displayName": "Charcoal Clearing",
+      "mapKind": "place",
+      "parentId": "woods-western",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "expedition-pause",
+        "investigate",
+        "rest",
+        "search"
+      ],
+      "sourceRefs": [
+        "map:v2:woods-clearing",
+        "art-inventory:woods-clearing"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:woods-clearing",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-woods"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "woods-cellar",
+      "displayName": "Root Cellar Ruin",
+      "mapKind": "place",
+      "parentId": "woods-western",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "expedition-pause",
+        "investigate",
+        "rest",
+        "search"
+      ],
+      "sourceRefs": [
+        "map:v2:woods-cellar",
+        "art-inventory:woods-cellar"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:woods-cellar",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-woods"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    },
+    {
+      "locationId": "woods-stones",
+      "displayName": "Standing-Stone Ring",
+      "mapKind": "place",
+      "parentId": "woods-western",
+      "status": "active",
+      "kind": "playable-scene",
+      "affordances": [
+        "converse",
+        "examine",
+        "expedition-pause",
+        "investigate",
+        "rest",
+        "search"
+      ],
+      "sourceRefs": [
+        "map:v2:woods-stones",
+        "art-inventory:woods-stones"
+      ],
+      "referenceImageId": "global-gallery:nevermore-map-pack:reference:woods-stones",
+      "lorebookEntryIds": [
+        "nevermore-directory-v2-woods"
+      ],
+      "childPresentation": "list",
+      "certainty": "sourced"
+    }
+  ],
+  "edges": [
+    {
+      "fromId": "jericho-town",
+      "toId": "nevermore-gates",
+      "label": "the ridge road up to Nevermore",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "jericho-town",
+      "toId": "woods-bridge",
+      "label": "Old town track",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-gates",
+      "toId": "jericho-town",
+      "label": "the ridge road down to Jericho",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-gates",
+      "toId": "nevermore-quad",
+      "label": "the drive up to the quad",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-quad",
+      "toId": "nevermore-gates",
+      "label": "the drive to the gates",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-quad",
+      "toId": "nevermore-poe-statue",
+      "label": "across the stones to the Poe statue",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-quad",
+      "toId": "nevermore-main-hall",
+      "label": "north into the main hall",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-quad",
+      "toId": "nevermore-dorms",
+      "label": "east toward the dormitories",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-quad",
+      "toId": "nevermore-lake",
+      "label": "south downhill to the lake",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-quad",
+      "toId": "nevermore-oaks",
+      "label": "the path through the oaks",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-quad",
+      "toId": "nevermore-dead-gardens",
+      "label": "west into the dead gardens",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-poe-statue",
+      "toId": "nevermore-quad",
+      "label": "back onto the quad",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-poe-statue",
+      "toId": "crypts-stair-mouth",
+      "label": "Concealed passage: Poe Stair-Mouth",
+      "bidirectional": true,
+      "state": "hidden",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-lake",
+      "toId": "nevermore-quad",
+      "label": "uphill to the quad",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-lake",
+      "toId": "nevermore-oaks",
+      "label": "along the tree line",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-oaks",
+      "toId": "nevermore-quad",
+      "label": "the path back to the quad",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-oaks",
+      "toId": "nevermore-lake",
+      "label": "down toward the lake",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-oaks",
+      "toId": "nevermore-botany",
+      "label": "the gravel cut to botany",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-cemetery",
+      "toId": "nevermore-dead-gardens",
+      "label": "the path through the dead gardens",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-cemetery",
+      "toId": "ravencroft-gates",
+      "label": "the service path up to Ravencroft",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-dead-gardens",
+      "toId": "nevermore-quad",
+      "label": "east back to the quad",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-dead-gardens",
+      "toId": "ravencroft-gates",
+      "label": "west to Ravencroft's gates",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-dead-gardens",
+      "toId": "nevermore-cemetery",
+      "label": "south toward the cemetery",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-botany",
+      "toId": "nevermore-oaks",
+      "label": "the gravel cut through the oaks",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-main-hall",
+      "toId": "nevermore-quad",
+      "label": "south out onto the quad",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "nevermore-dorms",
+      "toId": "nevermore-quad",
+      "label": "west to the quad",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "main-hall-foyer",
+      "toId": "nevermore-quad",
+      "label": "the front doors onto the quad",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "main-hall-foyer",
+      "toId": "main-hall-weems",
+      "label": "the principal's office",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "main-hall-foyer",
+      "toId": "main-hall-dining",
+      "label": "through to the dining hall",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "main-hall-foyer",
+      "toId": "main-hall-upper",
+      "label": "the stair to the upper floor",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "main-hall-weems",
+      "toId": "main-hall-foyer",
+      "label": "the foyer outside",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "main-hall-dining",
+      "toId": "main-hall-foyer",
+      "label": "back to the foyer",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "main-hall-classrooms",
+      "toId": "main-hall-foyer",
+      "label": "the stair down to the foyer",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "main-hall-classrooms",
+      "toId": "main-hall-fencing",
+      "label": "the salle at the end of the hall",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "main-hall-fencing",
+      "toId": "main-hall-classrooms",
+      "label": "the classroom corridor",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "dorms-common",
+      "toId": "nevermore-quad",
+      "label": "out toward the quad",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "dorms-common",
+      "toId": "dorms-upper",
+      "label": "the stair to the rooms",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "dorms-common",
+      "toId": "crypts-crawlspace",
+      "label": "Concealed passage: Crawlspace Mouth",
+      "bidirectional": true,
+      "state": "hidden",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "ravencroft-gates",
+      "toId": "nevermore-dead-gardens",
+      "label": "east through the dead gardens",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "ravencroft-gates",
+      "toId": "nevermore-cemetery",
+      "label": "the service path to the cemetery",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "ravencroft-gates",
+      "toId": "ravencroft-manor",
+      "label": "through the gates to the house",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "ravencroft-manor",
+      "toId": "ravencroft-gates",
+      "label": "out through the crest gates",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "ravencroft-iron-maiden",
+      "toId": "ravencroft-meditation",
+      "label": "back toward the meditation chamber",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "ravencroft-iron-maiden",
+      "toId": "crypts-tunnel-mouth",
+      "label": "Concealed passage: Ravencroft Tunnel-Mouth",
+      "bidirectional": true,
+      "state": "hidden",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "ravencroft-parlor",
+      "toId": "ravencroft-gates",
+      "label": "the front hall out to the gates",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "ravencroft-parlor",
+      "toId": "ravencroft-greenhouse",
+      "label": "through to the greenhouse",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "ravencroft-parlor",
+      "toId": "ravencroft-basement",
+      "label": "the stair down",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "ravencroft-parlor",
+      "toId": "ravencroft-family",
+      "label": "the stair up to the family wing",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "ravencroft-family",
+      "toId": "ravencroft-upper",
+      "label": "Stair between family gallery and roof landing",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-holding",
+      "toId": "crypts-portrait",
+      "label": "Portrait recess on the hall’s left wall",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-holding",
+      "toId": "crypts-vestment",
+      "label": "Preparation alcove",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-holding",
+      "toId": "crypts-chamber-1",
+      "label": "Stair between Threshold Hall and First Rite",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-chamber-1",
+      "toId": "crypts-door-1",
+      "label": "First chamber’s far exit",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-door-1",
+      "toId": "crypts-breath",
+      "label": "Progression door: Door of First Touch",
+      "bidirectional": true,
+      "state": "blocked",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-chamber-2",
+      "toId": "crypts-echo",
+      "label": "Side recess",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-chamber-2",
+      "toId": "crypts-door-2",
+      "label": "Second chamber’s far exit",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-door-2",
+      "toId": "crypts-chamber-3",
+      "label": "Progression door: Door of Worship",
+      "bidirectional": true,
+      "state": "blocked",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-chamber-3",
+      "toId": "crypts-door-3",
+      "label": "Union chamber’s far exit",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-door-3",
+      "toId": "crypts-approach",
+      "label": "Progression door: Door of Three",
+      "bidirectional": true,
+      "state": "blocked",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-altar",
+      "toId": "crypts-vault",
+      "label": "Side vault",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-altar",
+      "toId": "crypts-seed",
+      "label": "Niche behind the altar",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "woods-junction",
+      "toId": "nevermore-gates",
+      "label": "Academy approach",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "woods-junction",
+      "toId": "woods-lookout",
+      "label": "Upper ridge path",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "woods-junction",
+      "toId": "woods-cabin",
+      "label": "Cabin path",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "woods-junction",
+      "toId": "woods-clearing",
+      "label": "Western boundary trail",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "woods-bridge",
+      "toId": "woods-sawmill",
+      "label": "Mill track",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "woods-sawmill",
+      "toId": "woods-junction",
+      "label": "Ridge trail",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "woods-sawmill",
+      "toId": "woods-quarry",
+      "label": "Old haul track",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "woods-lookout",
+      "toId": "woods-cabin",
+      "label": "Sheltered ridge spur",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "ravencroft-meditation",
+      "toId": "ravencroft-iron-maiden",
+      "label": "the passage to the iron maiden",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "ravencroft-greenhouse",
+      "toId": "ravencroft-parlor",
+      "label": "back into the parlor",
+      "bidirectional": false,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-gate",
+      "toId": "crypts-holding",
+      "label": "Iron Gate and Threshold Hall",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-stair-mouth",
+      "toId": "crypts-gate",
+      "label": "Poe entrance passage",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-tunnel-mouth",
+      "toId": "crypts-gate",
+      "label": "Ravencroft entrance passage",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-crawlspace",
+      "toId": "crypts-gate",
+      "label": "Crawlspace entrance passage",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-breath",
+      "toId": "crypts-chamber-2",
+      "label": "Breath Passage and second chamber",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "crypts-approach",
+      "toId": "crypts-altar",
+      "label": "Sanctuary approach",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "woods-clearing",
+      "toId": "woods-cellar",
+      "label": "Broken field-wall path",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    },
+    {
+      "fromId": "woods-clearing",
+      "toId": "woods-stones",
+      "label": "Old forest footpath",
+      "bidirectional": true,
+      "state": "available",
+      "source": "v2-definition-link"
+    }
+  ],
+  "assets": [
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:jericho-woods",
+      "role": "reference",
+      "locationId": "jericho-woods",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:background:jericho-woods",
+      "role": "background",
+      "locationId": "jericho-woods",
+      "source": "v2-location.mapBackgroundImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:jericho-town",
+      "role": "reference",
+      "locationId": "jericho-town",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:background:jericho-town",
+      "role": "background",
+      "locationId": "jericho-town",
+      "source": "v2-location.mapBackgroundImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:jericho-main-street",
+      "role": "reference",
+      "locationId": "jericho-main-street",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:nevermore-grounds",
+      "role": "reference",
+      "locationId": "nevermore-grounds",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:background:nevermore-grounds",
+      "role": "background",
+      "locationId": "nevermore-grounds",
+      "source": "v2-location.mapBackgroundImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:nevermore-gates",
+      "role": "reference",
+      "locationId": "nevermore-gates",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:nevermore-quad",
+      "role": "reference",
+      "locationId": "nevermore-quad",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:nevermore-poe-statue",
+      "role": "reference",
+      "locationId": "nevermore-poe-statue",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:nevermore-lake",
+      "role": "reference",
+      "locationId": "nevermore-lake",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:nevermore-oaks",
+      "role": "reference",
+      "locationId": "nevermore-oaks",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:nevermore-cemetery",
+      "role": "reference",
+      "locationId": "nevermore-cemetery",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:nevermore-dead-gardens",
+      "role": "reference",
+      "locationId": "nevermore-dead-gardens",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:nevermore-botany",
+      "role": "reference",
+      "locationId": "nevermore-botany",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:nevermore-main-hall",
+      "role": "reference",
+      "locationId": "nevermore-main-hall",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:nevermore-dorms",
+      "role": "reference",
+      "locationId": "nevermore-dorms",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:main-hall-foyer",
+      "role": "reference",
+      "locationId": "main-hall-foyer",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:main-hall-weems",
+      "role": "reference",
+      "locationId": "main-hall-weems",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:main-hall-dining",
+      "role": "reference",
+      "locationId": "main-hall-dining",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:main-hall-classrooms",
+      "role": "reference",
+      "locationId": "main-hall-classrooms",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:main-hall-fencing",
+      "role": "reference",
+      "locationId": "main-hall-fencing",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:dorms-common",
+      "role": "reference",
+      "locationId": "dorms-common",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:dorms-upper",
+      "role": "reference",
+      "locationId": "dorms-upper",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:dorm-wednesday-enid",
+      "role": "reference",
+      "locationId": "dorm-wednesday-enid",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:ravencroft-gates",
+      "role": "reference",
+      "locationId": "ravencroft-gates",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:ravencroft-manor",
+      "role": "reference",
+      "locationId": "ravencroft-manor",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:ravencroft-basement",
+      "role": "reference",
+      "locationId": "ravencroft-basement",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:ravencroft-iron-maiden",
+      "role": "reference",
+      "locationId": "ravencroft-iron-maiden",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:ravencroft-parlor",
+      "role": "reference",
+      "locationId": "ravencroft-parlor",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:ravencroft-family",
+      "role": "reference",
+      "locationId": "ravencroft-family",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:ravencroft-morticia-chamber",
+      "role": "reference",
+      "locationId": "ravencroft-morticia-chamber",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:ravencroft-walk",
+      "role": "reference",
+      "locationId": "ravencroft-walk",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-labyrinth",
+      "role": "reference",
+      "locationId": "crypts-labyrinth",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-holding",
+      "role": "reference",
+      "locationId": "crypts-holding",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-first-rite",
+      "role": "reference",
+      "locationId": "crypts-first-rite",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-chamber-1",
+      "role": "reference",
+      "locationId": "crypts-chamber-1",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-door-1",
+      "role": "reference",
+      "locationId": "crypts-door-1",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-second-rite",
+      "role": "reference",
+      "locationId": "crypts-second-rite",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-chamber-2",
+      "role": "reference",
+      "locationId": "crypts-chamber-2",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-door-2",
+      "role": "reference",
+      "locationId": "crypts-door-2",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-union",
+      "role": "reference",
+      "locationId": "crypts-union",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-chamber-3",
+      "role": "reference",
+      "locationId": "crypts-chamber-3",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-door-3",
+      "role": "reference",
+      "locationId": "crypts-door-3",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-covenant",
+      "role": "reference",
+      "locationId": "crypts-covenant",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-altar",
+      "role": "reference",
+      "locationId": "crypts-altar",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:woods-ridge",
+      "role": "reference",
+      "locationId": "woods-ridge",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:woods-blackwater",
+      "role": "reference",
+      "locationId": "woods-blackwater",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:woods-western",
+      "role": "reference",
+      "locationId": "woods-western",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:woods-junction",
+      "role": "reference",
+      "locationId": "woods-junction",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:woods-bridge",
+      "role": "reference",
+      "locationId": "woods-bridge",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:woods-sawmill",
+      "role": "reference",
+      "locationId": "woods-sawmill",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:woods-lookout",
+      "role": "reference",
+      "locationId": "woods-lookout",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:main-hall-ground",
+      "role": "reference",
+      "locationId": "main-hall-ground",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:main-hall-upper",
+      "role": "reference",
+      "locationId": "main-hall-upper",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:dorms-ground",
+      "role": "reference",
+      "locationId": "dorms-ground",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:dorm-pugsley",
+      "role": "reference",
+      "locationId": "dorm-pugsley",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:dorm-bianca",
+      "role": "reference",
+      "locationId": "dorm-bianca",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:dorm-nerissa",
+      "role": "reference",
+      "locationId": "dorm-nerissa",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:ravencroft-meditation",
+      "role": "reference",
+      "locationId": "ravencroft-meditation",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:ravencroft-main",
+      "role": "reference",
+      "locationId": "ravencroft-main",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:ravencroft-greenhouse",
+      "role": "reference",
+      "locationId": "ravencroft-greenhouse",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:ravencroft-gomez-room",
+      "role": "reference",
+      "locationId": "ravencroft-gomez-room",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:ravencroft-spare",
+      "role": "reference",
+      "locationId": "ravencroft-spare",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:ravencroft-upper",
+      "role": "reference",
+      "locationId": "ravencroft-upper",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-threshold",
+      "role": "reference",
+      "locationId": "crypts-threshold",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-gate",
+      "role": "reference",
+      "locationId": "crypts-gate",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-stair-mouth",
+      "role": "reference",
+      "locationId": "crypts-stair-mouth",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-tunnel-mouth",
+      "role": "reference",
+      "locationId": "crypts-tunnel-mouth",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-crawlspace",
+      "role": "reference",
+      "locationId": "crypts-crawlspace",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-portrait",
+      "role": "reference",
+      "locationId": "crypts-portrait",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-breath",
+      "role": "reference",
+      "locationId": "crypts-breath",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-echo",
+      "role": "reference",
+      "locationId": "crypts-echo",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-vestment",
+      "role": "reference",
+      "locationId": "crypts-vestment",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-approach",
+      "role": "reference",
+      "locationId": "crypts-approach",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-vault",
+      "role": "reference",
+      "locationId": "crypts-vault",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:crypts-seed",
+      "role": "reference",
+      "locationId": "crypts-seed",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:woods-cabin",
+      "role": "reference",
+      "locationId": "woods-cabin",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:woods-quarry",
+      "role": "reference",
+      "locationId": "woods-quarry",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:woods-clearing",
+      "role": "reference",
+      "locationId": "woods-clearing",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:woods-cellar",
+      "role": "reference",
+      "locationId": "woods-cellar",
+      "source": "v2-location.referenceImageId"
+    },
+    {
+      "assetId": "global-gallery:nevermore-map-pack:reference:woods-stones",
+      "role": "reference",
+      "locationId": "woods-stones",
+      "source": "v2-location.referenceImageId"
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "schemaVersion": 1,
+  "worldId": "world:nevermore",
+  "services": [
+    {
+      "serviceId": "svc:dining-hall",
+      "displayName": "Dining Hall meals",
+      "locationId": "main-hall-dining",
+      "category": "food",
+      "hours": "UNKNOWN",
+      "notes": "ASSUMPTION: meal service on school days; exact hours/menu UNKNOWN.",
+      "certainty": "assumption",
+      "sourceRefs": [
+        "map:v2:main-hall-dining",
+        "lore:revised:aFv2LbazQ96NEpPVr_0ZT"
+      ]
+    },
+    {
+      "serviceId": "svc:weems-office",
+      "displayName": "Principal Weems's Office",
+      "locationId": "main-hall-weems",
+      "category": "administration",
+      "hours": "UNKNOWN",
+      "notes": "ASSUMPTION: accessible during school day by appointment or summons.",
+      "certainty": "assumption",
+      "sourceRefs": [
+        "map:v2:main-hall-weems"
+      ]
+    },
+    {
+      "serviceId": "svc:fencing-salle",
+      "displayName": "Fencing Salle",
+      "locationId": "main-hall-fencing",
+      "category": "instruction",
+      "hours": "UNKNOWN",
+      "notes": "Place exists; instructor roster and hours UNKNOWN in source materials.",
+      "certainty": "unknown",
+      "sourceRefs": [
+        "map:v2:main-hall-fencing"
+      ]
+    },
+    {
+      "serviceId": "svc:weathervane",
+      "displayName": "Weathervane diner (Jericho)",
+      "locationId": "jericho-main-street",
+      "category": "food",
+      "hours": "UNKNOWN — SOURCE: shops close early when outcasts come down the hill.",
+      "notes": "Named in Jericho lore; not a separate map location ID.",
+      "certainty": "sourced-place-name",
+      "sourceRefs": [
+        "lore:revised:mYfUaxUUp-lZFVl5W9WK0"
+      ]
+    },
+    {
+      "serviceId": "svc:sheriff-office",
+      "displayName": "Sheriff's office (Jericho)",
+      "locationId": "jericho-main-street",
+      "category": "civic",
+      "hours": "UNKNOWN",
+      "notes": "SOURCE mentions sheriff's office and patrols of diner lot; sheriff is NOT a census NPC (no character lore entry).",
+      "certainty": "sourced-place-name",
+      "sourceRefs": [
+        "lore:revised:mYfUaxUUp-lZFVl5W9WK0"
+      ]
+    },
+    {
+      "serviceId": "svc:botany-houses",
+      "displayName": "Botany Houses",
+      "locationId": "nevermore-botany",
+      "category": "academic",
+      "hours": "UNKNOWN",
+      "notes": "Building present; staffing/hours UNKNOWN.",
+      "certainty": "unknown",
+      "sourceRefs": [
+        "map:v2:nevermore-botany"
+      ]
+    }
+  ]
+}

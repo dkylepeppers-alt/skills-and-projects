@@ -1,0 +1,401 @@
+{
+  "schemaVersion": 1,
+  "worldId": "world:nevermore",
+  "policy": "Schedules predict expected whereabouts; they do not prove sightings. Witnessed actions beat routines.",
+  "schedules": [
+    {
+      "scheduleId": "sched:wednesday-school-day",
+      "npcId": "npc:wednesday-addams",
+      "timezone": "UNKNOWN",
+      "calendar": "ASSUMPTION: Nevermore school-week vs weekend distinction exists; exact calendar UNKNOWN.",
+      "windows": [
+        {
+          "id": "win:wed-dorm-night",
+          "days": "ASSUMPTION: nightly",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "dorm-wednesday-enid",
+          "activity": "sleep/return to dorm",
+          "travelRequired": false,
+          "certainty": "sourced-home"
+        },
+        {
+          "id": "win:wed-class",
+          "days": "ASSUMPTION: school days",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "main-hall-classrooms",
+          "activity": "classes",
+          "travelRequired": true,
+          "certainty": "assumption"
+        },
+        {
+          "id": "win:wed-dining",
+          "days": "ASSUMPTION: school days",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "main-hall-dining",
+          "activity": "meals",
+          "travelRequired": true,
+          "certainty": "assumption"
+        },
+        {
+          "id": "win:wed-ravencroft-visit",
+          "days": "ASSUMPTION: occasional",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "ravencroft-manor",
+          "activity": "visit manor on own terms",
+          "travelRequired": true,
+          "certainty": "sourced-intent"
+        }
+      ],
+      "notes": "SOURCE: dorm sleep + manor visits on own terms. Class/meal legs are labeled ASSUMPTION.",
+      "certainty": "assumption",
+      "priority": "routine",
+      "interruptionRule": "Witnessed placement and explicit commitments beat this routine schedule."
+    },
+    {
+      "scheduleId": "sched:enid-school-day",
+      "npcId": "npc:enid-sinclair",
+      "timezone": "UNKNOWN",
+      "calendar": "ASSUMPTION: Nevermore school-week vs weekend distinction exists; exact calendar UNKNOWN.",
+      "windows": [
+        {
+          "id": "win:enid-dorm",
+          "days": "ASSUMPTION: nightly",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "dorm-wednesday-enid",
+          "activity": "roommate dorm",
+          "travelRequired": false,
+          "certainty": "sourced-home"
+        },
+        {
+          "id": "win:enid-class",
+          "days": "ASSUMPTION: school days",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "main-hall-classrooms",
+          "activity": "classes",
+          "travelRequired": true,
+          "certainty": "assumption"
+        },
+        {
+          "id": "win:enid-common",
+          "days": "ASSUMPTION: evenings",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "dorms-common",
+          "activity": "social/common room",
+          "travelRequired": true,
+          "certainty": "assumption"
+        }
+      ],
+      "notes": "Roommate of Wednesday; detailed timetable UNKNOWN.",
+      "certainty": "assumption",
+      "priority": "routine",
+      "interruptionRule": "Witnessed placement and explicit commitments beat this routine schedule."
+    },
+    {
+      "scheduleId": "sched:pugsley-school-day",
+      "npcId": "npc:pugsley-addams",
+      "timezone": "UNKNOWN",
+      "calendar": "ASSUMPTION: Nevermore school-week vs weekend distinction exists; exact calendar UNKNOWN.",
+      "windows": [
+        {
+          "id": "win:pug-dorm",
+          "days": "ASSUMPTION: nightly",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "dorm-pugsley",
+          "activity": "dorm",
+          "travelRequired": false,
+          "certainty": "assumption"
+        },
+        {
+          "id": "win:pug-class",
+          "days": "ASSUMPTION: school days",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "main-hall-classrooms",
+          "activity": "classes",
+          "travelRequired": true,
+          "certainty": "assumption"
+        }
+      ],
+      "notes": "Enrolled student; routine assumed, clocks UNKNOWN.",
+      "certainty": "assumption",
+      "priority": "routine",
+      "interruptionRule": "Witnessed placement and explicit commitments beat this routine schedule."
+    },
+    {
+      "scheduleId": "sched:bianca-school-day",
+      "npcId": "npc:bianca-barclay",
+      "timezone": "UNKNOWN",
+      "calendar": "ASSUMPTION: Nevermore school-week vs weekend distinction exists; exact calendar UNKNOWN.",
+      "windows": [
+        {
+          "id": "win:bi-dorm",
+          "days": "ASSUMPTION: nightly",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "dorm-bianca",
+          "activity": "dorm",
+          "travelRequired": false,
+          "certainty": "assumption"
+        },
+        {
+          "id": "win:bi-campus",
+          "days": "ASSUMPTION: school days",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "nevermore-quad",
+          "activity": "campus social presence",
+          "travelRequired": true,
+          "certainty": "assumption"
+        }
+      ],
+      "notes": "Influential student; exact routine UNKNOWN.",
+      "certainty": "assumption",
+      "priority": "routine",
+      "interruptionRule": "Witnessed placement and explicit commitments beat this routine schedule."
+    },
+    {
+      "scheduleId": "sched:nerissa-school-day",
+      "npcId": "npc:nerissa-vale",
+      "timezone": "UNKNOWN",
+      "calendar": "ASSUMPTION: Nevermore school-week vs weekend distinction exists; exact calendar UNKNOWN.",
+      "windows": [
+        {
+          "id": "win:ne-dorm",
+          "days": "ASSUMPTION: nightly",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "dorm-nerissa",
+          "activity": "dorm",
+          "travelRequired": false,
+          "certainty": "assumption"
+        },
+        {
+          "id": "win:ne-campus",
+          "days": "ASSUMPTION: school days",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "nevermore-quad",
+          "activity": "observe campus politics",
+          "travelRequired": true,
+          "certainty": "assumption"
+        }
+      ],
+      "notes": "Exact routine UNKNOWN.",
+      "certainty": "assumption",
+      "priority": "routine",
+      "interruptionRule": "Witnessed placement and explicit commitments beat this routine schedule."
+    },
+    {
+      "scheduleId": "sched:weems-workday",
+      "npcId": "npc:larissa-weems",
+      "timezone": "UNKNOWN",
+      "calendar": "ASSUMPTION: Nevermore school-week vs weekend distinction exists; exact calendar UNKNOWN.",
+      "windows": [
+        {
+          "id": "win:weems-office",
+          "days": "ASSUMPTION: school days",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "main-hall-weems",
+          "activity": "principal office work",
+          "travelRequired": false,
+          "certainty": "assumption"
+        },
+        {
+          "id": "win:weems-grounds",
+          "days": "ASSUMPTION: intermittent",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "nevermore-grounds",
+          "activity": "grounds oversight",
+          "travelRequired": true,
+          "certainty": "assumption"
+        }
+      ],
+      "notes": "Office association sourced; hours/residence UNKNOWN.",
+      "certainty": "assumption",
+      "priority": "routine",
+      "interruptionRule": "Witnessed placement and explicit commitments beat this routine schedule."
+    },
+    {
+      "scheduleId": "sched:morticia-ravencroft",
+      "npcId": "npc:morticia-addams",
+      "timezone": "UNKNOWN",
+      "calendar": "ASSUMPTION: Nevermore school-week vs weekend distinction exists; exact calendar UNKNOWN.",
+      "windows": [
+        {
+          "id": "win:mo-chamber",
+          "days": "ASSUMPTION: overnight",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "ravencroft-morticia-chamber",
+          "activity": "bedchamber",
+          "travelRequired": false,
+          "certainty": "assumption"
+        },
+        {
+          "id": "win:mo-greenhouse",
+          "days": "ASSUMPTION: daytime",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "ravencroft-greenhouse",
+          "activity": "greenhouse",
+          "travelRequired": true,
+          "certainty": "assumption"
+        },
+        {
+          "id": "win:mo-parlor",
+          "days": "ASSUMPTION: evenings/receiving",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "ravencroft-parlor",
+          "activity": "receiving/presence in house",
+          "travelRequired": true,
+          "certainty": "assumption"
+        }
+      ],
+      "notes": "Residence at Ravencroft sourced; room-by-room routine ASSUMPTION.",
+      "certainty": "assumption",
+      "priority": "routine",
+      "interruptionRule": "Witnessed placement and explicit commitments beat this routine schedule."
+    },
+    {
+      "scheduleId": "sched:gomez-visiting",
+      "npcId": "npc:gomez-addams",
+      "timezone": "UNKNOWN",
+      "calendar": "ASSUMPTION: Nevermore school-week vs weekend distinction exists; exact calendar UNKNOWN.",
+      "windows": [
+        {
+          "id": "win:go-room",
+          "days": "UNCERTAIN",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "ravencroft-gomez-room",
+          "activity": "visiting room",
+          "travelRequired": false,
+          "certainty": "uncertain"
+        },
+        {
+          "id": "win:go-fencing",
+          "days": "ASSUMPTION: occasional",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "main-hall-fencing",
+          "activity": "fencing",
+          "travelRequired": true,
+          "certainty": "assumption"
+        }
+      ],
+      "notes": "Visiting-room ID sourced; continuous presence not asserted.",
+      "certainty": "assumption",
+      "priority": "routine",
+      "interruptionRule": "Witnessed placement and explicit commitments beat this routine schedule."
+    },
+    {
+      "scheduleId": "sched:thing-roaming",
+      "npcId": "npc:thing-t-thing",
+      "timezone": "UNKNOWN",
+      "calendar": "ASSUMPTION: Nevermore school-week vs weekend distinction exists; exact calendar UNKNOWN.",
+      "windows": [
+        {
+          "id": "win:thing-nest",
+          "days": "ASSUMPTION: return/nest",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "ravencroft-manor",
+          "activity": "jewelry-box nest",
+          "travelRequired": false,
+          "certainty": "sourced-home"
+        },
+        {
+          "id": "win:thing-campus",
+          "days": "ASSUMPTION: frequent",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "nevermore-grounds",
+          "activity": "roam via vents/mail slots",
+          "travelRequired": true,
+          "certainty": "sourced-behavior"
+        }
+      ],
+      "notes": "Nest location sourced; roaming paths not enumerated as map edges.",
+      "certainty": "assumption",
+      "priority": "routine",
+      "interruptionRule": "Witnessed placement and explicit commitments beat this routine schedule."
+    },
+    {
+      "scheduleId": "sched:ophelia-visits",
+      "npcId": "npc:ophelia-addams",
+      "timezone": "UNKNOWN",
+      "calendar": "ASSUMPTION: Nevermore school-week vs weekend distinction exists; exact calendar UNKNOWN.",
+      "windows": [
+        {
+          "id": "win:op-visit",
+          "days": "UNCERTAIN",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "ravencroft-manor",
+          "activity": "dramatic visit",
+          "travelRequired": true,
+          "certainty": "sourced-visit-pattern"
+        }
+      ],
+      "notes": "No permanent home on map; visit pattern only.",
+      "certainty": "assumption",
+      "priority": "routine",
+      "interruptionRule": "Witnessed placement and explicit commitments beat this routine schedule."
+    },
+    {
+      "scheduleId": "sched:esmeralda-visits",
+      "npcId": "npc:esmeralda-frump",
+      "timezone": "UNKNOWN",
+      "calendar": "ASSUMPTION: Nevermore school-week vs weekend distinction exists; exact calendar UNKNOWN.",
+      "windows": [
+        {
+          "id": "win:es-visit",
+          "days": "UNCERTAIN",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "ravencroft-manor",
+          "activity": "family visit / botanical interest",
+          "travelRequired": true,
+          "certainty": "uncertain"
+        }
+      ],
+      "notes": "No permanent home on map.",
+      "certainty": "assumption",
+      "priority": "routine",
+      "interruptionRule": "Witnessed placement and explicit commitments beat this routine schedule."
+    },
+    {
+      "scheduleId": "sched:belladonna-visits",
+      "npcId": "npc:belladonna-frump",
+      "timezone": "UNKNOWN",
+      "calendar": "ASSUMPTION: Nevermore school-week vs weekend distinction exists; exact calendar UNKNOWN.",
+      "windows": [
+        {
+          "id": "win:be-visit",
+          "days": "ASSUMPTION: frequent visits",
+          "start": "UNKNOWN",
+          "end": "UNKNOWN",
+          "locationId": "ravencroft-manor",
+          "activity": "visit sister",
+          "travelRequired": true,
+          "certainty": "sourced-visit-pattern"
+        }
+      ],
+      "notes": "Frequent visits sourced; home UNKNOWN.",
+      "certainty": "assumption",
+      "priority": "routine",
+      "interruptionRule": "Witnessed placement and explicit commitments beat this routine schedule."
+    }
+  ]
+}

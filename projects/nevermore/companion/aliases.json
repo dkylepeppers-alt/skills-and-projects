@@ -1,0 +1,594 @@
+{
+  "schemaVersion": 1,
+  "worldId": "world:nevermore",
+  "aliases": [
+    {
+      "alias": "Grandmama",
+      "candidates": [
+        "npc:esmeralda-frump",
+        "npc:ophelia-addams"
+      ],
+      "resolution": "UNCERTAIN without context — Esmeralda is Grandmama Frump; Ophelia is Gomez's mother (also called Grandmother/Abuela). Prefer full name matches.",
+      "preferredNpcId": null,
+      "certainty": "uncertain"
+    },
+    {
+      "alias": "Cara Mia",
+      "candidates": [
+        "npc:morticia-addams",
+        "npc:gomez-addams"
+      ],
+      "resolution": "Shared endearment in lore keys for both Morticia and Gomez; disambiguate by speaker/scene.",
+      "preferredNpcId": null,
+      "certainty": "uncertain"
+    },
+    {
+      "alias": "mother",
+      "candidates": [
+        "npc:morticia-addams"
+      ],
+      "resolution": "In Addams household contexts usually Morticia; may mean Esmeralda relative to Morticia.",
+      "preferredNpcId": "npc:morticia-addams",
+      "certainty": "assumption"
+    },
+    {
+      "alias": "principal",
+      "candidates": [
+        "npc:larissa-weems"
+      ],
+      "resolution": "Principal Larissa Weems is the only faculty principal entry in source lore.",
+      "preferredNpcId": "npc:larissa-weems",
+      "certainty": "sourced"
+    },
+    {
+      "alias": "Wednesday",
+      "candidates": [
+        "npc:wednesday-addams"
+      ],
+      "resolution": "Primary alias for Wednesday Addams from lore keys/name.",
+      "preferredNpcId": "npc:wednesday-addams",
+      "certainty": "sourced",
+      "npcId": "npc:wednesday-addams"
+    },
+    {
+      "alias": "Wednesday Addams",
+      "candidates": [
+        "npc:wednesday-addams"
+      ],
+      "resolution": "Primary alias for Wednesday Addams from lore keys/name.",
+      "preferredNpcId": "npc:wednesday-addams",
+      "certainty": "sourced",
+      "npcId": "npc:wednesday-addams"
+    },
+    {
+      "alias": "Addams girl",
+      "candidates": [
+        "npc:wednesday-addams"
+      ],
+      "resolution": "Primary alias for Wednesday Addams from lore keys/name.",
+      "preferredNpcId": "npc:wednesday-addams",
+      "certainty": "sourced",
+      "npcId": "npc:wednesday-addams"
+    },
+    {
+      "alias": "Enid",
+      "candidates": [
+        "npc:enid-sinclair"
+      ],
+      "resolution": "Primary alias for Enid Sinclair from lore keys/name.",
+      "preferredNpcId": "npc:enid-sinclair",
+      "certainty": "sourced",
+      "npcId": "npc:enid-sinclair"
+    },
+    {
+      "alias": "Enid Sinclair",
+      "candidates": [
+        "npc:enid-sinclair"
+      ],
+      "resolution": "Primary alias for Enid Sinclair from lore keys/name.",
+      "preferredNpcId": "npc:enid-sinclair",
+      "certainty": "sourced",
+      "npcId": "npc:enid-sinclair"
+    },
+    {
+      "alias": "Sinclair",
+      "candidates": [
+        "npc:enid-sinclair"
+      ],
+      "resolution": "Primary alias for Enid Sinclair from lore keys/name.",
+      "preferredNpcId": "npc:enid-sinclair",
+      "certainty": "sourced",
+      "npcId": "npc:enid-sinclair"
+    },
+    {
+      "alias": "werewolf",
+      "candidates": [
+        "npc:enid-sinclair"
+      ],
+      "resolution": "Primary alias for Enid Sinclair from lore keys/name.",
+      "preferredNpcId": "npc:enid-sinclair",
+      "certainty": "sourced",
+      "npcId": "npc:enid-sinclair"
+    },
+    {
+      "alias": "Pugsley",
+      "candidates": [
+        "npc:pugsley-addams"
+      ],
+      "resolution": "Primary alias for Pugsley Addams from lore keys/name.",
+      "preferredNpcId": "npc:pugsley-addams",
+      "certainty": "sourced",
+      "npcId": "npc:pugsley-addams"
+    },
+    {
+      "alias": "Pugsley Addams",
+      "candidates": [
+        "npc:pugsley-addams"
+      ],
+      "resolution": "Primary alias for Pugsley Addams from lore keys/name.",
+      "preferredNpcId": "npc:pugsley-addams",
+      "certainty": "sourced",
+      "npcId": "npc:pugsley-addams"
+    },
+    {
+      "alias": "brother",
+      "candidates": [
+        "npc:pugsley-addams"
+      ],
+      "resolution": "Primary alias for Pugsley Addams from lore keys/name.",
+      "preferredNpcId": "npc:pugsley-addams",
+      "certainty": "sourced",
+      "npcId": "npc:pugsley-addams"
+    },
+    {
+      "alias": "Bianca",
+      "candidates": [
+        "npc:bianca-barclay"
+      ],
+      "resolution": "Primary alias for Bianca Barclay from lore keys/name.",
+      "preferredNpcId": "npc:bianca-barclay",
+      "certainty": "sourced",
+      "npcId": "npc:bianca-barclay"
+    },
+    {
+      "alias": "Bianca Barclay",
+      "candidates": [
+        "npc:bianca-barclay"
+      ],
+      "resolution": "Primary alias for Bianca Barclay from lore keys/name.",
+      "preferredNpcId": "npc:bianca-barclay",
+      "certainty": "sourced",
+      "npcId": "npc:bianca-barclay"
+    },
+    {
+      "alias": "siren",
+      "candidates": [
+        "npc:bianca-barclay"
+      ],
+      "resolution": "Primary alias for Bianca Barclay from lore keys/name.",
+      "preferredNpcId": "npc:bianca-barclay",
+      "certainty": "sourced",
+      "npcId": "npc:bianca-barclay"
+    },
+    {
+      "alias": "Nerissa",
+      "candidates": [
+        "npc:nerissa-vale"
+      ],
+      "resolution": "Primary alias for Nerissa Vale from lore keys/name.",
+      "preferredNpcId": "npc:nerissa-vale",
+      "certainty": "sourced",
+      "npcId": "npc:nerissa-vale"
+    },
+    {
+      "alias": "Nerissa Vale",
+      "candidates": [
+        "npc:nerissa-vale"
+      ],
+      "resolution": "Primary alias for Nerissa Vale from lore keys/name.",
+      "preferredNpcId": "npc:nerissa-vale",
+      "certainty": "sourced",
+      "npcId": "npc:nerissa-vale"
+    },
+    {
+      "alias": "Weems",
+      "candidates": [
+        "npc:larissa-weems"
+      ],
+      "resolution": "Primary alias for Principal Larissa Weems from lore keys/name.",
+      "preferredNpcId": "npc:larissa-weems",
+      "certainty": "sourced",
+      "npcId": "npc:larissa-weems"
+    },
+    {
+      "alias": "Principal Weems",
+      "candidates": [
+        "npc:larissa-weems"
+      ],
+      "resolution": "Primary alias for Principal Larissa Weems from lore keys/name.",
+      "preferredNpcId": "npc:larissa-weems",
+      "certainty": "sourced",
+      "npcId": "npc:larissa-weems"
+    },
+    {
+      "alias": "Larissa",
+      "candidates": [
+        "npc:larissa-weems"
+      ],
+      "resolution": "Primary alias for Principal Larissa Weems from lore keys/name.",
+      "preferredNpcId": "npc:larissa-weems",
+      "certainty": "sourced",
+      "npcId": "npc:larissa-weems"
+    },
+    {
+      "alias": "Larissa Weems",
+      "candidates": [
+        "npc:larissa-weems"
+      ],
+      "resolution": "Primary alias for Principal Larissa Weems from lore keys/name.",
+      "preferredNpcId": "npc:larissa-weems",
+      "certainty": "sourced",
+      "npcId": "npc:larissa-weems"
+    },
+    {
+      "alias": "principal",
+      "candidates": [
+        "npc:larissa-weems"
+      ],
+      "resolution": "Primary alias for Principal Larissa Weems from lore keys/name.",
+      "preferredNpcId": "npc:larissa-weems",
+      "certainty": "sourced",
+      "npcId": "npc:larissa-weems"
+    },
+    {
+      "alias": "shapeshifter",
+      "candidates": [
+        "npc:larissa-weems"
+      ],
+      "resolution": "Primary alias for Principal Larissa Weems from lore keys/name.",
+      "preferredNpcId": "npc:larissa-weems",
+      "certainty": "sourced",
+      "npcId": "npc:larissa-weems"
+    },
+    {
+      "alias": "Morticia",
+      "candidates": [
+        "npc:morticia-addams"
+      ],
+      "resolution": "Primary alias for Morticia Addams from lore keys/name.",
+      "preferredNpcId": "npc:morticia-addams",
+      "certainty": "sourced",
+      "npcId": "npc:morticia-addams"
+    },
+    {
+      "alias": "Morticia Addams",
+      "candidates": [
+        "npc:morticia-addams"
+      ],
+      "resolution": "Primary alias for Morticia Addams from lore keys/name.",
+      "preferredNpcId": "npc:morticia-addams",
+      "certainty": "sourced",
+      "npcId": "npc:morticia-addams"
+    },
+    {
+      "alias": "Mama",
+      "candidates": [
+        "npc:morticia-addams"
+      ],
+      "resolution": "Primary alias for Morticia Addams from lore keys/name.",
+      "preferredNpcId": "npc:morticia-addams",
+      "certainty": "sourced",
+      "npcId": "npc:morticia-addams"
+    },
+    {
+      "alias": "Cara Mia",
+      "candidates": [
+        "npc:morticia-addams"
+      ],
+      "resolution": "Primary alias for Morticia Addams from lore keys/name.",
+      "preferredNpcId": "npc:morticia-addams",
+      "certainty": "sourced",
+      "npcId": "npc:morticia-addams"
+    },
+    {
+      "alias": "mother",
+      "candidates": [
+        "npc:morticia-addams"
+      ],
+      "resolution": "Primary alias for Morticia Addams from lore keys/name.",
+      "preferredNpcId": "npc:morticia-addams",
+      "certainty": "sourced",
+      "npcId": "npc:morticia-addams"
+    },
+    {
+      "alias": "Gomez",
+      "candidates": [
+        "npc:gomez-addams"
+      ],
+      "resolution": "Primary alias for Gomez Addams from lore keys/name.",
+      "preferredNpcId": "npc:gomez-addams",
+      "certainty": "sourced",
+      "npcId": "npc:gomez-addams"
+    },
+    {
+      "alias": "Gomez Addams",
+      "candidates": [
+        "npc:gomez-addams"
+      ],
+      "resolution": "Primary alias for Gomez Addams from lore keys/name.",
+      "preferredNpcId": "npc:gomez-addams",
+      "certainty": "sourced",
+      "npcId": "npc:gomez-addams"
+    },
+    {
+      "alias": "Mr. Addams",
+      "candidates": [
+        "npc:gomez-addams"
+      ],
+      "resolution": "Primary alias for Gomez Addams from lore keys/name.",
+      "preferredNpcId": "npc:gomez-addams",
+      "certainty": "sourced",
+      "npcId": "npc:gomez-addams"
+    },
+    {
+      "alias": "papa",
+      "candidates": [
+        "npc:gomez-addams"
+      ],
+      "resolution": "Primary alias for Gomez Addams from lore keys/name.",
+      "preferredNpcId": "npc:gomez-addams",
+      "certainty": "sourced",
+      "npcId": "npc:gomez-addams"
+    },
+    {
+      "alias": "dad",
+      "candidates": [
+        "npc:gomez-addams"
+      ],
+      "resolution": "Primary alias for Gomez Addams from lore keys/name.",
+      "preferredNpcId": "npc:gomez-addams",
+      "certainty": "sourced",
+      "npcId": "npc:gomez-addams"
+    },
+    {
+      "alias": "father",
+      "candidates": [
+        "npc:gomez-addams"
+      ],
+      "resolution": "Primary alias for Gomez Addams from lore keys/name.",
+      "preferredNpcId": "npc:gomez-addams",
+      "certainty": "sourced",
+      "npcId": "npc:gomez-addams"
+    },
+    {
+      "alias": "Cara Mia",
+      "candidates": [
+        "npc:gomez-addams"
+      ],
+      "resolution": "Primary alias for Gomez Addams from lore keys/name.",
+      "preferredNpcId": "npc:gomez-addams",
+      "certainty": "sourced",
+      "npcId": "npc:gomez-addams"
+    },
+    {
+      "alias": "Thing",
+      "candidates": [
+        "npc:thing-t-thing"
+      ],
+      "resolution": "Primary alias for Thing T. Thing from lore keys/name.",
+      "preferredNpcId": "npc:thing-t-thing",
+      "certainty": "sourced",
+      "npcId": "npc:thing-t-thing"
+    },
+    {
+      "alias": "Thing T. Thing",
+      "candidates": [
+        "npc:thing-t-thing"
+      ],
+      "resolution": "Primary alias for Thing T. Thing from lore keys/name.",
+      "preferredNpcId": "npc:thing-t-thing",
+      "certainty": "sourced",
+      "npcId": "npc:thing-t-thing"
+    },
+    {
+      "alias": "the hand",
+      "candidates": [
+        "npc:thing-t-thing"
+      ],
+      "resolution": "Primary alias for Thing T. Thing from lore keys/name.",
+      "preferredNpcId": "npc:thing-t-thing",
+      "certainty": "sourced",
+      "npcId": "npc:thing-t-thing"
+    },
+    {
+      "alias": "hand",
+      "candidates": [
+        "npc:thing-t-thing"
+      ],
+      "resolution": "Primary alias for Thing T. Thing from lore keys/name.",
+      "preferredNpcId": "npc:thing-t-thing",
+      "certainty": "sourced",
+      "npcId": "npc:thing-t-thing"
+    },
+    {
+      "alias": "disembodied",
+      "candidates": [
+        "npc:thing-t-thing"
+      ],
+      "resolution": "Primary alias for Thing T. Thing from lore keys/name.",
+      "preferredNpcId": "npc:thing-t-thing",
+      "certainty": "sourced",
+      "npcId": "npc:thing-t-thing"
+    },
+    {
+      "alias": "familiar",
+      "candidates": [
+        "npc:thing-t-thing"
+      ],
+      "resolution": "Primary alias for Thing T. Thing from lore keys/name.",
+      "preferredNpcId": "npc:thing-t-thing",
+      "certainty": "sourced",
+      "npcId": "npc:thing-t-thing"
+    },
+    {
+      "alias": "Ophelia",
+      "candidates": [
+        "npc:ophelia-addams"
+      ],
+      "resolution": "Primary alias for Ophelia Addams from lore keys/name.",
+      "preferredNpcId": "npc:ophelia-addams",
+      "certainty": "sourced",
+      "npcId": "npc:ophelia-addams"
+    },
+    {
+      "alias": "Ophelia Addams",
+      "candidates": [
+        "npc:ophelia-addams"
+      ],
+      "resolution": "Primary alias for Ophelia Addams from lore keys/name.",
+      "preferredNpcId": "npc:ophelia-addams",
+      "certainty": "sourced",
+      "npcId": "npc:ophelia-addams"
+    },
+    {
+      "alias": "Grandmother",
+      "candidates": [
+        "npc:ophelia-addams"
+      ],
+      "resolution": "Primary alias for Ophelia Addams from lore keys/name.",
+      "preferredNpcId": "npc:ophelia-addams",
+      "certainty": "sourced",
+      "npcId": "npc:ophelia-addams"
+    },
+    {
+      "alias": "Gomez's mother",
+      "candidates": [
+        "npc:ophelia-addams"
+      ],
+      "resolution": "Primary alias for Ophelia Addams from lore keys/name.",
+      "preferredNpcId": "npc:ophelia-addams",
+      "certainty": "sourced",
+      "npcId": "npc:ophelia-addams"
+    },
+    {
+      "alias": "Abuela",
+      "candidates": [
+        "npc:ophelia-addams"
+      ],
+      "resolution": "Primary alias for Ophelia Addams from lore keys/name.",
+      "preferredNpcId": "npc:ophelia-addams",
+      "certainty": "sourced",
+      "npcId": "npc:ophelia-addams"
+    },
+    {
+      "alias": "Grandmama Frump",
+      "candidates": [
+        "npc:esmeralda-frump"
+      ],
+      "resolution": "Primary alias for Grandmama Frump (Esmeralda Frump) from lore keys/name.",
+      "preferredNpcId": "npc:esmeralda-frump",
+      "certainty": "sourced",
+      "npcId": "npc:esmeralda-frump"
+    },
+    {
+      "alias": "Esmeralda",
+      "candidates": [
+        "npc:esmeralda-frump"
+      ],
+      "resolution": "Primary alias for Grandmama Frump (Esmeralda Frump) from lore keys/name.",
+      "preferredNpcId": "npc:esmeralda-frump",
+      "certainty": "sourced",
+      "npcId": "npc:esmeralda-frump"
+    },
+    {
+      "alias": "Esmeralda Frump",
+      "candidates": [
+        "npc:esmeralda-frump"
+      ],
+      "resolution": "Primary alias for Grandmama Frump (Esmeralda Frump) from lore keys/name.",
+      "preferredNpcId": "npc:esmeralda-frump",
+      "certainty": "sourced",
+      "npcId": "npc:esmeralda-frump"
+    },
+    {
+      "alias": "grandmother Frump",
+      "candidates": [
+        "npc:esmeralda-frump"
+      ],
+      "resolution": "Primary alias for Grandmama Frump (Esmeralda Frump) from lore keys/name.",
+      "preferredNpcId": "npc:esmeralda-frump",
+      "certainty": "sourced",
+      "npcId": "npc:esmeralda-frump"
+    },
+    {
+      "alias": "grand-mère",
+      "candidates": [
+        "npc:esmeralda-frump"
+      ],
+      "resolution": "Primary alias for Grandmama Frump (Esmeralda Frump) from lore keys/name.",
+      "preferredNpcId": "npc:esmeralda-frump",
+      "certainty": "sourced",
+      "npcId": "npc:esmeralda-frump"
+    },
+    {
+      "alias": "Grandmama",
+      "candidates": [
+        "npc:esmeralda-frump"
+      ],
+      "resolution": "Primary alias for Grandmama Frump (Esmeralda Frump) from lore keys/name.",
+      "preferredNpcId": "npc:esmeralda-frump",
+      "certainty": "sourced",
+      "npcId": "npc:esmeralda-frump"
+    },
+    {
+      "alias": "Morticia's mother",
+      "candidates": [
+        "npc:esmeralda-frump"
+      ],
+      "resolution": "Primary alias for Grandmama Frump (Esmeralda Frump) from lore keys/name.",
+      "preferredNpcId": "npc:esmeralda-frump",
+      "certainty": "sourced",
+      "npcId": "npc:esmeralda-frump"
+    },
+    {
+      "alias": "Belladonna",
+      "candidates": [
+        "npc:belladonna-frump"
+      ],
+      "resolution": "Primary alias for Belladonna Frump from lore keys/name.",
+      "preferredNpcId": "npc:belladonna-frump",
+      "certainty": "sourced",
+      "npcId": "npc:belladonna-frump"
+    },
+    {
+      "alias": "Belladonna Frump",
+      "candidates": [
+        "npc:belladonna-frump"
+      ],
+      "resolution": "Primary alias for Belladonna Frump from lore keys/name.",
+      "preferredNpcId": "npc:belladonna-frump",
+      "certainty": "sourced",
+      "npcId": "npc:belladonna-frump"
+    },
+    {
+      "alias": "Aunt Belladonna",
+      "candidates": [
+        "npc:belladonna-frump"
+      ],
+      "resolution": "Primary alias for Belladonna Frump from lore keys/name.",
+      "preferredNpcId": "npc:belladonna-frump",
+      "certainty": "sourced",
+      "npcId": "npc:belladonna-frump"
+    },
+    {
+      "alias": "aunt",
+      "candidates": [
+        "npc:belladonna-frump"
+      ],
+      "resolution": "Primary alias for Belladonna Frump from lore keys/name.",
+      "preferredNpcId": "npc:belladonna-frump",
+      "certainty": "sourced",
+      "npcId": "npc:belladonna-frump"
+    }
+  ]
+}

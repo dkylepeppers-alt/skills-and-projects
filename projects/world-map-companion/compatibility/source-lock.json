@@ -7,7 +7,7 @@
     "implementationBranch": "implementation/world-map-companion",
     "implementationTip": "7c8881192f4c48cc681d210c1d108d18f4f856fc",
     "taskBranch": "wmc/task-3-contracts",
-    "taskTip": "64e1967467b346d12abeb72bfa88946134b18921"
+    "taskTip": "d8568b792e09fdf3277478a9ccf18388320eccdc"
   },
   "engine": {
     "repository": "Pasta-Devs/Marinara-Engine",
@@ -22,7 +22,7 @@
   "notes": [
     "Do not invent Engine remapped IDs or runtimeObservation here.",
     "Task 1\u20132 evidence remains recorded; user desktop install fields remain UNKNOWN.",
-    "taskTip will be set to this Task 3 contracts commit SHA after commit.",
+    "taskTip is the Task 3 contracts/state commit SHA on wmc/task-3-contracts.",
     "implementationTip is origin/implementation/world-map-companion after PR #7 (Task 2 bridge) merge.",
     "CompanionHostBridge remains PROPOSED adapter; not upstream Engine API."
   ]

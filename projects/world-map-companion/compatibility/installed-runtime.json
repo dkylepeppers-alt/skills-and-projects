@@ -1,18 +1,26 @@
 {
   "schemaVersion": 1,
-  "status": "UNKNOWN",
-  "purpose": "Template for recording the user's actual installed Engine/Agents/package runtime. Do not invent versions or remapped IDs.",
-  "updatedAt": null,
+  "status": "PARTIAL",
+  "purpose": "Records Task 1 in-process Engine checkout evidence and leaves user desktop install fields UNKNOWN until a real installer/runtime is observed. Do not invent remapped IDs.",
+  "updatedAt": "2026-09-07T15:33:52.171Z",
+  "honesty": {
+    "kind": "in-process-engine-checkout-exercise",
+    "notUserDesktopInstall": true,
+    "fullHttpServer": false,
+    "note": "Task 1 exercised pinned Engine importMarinara + prompts/regex storage via createFileNativeDB in a checkout workspace \u2014 not proof of a user's installed Marinara desktop app or package activation."
+  },
   "evidence": {
-    "task1LiveImport": "absent",
+    "task1LiveImport": "recorded",
     "task2LifecycleObservation": "absent",
-    "notes": "Live Engine import → readback → export and no-op companion lifecycle observation have not been proven in this workspace. Fill this file only from real installer/runtime evidence."
+    "notes": "Task 1 live in-process round-trip is recorded (unaccounted=0, regex 25/25). Task 2 no-op companion lifecycle observation is still absent. Hierarchical-maps / companion package install fields remain UNKNOWN until a real host installer reports them."
   },
   "engine": {
     "version": "UNKNOWN",
-    "commit": "UNKNOWN",
+    "commit": "9bbee87d1a44c33f704977bd8c25aafbec9b85aa",
     "buildBranch": "UNKNOWN",
-    "localModifications": "UNKNOWN"
+    "localModifications": "UNKNOWN",
+    "observationMode": "in-process-engine-import",
+    "note": "commit is the pinned Engine checkout SHA used for Task 1; not an installed desktop build version string."
   },
   "agents": {
     "hierarchicalMaps": {
@@ -23,7 +31,10 @@
     }
   },
   "capabilityApi": {
-    "supportedByInspectedSource": { "major": 1, "minor": 15 },
+    "supportedByInspectedSource": {
+      "major": 1,
+      "minor": 15
+    },
     "installedHostReports": "UNKNOWN"
   },
   "packages": {
@@ -34,5 +45,21 @@
       "permissionsDeclared": []
     }
   },
-  "runtimeObservation": null
+  "runtimeObservation": {
+    "status": "recorded",
+    "mode": "in-process-engine-import",
+    "path": "compatibility/runtimeObservation.json",
+    "installationReceipt": "compatibility/installation-receipt.json",
+    "nativePresetId": "pLwe7NpVlr3mtoYe34-jD",
+    "sourceSha256": "43801992b7e07ffb24c0395f32ce87b4ea4f3a40aed929eb0462e3e41b7adc93",
+    "pins": {
+      "engine": "9bbee87d1a44c33f704977bd8c25aafbec9b85aa",
+      "agents": "ee1a4a01d1091a9f5e4086c58f608e401aa1d879"
+    },
+    "verification": {
+      "unaccounted": 0,
+      "regexScoped": "25/25"
+    },
+    "note": "Remapped IDs live only in runtimeObservation.json / installation-receipt.json; source archive frozen. Summary only \u2014 do not invent IDs here."
+  }
 }

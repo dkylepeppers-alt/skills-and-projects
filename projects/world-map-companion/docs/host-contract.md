@@ -14,7 +14,7 @@
 | Companion task branch | `wmc/task-2-host-contract` | see `compatibility/source-lock.json` |
 
 Machine-readable copy: `compatibility/source-lock.json`.  
-Installed build versions: `compatibility/installed-runtime.json` (status **UNKNOWN** until Task 1 live evidence exists).
+Installed build versions: `compatibility/installed-runtime.json` (Task 1 in-process import **recorded**; user desktop install fields still **UNKNOWN**; Task 2 lifecycle still absent).
 
 Inspected capability API surface in Engine shared schema: `supportedCapabilityApi = { major: 1, minor: 15 }`  
 (`packages/shared/src/schemas/capability-package.schema.ts` → `supportedCapabilityApi`).
@@ -113,7 +113,7 @@ World Maps reference permissions (source pin only):
 | Preset export | `GET /api/prompts/:id/export` | same | `buildPresetExportEnvelope` (local) |
 | Regex script import | `POST /api/regex-scripts/import` | `packages/server/src/routes/regex-scripts.routes.ts` | `createRegexScriptsStorage(...).create` via `importRegexScriptSchema` |
 
-**UNVERIFIED (Task 1 live):** actual remapped IDs, normalized export values, and regex readback against a running Engine. Do not invent `runtimeObservation`. See `compatibility/engine-import-status.md` / Task 1 ownership.
+**RECORDED (Task 1 in-process):** remapped IDs / export / regex 25/25 live in `compatibility/runtimeObservation.json` (not full HTTP desktop). Do not invent additional remaps. See `compatibility/engine-import-status.md`.
 
 ## 5. Roleplay lifecycle map (VERIFIED owners)
 
@@ -266,19 +266,19 @@ Task 2 exit (from plan): *a no-op companion observes each required lifecycle eve
 
 Still **UNVERIFIED / blocking exit**:
 
-1. **Live installed-runtime fill-in** of `compatibility/installed-runtime.json` (Engine version/commit, hierarchical-maps version, capability API reported by host) — depends on Task 1 live evidence + real installer.
+1. **User-desktop installed-runtime fill-in** of remaining UNKNOWN fields in `compatibility/installed-runtime.json` (Engine version string, hierarchical-maps install version, capability API reported by host) — Task 1 in-process pin evidence is present; real installer still required.
 2. **No-op companion package** activated on a real host (private install path), registering only observation hooks / prompt no-op.
 3. **Exactly-once observation** of: accepted response, cancel/abort, retry/regen, edit, active swipe change, branch, message deletion — against the owners in §5.
 4. **Disable / re-enable cleanup** via `deactivatePackage` / `activatePackage` with no leftover prompt contribution or listeners.
 5. **Supported-version detection** refusing hosts outside tested `capabilityApi` / engine range.
 6. **Bridge implementation** at the verified owners (explicitly out of scope for this scaffold commit).
 
-This document + `source-lock.json` + `installed-runtime.json` (UNKNOWN) + `tests/host-contract.test.ts` satisfy the **discovery/scaffold** portion only.
+This document + `source-lock.json` + `installed-runtime.json` (PARTIAL: Task 1 recorded) + `tests/host-contract.test.ts` satisfy the **discovery/scaffold** portion only — Task 2 exit proofs remain open.
 
 ## 9. Out of scope / non-goals for this commit
 
 - Modifying `source/presets/*` bytes.
 - Inventing remapped IDs or `runtimeObservation`.
 - Implementing Engine patches, CompanionHostBridge runtime, or package activation.
-- Claiming Task 1 live import complete.
+- Claiming Task 2 exit complete (no-op lifecycle still absent).
 - Opening/merging a PR that asserts Task 1 or Task 2 exit proofs.

@@ -384,7 +384,13 @@ export function loadNevermoreLocationIndex(repoRoot?: string): {
       parentId?: string | null;
     }>;
   };
-  const map = JSON.parse(readFileSync(mapPath, "utf8")) as {
+  const rawMap = readFileSync(mapPath, "utf8");
+  if (rawMap.startsWith("version https://git-lfs.github.com/spec/v1")) {
+    throw new Error(
+      `map file is still a Git LFS pointer; run git lfs pull before loading: ${mapPath}`,
+    );
+  }
+  const map = JSON.parse(rawMap) as {
     definition: { locations: Array<{ id: string }> };
   };
   const locationsById: SceneProjectionInput["locationsById"] = {};

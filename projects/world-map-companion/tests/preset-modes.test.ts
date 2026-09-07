@@ -417,8 +417,6 @@ test("whole-world retrieval: location outside native first-50 name selection", (
   const { locationsById, nativeLocationOrder } = loadNevermoreLocationIndex();
   assert.ok(nativeLocationOrder.length >= 79);
   assert.ok(locationsById["woods-cabin"], "woods-cabin in pack");
-  const idx = nativeLocationOrder.indexOf("woods-cabin");
-  assert.ok(idx >= 50 || idx === -1 || true); // may be beyond 50 in definition order
   // Find a location that is definitely outside first 50 in native order
   const beyond = nativeLocationOrder.slice(50);
   assert.ok(beyond.length > 0, "map has locations beyond first 50");

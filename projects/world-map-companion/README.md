@@ -25,6 +25,10 @@ Archive integrity is separate from Engine import and behavior verification. Pass
 
 Upstream source checkouts and dependencies stay outside this repository. Nevermore source IDs, lore, topology, and artwork remain under their existing project paths.
 
+## Knowledge & consequences (Task 8)
+
+Observer projections (actual / known / last-seen / expected) with an **earned-knowledge filter**: non-author views never seed from `actualPlacements`; `falseClaim` is author-only. Consequences + PROPOSED tracker adapters: [`docs/knowledge-consequences.md`](docs/knowledge-consequences.md) (merged PR #18 at tip `2f6b0b4`). Bridge stays PROPOSED.
+
 ## Travel & simulation (Tasks 6–7)
 
 - Effective topology + travel: [`docs/travel-topology.md`](docs/travel-topology.md) (merged PR #13). Spatial-owner adapter stays PROPOSED.

@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-07  
 **Scope:** Host contract discovery + Task 2 no-op lifecycle observation (in-process) + **PROPOSED** `CompanionHostBridge` adapter under `src/host/`. No Engine package-facing lifecycle APIs invented as upstream; no desktop `activatePackage`; no preset byte changes; no invented remapped IDs.  
-**Status:** Source-traced against pinned checkouts. Task 1 import + Task 2 lifecycle observation **recorded**; companion-owned bridge adapter **IMPLEMENTED as PROPOSED** (unit-tested). User-desktop install / `activatePackage` remain **UNVERIFIED** (`installed-runtime` PARTIAL).
+**Status:** Source-traced against pinned checkouts. Task 1 import + Task 2 lifecycle observation **recorded**; companion-owned bridge adapter **IMPLEMENTED as PROPOSED** (unit-tested). Task 4 history-selection **IMPLEMENTED** in-companion at tip `4008b1e` (see `docs/history-selection.md`); live Engine `selectHistory` wiring still **UNVERIFIED**. User-desktop install / `activatePackage` remain **UNVERIFIED** (`installed-runtime` PARTIAL).
 
 ## 1. Pins
 
@@ -157,7 +157,7 @@ There is **no** package-facing prepare/finish/rewind bus. Lifecycle is owned by 
 | same → `finalizeCapabilityAgentResults` usage | Agent result finalization for retries. |
 | `capability-agent-runtime.service.ts` → `finalizeCapabilityAgentResults` | Shared finalizer. |
 
-**UNVERIFIED:** Idempotent companion processing keyed by message+swipe+contentHash on regen; interaction with deferred capability agent results (`shouldDeferCapabilityAgentResult`).
+**Companion (Task 4):** Idempotent commit keyed by message+swipe+contentHash+branch+processingVersion is **IMPLEMENTED** in `HistoryStore` — see `docs/history-selection.md`. **UNVERIFIED:** live Engine regen path calling that store; interaction with deferred capability agent results (`shouldDeferCapabilityAgentResult`).
 
 ### 5.4 Edit message
 
@@ -167,7 +167,7 @@ There is **no** package-facing prepare/finish/rewind bus. Lifecycle is owned by 
 | `chats.storage.ts` → `updateMessageContent` | Persists edit (also used by continue). |
 | `PATCH .../extra` (~L2139) | Partial extra merge; may sync swipe extras. |
 
-**UNVERIFIED:** Content-hash invalidation cascade for companion projections after edit.
+**Companion (Task 4):** Content-hash invalidation cascade is **IMPLEMENTED** (`invalidateEditedMessage`) — see `docs/history-selection.md`. **UNVERIFIED:** live Engine edit route instrumentation calling it.
 
 ### 5.5 Swipe selection / swipe CRUD
 
@@ -182,7 +182,7 @@ There is **no** package-facing prepare/finish/rewind bus. Lifecycle is owned by 
 
 Storage: `chats.storage.ts` → `addSwipe` (~L2128), `setActiveSwipe` (~L2174), `removeSwipe` (~L2210).
 
-**UNVERIFIED:** Companion selected-history projection on active-swipe change without full bridge; game-state row anchoring per swipe (`getByChatAndMessage`).
+**Companion (Task 4):** Selected-swipe projection is **IMPLEMENTED** (`selectSwipe` / `applyHistorySelection`) — see `docs/history-selection.md`. **UNVERIFIED:** live Engine active-swipe route calling it; native game-state row anchoring per swipe (`getByChatAndMessage`).
 
 ### 5.6 Branch
 
@@ -191,7 +191,7 @@ Storage: `chats.storage.ts` → `addSwipe` (~L2128), `setActiveSwipe` (~L2174), 
 | `routes/chats.routes.ts` → `POST /:id/branch` (~L3885) | Copies messages/swipes/metadata up to optional `upToMessageId`; scene chats rejected. |
 | `chats.storage.ts` → `create` / `createMessagesBatch` / `getSwipes` | Used during branch copy. |
 
-**UNVERIFIED:** Companion campaign fork vs chat-branch identity; inheritance of package documents across `groupId` branches.
+**Companion (Task 4):** Branch inheritance of selection/lineage is **IMPLEMENTED** — see `docs/history-selection.md`. **UNVERIFIED:** live Engine branch route wiring; full package-document inheritance across native `groupId` branches.
 
 ### 5.7 Message deletion
 
@@ -201,7 +201,7 @@ Storage: `chats.storage.ts` → `addSwipe` (~L2128), `setActiveSwipe` (~L2174), 
 | `POST /:chatId/messages/bulk-delete` (~L2120) | `storage.removeMessages` |
 | `chats.storage.ts` → `removeMessage` / `removeMessages` | Authoritative delete |
 
-**UNVERIFIED:** Companion event tombstones / projection repair after deletion mid-history.
+**Companion (Task 4):** Delete truncate + soft-invalidation is **IMPLEMENTED** — see `docs/history-selection.md`. **UNVERIFIED:** live Engine delete route instrumentation.
 
 ## 6. CompanionHostBridge (PROPOSED adapter — IMPLEMENTED in companion repo)
 
@@ -321,5 +321,5 @@ Evidence: `compatibility/lifecycle-observation.json` (`evidence.task2LifecycleOb
 - Inventing remapped IDs beyond Task 1 `runtimeObservation`.
 - Implementing Engine patches that instrument `generate.routes` / chats HTTP (bridge adapter only).
 - Claiming the PROPOSED bridge is an upstream Engine export or that desktop `activatePackage` was proven.
-- Claiming Task 3 contracts/state work.
+- Claiming Task 3 contracts/state or Task 4 history-selection as live Engine features (those are companion-implemented; see `docs/history-selection.md`).
 - Claiming a user-desktop package install or full HTTP generate lifecycle.

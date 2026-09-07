@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "task": 7,
+  "kind": "simulation-unit-proof",
+  "distinctFrom": "live-http-engine-receipt",
+  "status": "PASS",
+  "baseSha": "69ca572faad350ad70af9553d6e8d5cac340a677",
+  "cases": [
+    "ordinary-day",
+    "missed-meeting",
+    "interrupted-routine",
+    "day-long-skip",
+    "zero-elapsed-chat",
+    "group-chat-dedupe",
+    "witnessed-beats-schedule",
+    "sealed-route-refusal",
+    "director-budget-validation",
+    "native-clock-reconcile"
+  ],
+  "perNpcPolling": false,
+  "companionHostBridge": "PROPOSED",
+  "spatialOwner": "PROPOSED",
+  "capabilityDocumentStore": false,
+  "archivePresetsFrozen": true,
+  "simulationTests": 16,
+  "fullSuitePass": 93,
+  "ranAt": "2026-09-07T17:55:00Z"
+}

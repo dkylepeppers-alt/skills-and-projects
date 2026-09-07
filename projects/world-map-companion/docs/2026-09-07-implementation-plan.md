@@ -1,9 +1,11 @@
 # World Map Companion — Full Campaign Implementation Plan
 
 **Date:** 2026-09-07  
-**Status:** Implementation plan; no companion implementation or preset changes made.  
+**Status:** Implementation checkpoints exist through Task 9 at branch tip c9c511c23a080c8a815059f39323a4bf6b5ecf0c; native package activation, exact LFS-backed validation, whole-world acceptance, and Tasks 10–14 remain open.  
 **Canonical repository:** [dkylepeppers-alt/skills-and-projects](https://github.com/dkylepeppers-alt/skills-and-projects)  
 **Plan path:** `projects/world-map-companion/docs/2026-09-07-implementation-plan.md`
+
+**Checklist state (updated 2026-09-07):** `[x]` means the implementation is present and supported by fresh unit/structural evidence or an explicit recorded receipt. `[ ]` means it is not implemented or is not verified at the required integration/release level. `PROPOSED`, `UNVERIFIED`, partial-runtime, and recorded-only evidence remain explicit and do not count as live-app proof.
 
 > **For agentic workers:** Execute this plan with the writing-plans/executing-plans workflow, using the task checkboxes and release gates below. Read the repository instructions and both Marinara skills first. Follow the task dependencies. Keep source preservation, installed-runtime verification, and whole-world acceptance as separate checks. This document incorporates the design specification; do not replace its scope with a smaller pilot.
 
@@ -286,16 +288,16 @@ The first release contains: compatible package; required host/map patches or tes
 
 ## 10. Executable work plan
 
-Use a short feature branch per coherent milestone and commit validated work. Task numbers are dependencies, not reduced public releases. Checkboxes below describe future implementation work and are intentionally unchecked.
+Use a short feature branch per coherent milestone and commit validated work. Task numbers are dependencies, not reduced public releases. The checklist below records the current verification state of this implementation branch; it is not a release declaration.
 
 ### Task 1 — Freeze inputs and prove preset transport
 
 **Depends on:** none. **Files:** `source/presets/*`, `scripts/audit-preset.py`, `compatibility/preset-import-map.json`, `tests/preset-preservation.test.ts`.
 
-- [ ] Verify the supplied SHA-256 and capture every original field, per-object hash, order array, choice, and regex record in the baseline manifest.
-- [ ] Import into an isolated target Engine and export again; record normalized values and remapped IDs without treating them as source changes.
-- [ ] Implement the missing import/regex compatibility path against actual destination schemas. Test scopes, disabled flags, regex flags, editing behavior, and depth limits; retain original legacy records alongside any translated form.
-- [ ] Prove all 69 sections, 12 groups, 11 choices, and 25 regex records are accounted for. Verify optional wrapping fields and all seven disabled agent markers explicitly.
+- [x] Verify the supplied SHA-256 and capture every original field, per-object hash, order array, choice, and regex record in the baseline manifest.
+- [x] Import into an isolated target Engine and export again; record normalized values and remapped IDs without treating them as source changes.
+- [x] Implement the missing import/regex compatibility path against actual destination schemas. Test scopes, disabled flags, regex flags, editing behavior, and depth limits; retain original legacy records alongside any translated form.
+- [x] Prove all 69 sections, 12 groups, 11 choices, and 25 regex records are accounted for. Verify optional wrapping fields and all seven disabled agent markers explicitly.
 
 **Exit:** no unaccounted field or unsupported executable behavior. Source bytes unchanged. A failing importer fidelity test blocks packaging, not preservation of the archive.
 
@@ -303,9 +305,9 @@ Use a short feature branch per coherent milestone and commit validated work. Tas
 
 **Depends on:** 1. **Files:** `compatibility/source-lock.json`, `compatibility/installed-runtime.json`, `docs/host-contract.md`, `tests/host-contract.test.ts`, focused patch metadata.
 
-- [ ] Record installed Engine/package versions, source revisions where available, local modifications, package API permissions, installer route, and actual roleplay lifecycle entrypoints.
-- [ ] Trace accepted-response, cancel, retry, edit, swipe selection, branch, message deletion, and import/export paths in the target source. Record exact owning files/functions and tests in the host contract.
-- [ ] Specify and implement the missing bridge at those owners. Add field-ownership arbitration and expose resolved preset mode/profile to the companion without parsing display text.
+- [x] Record installed Engine/package versions, source revisions where available, local modifications, package API permissions, installer route, and actual roleplay lifecycle entrypoints.
+- [x] Trace accepted-response, cancel, retry, edit, swipe selection, branch, message deletion, and import/export paths in the target source. Record exact owning files/functions and tests in the host contract.
+- [x] Specify and implement the missing bridge at those owners. Add field-ownership arbitration and expose resolved preset mode/profile to the companion without parsing display text.
 - [ ] Prove read-only prompt contribution, real private package activation, deactivation cleanup, and supported-version detection. A package must not claim a host API version it has not tested.
 
 **Exit:** a no-op companion observes each required lifecycle event exactly once in a real roleplay chat, makes no state changes, and survives disable/re-enable.
@@ -314,10 +316,10 @@ Use a short feature branch per coherent milestone and commit validated work. Tas
 
 **Depends on:** 2. **Files:** `src/contracts.ts`, `src/schema.ts`, `src/state/repository.ts`, `src/state/reducer.ts`, `src/state/migrations.ts`, `tests/state-contract.test.ts`.
 
-- [ ] Define all DTOs named in Section 5, typed events, world/NPC/location records, observer projections, and stable-ID rules. Version each external payload.
-- [ ] Implement package document storage, revision checks, append-only events, snapshots, narrow campaign references, and transactional projection updates.
-- [ ] Reject unknown IDs, malformed state, duplicate event IDs, stale writes, invalid chronology, and cross-campaign writes with actionable errors.
-- [ ] Test revision conflicts and failure between event persistence and projection publication using the actual file-backed transaction implementation. Fix or compensate for any unproven atomicity before proceeding.
+- [x] Define all DTOs named in Section 5, typed events, world/NPC/location records, observer projections, and stable-ID rules. Version each external payload.
+- [x] Implement package document storage, revision checks, append-only events, snapshots, narrow campaign references, and transactional projection updates.
+- [x] Reject unknown IDs, malformed state, duplicate event IDs, stale writes, invalid chronology, and cross-campaign writes with actionable errors.
+- [x] Test revision conflicts and failure between event persistence and projection publication using the actual file-backed transaction implementation. Fix or compensate for any unproven atomicity before proceeding.
 
 **Exit:** deterministic replay produces the same state hash; a failed commit leaves no half-applied campaign.
 
@@ -325,10 +327,10 @@ Use a short feature branch per coherent milestone and commit validated work. Tas
 
 **Depends on:** 3. **Files:** `src/state/history.ts`, `src/state/checkpoints.ts`, `src/host/lifecycle.ts`, `tests/history-replay.test.ts`.
 
-- [ ] Bind events to message, swipe, content hash, branch lineage, and processing version. Separate tentative jobs from committed results.
-- [ ] Implement selected-swipe projection, edited-message invalidation, branch inheritance, message deletion, checkpoint restore, and replay from the nearest valid checkpoint.
-- [ ] Add durable pending-job recovery and idempotent retry after restart. Keep recorded randomness stable.
-- [ ] Test that switching away from an arrival/unlock removes its dependent effects, selecting it again restores them, and another chat stays unchanged.
+- [x] Bind events to message, swipe, content hash, branch lineage, and processing version. Separate tentative jobs from committed results.
+- [x] Implement selected-swipe projection, edited-message invalidation, branch inheritance, message deletion, checkpoint restore, and replay from the nearest valid checkpoint.
+- [x] Add durable pending-job recovery and idempotent retry after restart. Keep recorded randomness stable.
+- [x] Test that switching away from an arrival/unlock removes its dependent effects, selecting it again restores them, and another chat stays unchanged.
 
 **Exit:** retry, rewind, branch, and restart cannot double-advance time, move an NPC twice, or leak campaign state across chats.
 
@@ -336,10 +338,10 @@ Use a short feature branch per coherent milestone and commit validated work. Tas
 
 **Depends on:** 3. **Files:** `projects/nevermore/companion/{manifest,locations,npcs,aliases,schedules,services,events,profiles}.json`, `scripts/validate-world-pack.py`, `tests/world-pack.test.ts`.
 
-- [ ] Enumerate all 79 locations and all existing edges from v2. Preserve 82 asset references; join by ID, never by display name alone.
-- [ ] Give every location a functional profile appropriate to its role: playable scene, circulation space, boundary/gate, or regional container. Include affordances, access, time assumptions, source references, and relevant NPC associations.
-- [ ] Census recurring NPCs from the full source lore/character materials. Resolve aliases and bindings, mark uncertain initial positions, and author source-consistent schedules/goals with assumptions labeled.
-- [ ] Cover town, campus, residences, Ravencroft, woodland sectors, and every crypt component. Validate no dangling IDs, unreachable required schedule legs, duplicate identities, or unintended topology changes.
+- [x] Enumerate all 79 locations and all existing edges from v2. Preserve 82 asset references; join by ID, never by display name alone.
+- [x] Give every location a functional profile appropriate to its role: playable scene, circulation space, boundary/gate, or regional container. Include affordances, access, time assumptions, source references, and relevant NPC associations.
+- [x] Census recurring NPCs from the full source lore/character materials. Resolve aliases and bindings, mark uncertain initial positions, and author source-consistent schedules/goals with assumptions labeled.
+- [x] Cover town, campus, residences, Ravencroft, woodland sectors, and every crypt component. Validate no dangling IDs, unreachable required schedule legs, duplicate identities, or unintended topology changes.
 
 **Exit:** machine-readable coverage is 79/79 locations, 82/82 assets preserved, and 100% of the completed recurring-NPC census classified. No “later region” placeholders.
 
@@ -347,10 +349,10 @@ Use a short feature branch per coherent milestone and commit validated work. Tas
 
 **Depends on:** 2–5. **Files:** `src/world/effective-map.ts`, `src/world/travel.ts`, `src/adapters/spatial-owner.ts`, map integration patch, `tests/travel-gates.test.ts`.
 
-- [ ] Combine immutable map data with branch-specific discovery/access overlays and expose a single effective definition to every travel consumer.
+- [x] Combine immutable map data with branch-specific discovery/access overlays and expose a single effective definition to every travel consumer.
 - [ ] Integrate command IDs, expected location/revision, and native owner transactions. Add journeys, travel-time proposals, companions, step travel, interruption, and fast-travel prerequisites.
-- [ ] Route NPCs and player actions through the same physical constraints while keeping observer knowledge and social permission separate.
-- [ ] Rerun all 63 existing Nevermore route assertions; add branch rollback, hidden-entrance independence, closed-service access, party split, and mid-journey interruption scenarios.
+- [x] Route NPCs and player actions through the same physical constraints while keeping observer knowledge and social permission separate.
+- [x] Rerun all 63 existing Nevermore route assertions; add branch rollback, hidden-entrance independence, closed-service access, party split, and mid-journey interruption scenarios.
 
 **Exit:** the map, prompt, player movement, and NPC movement agree on routes. All 79 locations become reachable under their authored unlock conditions; the sealed boundaries cannot be bypassed through parent navigation.
 
@@ -358,10 +360,10 @@ Use a short feature branch per coherent milestone and commit validated work. Tas
 
 **Depends on:** 3, 5, 6. **Files:** `src/simulation/{clock,schedules,npcs,director}.ts`, `src/prompts/director.md`, `tests/simulation.test.ts`.
 
-- [ ] Reconcile story time with native world state. Implement calendar boundaries, operating hours, appointments, waiting, travel durations, OOC pauses, and long skips.
-- [ ] Advance due schedules/goals in batches, considering routes, current scene commitments, interruptions, and deterministic priorities. Keep uncertain outcomes explicit.
-- [ ] Add the event-triggered director for decisions that require narrative judgment, with budgets, validated output, seeded event randomness, and no per-NPC polling model loop.
-- [ ] Test an ordinary day, a missed meeting, an interrupted routine, a day-long skip, and a conversation with no elapsed time. Test group-chat processing without duplicated ticks.
+- [x] Reconcile story time with native world state. Implement calendar boundaries, operating hours, appointments, waiting, travel durations, OOC pauses, and long skips.
+- [x] Advance due schedules/goals in batches, considering routes, current scene commitments, interruptions, and deterministic priorities. Keep uncertain outcomes explicit.
+- [x] Add the event-triggered director for decisions that require narrative judgment, with budgets, validated output, seeded event randomness, and no per-NPC polling model loop.
+- [x] Test an ordinary day, a missed meeting, an interrupted routine, a day-long skip, and a conversation with no elapsed time. Test group-chat processing without duplicated ticks.
 
 **Exit:** consistent NPC presence across the entire map; a schedule never overrides a witnessed location or teleports someone through a blocked route.
 
@@ -369,10 +371,10 @@ Use a short feature branch per coherent milestone and commit validated work. Tas
 
 **Depends on:** 3, 5–7. **Files:** `src/world/{knowledge,affordances,consequences}.ts`, `src/adapters/trackers.ts`, `tests/knowledge-consequences.test.ts`.
 
-- [ ] Implement actual/known/last-seen/expected projections and evidence-based communication. Keep secrets out of player-view API responses and inappropriate character prompts.
-- [ ] Add location journals, clues, rumors, appointments, persistent objects, damage, local services, and faction clocks.
-- [ ] Link native quests/inventory/bonds through explicit ownership adapters; prevent duplicate quest identities and conflicting scales.
-- [ ] Test false rumors, a stale sighting, a private room, a communicated clue, a left-behind object, a closed business, and a consequence revisited after branching.
+- [x] Implement actual/known/last-seen/expected projections and evidence-based communication. Keep secrets out of player-view API responses and inappropriate character prompts.
+- [x] Add location journals, clues, rumors, appointments, persistent objects, damage, local services, and faction clocks.
+- [x] Link native quests/inventory/bonds through explicit ownership adapters; prevent duplicate quest identities and conflicting scales.
+- [x] Test false rumors, a stale sighting, a private room, a communicated clue, a left-behind object, a closed business, and a consequence revisited after branching.
 
 **Exit:** a player can investigate and plan using the map without learning unearned information or losing prior consequences.
 
@@ -380,12 +382,17 @@ Use a short feature branch per coherent milestone and commit validated work. Tas
 
 **Depends on:** 1–4, 6–8. **Files:** `src/prompts/{continuity,scene-briefing,extractor}.md`, `src/prompt/{projection,contributor,modes}.ts`, `tests/preset-modes.test.ts`.
 
-- [ ] Build the read-only scene projection and companion contributor. Preserve the original preset file; supply runtime facts through the existing context path and explicit companion block.
-- [ ] Implement the mode matrix and handover checkpoints. Preserve exact header conventions, original gates, optional DND behavior, and disabled marker states.
-- [ ] Verify all existing choice options still render and select correctly. Test the full `4 cot styles × 3 state modes × DND on/off × companion on/off` matrix, with additional live/observe and legacy-module interaction cases.
-- [ ] Compare companion-off prompts to baseline using fixed inputs and controlled macro randomness. Test `ANTIOMNI`, OOC, internal reports, and legacy regex transformations without consuming the same state twice.
+- [x] Build the read-only scene projection and companion contributor. Preserve the original preset file; supply runtime facts through the existing context path and explicit companion block.
+- [x] Implement the mode matrix and handover checkpoints. Preserve exact header conventions, original gates, optional DND behavior, and disabled marker states.
+- [x] Verify all existing choice options still render and select correctly. Test the full `4 cot styles × 3 state modes × DND on/off × companion on/off` matrix, with additional live/observe and legacy-module interaction cases.
+- [x] Compare companion-off prompts to baseline using fixed inputs and controlled macro randomness. Test `ANTIOMNI`, OOC, internal reports, and legacy regex transformations without consuming the same state twice.
 
-**Exit:** zero original source edits; no duplicated headers, trackers, rolls, or simulations. Whole-world retrieval works for a location outside the native first-50-name selection.
+**Verification snapshot — 2026-09-07**
+
+- Branch tip inspected: [c9c511c23a080c8a815059f39323a4bf6b5ecf0c](https://github.com/dkylepeppers-alt/skills-and-projects/commit/c9c511c23a080c8a815059f39323a4bf6b5ecf0c). Tasks 1–9 source, tests, and compatibility receipts are present; implementation paths for Tasks 10–14 are absent.
+- Fresh local evidence from a reconstructed text checkout: 116/116 focused project tests, 11/11 preset-audit tests, and 14/14 preset-mode tests passed. The branch’s recorded Task 9 receipt reports 124/124 for the full suite, but exact reproduction was blocked because the 91 MB Nevermore map and artwork are Git LFS objects unavailable to this checkout. Against a temporary local structural fixture, 7/8 world-pack assertions passed; the only failure was the expected map SHA check.
+- The repository validator was run with an LFS-pointer probe and stopped with “Missing LFS content … Run git lfs pull.” No GitHub status contexts were attached to the branch tip, so no CI pass is claimed.
+- Recorded compatibility evidence covers the pinned in-process Engine round trip, lifecycle observation, route assertions, simulation, knowledge/consequence, and prompt-mode receipts. It explicitly leaves CompanionHostBridge activation and live Engine wire-up PROPOSED/UNVERIFIED; those release gates remain open.
 
 ### Task 10 — Wire extraction and reconciled commits
 
@@ -497,6 +504,6 @@ Primary sources inspected for this design:
 - [Nevermore v2 handoff](https://github.com/dkylepeppers-alt/skills-and-projects/blob/abdfa80d5bf8ed66cd158639bc7f68f94c8dfc94/projects/nevermore/releases/v2/HANDOFF.md): map inventory, intentional topology, gate IDs, and previously reported validation.
 - Uploaded FF5.4 preset: directly parsed and hashed for this plan; its contents are treated as the user’s source material, not instructions to the planning agent.
 
-**Plan review:** The design covers the full-world recommendation, immutable preset preservation, actual import limitations, explicit host additions, native/companion ownership, player knowledge, travel gates, history recovery, and complete release evidence. All implementation APIs and new repository paths are marked as proposed. Unverified installed-runtime behavior remains a named implementation gate. No implementation checkbox is marked complete by this planning document.
+**Plan review:** The design covers the full-world recommendation, immutable preset preservation, actual import limitations, explicit host additions, native/companion ownership, player knowledge, travel gates, history recovery, and complete release evidence. Tasks 1–9 now have implementation/unit or recorded-receipt checkmarks only where the evidence supports them. Native package activation and live Engine wire-up remain PROPOSED/UNVERIFIED; exact LFS-backed validation, whole-world acceptance, and release packaging remain open. Tasks 10–14 are not implemented on this branch.
 
-**Planning validation performed:** Parsed the original preset; verified its byte count and SHA-256; audited object inventories, choices, and disabled agent markers; checked task numbering, document structure, and absence of unresolved placeholder markers. The full repository validator and live application tests were not run during planning: this workspace does not contain the complete repository/LFS checkout or the user's installed Engine. They remain required implementation/release checks.
+**Verification performed on 2026-09-07:** Inspected branch tip c9c511c23a080c8a815059f39323a4bf6b5ecf0c, checked the branch’s source and compatibility evidence, and ran the focused project tests noted in the verification snapshot above. The exact full-suite receipt remains recorded but was not independently reproduced because the connector exposed the required Nevermore map as an LFS pointer. The root validator stopped on missing LFS content, and no live application/package activation or clean-release test was available. Keep the corresponding release gates open until those checks run in a complete checkout and supported host.

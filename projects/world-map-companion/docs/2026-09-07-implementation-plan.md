@@ -1,7 +1,7 @@
 # World Map Companion — Full Campaign Implementation Plan
 
 **Date:** 2026-09-07  
-**Status:** Implementation checkpoints exist through Task 9 at branch tip c9c511c23a080c8a815059f39323a4bf6b5ecf0c; native package activation, exact LFS-backed validation, whole-world acceptance, and Tasks 10–14 remain open.  
+**Status:** Implementation checkpoints exist through Task 9 at implementation baseline c9c511c23a080c8a815059f39323a4bf6b5ecf0c; checklist verification is recorded in this document. Native package activation, exact LFS-backed validation, whole-world acceptance, and Tasks 10–14 remain open.  
 **Canonical repository:** [dkylepeppers-alt/skills-and-projects](https://github.com/dkylepeppers-alt/skills-and-projects)  
 **Plan path:** `projects/world-map-companion/docs/2026-09-07-implementation-plan.md`
 

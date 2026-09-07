@@ -13,9 +13,9 @@ const lifecycleObservationPath = `${root}/compatibility/lifecycle-observation.js
 const EXPECTED_ENGINE = "9bbee87d1a44c33f704977bd8c25aafbec9b85aa";
 const EXPECTED_AGENTS = "ee1a4a01d1091a9f5e4086c58f608e401aa1d879";
 const EXPECTED_NATIVE_PRESET = "pLwe7NpVlr3mtoYe34-jD";
-const EXPECTED_IMPLEMENTATION_TIP = "6b303a99ef97bbab63414bb81b90003ba3b7b079";
-// taskTip pinned after Task 8 commit; tests that need exact tip read from lock after pin step
-const EXPECTED_TASK_BRANCH = "wmc/task-8-knowledge";
+const EXPECTED_IMPLEMENTATION_TIP = "cbed996047b6c4b7c5f2bf8b1f33beafa6a4991a";
+// taskTip pinned after Task 9 commit; tests that need exact tip read from lock after pin step
+const EXPECTED_TASK_BRANCH = "wmc/task-9-prompt-modules";
 
 const REQUIRED_HOST_CONTRACT_SECTIONS = [
   "## 1. Pins",

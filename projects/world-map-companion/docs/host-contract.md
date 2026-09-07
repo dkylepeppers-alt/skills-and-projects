@@ -2,7 +2,7 @@
 
 **Date:** 2026-09-07  
 **Scope:** Host contract discovery + Task 2 no-op lifecycle observation (in-process) + **PROPOSED** `CompanionHostBridge` adapter under `src/host/`. No Engine package-facing lifecycle APIs invented as upstream; no desktop `activatePackage`; no preset byte changes; no invented remapped IDs.  
-**Status:** Source-traced against pinned checkouts. Task 1 import + Task 2 lifecycle observation **recorded** (in-process). Live Fastify HTTP preset-import honesty **recorded** separately (`compatibility/live-http-status.md`, PR #12) — does not supersede Task 1 and does not prove package activate. Companion-owned bridge adapter **IMPLEMENTED as PROPOSED** (unit-tested). Feature tip `01cc141` includes Tasks 3–5 + Task 4 docs (#10); Task 4 history-selection **IMPLEMENTED** in-companion (see `docs/history-selection.md`); live Engine `selectHistory` wiring still **UNVERIFIED**. User-desktop install / `activatePackage` remain **UNVERIFIED** (`installed-runtime` PARTIAL).
+**Status:** Source-traced against pinned checkouts. Task 1 import + Task 2 lifecycle observation **recorded** (in-process). Live Fastify HTTP preset-import honesty **recorded** separately (`compatibility/live-http-status.md`, PR #12) — does not supersede Task 1 and does not prove package activate. Companion-owned bridge adapter **IMPLEMENTED as PROPOSED** (unit-tested). Feature tip `cbed996` includes Tasks 1–8 + Quill docs through #19; Task 4 history-selection and Task 8 earned-knowledge filter **IMPLEMENTED** in-companion (see `docs/history-selection.md`, `docs/knowledge-consequences.md`); live Engine `selectHistory` wiring still **UNVERIFIED**. User-desktop install / `activatePackage` remain **UNVERIFIED** (`installed-runtime` PARTIAL).
 
 ## 1. Pins
 
@@ -10,7 +10,7 @@
 |---|---|---|
 | Marinara Engine (staging) | `9bbee87d1a44c33f704977bd8c25aafbec9b85aa` | `/workspace/repos/Marinara-Engine` |
 | Marinara Agents (staging) | `ee1a4a01d1091a9f5e4086c58f608e401aa1d879` | `/workspace/repos/Marinara-Agents` |
-| Companion implementation branch tip (after PRs #10 + #12) | `01cc1411fa3d2fb00431cc2cbe49a46d2ab384dd` | `implementation/world-map-companion` |
+| Companion implementation branch tip (after PR #19) | `cbed996047b6c4b7c5f2bf8b1f33beafa6a4991a` | `implementation/world-map-companion` |
 | Live HTTP honesty receipt | see `compatibility/live-http-status.md` | Engine `2.4.5` @ `9bbee87` on `:7860` |
 
 Machine-readable copy: `compatibility/source-lock.json`.  

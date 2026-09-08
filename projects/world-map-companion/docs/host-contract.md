@@ -135,6 +135,14 @@ There is **no** package-facing prepare/finish/rewind bus. Lifecycle is owned by 
 | Spatial materialization | Agents `.../spatial-context/state-resolution.ts` → `materializeAssistantSpatialState` | Called from generate after save when hierarchical maps enabled. |
 | Spatial owner commit (impersonate travel) | Agents `.../spatial-context/owner-turn.ts` → `commitSpatialOwnerTurn` | User-committed movement path. |
 
+**Canonical transcript channel for Task 10 (companion-side / PROPOSED):** the persisted
+accepted assistant content returned by `chats.createMessage`, `chats.addSwipe`, or
+`chats.updateMessageContent`, anchored by the resulting message ID, selected swipe index,
+and content hash. SSE/display transformations, streaming chunks, hidden reasoning, control
+markup, quoted plans, and legacy report payloads are not canonical extraction input. The
+companion implementation enforces this contract, but live Engine bridge instrumentation at
+these storage owners remains **PROPOSED / UNVERIFIED**.
+
 **UNVERIFIED:** Whether every accept path (empty anchor, discarded duplicate conversation response, aborted mid-stream partial save) is observable without Engine patches; which SSE types a no-op companion must see exactly once per user-visible accept.
 
 ### 5.2 Cancel / abort

@@ -50,3 +50,19 @@ export {
   type CheckpointRecord,
 } from "./checkpoints.ts";
 
+export {
+  validateExtractedProposals,
+  type ProposalValidationInput,
+  type ProposalValidationIssue,
+  type ProposalValidationResult,
+  type ValidatedProposal,
+} from "./validator.ts";
+
+export {
+  RECONCILIATION_HONESTY,
+  reconcileAcceptedTurn,
+  type NativeAgentResult,
+  type ReconciliationInput,
+  type ReconciliationIssue,
+  type ReconciliationResult,
+} from "./reconciliation.ts";

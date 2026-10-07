@@ -8,6 +8,7 @@
  * Engine checkout. See README.md in this directory for setup.
  */
 import { readFileSync } from "node:fs";
+import Module from "node:module";
 import { resolve } from "node:path";
 
 const engineRoot = process.env.MARINARA_ENGINE_ROOT;
@@ -56,6 +57,21 @@ function unwrap(raw: any): { kind: string; payload: any } {
   return { kind: "unknown", payload: raw };
 }
 
+/** Shape checks from the importer's decodeLorebookImages; it also verifies the bytes. */
+function imageProblem(images: unknown): string | null {
+  if (images === undefined || images === null) return null;
+  if (!Array.isArray(images)) return "must be an array";
+  if (images.length > 4) return "at most 4 images per entry";
+  for (const image of images) {
+    const { dataUrl, caption = "" } = (image ?? {}) as Record<string, unknown>;
+    if (typeof caption !== "string" || caption.length > 500) return "caption must be a string of at most 500 characters";
+    if (typeof dataUrl !== "string") return "each image needs a dataUrl (exports embed bytes, not paths)";
+    if (!/^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+={0,2}$/.test(dataUrl)) return "dataUrl must be base64 PNG, JPEG, or WebP";
+    if (dataUrl.length > Math.ceil((5 * 1024 * 1024) / 3) * 4 + 64) return "image larger than 5 MB";
+  }
+  return null;
+}
+
 function validateLorebook(data: any) {
   report("lorebook", lorebookSchemas.createLorebookSchema.safeParse(data.lorebook));
   for (const [index, folder] of (data.folders ?? []).entries()) {
@@ -64,7 +80,14 @@ function validateLorebook(data: any) {
   }
   const folderIds = new Set((data.folders ?? []).map((folder: any) => folder.id));
   for (const [index, entry] of (data.entries ?? []).entries()) {
-    const { folderId, ...rest } = entry;
+    const { folderId, images, ...rest } = entry;
+    // Exports embed images as data URLs; the schema only knows server paths. Mirror
+    // the importer, where one bad image fails the whole book.
+    const badImage = imageProblem(images);
+    if (badImage) {
+      failures += 1;
+      console.log(`  FAIL  entry[${index}] images: ${badImage} — the whole lorebook import will fail`);
+    }
     report(
       `entry[${index}] ${entry.name ?? ""}`,
       lorebookSchemas.createLorebookEntrySchema.safeParse({ ...rest, lorebookId: "validation", folderId: null }),
@@ -82,7 +105,7 @@ function validateMap(raw: any) {
   const profile = raw?.hierarchyProfile ?? raw?.data?.hierarchyProfile;
   if (!profile) return;
   if (!hierarchyProfileSchema) {
-    console.log("  skip  hierarchyProfile (set MARINARA_AGENTS_ROOT to check it)");
+    console.log("  skip  hierarchyProfile (maps model not loaded; see the warning above)");
     return;
   }
   report("hierarchyProfile", hierarchyProfileSchema.safeParse(profile));
@@ -239,10 +262,18 @@ async function main() {
       agentsRoot,
       "packages/hierarchical-maps/src/engine/packages/maps-shared/src/maps-model.js",
     );
+    // The maps model imports runtime values from `@marinara-engine/shared`, which a
+    // plain checkout cannot resolve. Point that specifier at the Engine's shared source.
+    const sharedIndex = resolve(engineRoot, "packages/shared/src/index.ts");
+    const moduleInternals = Module as unknown as { _resolveFilename: (request: string, ...rest: unknown[]) => string };
+    const resolveFilename = moduleInternals._resolveFilename;
+    moduleInternals._resolveFilename = function (request, ...rest) {
+      return resolveFilename.call(this, request === "@marinara-engine/shared" ? sharedIndex : request, ...rest);
+    };
     try {
       ({ spatialHierarchyProfileSchema: hierarchyProfileSchema } = await import(mapsModel));
-    } catch {
-      console.warn("! Could not load the maps model; hierarchy profiles will be skipped.");
+    } catch (error) {
+      console.warn(`! Could not load the maps model; hierarchy profiles will be skipped. ${(error as Error).message}`);
     }
   }
 

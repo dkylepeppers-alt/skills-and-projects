@@ -20,7 +20,7 @@ Set `MARINARA_ENGINE_ROOT` if it lives elsewhere. Run `npm ci` after a fresh che
 4. Correct category, modes, entrypoints, permissions, engine range, and `restartRequired`.
 5. Run the builder to produce `files[]`, the ZIP artifact, `locales/en.json`, and the catalog entry.
 6. A README row in the matching category table. Validation looks for the literal string `](packages/<id>/manifest.json)` in `README.md`.
-7. Update the package-count assertion near the end of `scripts/validate-catalog.mjs` (it hard-codes total / agent-only / feature counts).
+7. Update the package-count assertion near the end of `scripts/validate-catalog.mjs` (it hard-codes the published agent-only, feature, and ruleset counts — currently 24, 15, and 0; staging-only packages are excluded).
 8. Manual install evidence in the PR.
 
 ## Build
@@ -28,6 +28,7 @@ Set `MARINARA_ENGINE_ROOT` if it lives elsewhere. Run `npm ci` after a fresh che
 ```bash
 node scripts/build-agent-catalog.mjs [id …]     # agent-only packages
 node scripts/build-feature-packages.mjs [id …]  # Engine-derived feature packages
+node scripts/build-ruleset-packages.mjs         # ruleset data packages (always rebuilds all)
 node scripts/sync-package-locales.mjs           # after changing manifest/agents strings
 ```
 
@@ -44,6 +45,8 @@ node scripts/validate-package-locales.mjs
 node scripts/validate-catalog.mjs
 git diff --check
 ```
+
+Feature packages that vendor Engine sources also run `node scripts/validate-vendored-engine.mjs --baseline-ref origin/staging` with `MARINARA_ENGINE_ROOT` set to an Engine `staging` checkout. It flags drift between `sources/engine/` and the Engine; `scripts/vendored-engine-baseline.json` may only lose entries, never gain them. Translated package UIs are also protected by `scripts/package-ui-translation-baseline.json`: removing a shipped translation key fails localization validation unless the baseline is updated with a reason.
 
 `npm run format` applies Prettier. Generated bundles, artifacts, catalogs, and captured Engine snapshots are excluded from formatting — rebuild them instead.
 
@@ -68,7 +71,7 @@ Then install or update through **Agents → Download Agents** in a compatible En
 | `INCOMPLETE_PACKAGE_IDS` | hidden | hidden |
 | `STAGING_ONLY_PACKAGE_IDS` | hidden | visible, installable |
 
-Both keep the package building normally. Promotion path is `INCOMPLETE` → `STAGING_ONLY` → neither; an id may not sit in both. Staging-only packages are cut from the published lanes and written to a preview overlay under `catalog/preview/`, which stable Engines never request.
+Both keep the package building normally. At the time of writing, `pixelforge` is incomplete and `modern-life-sim` and `ruleset-5e-2014` are staging-only; Quartermaster and Relationship Tracker graduated to stable for Engine v2.5.0. Read the file for the current sets. Promotion path is `INCOMPLETE` → `STAGING_ONLY` → neither; an id may not sit in both. Staging-only packages are cut from the published lanes and written to a preview overlay under `catalog/preview/`, which stable Engines never request.
 
 Graduating a package: delete the id from both sets, rebuild, update the count assertion and README tables, land it all in one PR.
 

@@ -52,6 +52,8 @@ compare repository and installed skill revisions before reconciling differences.
 | A downloadable Agent package | `references/agent-packages.md` |
 | To know what file shape imports at all | `references/export-envelopes.md` |
 
+Version note: the references track Engine v2.5.0 and the Agents catalog as of October 2026. Decision activation and `decision:` conditions, lorebook entry images, `{{include::}}`, preset `skipWrap`, and maps above 500 locations need Engine 2.5.0 or later. An older install fails or ignores them, so ask which version the user runs before relying on them.
+
 Coverage note: lorebook, character, persona, map, preset, and regex-script formats have each been verified against the Engine's own schemas — the first four via templates in this skill, the last two against real exports. Custom tools, personal extensions, and themes are documented from their schemas but have no file format to verify, since they are created in the app.
 
 Several often apply at once. A "setting pack" is usually a lorebook plus a map plus one or two cards, and the cross-links between them matter — read all three.

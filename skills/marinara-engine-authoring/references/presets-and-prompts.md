@@ -58,17 +58,24 @@ injectionPosition: "ordered" | "depth"      default ordered
 injectionDepth: int ≥ 0                     default 0
 injectionOrder: int                         default 100
 forbidOverrides: boolean                    default false
+skipWrap: boolean                           default false
 ```
 
 `ordered` places the section by `injectionOrder` among the other ordered sections. `depth` injects it `injectionDepth` messages back inside the chat history — the same interruption effect as a lorebook entry at position 2, and worth the same restraint.
 
+`skipWrap` (Engine 2.5.0+) sends one plain section without the preset's XML tag or Markdown heading while the rest stays wrapped. It round-trips through export and import, coerced like the other booleans. A group's own wrapper can still surround it, it has no effect when `wrapFormat` is `none`, and markers always keep their wrapper — the app never stores `skipWrap: true` on a marker.
+
 `forbidOverrides` stops a character card's `system_prompt` / `post_history_instructions` from replacing this section. Use it on sections whose behavior the preset must guarantee.
+
+**Decision blocks and caching.** A section can hold `{{#if decision:"…"}}` so its text is sent only on turns where a statement about the chat is true. Statements in disabled sections and groups are never asked. Put branches that change often late in the prompt, such as post-history instructions: a changed branch stops the provider's prompt cache from reusing everything after it.
 
 ## Markers
 
 A marker section is a slot the Engine fills. `isMarker: true` plus a `markerConfig.type`:
 
-`character`, `lorebook`, `persona`, `chat_history`, `chat_summary`, `id_macro_cards`, `world_info_before`, `world_info_after`, `dialogue_examples`, `agent_data`.
+`character`, `lorebook`, `persona`, `chat_history`, `chat_summary`, `current_scene_summary`, `recalled_scenes`, `recalled_messages`, `id_macro_cards`, `world_info_before`, `world_info_after`, `dialogue_examples`, `agent_data`.
+
+The three memory markers serve Advanced Memory Recall: `current_scene_summary` places the temporary summary of the earlier part of an ongoing scene; `recalled_scenes` places all recalled scene summaries, each followed by its message excerpt, and without an enabled marker that block appears before chat history; `recalled_messages` is a legacy placement that an enabled `recalled_scenes` marker overrides. Use `recalled_scenes` in new presets.
 
 Options: `characterFields[]` limits which card fields the `character` marker emits; `lorebookFormat` is `full` | `worldbook_only` | `character_only`; `chatHistoryOptions` takes `maxMessages` and `includeSystemMessages`; `agentType` names the agent for an `agent_data` marker.
 
@@ -97,7 +104,9 @@ The chosen `value` is substituted wherever `{{variableName}}` appears, and `defa
 
 The pattern this enables, seen in Marinara's own universal preset: a section whose entire content is one variable. `Role` is the string `You are {{role}}!` and `Guidelines` is just `{{guidelines}}` — the substance lives in the choice block's option values, several hundred words each, and the user picks one from a form instead of editing prompt text. Use it for the axes a user genuinely wants to switch (perspective, tense, response length, language, GM style) rather than for everything.
 
-`randomPick` picks for the user — useful for tone or weather variables that should vary run to run.
+`randomPick` picks for the user. On a multi-select variable it draws one of the selected options on every generation — useful for tone or weather that should vary run to run. On a single-select variable it only preselects a random option for each new chat, which then stays fixed until the user changes it.
+
+Option values are ordinary prompt text, so they can hold `{{#if decision:"…"}}` blocks (see `macros.md`). Only selected options are asked about; for a random-pick variable every option in the selected pool is. Preset variables also resolve in character greetings.
 
 ## Generation parameters
 
@@ -111,6 +120,7 @@ serviceTier: flex | priority | null
 assistantPrefill, assistantReasoningPrefill: string
 customThinkingTags: [{ open, close }]  max 20
 customParameters: {}       managedCustomParameters: { name: { enabled, value } }
+customHeaders?: { name: value }   ≤32 non-secret request headers; auth, transport, and provider-key headers are rejected
 enabledParameters: { temperature?, maxTokens?, topP?, topK?, frequencyPenalty?, presencePenalty?, reasoningEffort?, verbosity? }
 squashSystemMessages (true)  showThoughts (true)  useMaxContext (false)
 stopSequences: []            strictRoleFormatting (true)  singleUserMessage (false)

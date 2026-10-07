@@ -32,6 +32,10 @@ Every first-party template does the same five things, in roughly this order:
 
 **Enum in a string field.** `"action": "create|update|complete|fail"` inside the schema block, rather than a separate paragraph listing valid actions.
 
+## Incremental tracker output
+
+World State, Character Tracker, Custom Tracker, and Inventory Tracker now open their templates with a dual contract. When the Engine's context contains `tracker_incremental_updates: supported` (the Engine adds that line only for those four agent types), the agent returns only changed rows — `{"updates": [rows], "removed": ["existing identity"]}`, `{}` for no change, locked rows never touched. Without the marker, it falls back to the legacy full-array output. Do not use this protocol in a new package unless the Engine names that package's agent type, because the marker never appears for it; ship the full-output contract instead.
+
 ## Placeholders
 
 `{{key}}` interpolates. Two sources:

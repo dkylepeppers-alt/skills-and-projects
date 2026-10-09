@@ -12,7 +12,7 @@ Packages for the official catalog at `Pasta-Devs/Marinara-Agents`, consumed by M
 | `restartRequired` | `false` | `true` iff it has a server entrypoint |
 | Examples | prose-guardian, quest, world-state, cyoa | hierarchical-maps, conversation-calls, noodle, slurp2, quartermaster |
 
-A third kind, the **ruleset package** (`kind: ["ruleset"]`, e.g. `ruleset-5e-2014`), ships a validated `ruleset.json` data asset for Game Mode instead of an Agent: `entrypoints: {}`, no permissions, no restart, built by `scripts/build-ruleset-packages.mjs`. Its schema is the Engine's `ruleset.schema.ts` (documented in Engine `docs/extending/writing-rulesets.md`) and each optional block needs a minimum Capability API. It is out of scope for this skill; read those sources before attempting one.
+A third kind, the **ruleset package** (`kind: ["ruleset"]`, e.g. `ruleset-5e-2014`), ships a validated `ruleset.json` data asset for Game Mode instead of an Agent: `entrypoints: {}`, no permissions, no restart, its asset files declared in `contributions.assets.paths`, built by `scripts/build-ruleset-packages.mjs`. Its schema is the Engine's `ruleset.schema.ts` (documented in Engine `docs/extending/writing-rulesets.md`) and each optional block needs a minimum Capability API. It is out of scope for this skill; read those sources before attempting one.
 
 **Default to agent-only.** It is pure JSON — a prompt, a category, a phase, and some settings — and covers most of what people actually want. Only reach for a feature package when the behavior genuinely needs executable runtime, HTTP routes, or its own UI surface. If the user is describing behavior rather than infrastructure, they want agent-only; say so and build that.
 

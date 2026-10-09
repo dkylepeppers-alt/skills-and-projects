@@ -24,7 +24,7 @@ The first is the standard template export and the one to author. Whatever the de
 schemaVersion: 1                  literal
 ownerMode: "roleplay" | "game"
 enabled: boolean                  false for a template
-locations: SpatialLocation[]      max 500
+locations: SpatialLocation[]      max 5,000 (500 before Engine 2.5.0)
 startingLocationId: string|null
 revision: number                  0 for a fresh template
 ```
@@ -64,10 +64,10 @@ Beyond the field types, `validateSpatialContextDefinition` rejects:
 - parent cycles, or nesting deeper than 20 levels
 - self-links, links to a nonexistent target, duplicate link targets on one location
 - duplicate `lorebookEntryIds` on one location
-- more than 500 locations, more than 50 links on one location
+- more than 5,000 locations, more than 50 links on one location
 - a child of a `layers` parent with no `layerOrder`, or two siblings sharing one
 
-Limits live in `SPATIAL_CONTEXT_LIMITS`. The three that bite most often: the layer-order requirement, the parent cycle check, and link targets typo'd out of existence.
+Limits live in `SPATIAL_CONTEXT_LIMITS`. The location cap rose from 500 to 5,000 in Engine 2.5.0, and the Hierarchical Maps package applies the same ceiling. A map over 500 locations will not load on an older Engine, so check the user's version before shipping one that large. The three that bite most often: the layer-order requirement, the parent cycle check, and link targets typo'd out of existence.
 
 ## Hierarchy profile
 
@@ -89,7 +89,7 @@ Pick the hierarchy first — the tree is the map. `region → settlement → pla
 
 `childPresentation` is a decision per parent, not a global style:
 
-- **`map`** — children get `placement` coordinates and draw on a canvas. Use for a region's settlements or a town's buildings.
+- **`map`** — children get `placement` coordinates and draw on a canvas. Use for a region's settlements or a town's buildings. The canvas is square (a 100 × 100 grid), so a child-map background should be square artwork, for example 1024 × 1024 px.
 - **`layers`** — children are stacked levels and every one needs a unique `layerOrder`. Use for a building's floors.
 - **`list`** — children are a plain list. Use for rooms and anything where geography does not matter.
 

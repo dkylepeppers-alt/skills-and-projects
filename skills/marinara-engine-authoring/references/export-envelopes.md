@@ -25,7 +25,7 @@ Native lorebook and character exports use the `.marinara.json` suffix; the app p
 Each type that can leave Marinara offers two export formats:
 
 - **Marinara Native** — the envelope above. Keeps folders, Marinara-only entry fields, sprites, and galleries. Round-trips losslessly.
-- **Compatible JSON** — a foreign-format file (SillyTavern World Info, plain `chara_card_v2`). Marinara-only fields are dropped, folders are flattened.
+- **Compatible JSON** — a foreign-format file (SillyTavern World Info, plain `chara_card_v2`). Most Marinara-only fields are dropped and folders are flattened. Two deliberate exceptions: lorebook entries keep decision activation and embed images under `extensions.marinaraImages`, and cards fold `backstory` / `appearance` into `description`.
 
 Bulk lorebook export produces `marinara-lorebooks.zip` and always uses native format.
 
@@ -54,7 +54,8 @@ Native export is lossless for lorebooks and cards, but not universally:
 - A **preset** export carries no `parameters` — the importer hardcodes `parameters: {}`. Temperature, token limits, and penalties stay behind.
 - Preset **section** exports include `wrapInXml` and `xmlTagName`, which the importer ignores.
 - A **map template** drops chat-scoped image references; only Global Gallery references travel.
-- **Compatible JSON** exports drop every Marinara-only field by design.
+- **Compatible JSON** exports drop most Marinara-only fields by design (see above for the exceptions).
+- **Lorebook entry images** travel as embedded data URLs, capped at 64 MiB of images per export. A missing image file is skipped on export with a warning.
 
 ## Things that are not importable as files
 

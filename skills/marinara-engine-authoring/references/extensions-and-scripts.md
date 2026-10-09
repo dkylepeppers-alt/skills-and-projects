@@ -31,6 +31,8 @@ Two things constrain the pattern. `{{macros}}` are resolved *before* the pattern
 
 Exported scripts carry `name`, `enabled`, `findRegex`, `replaceString`, `trimStrings`, `placement`, `flags`, `promptOnly`, `applyMode`, `targetCharacterIds`, `minDepth`, `maxDepth`. `targetPromptPresetIds` and `order` are in the schema but absent from exports; omit them.
 
+In a Roleplay chat with Individual group mode, `prompt` and `both` scripts follow the character receiving the prompt: the responder's own replies count as `ai_output`, while the user's and other characters' messages count as `user_input`. `targetCharacterIds` still decides who gets the rewritten prompt.
+
 `applyMode` is the useful distinction. `display` cleans up what the user reads without touching what the model sees on the next turn; `prompt` does the opposite; `both` changes the message permanently. A script that strips an artifact from output should usually be `display` only, so the model still sees its own original text and stays consistent.
 
 ## Custom tools
@@ -48,6 +50,8 @@ Function-calling tools the model can invoke.
 | `includeHiddenContext` | `false` | |
 | `enabled` | `true` | |
 | `sortOrder` | optional | |
+
+Tools only reach the model on a tool-capable connection with **Enable Tool Use** on for the chat. Claude and Grok subscription transports ignore native tool definitions. In Game chats `search_lorebook` additionally needs **Let the GM search lore**.
 
 `description` does the real work — the model chooses tools by description, so name the trigger condition, not just the capability. `static` is the right default for anything that returns a constant or a lookup table; reach for `webhook` or `script` only when the result genuinely has to be computed.
 
@@ -71,6 +75,8 @@ The runtime split is enforced:
 CSS is byte-capped (shared with themes). Extension storage is capped at 1,000,000 bytes of JSON.
 
 Approval takes `{ contentHash: "sha256:<64 hex>", acknowledgeSandboxedCode: true, acknowledgeFullPageAccess?: true }`, and rollback targets a prior content hash. Contribution surfaces are `button`, `menu-item`, and `panel` placed in surfaces like `top-bar`, `chats`, `bots`, `characters`.
+
+Every runtime (browser, full-page, and server) gets `marinara.estimateTextTokens(text): number`, a synchronous model-agnostic estimate needing no capability. Guard with `typeof marinara.estimateTextTokens === "function"` for older Engines.
 
 Ask for the narrowest capability set that works. The full-page capability needs a second explicit acknowledgement for a reason.
 

@@ -20,8 +20,10 @@ Marinara's card is `chara_card_v2` with `spec_version: "2.0"`. The `data` object
 | `depth_prompt` | `{ prompt: "", depth: 4, role: "system" }` | a per-card note injected at depth |
 | `backstory` | `""` | Marinara field, surfaced by `{{backstory}}` |
 | `appearance` | `""` | Marinara field, surfaced by `{{appearance}}` |
+| `imageAppearanceEnabled`, `imageAppearance` | optional | when enabled, image prompts use `imageAppearance` instead of `appearance` — for a visual description that differs from the prose one |
 | `versioningEnabled` | `true` | keep card revisions and bump the visible version on edit |
 | `convoDisplayName`, `convoDisplayNameInCard`, `aboutMe`, `convoBehavior` | optional | Conversation mode only |
+| `rulesetSheets` | optional | Game Mode starting builds keyed by ruleset id. Size-bounded but not shape-checked; on import an unusable sheet is dropped with a warning rather than failing the card. Leave it out unless the user has a ruleset package installed and supplies a sheet |
 
 `convoBehavior` is `{ instruction, insertionStrategy }` where the strategy is one of `constant_before`, `constant_after`, `post_history_replace`, `post_history_before`, `post_history_after`, `macro`. Choosing `macro` means the text appears only where `{{convo_behavior}}` is placed.
 
@@ -29,17 +31,19 @@ Marinara's card is `chara_card_v2` with `spec_version: "2.0"`. The `data` object
 
 **Native export extras.** A `marinara_character` envelope's `data` may also carry `avatar` (data URL), `sprites[]`, `gallery[]`, and `metadata` (`createdAt`, `updatedAt`, `comment`). Omit them when authoring fresh — the card imports fine without an avatar, and the user can add art in the app.
 
+**Compatible exports fold in Marinara fields.** Compatible JSON and PNG exports append non-empty `backstory` and `appearance` to `description` and remove them from `extensions`, so other V2 readers keep that text. Native export keeps the fields separate. When converting a card that came out of Marinara as Compatible JSON, expect that text inside `description`.
+
 ## Personas
 
 The player-side card. Only `name` is required; everything else is optional.
 
-**Text fields:** `comment`, `creator`, `personaVersion`, `versioningEnabled`, `creatorNotes`, `phoneticName`, `description`, `personality`, `scenario`, `backstory`, `appearance`, `convoDisplayName`, `aboutMe`, `tags[]`, `savedStatusOptions[]`.
+**Text fields:** `comment`, `creator`, `personaVersion`, `versioningEnabled`, `creatorNotes`, `phoneticName`, `description`, `personality`, `scenario`, `backstory`, `appearance`, `imageAppearanceEnabled` / `imageAppearance` (image-prompt override, as on cards), `convoDisplayName`, `aboutMe`, `tags[]`, `savedStatusOptions[]`.
 
 `{{persona}}` expands to description, personality, backstory, appearance, and scenario joined by newlines; each also has its own macro.
 
 **Presentation:** `nameColor`, `dialogueColor`, `boxColor` accept a solid color or exactly one local CSS gradient — `url()`, `image()`, `expression()`, backslashes, semicolons and braces are rejected. `avatarCrop`, `trackerCardColors` (mode `default`/`chat`/`custom`, plus stat icons, opacities, portrait framing).
 
-**Stats:** `personaStats` is `{ enabled, bars[], rpgStats? }`. Bars are `{ name, value, max, color }`. `rpgStats` adds `{ enabled, attributes[], hp: { value, max }, pools[] }`. Every value/max pair is checked: `max` at least 1, `value` between 0 and `max`.
+**Stats:** `personaStats` is `{ enabled, bars[], rpgStats?, rulesetSheets? }`. Bars are `{ name, value, max, color }`. `rpgStats` adds `{ enabled, attributes[], hp: { value, max }, pools[] }`. Every value/max pair is checked: `max` at least 1, `value` between 0 and `max`.
 
 `createdAt` / `updatedAt` are accepted on create/import only, as an ISO string or an epoch number.
 

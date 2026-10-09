@@ -10,7 +10,9 @@ Packages for the official catalog at `Pasta-Devs/Marinara-Agents`, consumed by M
 | Built by | `scripts/build-agent-catalog.mjs` | `scripts/build-feature-packages.mjs` or `build-<id>-package.mjs` |
 | Needs Engine checkout | no | yes (`MARINARA_ENGINE_ROOT`) |
 | `restartRequired` | `false` | `true` iff it has a server entrypoint |
-| Examples | prose-guardian, quest, world-state, cyoa | hierarchical-maps, conversation-calls, noodle, slurp |
+| Examples | prose-guardian, quest, world-state, cyoa | hierarchical-maps, conversation-calls, noodle, slurp2, quartermaster |
+
+A third kind, the **ruleset package** (`kind: ["ruleset"]`, e.g. `ruleset-5e-2014`), ships a validated `ruleset.json` data asset for Game Mode instead of an Agent: `entrypoints: {}`, no permissions, no restart, its asset files declared in `contributions.assets.paths`, built by `scripts/build-ruleset-packages.mjs`. Its schema is the Engine's `ruleset.schema.ts` (documented in Engine `docs/extending/writing-rulesets.md`) and each optional block needs a minimum Capability API. It is out of scope for this skill; read those sources before attempting one.
 
 **Default to agent-only.** It is pure JSON — a prompt, a category, a phase, and some settings — and covers most of what people actually want. Only reach for a feature package when the behavior genuinely needs executable runtime, HTTP routes, or its own UI surface. If the user is describing behavior rather than infrastructure, they want agent-only; say so and build that.
 
@@ -38,6 +40,8 @@ Two rules the validator enforces that trip people up:
 
 - **`pre_generation`** — runs before the main model replies and injects into its prompt. Directors, retrieval, routers, anything that shapes the coming response.
 - **`post_processing`** — runs on the finished reply. Trackers, auditors, rewriters, illustrators. This is the common case.
+
+Catalog descriptions are now written in plain, user-facing language — what the user gets, not the mechanism ("Keeps track of your quests, their goals, and their rewards."). Match that tone in new `description` text.
 - **`parallel`** — runs alongside generation without gating it. Ambient stuff (combat, echo-chamber).
 
 `resultType: "text_rewrite"` is what makes a post-processing agent replace the message instead of just recording state. Only Continuity Checker, Prose Guardian, and Immersive HTML use it. If your agent is not literally editing the assistant's prose, leave it off.
@@ -70,7 +74,7 @@ Generated and never hand-edited: `locales/en.json`, `manifest.files[]` hashes an
 
 - Base everything on `staging` and open an issue before implementing a new package.
 - Every published package needs a README row in its correct category table, or catalog validation fails.
-- Adding a package changes the count assertion near the end of `validate-catalog.mjs`. Update it in the same PR.
+- Adding a published package changes the count assertion near the end of `validate-catalog.mjs` (agent-only, feature, and ruleset counts; staging-only packages are not counted). Update it in the same PR.
 - Permissions are narrowly scoped and justified. An agent-only package needs no more than `agent-runtime`, `chat-read`, `prompt-context`, `storage`, `ui` — and often fewer. `network` and `routes` on a JSON-only package are a red flag.
 - About Me is a core Conversation feature and must never be published as an agent package.
 - Never invent Engine behavior. If a field, tool, or context tag is not observably used by an existing package in the repo, check before relying on it.

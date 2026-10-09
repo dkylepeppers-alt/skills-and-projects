@@ -8,6 +8,7 @@
  * Engine checkout. See README.md in this directory for setup.
  */
 import { readFileSync } from "node:fs";
+import Module from "node:module";
 import { resolve } from "node:path";
 
 const engineRoot = process.env.MARINARA_ENGINE_ROOT;
@@ -27,6 +28,7 @@ let spatialSchemas: any;
 let promptSchemas: any;
 let regexSchemas: any;
 let hierarchyProfileSchema: any = null;
+let mapsModelError: string | null = null;
 let failures = 0;
 
 function report(label: string, result: { success: boolean; error?: any }) {
@@ -56,6 +58,35 @@ function unwrap(raw: any): { kind: string; payload: any } {
   return { kind: "unknown", payload: raw };
 }
 
+/** The importer's accepted signatures (isAllowedImageBuffer, limited to lorebook types). */
+function imageMime(bytes: Buffer): string | null {
+  if (bytes.length >= 8 && bytes.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a])))
+    return "image/png";
+  if (bytes.length >= 3 && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return "image/jpeg";
+  if (bytes.length >= 12 && bytes.subarray(0, 4).toString("ascii") === "RIFF" && bytes.subarray(8, 12).toString("ascii") === "WEBP")
+    return "image/webp";
+  return null;
+}
+
+/** Mirrors the importer's decodeLorebookImages, which rejects the whole book on any failure. */
+function imageProblem(images: unknown): string | null {
+  if (images === undefined || images === null) return null;
+  if (!Array.isArray(images)) return "must be an array";
+  if (images.length > 4) return "at most 4 images per entry";
+  for (const image of images) {
+    const { dataUrl, caption = "" } = (image ?? {}) as Record<string, unknown>;
+    if (typeof caption !== "string" || caption.length > 500) return "caption must be a string of at most 500 characters";
+    if (typeof dataUrl !== "string") return "each image needs a dataUrl (exports embed bytes, not paths)";
+    const match = /^data:(image\/(?:png|jpeg|webp));base64,([A-Za-z0-9+/]+={0,2})$/.exec(dataUrl);
+    if (!match) return "dataUrl must be base64 PNG, JPEG, or WebP";
+    const bytes = Buffer.from(match[2]!, "base64");
+    if (bytes.toString("base64") !== match[2]) return "dataUrl base64 is not canonical";
+    if (bytes.length > 5 * 1024 * 1024) return "image larger than 5 MB";
+    if (imageMime(bytes) !== match[1]) return `bytes are not a valid ${match[1]}`;
+  }
+  return null;
+}
+
 function validateLorebook(data: any) {
   report("lorebook", lorebookSchemas.createLorebookSchema.safeParse(data.lorebook));
   for (const [index, folder] of (data.folders ?? []).entries()) {
@@ -64,7 +95,14 @@ function validateLorebook(data: any) {
   }
   const folderIds = new Set((data.folders ?? []).map((folder: any) => folder.id));
   for (const [index, entry] of (data.entries ?? []).entries()) {
-    const { folderId, ...rest } = entry;
+    const { folderId, images, ...rest } = entry;
+    // Exports embed images as data URLs; the schema only knows server paths. Mirror
+    // the importer, where one bad image fails the whole book.
+    const badImage = imageProblem(images);
+    if (badImage) {
+      failures += 1;
+      console.log(`  FAIL  entry[${index}] images: ${badImage} — the whole lorebook import will fail`);
+    }
     report(
       `entry[${index}] ${entry.name ?? ""}`,
       lorebookSchemas.createLorebookEntrySchema.safeParse({ ...rest, lorebookId: "validation", folderId: null }),
@@ -82,7 +120,13 @@ function validateMap(raw: any) {
   const profile = raw?.hierarchyProfile ?? raw?.data?.hierarchyProfile;
   if (!profile) return;
   if (!hierarchyProfileSchema) {
-    console.log("  skip  hierarchyProfile (set MARINARA_AGENTS_ROOT to check it)");
+    if (mapsModelError) {
+      // A configured checkout that cannot be loaded must not read as a pass.
+      failures += 1;
+      console.log(`  FAIL  hierarchyProfile not checked: maps model failed to load (${mapsModelError})`);
+    } else {
+      console.log("  skip  hierarchyProfile (set MARINARA_AGENTS_ROOT to check it)");
+    }
     return;
   }
   report("hierarchyProfile", hierarchyProfileSchema.safeParse(profile));
@@ -239,10 +283,19 @@ async function main() {
       agentsRoot,
       "packages/hierarchical-maps/src/engine/packages/maps-shared/src/maps-model.js",
     );
+    // The maps model imports runtime values from `@marinara-engine/shared`, which a
+    // plain checkout cannot resolve. Point that specifier at the Engine's shared source.
+    const sharedIndex = resolve(engineRoot, "packages/shared/src/index.ts");
+    const moduleInternals = Module as unknown as { _resolveFilename: (request: string, ...rest: unknown[]) => string };
+    const resolveFilename = moduleInternals._resolveFilename;
+    moduleInternals._resolveFilename = function (request, ...rest) {
+      return resolveFilename.call(this, request === "@marinara-engine/shared" ? sharedIndex : request, ...rest);
+    };
     try {
       ({ spatialHierarchyProfileSchema: hierarchyProfileSchema } = await import(mapsModel));
-    } catch {
-      console.warn("! Could not load the maps model; hierarchy profiles will be skipped.");
+    } catch (error) {
+      mapsModelError = (error as Error).message.split("\n")[0]!;
+      console.warn(`! Could not load the maps model from MARINARA_AGENTS_ROOT: ${mapsModelError}`);
     }
   }
 

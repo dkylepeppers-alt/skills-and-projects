@@ -18,6 +18,7 @@ File shape: the `marinara_lorebook` envelope with `data: { lorebook, entries[], 
 | `maxRecursionDepth` | `3` | 1–10 |
 | `excludeFromVectorization` | `true` | book-level semantic-search opt-out |
 | `vectorQueryDepth`, `vectorScoreThreshold`, `vectorMaxResults` | 10 / 0.3 / 10 | semantic search tuning |
+| `vectorIncludeAssistant` | `false` | include assistant messages in the semantic-search query |
 | `characterId` / `characterIds` | `null` / `[]` | mutually exclusive — using both is a validation error |
 | `personaId` / `personaIds` | `null` / `[]` | same rule |
 | `chatId` | `null` | chat-scoped book |
@@ -86,6 +87,21 @@ Recursion also needs `recursiveScanning: true` on the book. A "recursion seed" t
 
 `group` (only one entry per group activates), `groupWeight`, `tag` (free-text label), `locked` (blocks the Lorebook Keeper agent from editing it), `constant` (always active, no keys), `enabled`, `excludeFromVectorization`.
 
+**Decision activation** (Engine 2.5.0+)
+
+`decisionStatement` (≤500 chars) plus `decisionMode`: `off` (default) | `require` | `trigger`. The statement is a true/false claim about the recent chat, answered by the user's **Decision model**.
+
+- `require` — the entry still needs its ordinary route (keys, `constant`, semantic match, attached map location) *and* a yes. Filters passing mentions, or makes a `constant` entry situational.
+- `trigger` — a yes is an extra route in, even with no key match. Catches paraphrases and situations.
+
+No Decision model, or no answer, reads as no: `require` admits nothing new and `trigger` adds nothing. Never gate lore the story depends on behind `require`, and give important `trigger` entries ordinary keys too. The entry's own `sticky` / `cooldown` hold or rest the statement without asking again. Write statements as observable facts about the latest message, naming who — "In the latest message, a dragon is physically present", not "Is there a dragon?". `{{user}}` / `{{char}}` work inside the statement. Decision activation only applies to chat turns; game setup and agents' own lorebook scans read it as no.
+
+On import an unknown `decisionMode` silently becomes `off` and the statement is cut to 500 characters, so a typo just disables the feature. This is distinct from a `{{#if decision:"…"}}` block inside `content`, which trims the text of an entry that already activated (see `macros.md`).
+
+**Images** (Engine 2.5.0+)
+
+`images[]` — up to 4 reference images sent to the model whenever the entry activates. In the database each is `{ path, caption }` with a server-generated path; in an export file each is `{ dataUrl, caption }`, a base64 PNG, JPEG, or WebP of at most 5 MB with a caption of at most 500 characters. The importer verifies every image's bytes before creating anything, and **one bad image fails the whole lorebook import**. When authoring offline, leave `images` as `[]` and attach art in the app, unless you have real image files to embed.
+
 **Structured extras**
 
 `relationships` (string→string map), `dynamicState` (free-form record), `activationConditions[]` (`{ field, operator, value }` with operators `equals`, `not_equals`, `contains`, `not_contains`, `gt`, `lt`), `schedule` (`{ activeTimes[], activeDates[], activeLocations[] }`, or `null`).
@@ -96,9 +112,11 @@ Recursion also needs `recursiveScanning: true` on the book. A "recursion seed" t
 - **Mutual exclusion.** Variants of the same fact share a `group` and split `groupWeight`; only one fires. Add `cooldown` so the choice holds for a few turns instead of flickering.
 - **Rules through an Outlet.** Narration constraints belong in a prompt section via `{{outlet::name}}`, not injected at position 0 where they compete with lore for budget.
 - **Sticky for scene facts.** A fact that must survive a few turns after its keyword stops appearing.
+- **Situational constants.** A `constant` entry with `decisionMode: "require"` — combat rules with "A fight is happening in the latest message" — stays out of the prompt on quiet turns, though its statement is asked each turn. Pair it with `sticky` so it holds through the scene without being asked again.
+- **Shared text in one place.** `{{include::Entry name}}` pastes another entry's content from the same book, even a disabled one, so boilerplate can live in a single "include-only" entry. See `macros.md`.
 
 ## Differences from SillyTavern
 
-Marinara reads ST World Info and the V2 `character_book`, mapping fields onto its own. It adds, with no ST equivalent: Outlet position and `outletName`, entry folders, `ephemeral`, `activationConditions`, `schedule`, `relationships`, `dynamicState`, `locked`, `additionalMatchingSources`, `generationTriggerFilters`, and per-entry vector settings. All of those are dropped by Compatible JSON export.
+Marinara reads ST World Info and the V2 `character_book`, mapping fields onto its own. It adds, with no ST equivalent: Outlet position and `outletName`, entry folders, `ephemeral`, `activationConditions`, `schedule`, `relationships`, `dynamicState`, `locked`, `additionalMatchingSources`, `generationTriggerFilters`, per-entry vector settings, decision activation, and entry images. Compatible JSON export drops most of them. The exception: it writes `decisionStatement` / `decisionMode` on each entry and the images under `extensions.marinaraImages`, which SillyTavern ignores and Marinara reads back on import.
 
 After importing, semantic search needs its vectors rebuilt; keyword activation works immediately.

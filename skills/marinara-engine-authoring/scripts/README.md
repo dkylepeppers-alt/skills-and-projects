@@ -37,7 +37,7 @@ Artifact type is detected from the envelope `type`, or from the shape for bare p
 
 | Artifact | Checks |
 |---|---|
-| Lorebook | book settings, every folder, every entry, plus `folderId` values that name no folder in the file |
+| Lorebook | book settings, every folder, every entry, plus `folderId` values that name no folder in the file, and embedded entry images (count, caption, canonical base64, decoded size, and that the bytes really are the declared PNG/JPEG/WebP) — one bad image fails the whole import |
 | Map | the full definition including all structural rules (parent cycles, dangling links, layer ordering, depth and count limits), the hierarchy profile, and cross-references between `locationTypeIds`, the type list, and the location list |
 | Character | the V2 card |
 | Persona | persona create input |
@@ -49,6 +49,12 @@ The lorebook `folderId` and map cross-reference checks are additions on top of t
 Custom tools, personal extensions, and themes are not wired up, because none of them are authored as standalone import files — they are created through the app. The harness reports them as unrecognized. Adding one is a few lines: import the schema from the same directory and add a `case`.
 
 Preset and regex validation mirrors the importer rather than the create path, because that is what actually runs on an imported file. Two consequences worth knowing: booleans are coerced as `x === true || x === "true"`, so a missing `enabled` is treated as **false**; and JSON-string fields (`sectionOrder`, `variableGroups`, `options`, …) are accepted in either form, since real exports serialize them as strings.
+
+The decision fields are checked against the edit schema, so an unknown `decisionMode` fails here even though the importer would silently turn it into `off`. Treat that failure as real: the feature would be disabled.
+
+Since the Agents repo's maps model began importing runtime values from `@marinara-engine/shared`, the harness redirects that specifier to the Engine checkout's `packages/shared/src/index.ts`. Without `MARINARA_AGENTS_ROOT`, hierarchy profiles are skipped. With it set, a maps model that fails to load counts as a failure for every map carrying a profile, so a broken checkout never reads as a pass.
+
+Last checked against Engine `c56501495a8b` (v2.5.0 line) and Agents `e816c5ba9bf7`, October 2026: all templates pass.
 
 ## When it disagrees with the app
 

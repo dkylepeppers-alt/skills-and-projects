@@ -1,6 +1,6 @@
 # `agents.json` and `manifest.json` field reference
 
-Derived from the 37 packages in `Pasta-Devs/Marinara-Agents`. Values listed are the ones actually in use; anything outside them is unproven.
+Derived from the 42 package directories in `Pasta-Devs/Marinara-Agents` (41 with an `agents.json`; the ruleset package has none). Values listed are the ones actually in use; anything outside them is unproven.
 
 ## agents.json
 
@@ -57,17 +57,18 @@ Required: `schemaVersion`, `id`, `name`, `version`, `engine`, `kind`, `entrypoin
 
 | Field | Notes |
 |---|---|
-| `schemaVersion` | `1` for agent-only. `2` additionally requires `capabilityApi` and `builtAgainst`, and forbids them when `1`. |
+| `schemaVersion` | `1` for agent-only. `2` additionally requires `capabilityApi` (`{ major, minor }`) and `builtAgainst` (`{ engineVersion, engineCommit }`), and forbids them when `1`. |
 | `id` | `^[a-z0-9]+(?:-[a-z0-9]+)*$`, ≤80 chars, equals the directory name |
 | `version` | semver |
 | `description` | ≤2000 chars. Builder appends the activation sentence from `catalog-package-guidance.mjs`. |
-| `engine` | `{ "min": "2.3.0", "maxExclusive": "4.0.0" }` — this range alone decides which catalog lanes the package publishes into |
-| `kind` | array from `agent`, `maps`, `conversation-calls`, `turn-game`. Agent-only: `["agent"]`. |
+| `engine` | `{ "min": "2.3.0", "maxExclusive": "4.0.0" }` — this range alone decides which catalog lanes the package publishes into. Minimums in use run from `2.3.0` to `2.4.6`; raise it only when the package needs newer Engine behavior |
+| `kind` | array from `agent`, `maps`, `conversation-calls`, `ruleset`, `turn-game`. Agent-only: `["agent"]`. |
 | `entrypoints` | agent-only: `{ "agents": "agents.json" }`. A `server` or `client` entrypoint makes the agent-catalog builder skip the package entirely. |
 | `files` | **generated** — path/sha256/bytes per declared file |
 | `permissions` | subset of `agent-runtime`, `chat-read`, `chat-write`, `network`, `prompt-context`, `routes`, `storage`, `ui` |
 | `restartRequired` | must equal `Boolean(entrypoints.server)`. `false` for agent-only. |
 | `localizations` | optional inline name/description overrides per locale |
+| `contributions` | slots, assets, Home tabs, Game Mode setup. Feature packages use it, and so do ruleset packages: `contributions.assets.paths` must list `ruleset.json` and every `catalogs/<id>.json`, because the ruleset builder reads it to hash and zip them. Deliberately an open object in the catalog schema — the Engine owns the contract and grows it per Capability API. Agent-only packages omit it |
 
 Cross-checks the validator runs: a `client` entrypoint requires the `ui` permission; `maps` requires `routes` plus four contribution slots; every entrypoint and contributed asset path must appear in `files`; declared hashes and sizes must match both the working tree and the ZIP.
 

@@ -1,12 +1,16 @@
 # Hierarchical maps (spatial context)
 
+Verified against **Engine v2.5.1**, commit `8042ef6ec638801de45b8d82f82cd2dea85f51a4`, and **World Maps 1.3.1** in Agents commit `0d97d8520dfd7ae9ec0d5e2a7f016b9b233e78e3` (2026-10-20). Engine sources: [schema](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/schemas/spatial-context.schema.ts), [structural validator](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/utils/spatial-context.ts). Agents sources: [model](https://github.com/Pasta-Devs/Marinara-Agents/blob/0d97d8520dfd7ae9ec0d5e2a7f016b9b233e78e3/packages/hierarchical-maps/src/engine/packages/maps-shared/src/maps-model.ts), [library importer](https://github.com/Pasta-Devs/Marinara-Agents/blob/0d97d8520dfd7ae9ec0d5e2a7f016b9b233e78e3/packages/hierarchical-maps/src/engine/packages/client/src/features/spatial-context/SpatialMapLibrary.tsx), [workspace exporter/artwork parser](https://github.com/Pasta-Devs/Marinara-Agents/blob/0d97d8520dfd7ae9ec0d5e2a7f016b9b233e78e3/packages/hierarchical-maps/src/engine/packages/client/src/features/spatial-context/SpatialMapWorkspace.tsx), [portable lore parser](https://github.com/Pasta-Devs/Marinara-Agents/blob/0d97d8520dfd7ae9ec0d5e2a7f016b9b233e78e3/packages/hierarchical-maps/src/engine/packages/client/src/features/spatial-context/portable-lore.ts).
+
+This is the World Maps Agent's hierarchy. Game Mode's generated worlds, `.world.json`, tile packs and battlefield art use different contracts; see [game-content.md](game-content.md).
+
 Two owners: the **definition** schema is Engine-side at `packages/shared/src/schemas/spatial-context.schema.ts`, with structural validation in `packages/shared/src/utils/spatial-context.ts`. The **hierarchy profile** and the portable-lore bundle belong to the Hierarchical Maps package, vendored in the Agents repo at `packages/hierarchical-maps/src/engine/packages/maps-shared/src/maps-model.ts`.
 
 Template: `templates/map-template.json` — validated against both schemas.
 
 ## What the importer accepts
 
-The map library import (`SpatialMapLibrary.tsx`) parses the file, then looks for a definition in this order: `record.data.definition` → `record.definition` → the whole file. So all three of these work:
+The map library import (`SpatialMapLibrary.tsx`) parses JSON, takes `record.data` if it is an object (otherwise `record`), then uses that object's `definition` if present, otherwise the whole file. Do not supply an unrelated object-valued `data`: it shadows a top-level `definition`. These three ordinary shapes work:
 
 ```json
 { "version": 1, "definition": { … }, "hierarchyProfile": { … } }
@@ -14,7 +18,7 @@ The map library import (`SpatialMapLibrary.tsx`) parses the file, then looks for
 { "schemaVersion": 1, "ownerMode": "roleplay", … }
 ```
 
-The first is the standard template export and the one to author. Whatever the definition fails on, the user sees only "This is not a valid map file", so validate before handing the file over.
+The first is the minimal reusable template shape in this skill. The current workspace export is a `.world-map.json` with `{ format: "marinara-hierarchical-map", formatVersion: 4, name, definition, hierarchyProfile, portableLore, artwork? }`. Older `.hierarchical-map.json` files remain importable. Do not wrap either in a generic `.marinara.json` content envelope. The library discriminates by the definition's schema, not the filename or a required `format` value, and reports the first schema issue. Validate before handing the file over.
 
 ## Definition
 
@@ -42,7 +46,7 @@ revision: number                  0 for a fresh template
 | `description` | yes | ≤4,000 — what the player sees |
 | `modelMemory` | no | ≤8,000 — private context for the model only |
 | `awarenessSummary` | no | ≤1,000 — one line used for nearby-place awareness |
-| `icon` | no | ≤64, a kebab-case Lucide name |
+| `icon` | no | Engine accepts a nonempty string ≤64; current Maps authoring uses one emoji grapheme (manual input ≤16), not a Lucide name |
 | `lorebookEntryIds` | defaults `[]` | max 50, no duplicates; real entry IDs only |
 | `childPresentation` | defaults `"list"` | `map` \| `layers` \| `list` |
 | `placement` | no | `{ x, y }`, each 0–100, for children of a `map` parent |
@@ -50,7 +54,7 @@ revision: number                  0 for a fresh template
 | `links` | defaults `[]` | max 50 |
 | `status` | defaults `"active"` | `active` \| `archived` |
 | `sortOrder` | defaults `0` | integer |
-| `referenceImageId`, `useReferenceImage`, `mapBackgroundImageId`, `mapBackgroundPosition` | no | image bindings; only Global Gallery references survive a template export |
+| `referenceImageId`, `useReferenceImage`, `mapBackgroundImageId`, `mapBackgroundPosition` | no | Gallery image bindings; IDs ≤200, position `{x,y}` at 0–100; portable artwork is separate from a reusable template |
 
 Links are `.strict()`: `{ targetId, label?, bidirectional (default false), state (default "available") }`, state being `available` | `hidden` | `blocked`.
 
@@ -59,7 +63,7 @@ Links are `.strict()`: `{ targetId, label?, bidirectional (default false), state
 Beyond the field types, `validateSpatialContextDefinition` rejects:
 
 - duplicate location IDs
-- `startingLocationId` that is missing or points at an archived location
+- non-null `startingLocationId` that is missing or points at an archived location (null is schema-valid; enabling a usable map requires an active start in the UI)
 - a location that is its own parent, or a `parentId` that does not exist
 - parent cycles, or nesting deeper than 20 levels
 - self-links, links to a nonexistent target, duplicate link targets on one location
@@ -75,13 +79,13 @@ Limits live in `SPATIAL_CONTEXT_LIMITS`. The location cap rose from 500 to 5,000
 version: 1
 mode: "auto" | "template" | "custom"
 name: string (1–120)
-types: [{ id, label (≤80), baseKind, description? }]   1–40, ids unique
-locationTypeIds: { "<locationId>": "<typeId>" }         every value must name a real type
-showConnections: boolean
-linkPresentations: { "<a>::<b>": { color: "#rrggbb", lineStyle } }
+types: [{ id, label (≤80), baseKind, description? (≤240) }]   1–40, ids unique
+locationTypeIds: { "<locationId>": "<typeId>" }         defaults {}, values must name real types
+showConnections: boolean                             defaults true
+linkPresentations: { "<a>::<b>": { color?, lineStyle? } }   defaults {}
 ```
 
-Types are the display layer over `kind`. Assign every location a type; the default template gives one type per base kind (`type_region` … `type_room`).
+Types are the display layer over `kind`; IDs use the location-ID character pattern but max 80 characters. `color` is `#rrggbb`; `lineStyle` is `solid`, `dashed` or `dotted`. Assign every location a type for predictable display; the default template gives one type per base kind (`type_region` … `type_room`). Missing assignments are valid and normalization fills them by base kind (then the first type). The profile schema checks type IDs, not whether every location key exists in the definition; normalize/validate against the definition as well.
 
 ## Authoring a map by hand
 
@@ -95,13 +99,29 @@ Pick the hierarchy first — the tree is the map. `region → settlement → pla
 
 The three text fields do different jobs. `description` is prose the player reads. `awarenessSummary` is the one-liner shown when the place is merely nearby, so keep it short and non-spoiling. `modelMemory` is private — put the secret the room is hiding here, not in `description`.
 
-Link `state` is how a map holds a secret. A passage the player has not found is `hidden`; one they know about but cannot use is `blocked`. Both are real locations with real links, which means the model can reveal them at the right moment without the map being edited mid-scene.
+Link `state` controls traversal. A passage the player has not found is `hidden`; one they know about but cannot use is `blocked`. Only `available` links to active locations are offered as destinations. Parent/child travel and available links form routes (maximum 64 locations); hidden/blocked links require an authoritative state update before they become traversable. Do not promise that visible AI narration alone reveals a link or moves the marker.
 
 ## Cross-linking lore
 
 `lorebookEntryIds` needs entry IDs that only exist after the lorebook is imported, so an offline-authored map ships with empty arrays and gets linked in the app.
 
-The alternative is the **portable lore bundle** the workspace produces on export — `{ schemaVersion: 1, mode, books[], entries[], references[] }`, where `mode` is `map-only`, `linked-entries`, or `complete-lorebooks`. On import Marinara matches each entry against existing ones by exact ID, then by content fingerprint, and either reuses or creates. It is a real interchange format, but it is produced by the app's exporter; hand-building one is not worth it compared to importing the lorebook and the map separately and linking once.
+The alternative is the **portable lore bundle** the workspace produces on export — `{ schemaVersion: 1, mode, books[], references[] }`, with entries and folders **nested inside each book**, not a top-level `entries` array. `mode` is `map-only`, `linked-entries`, or `complete-lorebooks`. A book holds `{key, originalId, name, settings, folders, entries}`. Entry records hold `{key, originalId, name, folderKey, fingerprint, data}`; references tie a location to an entry key and readable original-book/entry provenance.
+
+`parsePortableLoreBundle` rejects unsupported versions/modes, duplicate book/entry identifiers, missing folder/entry references, more than 100 books or 10,000 references, or more than 20,000 entries/5,000 folders in one book. `map-only` must have no books. A malformed supplied `portableLore` rejects the map import; missing portable lore is fine. Use the app exporter for this format and validate embedded entry content against the lorebook contract too.
+
+Restoring lore is reviewed. Exact IDs are authoritative only within the destination lorebook; IDs from another book require a choice. Otherwise one unique complete-content/settings fingerprint can be reused. Names alone never match. The user can reuse matches and import the rest, choose an ambiguous destination, or import separate collision-safe copies. Map-only exports preserve provenance/existing exact links but cannot recreate missing books. Created books survive map deletion.
+
+Linked lore applies at the **exact current location**, not its descendants. It bypasses keyword matching, while enabled state, chat exclusions, conditions, timing, probability and token budgets still apply.
+
+## Artwork and shared worlds
+
+`createSpatialMapTemplateData` makes a reusable template with `ownerMode: "roleplay"`, `enabled: false`, `revision: 0`. It drops chat-owned artwork bindings while preserving `global-gallery:<id>` references. A template reference is not an embedded image and is not portable to another account by itself.
+
+The separate workspace export can include referenced chat and Global Gallery artwork at top-level `artwork`: records contain `sourceImageId`, `filename`, an image data URL in `data`, plus prompt/provider/model and nullable width/height metadata. Supported data-URL image types are JPEG, PNG, GIF, WebP and AVIF. `parseBundledArtwork` skips malformed records and deduplicates source IDs (last accepted record wins); it does not strictly reject the whole file like the definition parser. Import restores referenced images and remaps IDs; library imports restore them into Global Gallery, while chat imports can restore chat-owned images to that chat. Prefer the app exporter rather than inventing Gallery IDs.
+
+Templates make independent copies. Shared worlds instead keep an account-owned canonical hierarchy/artwork set. Each linked chat retains its own location, history, snapshots, Game bindings and unpublished changes; publishing is a reviewed revision/conflict operation. A portable map file does not establish a shared-world link or carry a campaign's travel history.
+
+After importing into a workspace, review and save before treating the map as authoritative. Preserve existing location IDs in a campaign with history or Game bindings. Archive protected locations; do not edit JSON to bypass the UI's permanent-deletion safeguards.
 
 ## Related
 

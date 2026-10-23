@@ -1,0 +1,56 @@
+{
+  "type": "marinara_preset",
+  "version": 1,
+  "exportedAt": "2026-10-23T00:00:00.000Z",
+  "data": {
+    "preset": {
+      "name": "Grounded Roleplay",
+      "description": "A minimal v2.5.1 preset with a choice, group, plain section and markers.",
+      "conversationPrompt": "Respond naturally to {{user}}.",
+      "gamePrompt": "Narrate the situation using the active Game rules and state.",
+      "wrapFormat": "xml",
+      "scopedRegexMode": "disabled",
+      "sectionOrder": ["scene-rules", "character", "history"],
+      "groupOrder": ["context"],
+      "variableGroups": [],
+      "variableValues": {},
+      "defaultChoices": { "tone": "grounded" },
+      "author": ""
+    },
+    "groups": [
+      { "id": "context", "name": "Context", "parentGroupId": null, "order": 0, "enabled": true }
+    ],
+    "sections": [
+      {
+        "id": "scene-rules", "identifier": "scene_rules", "name": "Scene rules",
+        "content": "{{#if tone == grounded}}Use concrete actions and consistent spatial detail.{{else}}Use heightened dramatic detail.{{/if}}",
+        "role": "system", "enabled": true, "isMarker": false, "groupId": "context", "markerConfig": null,
+        "injectionPosition": "ordered", "injectionDepth": 0, "injectionOrder": 100,
+        "forbidOverrides": false, "skipWrap": true
+      },
+      {
+        "id": "character", "identifier": "character", "name": "Character",
+        "content": "", "role": "system", "enabled": true, "isMarker": true, "groupId": "context",
+        "markerConfig": { "type": "character" }, "injectionPosition": "ordered",
+        "injectionDepth": 0, "injectionOrder": 100, "forbidOverrides": false, "skipWrap": false
+      },
+      {
+        "id": "history", "identifier": "chat_history", "name": "Chat history",
+        "content": "", "role": "system", "enabled": true, "isMarker": true, "groupId": null,
+        "markerConfig": { "type": "chat_history" }, "injectionPosition": "ordered",
+        "injectionDepth": 0, "injectionOrder": 100, "forbidOverrides": false, "skipWrap": false
+      }
+    ],
+    "choiceBlocks": [
+      {
+        "variableName": "tone", "question": "Choose the narrative tone",
+        "options": [
+          { "id": "grounded", "label": "Grounded", "value": "grounded" },
+          { "id": "heightened", "label": "Heightened", "value": "heightened" }
+        ],
+        "multiSelect": false, "separator": ", ", "randomPick": false,
+        "displayMode": "auto", "optionSort": "manual"
+      }
+    ]
+  }
+}

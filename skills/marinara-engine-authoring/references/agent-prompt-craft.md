@@ -14,6 +14,8 @@ Every first-party template does the same five things, in roughly this order:
 
 `Respond ONLY with valid JSON.` appears near the top or bottom of every structured agent. Keep it.
 
+Bind the output contract to an actual result handler. A new package id and a plausible JSON schema do not add a new tracker parser. Check the targeted Engine's result dispatch before copying the generic tracker template; for a rewriter, set `defaultSettings.resultType: "text_rewrite"` and emit that handler's exact shape. For in-app custom Agents, use `settings.resultType` and the matching approved `settings.customCapabilities`; the separate custom import contract is in [agent-definition.md](agent-definition.md). Engine v2.5.1 deprecates package definitions' top-level `resultType` in favor of `defaultSettings.resultType` ([pinned schema](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/schemas/capability-package.schema.ts)).
+
 ## Patterns worth copying
 
 **Exact-name matching.** When updates key off a name, say so in capitals — Quest: copy `questName` EXACTLY as it appears, do not reword, recapitalize, or paraphrase, "or you will create a duplicate instead of updating." Naming the failure consequence works better than the instruction alone.

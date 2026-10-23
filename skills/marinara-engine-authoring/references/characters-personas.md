@@ -1,5 +1,7 @@
 # Characters and personas
 
+Checked against Engine **v2.5.1**, commit `8042ef6ec638801de45b8d82f82cd2dea85f51a4`, 2026-10-23. Release notes: [v2.5.1](https://github.com/Pasta-Devs/Marinara-Engine/releases/tag/v2.5.1).
+
 Schemas: `packages/shared/src/schemas/character.schema.ts`, `persona.schema.ts`. Templates: `templates/character.marinara.json`, `templates/persona.marinara.json` (both parsed by the real schemas).
 
 ## Character cards
@@ -8,7 +10,7 @@ Marinara's card is `chara_card_v2` with `spec_version: "2.0"`. The `data` object
 
 **Core fields** (all default to `""` or `[]` except `name`, which is required):
 
-`name`, `description`, `personality`, `scenario`, `first_mes`, `mes_example`, `creator_notes`, `system_prompt`, `post_history_instructions`, `tags[]`, `creator`, `character_version` (default `"1.0"`), `alternate_greetings[]`.
+`name`, `summary` (trimmed, ≤500 characters), `description`, `personality`, `scenario`, `first_mes`, `mes_example`, `creator_notes`, `system_prompt`, `post_history_instructions`, `tags[]`, `creator`, `character_version` (default `"1.0"`), `alternate_greetings[]`.
 
 **`extensions`** — where Marinara's additions live:
 
@@ -23,33 +25,55 @@ Marinara's card is `chara_card_v2` with `spec_version: "2.0"`. The `data` object
 | `imageAppearanceEnabled`, `imageAppearance` | optional | when enabled, image prompts use `imageAppearance` instead of `appearance` — for a visual description that differs from the prose one |
 | `versioningEnabled` | `true` | keep card revisions and bump the visible version on edit |
 | `convoDisplayName`, `convoDisplayNameInCard`, `aboutMe`, `convoBehavior` | optional | Conversation mode only |
+| `onboarding` | optional | Interactive persona/card questions; absent or disabled means no onboarding. See the concrete contract below |
 | `rulesetSheets` | optional | Game Mode starting builds keyed by ruleset id. Size-bounded but not shape-checked; on import an unusable sheet is dropped with a warning rather than failing the card. Leave it out unless the user has a ruleset package installed and supplies a sheet |
 
 `convoBehavior` is `{ instruction, insertionStrategy }` where the strategy is one of `constant_before`, `constant_after`, `post_history_replace`, `post_history_before`, `post_history_after`, `macro`. Choosing `macro` means the text appears only where `{{convo_behavior}}` is placed.
 
 **`character_book`** — embedded lore that travels with the card, in V2 shape (`name`, `description`, `scan_depth`, `token_budget`, `recursive_scanning`, `entries[]`). Entries use the V2 field names — `insertion_order`, `secondary_keys`, `case_sensitive`, `comment`, `position` as `before_char`/`after_char`/`at_depth` or `0`–`6` — not Marinara's native entry names. This is the only cross-content link that works fully offline, so it is the right vehicle for lore belonging to one character. Setting `character_book` to `null` is normal for cards whose lore lives in a standalone book.
 
-**Native export extras.** A `marinara_character` envelope's `data` may also carry `avatar` (data URL), `sprites[]`, `gallery[]`, and `metadata` (`createdAt`, `updatedAt`, `comment`). Omit them when authoring fresh — the card imports fine without an avatar, and the user can add art in the app.
+**Native export extras.** A `marinara_character` envelope's `data` may also carry `avatar` (data URL), `sprites[]`, `gallery[]`, and `metadata` (`createdAt`, `updatedAt`, `comment`). Omit them for a text-only card; embed actual image bytes when delivering a portable art package (see `portrait-workflow.md`). `avatar` here is a static profile picture. Animated 2D/3D avatar models and their settings are separate and never travel in card exports; see `avatars.md`.
 
-**Compatible exports fold in Marinara fields.** Compatible JSON and PNG exports append non-empty `backstory` and `appearance` to `description` and remove them from `extensions`, so other V2 readers keep that text. Native export keeps the fields separate. When converting a card that came out of Marinara as Compatible JSON, expect that text inside `description`.
+**Compatible exports fold in Marinara fields.** Compatible JSON and PNG exports append non-empty `backstory` and `appearance` to `description` and remove them from `extensions`, so other V2 readers keep that text. Native export keeps the fields separate. Compatible JSON omits interactive `extensions.onboarding` and sprites. Compatible PNG retains onboarding and embeds sprites in `data.extensions.marinara.sprites`; both compatible formats omit the gallery and clear character-sheet selection/reference use. Baked gallery greeting images revert to their original web links in compatible exports. When converting a card that came out of Marinara as Compatible JSON, expect that text inside `description`.
+
+## Interactive onboarding (`extensions.onboarding`)
+
+A card can ship a skeleton persona and separate per-chat character questions. The block has `enabled` (default false), five persona template strings (`description`, `personality`, `backstory`, `appearance`, `scenario`, all default empty), and two question arrays, `variables` and `cardVariables` (both default empty). There is no separate name template: the persona question `player` supplies its name; when absent, Engine inserts a free-text name question.
+
+Each question is `{ id, variableName, question, options, allowCustom, multiSelect, separator, displayMode, optionSort }`. `id` is a string; `variableName` and `question` default empty; `options` defaults `[]`; `allowCustom` and `multiSelect` default false; `separator` defaults `", "`; `displayMode` is `auto` (default), `buttons`, or `listbox`; `optionSort` is `manual` (default) or `alphabetical`. Each option is `{ id, label, value, description? }`, with the first three required strings. Empty `value` uses its label. No options means free text; otherwise the first option is the default. Multi-select joins values using `separator`. This shared choice behavior also applies to presets (`presets-and-prompts.md`).
+
+| Question list | Where answers go | Macro lifetime |
+|---|---|---|
+| `variables` | The new persona's five fields, resolved once | Persona answers become text; `{{user}}` and `{{char}}` deliberately stay live; other macros resolve once using creation-time context |
+| `cardVariables` | That chat's variables; card source stays unchanged | Card Description, Personality, Scenario and extension Backstory/Appearance read `{{variableName}}` at prompt time; persona text can also retain a card-variable tag for later chat resolution |
+
+Use case-sensitive ASCII names starting with a letter/underscore, then letters/digits/underscores. Do not use reserved built-in macro names or repeat a name across the two lists. Persisted card-variable names are limited to 64 characters, values to 10,000 characters, and onboarding writes at most 100 card variables. The broader chat-variable map allows 500 total. An invalid schema block is dropped on card import rather than rejecting the card; imports cap **each** question list at its first 100 and repair empty/duplicate IDs. The question schema deliberately permits unfinished authoring content; schema acceptance does not prove that variable names or references work. Use `validateOnboarding` for naming/reference diagnostics, including unused questions, undeclared tags and `{{if}}` without `#`.
+
+Use `{{#if}}` for dependent questions: relevance follows what the macro engine actually reads in reachable field text or selected option values. Persona and card questions have separate answer contexts; do not make a card option depend on a persona-only variable. Questions can use `{{char}}` and `{{user}}` for display.
+
+Choice defaults seed card variables when a chat starts without answering the wizard; free-text questions have no default and may leave a literal tag. Seeded values cannot contain unresolved non-built-in tags; a default depending on another default is settled in up to two passes. Wizard answers replace defaults in that chat. Two cards declaring one name share one chat value (last saved wins); removing a card removes its owned variables unless another remaining card declares the name. Reopening character questions edits saved chat answers. This is independent of creating a persona.
+
+Native and Compatible PNG card exports retain onboarding; Compatible JSON omits it. Keep per-chat answers out of a reusable card. The Roleplay wizard asks the questions; Quick Start, Conversation setup and starting directly from a card do not currently ask them.
 
 ## Personas
 
 The player-side card. Only `name` is required; everything else is optional.
 
-**Text fields:** `comment`, `creator`, `personaVersion`, `versioningEnabled`, `creatorNotes`, `phoneticName`, `description`, `personality`, `scenario`, `backstory`, `appearance`, `imageAppearanceEnabled` / `imageAppearance` (image-prompt override, as on cards), `convoDisplayName`, `aboutMe`, `tags[]`, `savedStatusOptions[]`.
+**Text fields:** `comment`, `creator`, `personaVersion`, `versioningEnabled`, `creatorNotes`, `phoneticName`, `description`, `personality`, `scenario`, `backstory`, `appearance`, `imageAppearanceEnabled` / `imageAppearance` (image-prompt override, as on cards), `convoDisplayName`, `aboutMe`, nullable `convoBehavior` (`instruction` plus the same insertion strategies as cards), `tags[]`, `savedStatusOptions[]`.
 
 `{{persona}}` expands to description, personality, backstory, appearance, and scenario joined by newlines; each also has its own macro.
 
 **Presentation:** `nameColor`, `dialogueColor`, `boxColor` accept a solid color or exactly one local CSS gradient — `url()`, `image()`, `expression()`, backslashes, semicolons and braces are rejected. `avatarCrop`, `trackerCardColors` (mode `default`/`chat`/`custom`, plus stat icons, opacities, portrait framing).
 
-**Stats:** `personaStats` is `{ enabled, bars[], rpgStats?, rulesetSheets? }`. Bars are `{ name, value, max, color }`. `rpgStats` adds `{ enabled, attributes[], hp: { value, max }, pools[] }`. Every value/max pair is checked: `max` at least 1, `value` between 0 and `max`.
+**Stats:** `personaStats` is `{ enabled, bars[], rpgStats?, rulesetSheets? }`. Bars are `{ name, value, max, color }`. `rpgStats` adds `{ enabled, attributes[], hp: { value, max }, pools[] }`. Numbers must be finite. RPG `hp` and pool value/max pairs are range-checked (`max` at least 1, `value` between 0 and `max`); ordinary `bars` have finite numbers but do not use that RPG range refinement.
+
+Native persona exports also embed static `avatar`, `sprites[]`, `gallery[]` and timestamp `metadata`. Selected sheets use gallery `isCharacterSheet: true`; import binds the new image ID. Compatible persona export is text/presentation data without these image assets or sheet-reference selection. Animated model files remain separate (`avatars.md`).
 
 `createdAt` / `updatedAt` are accepted on create/import only, as an ISO string or an epoch number.
 
 ## Groups
 
-`createGroupSchema`: `{ name, description, avatarPath?, characterIds[] }`. `createPersonaGroupSchema` is the same with `personaIds[]`. Both need real IDs from the app, so groups are an in-app step, not an authored file.
+`createGroupSchema`: `{ name, description, avatarPath?, characterIds[] }`. `createPersonaGroupSchema` is `{ name, description, personaIds[] }` and has no `avatarPath`. Both need real IDs from the app, so groups are an in-app step, not an authored file.
 
 ## Writing the card itself
 
@@ -61,3 +85,13 @@ The schema will accept anything; these are the choices that make a card work.
 - **`first_mes` sets the format contract** — if it opens with narration in asterisks and quoted dialogue, the model will follow. Whatever prose habits appear here will be copied all session.
 - **`alternate_greetings` are entry points, not variations in tone.** Each should open a different scene.
 - **Keep `system_prompt` and `post_history_instructions` empty** unless the card genuinely needs to override the user's preset. Cards that ship opinionated system prompts fight whatever preset the user has chosen.
+
+## Pinned implementation sources
+
+- [Character schema](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/schemas/character.schema.ts)
+- [Persona schema](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/schemas/persona.schema.ts)
+- [Character/persona export builders and PNG route](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/routes/characters.routes.ts)
+- [Native card/persona restoration](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/services/import/marinara.importer.ts)
+- [Onboarding relevance, defaults, normalization and persistence helpers](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/utils/onboarding.ts)
+- [Chat-variable name/value limits](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/utils/chat-variables.ts)
+- [Interactive onboarding guide](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/docs/characters/interactive-onboarding.md)

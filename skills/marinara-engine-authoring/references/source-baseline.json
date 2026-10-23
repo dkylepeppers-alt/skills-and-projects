@@ -1,0 +1,20 @@
+{
+  "checkedOn": "2026-10-23",
+  "engine": {
+    "repository": "Pasta-Devs/Marinara-Engine",
+    "release": "v2.5.1",
+    "commit": "8042ef6ec638801de45b8d82f82cd2dea85f51a4",
+    "url": "https://github.com/Pasta-Devs/Marinara-Engine/tree/8042ef6ec638801de45b8d82f82cd2dea85f51a4"
+  },
+  "agents": {
+    "repository": "Pasta-Devs/Marinara-Agents",
+    "commit": "0d97d8520dfd7ae9ec0d5e2a7f016b9b233e78e3",
+    "url": "https://github.com/Pasta-Devs/Marinara-Agents/tree/0d97d8520dfd7ae9ec0d5e2a7f016b9b233e78e3"
+  },
+  "validation": {
+    "node": "24.19.0",
+    "zod": "3.25.76",
+    "tsx": "4.20.6",
+    "scope": "Source schemas and parsers, native import/export contract audit, CLI regressions; not a live application import test"
+  }
+}

@@ -7,9 +7,9 @@
  * Maps package owns that schema, not the Engine). Everything else needs only the
  * Engine checkout. See README.md in this directory for setup.
  */
-import { readFileSync } from "node:fs";
-import Module from "node:module";
-import { resolve } from "node:path";
+import { existsSync, readFileSync } from "node:fs";
+import { registerHooks } from "node:module";
+import { dirname, resolve } from "node:path";
 
 const engineRoot = process.env.MARINARA_ENGINE_ROOT;
 const agentsRoot = process.env.MARINARA_AGENTS_ROOT;
@@ -31,6 +31,29 @@ let hierarchyProfileSchema: any = null;
 let mapsModelError: string | null = null;
 let failures = 0;
 
+function record(value: unknown): value is Record<string, any> {
+  return value !== null && typeof value === "object" && !Array.isArray(value);
+}
+
+function problem(message: string) {
+  failures += 1;
+  console.log(`  FAIL  ${message}`);
+}
+
+function uniqueIds(items: any[], label: string) {
+  const seen = new Set<string>();
+  for (const [index, item] of items.entries()) {
+    if (!record(item)) throw new Error(`${label}[${index}] must be an object`);
+    const id = item.id;
+    if (typeof id !== "string" || !id) {
+      problem(`${label}[${index}] needs a nonempty source id for import remapping`);
+    } else if (seen.has(id)) {
+      problem(`${label}[${index}] has duplicate source id "${id}"`);
+    }
+    seen.add(id);
+  }
+}
+
 function report(label: string, result: { success: boolean; error?: any }) {
   if (result.success) {
     console.log(`  ok    ${label}`);
@@ -45,7 +68,13 @@ function report(label: string, result: { success: boolean; error?: any }) {
 
 /** Native envelopes wrap the payload; bare payloads are accepted too. */
 function unwrap(raw: any): { kind: string; payload: any } {
-  if (raw && typeof raw === "object" && typeof raw.type === "string" && raw.version === 1) {
+  if (record(raw) && raw.kind === "marinara.regex-scripts") {
+    if (raw.version !== 1) throw new Error(`unsupported regex export version (${String(raw.version)})`);
+    if (!Array.isArray(raw.regexScripts)) throw new Error("regexScripts must be an array");
+    return { kind: "regex_scripts", payload: raw.regexScripts };
+  }
+  if (record(raw) && typeof raw.type === "string") {
+    if (raw.version !== 1) throw new Error(`unsupported envelope version (${String(raw.version)})`);
     return { kind: raw.type, payload: raw.data };
   }
   if (raw?.definition || raw?.data?.definition || raw?.schemaVersion === 1) return { kind: "map", payload: raw };
@@ -88,6 +117,10 @@ function imageProblem(images: unknown): string | null {
 }
 
 function validateLorebook(data: any) {
+  if (!record(data) || !record(data.lorebook)) throw new Error("lorebook payload needs a lorebook object");
+  if (data.entries !== undefined && !Array.isArray(data.entries)) throw new Error("entries must be an array");
+  if (data.folders !== undefined && !Array.isArray(data.folders)) throw new Error("folders must be an array");
+  if (data.folders?.length) uniqueIds(data.folders, "folder");
   report("lorebook", lorebookSchemas.createLorebookSchema.safeParse(data.lorebook));
   for (const [index, folder] of (data.folders ?? []).entries()) {
     const { id, ...rest } = folder;
@@ -115,9 +148,12 @@ function validateLorebook(data: any) {
 }
 
 function validateMap(raw: any) {
-  const definition = raw?.data?.definition ?? raw?.definition ?? raw;
+  // Mirror SpatialMapLibrary's candidate selection, including a data object
+  // shadowing the top-level definition and an explicitly null definition.
+  const data = record(raw?.data) ? raw.data : record(raw) ? raw : null;
+  const definition = data && "definition" in data ? data.definition : raw;
   report("map definition", spatialSchemas.spatialContextDefinitionSchema.safeParse(definition));
-  const profile = raw?.hierarchyProfile ?? raw?.data?.hierarchyProfile;
+  const profile = data?.hierarchyProfile;
   if (!profile) return;
   if (!hierarchyProfileSchema) {
     if (mapsModelError) {
@@ -166,19 +202,31 @@ function bool(value: any) {
 }
 
 function validatePreset(data: any) {
-  const preset = data.preset ?? {};
+  if (!record(data) || !record(data.preset)) throw new Error("preset payload needs a preset object");
+  for (const field of ["groups", "sections", "choiceBlocks"]) {
+    if (data[field] !== undefined && !Array.isArray(data[field])) throw new Error(`${field} must be an array`);
+  }
+  uniqueIds(data.groups ?? [], "group");
+  uniqueIds(data.sections ?? [], "section");
+  const preset = data.preset;
+  const scopedRegexMode = ["disabled", "exclusive", "chat"].includes(preset.scopedRegexMode)
+    ? preset.scopedRegexMode : "disabled";
+  if (preset.scopedRegexMode !== undefined && preset.scopedRegexMode !== scopedRegexMode) {
+    console.log("  warn  scopedRegexMode is invalid; import normalizes it to disabled");
+  }
   report(
     "preset",
     promptSchemas.createPromptPresetSchema.safeParse({
       name: String(preset.name ?? ""),
       description: String(preset.description ?? ""),
       imagePath: preset.imagePath ?? null,
-      conversationPrompt: String(preset.conversationPrompt ?? ""),
-      gamePrompt: String(preset.gamePrompt ?? ""),
+      conversationPrompt: String(preset.conversationPrompt ?? preset.conversation_prompt ?? ""),
+      gamePrompt: String(preset.gamePrompt ?? preset.game_prompt ?? ""),
       variableGroups: loose(preset.variableGroups, []),
       variableValues: loose(preset.variableValues, {}),
       parameters: {},
       wrapFormat: preset.wrapFormat ?? "xml",
+      scopedRegexMode,
       author: String(preset.author ?? ""),
     }),
   );
@@ -204,6 +252,7 @@ function validatePreset(data: any) {
   const sectionIds = new Set<string>();
   for (const [index, section] of (data.sections ?? []).entries()) {
     sectionIds.add(String(section.id));
+    const markerConfig = section.markerConfig ? loose(section.markerConfig, null) : null;
     report(
       `section[${index}] ${section.name ?? ""}`,
       promptSchemas.createPromptSectionSchema.safeParse({
@@ -215,14 +264,15 @@ function validatePreset(data: any) {
         enabled: bool(section.enabled),
         isMarker: bool(section.isMarker),
         groupId: null,
-        markerConfig: section.markerConfig ? loose(section.markerConfig, null) : null,
+        markerConfig,
         injectionPosition: section.injectionPosition ?? "ordered",
         injectionDepth: Number(section.injectionDepth ?? 0),
         injectionOrder: Number(section.injectionOrder ?? 100),
         forbidOverrides: bool(section.forbidOverrides),
+        skipWrap: bool(section.skipWrap),
       }),
     );
-    if (bool(section.isMarker) && !section.markerConfig) {
+    if (bool(section.isMarker) && !markerConfig) {
       failures += 1;
       console.log(`  FAIL  section[${index}] is a marker with no markerConfig`);
     }
@@ -268,6 +318,10 @@ function validateRegexScripts(scripts: any[]) {
 }
 
 async function main() {
+  if (process.argv.length < 3) {
+    console.error("Usage: validate-artifact.ts file.json [more.json …]");
+    process.exit(2);
+  }
   [lorebookSchemas, characterSchemas, personaSchemas, spatialSchemas, promptSchemas, regexSchemas] =
     await Promise.all([
       load("lorebook.schema.js"),
@@ -283,19 +337,22 @@ async function main() {
       agentsRoot,
       "packages/hierarchical-maps/src/engine/packages/maps-shared/src/maps-model.js",
     );
-    // The maps model imports runtime values from `@marinara-engine/shared`, which a
-    // plain checkout cannot resolve. Point that specifier at the Engine's shared source.
-    const sharedIndex = resolve(engineRoot, "packages/shared/src/index.ts");
-    const moduleInternals = Module as unknown as { _resolveFilename: (request: string, ...rest: unknown[]) => string };
-    const resolveFilename = moduleInternals._resolveFilename;
-    moduleInternals._resolveFilename = function (request, ...rest) {
-      return resolveFilename.call(this, request === "@marinara-engine/shared" ? sharedIndex : request, ...rest);
-    };
+    // Use the release's built shared entrypoint when available. The source-only
+    // fallback re-exports the maps model's actual Engine schema dependencies,
+    // avoiding unrelated generated registries imported by shared/src/index.ts.
+    const builtShared = resolve(engineRoot, "packages/shared/dist/index.js");
+    const bridge = resolve(dirname(resolve(process.argv[1]!)), "maps-shared-bridge.cjs");
+    const sharedModule = existsSync(builtShared) ? builtShared : bridge;
+    const hooks = registerHooks({ resolve(specifier, context, nextResolve) {
+      return nextResolve(specifier === "@marinara-engine/shared" ? sharedModule : specifier, context);
+    } });
     try {
       ({ spatialHierarchyProfileSchema: hierarchyProfileSchema } = await import(mapsModel));
     } catch (error) {
       mapsModelError = (error as Error).message.split("\n")[0]!;
       console.warn(`! Could not load the maps model from MARINARA_AGENTS_ROOT: ${mapsModelError}`);
+    } finally {
+      hooks.deregister();
     }
   }
 
@@ -309,8 +366,9 @@ async function main() {
       console.log(`  FAIL  not parseable JSON: ${(error as Error).message}`);
       continue;
     }
-    const { kind, payload } = unwrap(raw);
-    switch (kind) {
+    try {
+      const { kind, payload } = unwrap(raw);
+      switch (kind) {
       case "marinara_lorebook":
         validateLorebook(payload);
         break;
@@ -337,7 +395,10 @@ async function main() {
         validateRegexScripts(payload);
         break;
       default:
-        console.log(`  skip  unrecognized artifact type (${kind})`);
+        problem(`unrecognized artifact type (${kind}); no schema validation was performed`);
+      }
+    } catch (error) {
+      problem((error as Error).message);
     }
   }
 

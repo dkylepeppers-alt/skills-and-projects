@@ -1,6 +1,6 @@
 # Downloadable Agent packages
 
-Packages for the official catalog at `Pasta-Devs/Marinara-Agents`, consumed by Marinara Engine through **Agents → Download Agents**. Field detail is in `agent-definition.md`, prompt conventions in `agent-prompt-craft.md`, build and PR process in `agent-ship-checklist.md`. Templates: `templates/agent-package/`.
+Packages for the official catalog at `Pasta-Devs/Marinara-Agents`, consumed by Marinara Engine through **Agents → Download Agents**. Field detail is in `agent-definition.md`, including the separate in-app custom Agent import/export format; prompt conventions are in `agent-prompt-craft.md`, build and PR process in `agent-ship-checklist.md`. Templates: `templates/agent-package/`.
 
 ## First: which kind of package
 
@@ -12,7 +12,7 @@ Packages for the official catalog at `Pasta-Devs/Marinara-Agents`, consumed by M
 | `restartRequired` | `false` | `true` iff it has a server entrypoint |
 | Examples | prose-guardian, quest, world-state, cyoa | hierarchical-maps, conversation-calls, noodle, slurp2, quartermaster |
 
-A third kind, the **ruleset package** (`kind: ["ruleset"]`, e.g. `ruleset-5e-2014`), ships a validated `ruleset.json` data asset for Game Mode instead of an Agent: `entrypoints: {}`, no permissions, no restart, its asset files declared in `contributions.assets.paths`, built by `scripts/build-ruleset-packages.mjs`. Its schema is the Engine's `ruleset.schema.ts` (documented in Engine `docs/extending/writing-rulesets.md`) and each optional block needs a minimum Capability API. It is out of scope for this skill; read those sources before attempting one.
+A third kind, the **ruleset package** (`kind: ["ruleset"]`, e.g. `ruleset-5e-2014`), ships a validated `ruleset.json` data asset for Game Mode instead of an Agent: `entrypoints: {}`, no permissions, no restart, its asset files declared in `contributions.assets.paths`, built by `scripts/build-ruleset-packages.mjs`. Use [game-content.md](game-content.md) for rulesets and the other Game content families; their Engine contracts and import surfaces differ from `agents.json`. Optional ruleset blocks have their own minimum Capability API.
 
 **Default to agent-only.** It is pure JSON — a prompt, a category, a phase, and some settings — and covers most of what people actually want. Only reach for a feature package when the behavior genuinely needs executable runtime, HTTP routes, or its own UI surface. If the user is describing behavior rather than infrastructure, they want agent-only; say so and build that.
 
@@ -20,7 +20,7 @@ A third kind, the **ruleset package** (`kind: ["ruleset"]`, e.g. `ruleset-5e-201
 
 ```
 packages/<id>/
-├── manifest.json      # hand-written source; the builder rewrites description/files/engine.min
+├── manifest.json      # hand-written source; builder adds guidance/files and defaults a missing engine.min
 ├── agents.json        # hand-written source; the builder reformats it
 └── locales/
     ├── en.json        # GENERATED — never hand-edit
@@ -41,10 +41,11 @@ Two rules the validator enforces that trip people up:
 - **`pre_generation`** — runs before the main model replies and injects into its prompt. Directors, retrieval, routers, anything that shapes the coming response.
 - **`post_processing`** — runs on the finished reply. Trackers, auditors, rewriters, illustrators. This is the common case.
 
-Catalog descriptions are now written in plain, user-facing language — what the user gets, not the mechanism ("Keeps track of your quests, their goals, and their rewards."). Match that tone in new `description` text.
 - **`parallel`** — runs alongside generation without gating it. Ambient stuff (combat, echo-chamber).
 
-`resultType: "text_rewrite"` is what makes a post-processing agent replace the message instead of just recording state. Only Continuity Checker, Prose Guardian, and Immersive HTML use it. If your agent is not literally editing the assistant's prose, leave it off.
+Catalog descriptions are written in plain, user-facing language — what the user gets, not the mechanism ("Keeps track of your quests, their goals, and their rewards."). Match that tone in new `description` text.
+
+`defaultSettings.resultType: "text_rewrite"` makes a post-processing agent replace the message instead of just recording state. If your agent is not literally editing the assistant's prose, leave it off. The top-level `resultType` remains readable for legacy packages but is deprecated in the v2.5.1 loader.
 
 Trackers additionally set `defaultInjectAsSection` (whether their state is injected back into the prompt as a visible section) and almost always `modeAllowlist: ["roleplay"]`.
 
@@ -63,6 +64,7 @@ npm run check
 node scripts/test-catalog-lanes.mjs
 node scripts/validate-package-locales.mjs
 node scripts/validate-catalog.mjs
+node scripts/tests/catalog-release-notes.regression.mjs
 git diff --check
 ```
 
@@ -75,6 +77,9 @@ Generated and never hand-edited: `locales/en.json`, `manifest.files[]` hashes an
 - Base everything on `staging` and open an issue before implementing a new package.
 - Every published package needs a README row in its correct category table, or catalog validation fails.
 - Adding a published package changes the count assertion near the end of `validate-catalog.mjs` (agent-only, feature, and ruleset counts; staging-only packages are not counted). Update it in the same PR.
+- A minor/major version bump requires a matching `packages/<id>/CHANGELOG.md` entry; rebuild the release-note sidecars with the catalog. Read the current repository release-note format before writing one.
 - Permissions are narrowly scoped and justified. An agent-only package needs no more than `agent-runtime`, `chat-read`, `prompt-context`, `storage`, `ui` — and often fewer. `network` and `routes` on a JSON-only package are a red flag.
 - About Me is a core Conversation feature and must never be published as an agent package.
 - Never invent Engine behavior. If a field, tool, or context tag is not observably used by an existing package in the repo, check before relying on it.
+
+Contract baseline: Engine [v2.5.1 / `8042ef6`](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/schemas/capability-package.schema.ts), companion Agents [`0d97d85`](https://github.com/Pasta-Devs/Marinara-Agents/blob/0d97d8520dfd7ae9ec0d5e2a7f016b9b233e78e3/AGENTS.md). Live catalog wording such as “first release after v2.5.0” must be resolved against the target loader's API and version checks; it is not a reason to invent a higher minimum than the payload requires.

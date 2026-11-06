@@ -96,7 +96,7 @@ Recursion also needs `recursiveScanning: true` on the book. A "recursion seed" t
 
 `group` (only one eligible entry per group activates), `groupWeight`, `tag` (free-text label), `locked` (blocks the Lorebook Keeper agent from editing it), `constant` (no keyword needed; other gates and budgets still apply), `enabled`, `excludeFromVectorization`.
 
-**Decision activation** (Engine 2.5.0+)
+**Decision activation**
 
 `decisionStatement` (≤500 chars) plus `decisionMode`: `off` (default) | `require` | `trigger`. The statement is a true/false claim about the recent chat, answered by the user's **Decision model**.
 
@@ -109,7 +109,7 @@ No Decision model, or no answer, reads as no: `require` admits nothing new and `
 
 On import an unknown `decisionMode` silently becomes `off` and the statement is cut to 500 characters, so a typo just disables the feature. This is distinct from a `{{#if decision:"…"}}` block inside `content`, which trims the text of an entry that already activated (see `macros.md`).
 
-**Images** (Engine 2.5.0+)
+**Images**
 
 `images[]` — up to 4 reference images eligible to be sent when the entry activates. In the database each is `{ path, caption }` with a server-generated path; in an export file each is `{ dataUrl, caption }`, a base64 PNG, JPEG, or WebP of at most 5 MiB with a caption of at most 500 characters. The importer verifies every image's bytes before creating anything, and **one bad image fails the whole lorebook import**. When authoring offline, leave `images` as `[]` and attach art in the app, unless you have real image files to embed.
 
@@ -128,7 +128,7 @@ Conditions read game-state fields, not arbitrary prompt variables. With no game 
 - **Rules through an Outlet.** Place activated narration constraints precisely with `{{outlet::name}}`. Outlet entries still consume lorebook token and entry budgets.
 - **Sticky for scene facts.** A fact that must survive a few turns after its keyword stops appearing.
 - **Situational constants.** A `constant` entry with `decisionMode: "require"` — combat rules with "A fight is happening in the latest message" — stays out of the prompt on quiet turns, though its statement is asked each turn. Pair it with `sticky` so it holds through the scene without being asked again.
-- **Agent-only reference lore** (2.5.2+). In **Chat Settings → Agents**, an agent's **Attach lorebook for the specific agent** gives that agent, in that chat, its own **Reference lorebook** (stored as chat metadata `agentLorebookAttachments: { [agentKey]: { enabled, lorebookId } }`). Matching entries follow the normal trigger rules but go only to that agent, not the main reply; agents running together may still see them. Use it for tracker or director lore that should not reach the story prompt. It is an in-app link, not part of the book file.
+- **Agent-only reference lore**. In **Chat Settings → Agents**, an agent's **Attach lorebook for the specific agent** gives that agent, in that chat, its own **Reference lorebook** (stored as chat metadata `agentLorebookAttachments: { [agentKey]: { enabled, lorebookId } }`). Matching entries follow the normal trigger rules but go only to that agent, not the main reply; agents running together may still see them. Use it for tracker or director lore that should not reach the story prompt. It is an in-app link, not part of the book file.
 - **Shared text in one place.** `{{include::Entry name}}` pastes another entry's content from the same book, even a disabled one, so boilerplate can live in a single "include-only" entry. See `macros.md`.
 
 ## Differences from SillyTavern

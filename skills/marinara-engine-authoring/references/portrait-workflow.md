@@ -310,7 +310,7 @@ Expand the ledger to include every selected label. Generation completion is not 
 
 ### Animated avatar boundary
 
-The expression package below contains static sprites. The **2D Avatars** agent (Engine 2.5.1+) can reuse them as a PNGTuber setup, with optional `_talk`, `_blink`, and `_blink_talk` variants. It uses portraits whenever any are present, otherwise full-body sprites. Since 2.5.2 sprites alone do not show as an avatar until **Show this avatar in chats** is on for that owner. Read `avatars.md` for all accepted suffixes, face mappings, `.save` / `.mavatar` / `.vrm` / `.vrma` / MMD / GLB / FBX imports, settings and validation. Keep this workflow's 16+16 art defaults unless the user requests an animated-avatar set.
+The expression package below contains static sprites. The **2D Avatars** agent can reuse them as a PNGTuber setup, with optional `_talk`, `_blink`, and `_blink_talk` variants. It uses portraits whenever any are present, otherwise full-body sprites. Since 2.5.2 sprites alone do not show as an avatar until **Show this avatar in chats** is on for that owner. Read `avatars.md` for all accepted suffixes, face mappings, `.save` / `.mavatar` / `.vrm` / `.vrma` / MMD / GLB / FBX imports, settings and validation. Keep this workflow's 16+16 art defaults unless the user requests an animated-avatar set.
 
 Native character export embeds sprites and static profile pictures, **not** the separate `avatar-models` files or their `avatar.json` settings. Profile export/backup includes those files. Deliver avatar models separately with setup instructions when transferring only a character.
 

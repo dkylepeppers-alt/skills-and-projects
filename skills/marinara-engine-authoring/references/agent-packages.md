@@ -1,6 +1,6 @@
 # Downloadable Agent packages
 
-Packages for the official catalog at `Pasta-Devs/Marinara-Agents`, consumed by Marinara Engine through **Agents → Agent Organizer** (named **Download Agents** before 2.5.2). Field detail is in `agent-definition.md`, including the separate in-app custom Agent import/export format; prompt conventions are in `agent-prompt-craft.md`, build and PR process in `agent-ship-checklist.md`. Templates: `templates/agent-package/`.
+Packages for the official catalog at `Pasta-Devs/Marinara-Agents`, consumed by Marinara Engine through **Agents → Agent Organizer**. Field detail is in `agent-definition.md`, including the separate in-app custom Agent import/export format; prompt conventions are in `agent-prompt-craft.md`, build and PR process in `agent-ship-checklist.md`. Templates: `templates/agent-package/`.
 
 ## First: which kind of package
 
@@ -36,7 +36,7 @@ Two rules the validator enforces that trip people up:
 
 ## Choosing category and phase
 
-`category` (writer / tracker / misc) is still the schema enum and must match the catalog entry's category and the README table it is listed under. Since 2.5.2 the Agents sidebar with no chat open groups agents by their Agent Organizer store **section** (`store/store.json`, below) rather than by category, so choose both deliberately. Official and downloaded agents can no longer be copied into custom agents (2.5.2), so a user who wants a variant needs a custom agent written from scratch. `phase` decides when it runs.
+`category` (writer / tracker / misc) is still the schema enum and must match the catalog entry's category and the README table it is listed under. The Agents sidebar with no chat open groups agents by their Agent Organizer store **section** (`store/store.json`, below) rather than by category, so choose both deliberately. Official and downloaded agents cannot be copied into custom agents, so a user who wants a variant needs a custom agent written from scratch. `phase` decides when it runs.
 
 - **`pre_generation`** — runs before the main model replies and injects into its prompt. Directors, retrieval, routers, anything that shapes the coming response.
 - **`post_processing`** — runs on the finished reply. Trackers, auditors, rewriters, illustrators. This is the common case.
@@ -45,7 +45,7 @@ Two rules the validator enforces that trip people up:
 
 Catalog descriptions are written in plain, user-facing language — what the user gets, not the mechanism ("Keeps track of your quests, their goals, and their rewards."). Match that tone in new `description` text.
 
-`defaultSettings.resultType: "text_rewrite"` makes a post-processing agent replace the message instead of just recording state. If your agent is not literally editing the assistant's prose, leave it off. The top-level `resultType` remains readable for legacy packages but is deprecated since the v2.5.1 loader.
+`defaultSettings.resultType: "text_rewrite"` makes a post-processing agent replace the message instead of just recording state. If your agent is not literally editing the assistant's prose, leave it off. The top-level `resultType` remains readable for legacy packages but is deprecated.
 
 Trackers additionally set `defaultInjectAsSection` (whether their state is injected back into the prompt as a visible section) and almost always `modeAllowlist: ["roleplay"]`.
 

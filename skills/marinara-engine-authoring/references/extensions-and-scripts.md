@@ -87,11 +87,11 @@ CSS is capped at **262,144 UTF-8 bytes (256 KiB)**, shared with themes; characte
 
 Approval takes `{ contentHash: "sha256:<64 hex>", acknowledgeSandboxedCode: true, acknowledgeFullPageAccess?: true }`, and rollback targets a prior content hash. Contribution kinds are `button`, `menu-item`, `panel`, and `command`. A command targets an existing contribution from the same extension revision using `targetContributionId`; it has no callback. Surface contributions use `top-bar`, `chats`, `bots`, `characters`, `personas`, `lorebooks`, `presets`, `connections`, `agents`, or `settings`, with `header`, `before-content`, or `after-content` positions. UI descriptors are validated plain data, not host HTML/React callbacks.
 
-Browser extensions gain `marinara.dice.registerFormat(options)` in 2.5.2, teaching `/roll` a custom notation (`id`, `label`, `parse(notation)` returning null for notation it does not read; see Engine `docs/extending/writing-personal-extensions.md` → **Add a dice format**). Extension dice text in a `/roll` message always renders as escaped plain text (#8773). Guard with `typeof marinara.dice?.registerFormat === "function"` for older Engines.
+Browser extensions gain `marinara.dice.registerFormat(options)` in 2.5.2, teaching `/roll` a custom notation (`id`, `label`, `parse(notation)` returning null for notation it does not read; see Engine `docs/extending/writing-personal-extensions.md` → **Add a dice format**). Extension dice text in a `/roll` message always renders as escaped plain text (#8773).
 
 Revision history keeps 0-10 revisions per extension (default 10): `GET` / `PATCH /api/personal-extensions/revision-history` with `{ limit, confirmPrune?: true }` (2.5.2).
 
-Every runtime (browser, full-page, and server) gets `marinara.estimateTextTokens(text): number`, a synchronous model-agnostic estimate needing no capability. Guard with `typeof marinara.estimateTextTokens === "function"` for older Engines.
+Every runtime (browser, full-page, and server) gets `marinara.estimateTextTokens(text): number`, a synchronous model-agnostic estimate needing no capability.
 
 Browser extensions normally run in an opaque-origin Worker sandbox, not in the host DOM. `full_page_access` is an external-only trust mode requiring its extra acknowledgement, not an extra sandbox capability for Professor Mari drafts. A Personal Extension row never keeps it (it is stripped on save), and since 2.5.2 Professor Mari refuses to draft a Personal Extension with it rather than saving one that switches itself off at restart (#8113). Server code runs in a separate restricted process, never by in-process import. Prefer narrow context capabilities and declarative contributions.
 
@@ -114,7 +114,7 @@ This reference covers the file contract, packaging and trust gates. It does **no
 | User-side install, the two External Extension gates, platform support, revisions | [Personal Extensions](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/personal-extensions.md) |
 | Security invariants and how each runtime is isolated | [Personal Extension Architecture](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/development/personal-extensions.md) |
 
-Use only APIs those guides document for the targeted release. Guard newer ones with a `typeof` check, as above.
+Use only APIs those guides document for 2.5.2 or the later release being targeted.
 
 ### Extension files and packages
 

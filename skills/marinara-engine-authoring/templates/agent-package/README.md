@@ -16,8 +16,8 @@ placeholder, then run `node scripts/build-agent-catalog.mjs <id>`.
 - These templates target the Agent Organizer catalog (Download Agents before
   Engine 2.5.2), not the in-app custom
   Agent file/folder importer; see `references/agent-definition.md` for that format.
-- Select and test `engine.min` for the behavior used. The template's `2.3.0`
-  is the catalog baseline, not a compatibility test for a new package.
+- `engine.min` is `2.5.2`, the floor for all new builds. Raise it only if the
+  package needs a later release.
 - The `agents.json` template is shaped for a tracker. Bind its output to a
   verified Engine result handler before use; a new id does not create a parser.
   For a rewriter add `"resultType": "text_rewrite"` inside `defaultSettings`

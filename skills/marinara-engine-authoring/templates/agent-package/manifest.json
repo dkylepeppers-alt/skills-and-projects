@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "description": "One or two sentences describing what the agent does. The builder appends the activation sentence from scripts/catalog-package-guidance.mjs.",
   "engine": {
-    "min": "2.3.0",
+    "min": "2.5.2",
     "maxExclusive": "4.0.0"
   },
   "kind": [

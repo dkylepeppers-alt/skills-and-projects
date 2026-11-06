@@ -82,10 +82,9 @@ Do not call native export universally lossless:
 
 - Character and persona exports carry `cardFieldAlternatives` with `chatIds` cleared (backups keep them) and sprite folders.
 - Compatible card exports write embedded-book entry settings back in SillyTavern's `extensions` shape.
-- Chat settings profiles may carry `settings.personaId` and `settings.lorebookIds` (≤200); `settings` is still strict, so 2.5.1 rejects them.
+- Chat settings profiles may carry `settings.personaId` and `settings.lorebookIds` (≤200); `settings` is strict.
 - Full backups and profile exports include the new `connection_accounts` table (restore relinks rows to accounts) and `avatar-models/` with the new `mmd/` and `glb-fbx/` folders. Connection exports never carry keys; Connections → **Import a backup** restores connections without keys.
 - ZIP imports read Japanese file names.
-- A **data folder** opened by 2.5.2 is storage format 10, which 2.5.1 refuses; that gate is separate from these file exports. See the upgrade note in `SKILL.md`.
 
 ## Other route boundaries
 

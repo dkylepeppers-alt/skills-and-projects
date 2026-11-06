@@ -1,0 +1,25 @@
+{
+  "kind": "marinara.regex-scripts",
+  "version": 1,
+  "exportedAt": "2026-10-23T00:00:00.000Z",
+  "regexScripts": [
+    {
+      "name": "Collapse repeated display spaces",
+      "enabled": true,
+      "findRegex": " {2,}",
+      "replaceString": " ",
+      "trimStrings": [],
+      "placement": [
+        "ai_output"
+      ],
+      "flags": "g",
+      "promptOnly": false,
+      "applyMode": "display",
+      "targetCharacterIds": [],
+      "targetPromptPresetIds": [],
+      "order": 100,
+      "minDepth": null,
+      "maxDepth": null
+    }
+  ]
+}

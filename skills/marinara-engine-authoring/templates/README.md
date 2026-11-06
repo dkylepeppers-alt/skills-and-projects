@@ -1,17 +1,17 @@
 # Templates
 
-Every JSON file here has been parsed by the Engine's real schemas (see
-`../scripts/`). Replace the content, keep the shape.
+The six content templates below pass against **Engine v2.5.2** at `fc0333c3fe978cda5e0b919bd6faec985901704e` (Zod 4). The map hierarchy profile also passes the companion Agents model at `ffde8ea4035868c064eb3b2ffd675f1f807c57ed`, loaded through the validator's Zod 4 bridge shim. None of them use 2.5.2-only fields; they passed the v2.5.1 schemas before this update. Replace content while preserving each format's actual shape; run the validator after edits.
 
 | File | What it demonstrates |
 |---|---|
-| `lorebook.marinara.json` | native envelope, nested folders, a recursion tree (parent seeds children via `delayUntilRecursion`), a weighted mutual-exclusion group, and an Outlet entry |
-| `character.marinara.json` | V2 card with Marinara `extensions` (backstory, appearance, depth_prompt), macro use in every text field, `<START>` example dialogue |
-| `persona.marinara.json` | persona envelope with the fields the `{{persona*}}` macros read |
-| `map-template.json` | 8 locations across region → settlement → building → floor/room, all three `childPresentation` styles, a hidden link, `modelMemory` used to hold a secret |
-| `agent-package/` | a downloadable Agent package skeleton; see its own README |
+| `lorebook.marinara.json` | Native envelope, nested folders, recursion keys, weighted exclusion group and Outlet. |
+| `character.marinara.json` | V2 card with Marinara extensions, macros and example dialogue. |
+| `persona.marinara.json` | Native persona with fields read by persona macros. |
+| `map-template.json` | Eight locations, emoji icons, three child presentation styles, layers, hidden link and model memory. |
+| `preset.marinara.json` | Native preset, explicit enabled flags/order IDs, group, `skipWrap`, character/history markers, choice defaults and mode prompts. |
+| `regex-scripts.json` | Current `marinara.regex-scripts` wrapper and one display-only regex; legacy bare arrays remain importable. |
+| `agent-package/` | Catalog builder inputs, separate from native Agent-config transfers. Manifest and definitions pass the release schemas, but placeholder hashes must be regenerated before installation. |
 
-The four content templates share one setting (the Ashen Vale) on purpose, so
-they read as a pack and show how the pieces reference each other. Note that the
-map's `lorebookEntryIds` are empty and the lorebook's `characterIds` are empty:
-those IDs only exist after import. Link them in the app.
+The original four content templates share the Ashen Vale setting. Their destination-dependent character/lore IDs are empty: link in the app, or use the map's actual portable-lore workflow for bundled remapping. These samples are schema-tested; no live application import test is implied.
+
+Game, avatar and extension formats use their own tools/parsers. See the matching references for pinned upstream examples rather than wrapping them in a generic native envelope.

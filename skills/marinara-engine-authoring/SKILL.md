@@ -1,6 +1,6 @@
 ---
 name: marinara-engine-authoring
-description: Author anything that goes into Marinara Engine — lorebooks, character cards, personas, hierarchical maps, prompt presets, regex scripts, custom tools, personal extensions, themes, and downloadable Agent packages — against the real schemas in Pasta-Devs/Marinara-Engine and Pasta-Devs/Marinara-Agents. Use this whenever the user mentions Marinara Engine, Marinara Agents, a `.marinara.json` file, a worldbook or lorebook entry for Marinara, a character card or persona for Marinara, a spatial/hierarchical map, an Outlet entry, a prompt preset or preset variables, or wants to build, convert, port from SillyTavern, validate, or debug any importable Marinara artifact. Use it even when the user only describes the content ("a worldbook for my setting", "a map of this town", "an agent that tracks X") without naming a format.
+description: Use when creating, editing, converting, packaging, validating, or debugging content for Marinara Engine or Marinara Agents. Covers lorebooks and Outlets, character cards and personas, portrait and sprite packages, 2D/3D avatars (PNGTuber, mesh, VRM, MMD, GLB/FBX), hierarchical maps, prompt presets and macros, regex scripts, custom agents and tools, personal extensions, themes, downloadable capability packages, Game rulesets, creature/tile/board packs, world kits, world files, and story scripts. Trigger for Marinara content requests even when no file format is named, including .marinara.json, .world-map.json, .ruleset.json, .worldkit.json, .world.json, .tilepack.json, .creatures.json, .experience.json, .mavatar, .vrm, .pmx, and Marinara-directed SillyTavern conversions.
 ---
 
 # Marinara Engine Authoring
@@ -9,6 +9,8 @@ Everything the user can put *into* Marinara Engine, plus the packages that exten
 
 - **`Pasta-Devs/Marinara-Engine`** — the app. Owns the zod schemas for every content type (`packages/shared/src/schemas/`), the import/export routes (`packages/server/src/routes/`), the importers (`packages/server/src/services/import/`), and the user docs (`docs/`).
 - **`Pasta-Devs/Marinara-Agents`** — the downloadable Agent catalog. Owns package manifests, agent definitions, and the map package's own schemas.
+
+Checked baseline: **Engine v2.5.2** (released 2026-11-05), release commit `fc0333c3fe978cda5e0b919bd6faec985901704e`; companion Agents commit `ffde8ea4035868c064eb3b2ffd675f1f807c57ed`. See `references/source-baseline.json` for the pinned repositories. A request to update this skill means audit it against the requested **Engine source release**, including schemas, import/export boundaries and runtime consumers; copying an older skills-repository package is not that audit. Preserve user-authored additions while reconciling source changes.
 
 ## Private skills and projects workflow
 
@@ -45,34 +47,40 @@ compare repository and installed skill revisions before reconciling differences.
 |---|---|
 | A lorebook / worldbook, entries, keys, timing, Outlets | `references/lorebooks.md` |
 | A character card, persona, or group | `references/characters-personas.md` |
+| A character identity sheet, facial-expression portraits, matching full-body portraits, sprite filenames, or a portable portrait package | `references/portrait-workflow.md` and, when packaging a native character file, `references/characters-personas.md` |
+| A PNGTuber, mesh/VRM/MMD/GLB/FBX avatar, blink/talk faces, avatar settings, or .mavatar/.save/.vrm/.vrma/.pmx/.vmd/.glb/.fbx files | `references/avatars.md` |
 | A hierarchical / spatial map | `references/maps.md` |
 | A prompt preset, sections, markers, generation parameters | `references/presets-and-prompts.md` |
 | Macros, `{{#if}}` conditionals, preset variables | `references/macros.md` |
 | Regex scripts, custom tools, personal extensions, themes | `references/extensions-and-scripts.md` |
 | A downloadable Agent package | `references/agent-packages.md` |
+| An in-app custom Agent, its file/folder export, activation, capabilities, or output contract | `references/agent-definition.md` and `references/agent-prompt-craft.md` |
+| A Game ruleset, creature/tile/board pack, world kit, generated world, Experience map pack, or world-bound story script | `references/game-content.md` |
 | To know what file shape imports at all | `references/export-envelopes.md` |
 
-Version note: the references track Engine v2.5.0 and the Agents catalog as of October 2026. Decision activation and `decision:` conditions, lorebook entry images, `{{include::}}`, preset `skipWrap`, and maps above 500 locations need Engine 2.5.0 or later. An older install fails or ignores them, so ask which version the user runs before relying on them.
+Version note: these references track **v2.5.2**, rather than an unpinned `main`. Existing minimum-version notes remain feature-specific: decision activation, entry images, `{{include::}}`, `skipWrap`, and maps above 500 locations arrived on the 2.5.0 line; 2D/3D Avatars and expanded Game formats on 2.5.1. New in **2.5.2**: per-chat card field alternatives (`extensions.cardFieldAlternatives`), persona `summary` / `mes_example`, uncapped character `summary`, `{{date|time|weekday.world_state}}` macros, `{{characters}}` including inactive members, creator notes never reaching the model, presets no longer setting token limits, chat-settings-profile `personaId` / `lorebookIds`, MMD and GLB/FBX avatars, Capability API above 1.341 (v2.5.2 supports 1.816) and the Agent Organizer store. An older install ignores or rejects these. Use the version the user supplies; if it is unknown and changes the deliverable, inspect it before relying on a newer contract. Capability API compatibility is a separate gate from the Engine version range.
 
-Coverage note: lorebook, character, persona, map, preset, and regex-script formats have each been verified against the Engine's own schemas — the first four via templates in this skill, the last two against real exports. Custom tools, personal extensions, and themes are documented from their schemas but have no file format to verify, since they are created in the app.
+Upgrade note: **2.5.2 cannot be rolled back by any updater.** On first start it upgrades the data folder to storage format 10 (connection accounts, MMD and GLB/FBX avatars); 2.5.1 refuses to open it, the launcher and in-app updater refuse the downgrade, and the chat-file conversion command refuses any format ≥ 8. Tell users to make a full backup (**Download Backup**) before upgrading; the only way back is restoring a pre-upgrade backup (Engine `docs/UPGRADING.md` → **Downgrading to an older version**). Do not suggest editing the format number. Historical note: data below format 8 (a 2.5.1 or older folder that 2.5.2 has never opened) can still have its chat files converted back for an older build with that command; 2.5.0 also drops newer connection, image and game data when it saves.
+
+Coverage: the six content templates (lorebook, character, persona, map, preset, regex) are checked against the v2.5.2 release schemas with Zod 4; the map's hierarchy profile is checked against the pinned Agents model through the validator's Zod 4 bridge shim (World Maps 1.8.0 still uses a Zod 3 API; see `scripts/README.md`). Other formats have their own validators or binary import checks, listed in their references. Schema acceptance is distinct from importer normalization, asset decoding, runtime behavior and a live UI import test. Personal extensions, themes, custom Agents and tools also have file/folder workflows; do not assume everything outside `.marinara.json` is UI-only.
 
 Several often apply at once. A "setting pack" is usually a lorebook plus a map plus one or two cards, and the cross-links between them matter — read all three.
 
 ## Working discipline
 
-**Do not author from memory.** Every content type here has a strict or near-strict zod schema, and Marinara has diverged from SillyTavern in ways that are easy to guess wrong (Outlet position 7, entry folders, `ephemeral`, `activationConditions`, layer ordering on maps). Before emitting a file, check the field against the schema listed in the relevant reference. A hallucinated key on a `.strict()` schema fails the whole import with one terse error.
+**Do not author from memory.** Check the actual schema and consuming importer/parser for each field. Strict objects reject unknown keys; other boundaries strip, normalize or preserve them. Importers may default a field differently from its API create schema. Field presence in a type declaration alone does not prove a feature works or round-trips.
 
 **Validate before delivering.** If a Marinara-Engine checkout is available, run the artifact through the actual schema — see `scripts/README.md`. This catches the failure modes that matter (dangling parent IDs, duplicate layer orders, unknown enum values) far faster than an import attempt does.
 
-**Prefer the native envelope.** Marinara reads its own `.marinara.json` exports losslessly and reads foreign formats (SillyTavern World Info, V2 character cards) through a lossy mapping. When authoring fresh content, emit native.
+**Choose the artifact's real format.** Prefer native exports for the content they carry, but verify their actual omissions and ID remapping. Character native exports do not carry avatar model files; preset import discards generation parameters. Maps, Game assets, ruleset packages, avatar binaries and extension ZIPs use separate contracts. Consult `references/export-envelopes.md` rather than wrapping every artifact in `.marinara.json` or promising universal losslessness.
 
-**Start from `templates/`.** Every file there has been parsed by the real Engine schema and is valid as shipped. Replace the content, keep the shape.
+**Start from the matching template or upstream example.** The six content templates are checked against v2.5.2. Agent-package templates are builder inputs: regenerate their file hashes before distributing them. For large Game contracts or binary formats, start from the pinned examples/tools in the relevant reference, not a fabricated generic envelope.
 
 ## Content that references other content
 
 Marinara artifacts point at each other by ID, and IDs are assigned at import time. That constrains what can be authored offline:
 
-- A map location's `lorebookEntryIds` refers to entry IDs that do not exist until the lorebook is imported. Author the map with empty arrays and link inside the app, or ship the map with a portable-lore bundle (`references/maps.md`).
+- A map location's `lorebookEntryIds` must resolve in the destination. Either link in the app or use the current portable map lore bundle and its reviewed restore/remapping workflow (`references/maps.md`). Do not substitute a flat guessed lore format.
 - A lorebook's `characterIds` / `personaIds` are the same problem. Leave them empty and link in the Lorebooks panel.
 - A character's `character_book` is embedded lore that travels with the card — this one *does* work offline, and is the right vehicle for lore that belongs to one character.
 - `{{21-character-card-ID}}` macros need the real card ID from the app; they cannot be pre-filled.
@@ -81,4 +89,4 @@ Say this plainly when handing over a multi-part pack, rather than shipping IDs t
 
 ## Coming from SillyTavern
 
-Marinara imports SillyTavern World Info files, V2 character cards, and whole ST install folders, and maps ST fields onto its own. What Marinara adds on top — Outlets, entry folders, `ephemeral`, scheduling, activation conditions, per-entry vector settings, `additionalMatchingSources` — has no ST equivalent and is lost on a round trip through Compatible JSON. When converting an existing ST worldbook, the interesting work is deciding which of those additions to apply, not the field mapping itself.
+Marinara imports SillyTavern World Info, character cards and install folders through dedicated mappings. Some ST extensions preserve Outlet 7, ephemeral/recursion flags, decisions and embedded lore images; support differs by exporter. Compatible character PNG and JSON also retain different assets/onboarding. Check the exact conversion route in the relevant reference and record losses, rather than treating every Compatible export alike.

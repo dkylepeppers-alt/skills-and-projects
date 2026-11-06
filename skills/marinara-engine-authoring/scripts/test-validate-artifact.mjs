@@ -1,11 +1,20 @@
 /** Run with the same TypeScript loader as validate-artifact.ts and MARINARA_ENGINE_ROOT set. */
 import assert from "node:assert/strict";
-import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 if (!process.env.MARINARA_ENGINE_ROOT) throw new Error("Set MARINARA_ENGINE_ROOT to the release checkout.");
+// Resolve checkout roots against the working directory once, so symlinks made in the temporary
+// directory and validator runs from other working directories see the same checkouts.
+process.env.MARINARA_ENGINE_ROOT = resolve(process.env.MARINARA_ENGINE_ROOT);
+if (process.env.MARINARA_AGENTS_ROOT) process.env.MARINARA_AGENTS_ROOT = resolve(process.env.MARINARA_AGENTS_ROOT);
+const engineSibling = resolve(process.env.MARINARA_ENGINE_ROOT, "..", "Marinara-Agents");
+const agentsAvailable = Boolean(process.env.MARINARA_AGENTS_ROOT)
+  || existsSync(resolve(engineSibling, "scripts/catalog-package-guidance.mjs"));
+if (!agentsAvailable)
+  throw new Error("Set MARINARA_AGENTS_ROOT (or clone Marinara-Agents next to Marinara-Engine): map profiles and agent packages are checked against it.");
 const scripts = dirname(fileURLToPath(import.meta.url));
 const temporary = mkdtempSync(join(process.cwd(), ".marinara-validation-"));
 const validator = join(scripts, "validate-artifact.ts");
@@ -47,7 +56,7 @@ try {
     const result = run(names.map(n => resolve(scripts, "../templates", n)));
     assert.equal(result.status, 0, result.output);
     assert.match(result.output, /ok\s+map definition/);
-    if (process.env.MARINARA_AGENTS_ROOT) assert.match(result.output, /ok\s+hierarchyProfile/);
+    assert.match(result.output, /ok\s+hierarchyProfile/);
   });
   check("unknown JSON never reports successful validation", () => rejected({ arbitrary: "unvalidated" }));
   check("unsupported envelope versions fail", () => rejected({ type: "marinara_character", version: 2, data: {} }));
@@ -106,7 +115,7 @@ try {
     value.data = {};
     rejected(value, /map definition/);
   });
-  if (process.env.MARINARA_AGENTS_ROOT) {
+  {
     check("an invalid hierarchy profile fails the loaded maps model", () => {
       const value = JSON.parse(readFileSync(resolve(scripts, "../templates/map-template.json"), "utf8"));
       value.hierarchyProfile.types[0].baseKind = "not-a-kind";
@@ -229,6 +238,37 @@ try {
     const loose = run([join(dir, "loose-tool.json")]);
     assert.match(loose.output, /loose JSON tool file is imported without resolving/);
     assert.match(loose.output, /script tool with no script body/);
+  });
+  check("without an Agents checkout, agent-package and map-profile checks fail instead of guessing", () => {
+    const env = { ...process.env, MARINARA_AGENTS_ROOT: "" };
+    delete env.MARINARA_AGENTS_ROOT;
+    // Point the Engine root through a temporary path with no Marinara-Agents sibling.
+    const isolated = join(temporary, "isolated", "Marinara-Engine");
+    mkdirSync(dirname(isolated), { recursive: true });
+    symlinkSync(process.env.MARINARA_ENGINE_ROOT, isolated);
+    env.MARINARA_ENGINE_ROOT = isolated;
+    const result = spawnSync(process.execPath, [...process.execArgv, validator,
+      join(templates, "agent-package/manifest.json"), resolve(scripts, "../templates/map-template.json")],
+      { encoding: "utf8", env, timeout: 30000 });
+    const output = result.stdout + result.stderr;
+    assert.equal(result.status, 1, output);
+    assert.match(output, /description rule needs the Marinara-Agents checkout/);
+    assert.match(output, /World Maps model needs the Marinara-Agents checkout/);
+  });
+  check("a Marinara-Agents checkout beside Marinara-Engine is found without MARINARA_AGENTS_ROOT", () => {
+    const agentsRoot = process.env.MARINARA_AGENTS_ROOT || engineSibling;
+    const root = join(temporary, "side-by-side");
+    mkdirSync(root);
+    symlinkSync(process.env.MARINARA_ENGINE_ROOT, join(root, "Marinara-Engine"));
+    symlinkSync(agentsRoot, join(root, "Marinara-Agents"));
+    const env = { ...process.env, MARINARA_ENGINE_ROOT: join(root, "Marinara-Engine") };
+    delete env.MARINARA_AGENTS_ROOT;
+    const result = spawnSync(process.execPath, [...process.execArgv, validator,
+      join(templates, "agent-package/manifest.json"), resolve(scripts, "../templates/map-template.json")],
+      { encoding: "utf8", env, timeout: 30000 });
+    const output = result.stdout + result.stderr;
+    assert.equal(result.status, 0, output);
+    assert.match(output, /ok\s+hierarchyProfile/);
   });
   check("a ruleset package with a tampered document fails the Engine reader", () => rejected({
     format: "marinara-ruleset", version: 1, manifest: {}, files: { "ruleset.json": "e30=" },

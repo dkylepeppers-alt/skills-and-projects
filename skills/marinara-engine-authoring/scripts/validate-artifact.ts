@@ -15,7 +15,15 @@ import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { lintExtensionSource } from "./lint-extension.mjs";
 
 const engineRoot = process.env.MARINARA_ENGINE_ROOT;
-const agentsRoot = process.env.MARINARA_AGENTS_ROOT;
+/** The Agents checkout: MARINARA_AGENTS_ROOT, else a Marinara-Agents folder beside the Engine checkout. */
+const agentsRoot = (() => {
+  if (process.env.MARINARA_AGENTS_ROOT) return process.env.MARINARA_AGENTS_ROOT;
+  if (!process.env.MARINARA_ENGINE_ROOT) return undefined;
+  const sibling = resolve(process.env.MARINARA_ENGINE_ROOT, "..", "Marinara-Agents");
+  return existsSync(resolve(sibling, "scripts/catalog-package-guidance.mjs")) ? sibling : undefined;
+})();
+const AGENTS_REQUIRED =
+  "needs the Marinara-Agents checkout: set MARINARA_AGENTS_ROOT, or clone Marinara-Agents next to Marinara-Engine";
 if (!engineRoot) {
   console.error("Set MARINARA_ENGINE_ROOT to a Marinara-Engine checkout.");
   process.exit(2);
@@ -208,7 +216,8 @@ function validateMap(raw: any) {
       failures += 1;
       console.log(`  FAIL  hierarchyProfile not checked: maps model failed to load (${mapsModelError})`);
     } else {
-      console.log("  skip  hierarchyProfile (set MARINARA_AGENTS_ROOT to check it)");
+      failures += 1;
+      console.log(`  FAIL  hierarchyProfile not checked: the World Maps model ${AGENTS_REQUIRED}`);
     }
     return;
   }
@@ -430,25 +439,20 @@ function inside(dir: string, target: string) {
 
 /**
  * The Agents catalog rule (validate-catalog.mjs): the package-id agent's description equals
- * manifest.description, or manifest.description without this package's activation sentence
- * from catalog-package-guidance.mjs. That sentence is known only with MARINARA_AGENTS_ROOT.
+ * manifest.description, or manifest.description without this package's activation sentence,
+ * using the catalog's own withoutPackageActivationGuidance (catalog-package-guidance.mjs).
+ * The Agents checkout is required; the rule is never approximated.
  */
 async function checkPackageDescription(manifest: any, own: any) {
-  const manifestText = String(manifest.description ?? "").trim();
-  const agentText = String(own.description ?? "");
-  if (agentText === manifest.description) return;
-  if (agentsRoot) {
-    const guidancePath = resolve(agentsRoot, "scripts/catalog-package-guidance.mjs");
-    if (existsSync(guidancePath)) {
-      const guidance = await import(guidancePath);
-      if (agentText !== guidance.withoutPackageActivationGuidance(manifest.id, manifest.description))
-        problem("the package agent's description must equal manifest.description, or it without this package's activation sentence");
-      return;
-    }
+  const guidancePath = agentsRoot ? resolve(agentsRoot, "scripts/catalog-package-guidance.mjs") : null;
+  if (!guidancePath || !existsSync(guidancePath)) {
+    problem(`the package description rule ${AGENTS_REQUIRED} (scripts/catalog-package-guidance.mjs)`);
+    return;
   }
-  if (manifestText.startsWith(`${agentText.trim()} `) && agentText.trim())
-    warn("the package agent's description is manifest.description minus a trailing part; set MARINARA_AGENTS_ROOT to confirm that part is this package's activation sentence");
-  else problem("the package agent's description must equal manifest.description (or it without the activation sentence)");
+  const guidance = await import(guidancePath);
+  const agentText = String(own.description ?? "");
+  if (agentText !== manifest.description && agentText !== guidance.withoutPackageActivationGuidance(manifest.id, manifest.description))
+    problem("the package agent's description must equal manifest.description, or it without this package's activation sentence");
 }
 
 async function validateAgentDefinitions(definitions: any, label = "") {

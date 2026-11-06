@@ -6,6 +6,10 @@ import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
 
 if (!process.env.MARINARA_ENGINE_ROOT) throw new Error("Set MARINARA_ENGINE_ROOT to the release checkout.");
+// Resolve checkout roots against the working directory once, so symlinks made in the temporary
+// directory and validator runs from other working directories see the same checkouts.
+process.env.MARINARA_ENGINE_ROOT = resolve(process.env.MARINARA_ENGINE_ROOT);
+if (process.env.MARINARA_AGENTS_ROOT) process.env.MARINARA_AGENTS_ROOT = resolve(process.env.MARINARA_AGENTS_ROOT);
 const engineSibling = resolve(process.env.MARINARA_ENGINE_ROOT, "..", "Marinara-Agents");
 const agentsAvailable = Boolean(process.env.MARINARA_AGENTS_ROOT)
   || existsSync(resolve(engineSibling, "scripts/catalog-package-guidance.mjs"));

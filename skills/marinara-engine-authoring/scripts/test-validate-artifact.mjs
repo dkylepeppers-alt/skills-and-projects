@@ -110,7 +110,10 @@ try {
     check("an invalid hierarchy profile fails the loaded maps model", () => {
       const value = JSON.parse(readFileSync(resolve(scripts, "../templates/map-template.json"), "utf8"));
       value.hierarchyProfile.types[0].baseKind = "not-a-kind";
-      rejected(value, /FAIL\s+hierarchyProfile/);
+      const result = run([fixture("bad-profile", value)]);
+      assert.notEqual(result.status, 0, result.output);
+      assert.match(result.output, /FAIL\s+hierarchyProfile/);
+      assert.doesNotMatch(result.output, /not checked|Could not load/, "the maps model must load for this check to mean anything");
     });
   }
 } finally { rmSync(temporary, { recursive: true, force: true }); }

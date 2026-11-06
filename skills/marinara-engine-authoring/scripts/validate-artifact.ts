@@ -7,7 +7,7 @@
  * Maps package owns that schema, not the Engine). Everything else needs only the
  * Engine checkout. See README.md in this directory for setup.
  */
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { registerHooks } from "node:module";
 import { dirname, resolve } from "node:path";
 
@@ -337,12 +337,10 @@ async function main() {
       agentsRoot,
       "packages/hierarchical-maps/src/engine/packages/maps-shared/src/maps-model.js",
     );
-    // Use the release's built shared entrypoint when available. The source-only
-    // fallback re-exports the maps model's actual Engine schema dependencies,
-    // avoiding unrelated generated registries imported by shared/src/index.ts.
-    const builtShared = resolve(engineRoot, "packages/shared/dist/index.js");
-    const bridge = resolve(dirname(resolve(process.argv[1]!)), "maps-shared-bridge.cjs");
-    const sharedModule = existsSync(builtShared) ? builtShared : bridge;
+    // The bridge loads the release's built shared entrypoint when available, else the
+    // maps model's actual Engine schema dependencies from source, and applies the Zod 4
+    // `.innerType()` shim in the same module instance the maps model receives.
+    const sharedModule = resolve(dirname(resolve(process.argv[1]!)), "maps-shared-bridge.cjs");
     const hooks = registerHooks({ resolve(specifier, context, nextResolve) {
       return nextResolve(specifier === "@marinara-engine/shared" ? sharedModule : specifier, context);
     } });

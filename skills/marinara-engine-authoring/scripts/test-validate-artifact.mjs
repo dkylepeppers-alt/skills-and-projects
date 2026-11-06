@@ -1,6 +1,6 @@
 /** Run with the same TypeScript loader as validate-artifact.ts and MARINARA_ENGINE_ROOT set. */
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { spawnSync } from "node:child_process";
@@ -116,6 +116,123 @@ try {
       assert.doesNotMatch(result.output, /not checked|Could not load/, "the maps model must load for this check to mean anything");
     });
   }
+  // ── Formats beyond the six content templates ──
+  const accepted = (paths, pattern) => {
+    const result = run(paths);
+    assert.equal(result.status, 0, result.output);
+    if (pattern) assert.match(result.output, pattern);
+    return result;
+  };
+  const templates = resolve(scripts, "../templates");
+  check("extension templates pass the Engine importer, schema and lint", () => accepted(
+    [join(templates, "extension-browser/manifest.json"), join(templates, "extension-server/manifest.json")],
+    /ok\s+personal extension "Scene Notes" \(client\)[\s\S]*ok\s+personal extension "Uptime Log" \(server\)/,
+  ));
+  check("an extension manifest naming a missing file finds no extension", () => {
+    const dir = join(temporary, "Broken Extension");
+    mkdirSync(dir);
+    writeFileSync(join(dir, "manifest.json"), JSON.stringify({
+      kind: "marinara.personal-extension", version: 1,
+      config: { name: "Broken", runtime: "client", capabilities: [], jsPath: "missing.js" },
+    }));
+    const result = run([join(dir, "manifest.json")]);
+    assert.equal(result.status, 1, result.output);
+    assert.match(result.output, /finds no extension/);
+  });
+  check("sandbox-forbidden code in an extension fails its lint", () => {
+    const dir = join(temporary, "Dom Extension");
+    mkdirSync(dir);
+    writeFileSync(join(dir, "extension.js"), "document.body.append('x');\nmarinara.chat.send('hi');\n");
+    writeFileSync(join(dir, "manifest.json"), JSON.stringify({
+      kind: "marinara.personal-extension", version: 1,
+      config: { name: "Dom", runtime: "client", capabilities: [], jsPath: "extension.js" },
+    }));
+    const result = run([join(dir, "manifest.json")]);
+    assert.equal(result.status, 1, result.output);
+    assert.match(result.output, /lint: .*`document`/);
+    assert.match(result.output, /lint: .*marinara\.chat/);
+  });
+  check("the agent-package template manifest and definitions pass", () => accepted(
+    [join(templates, "agent-package/manifest.json"), join(templates, "agent-package/agents.json")],
+    /ok\s+capability package manifest[\s\S]*ok\s+agents\.json packaged agent definitions[\s\S]*ok\s+packaged agent definitions/,
+  ));
+  check("a Capability API minor above the supported one fails", () => {
+    const manifest = JSON.parse(readFileSync(join(templates, "agent-package/manifest.json"), "utf8"));
+    rejected({ ...manifest, schemaVersion: 2, capabilityApi: { major: 1, minor: 9999 },
+      builtAgainst: { engineVersion: "2.5.2", engineCommit: "fc0333c3fe978cda5e0b919bd6faec985901704e" } }, /capabilityApi\.minor 9999/);
+  });
+  check("an engine.min below the 2.5.2 floor warns", () => {
+    const manifest = JSON.parse(readFileSync(join(templates, "agent-package/manifest.json"), "utf8"));
+    accepted([fixture("old-min", { ...manifest, engine: { min: "2.3.0", maxExclusive: "4.0.0" } })], /warn\s+engine\.min 2\.3\.0/);
+  });
+  check("a custom tool imports through the Engine's transfer normalizer", () => accepted([fixture("tool", {
+    kind: "marinara.function", version: 1,
+    config: { name: "roll_weather", description: "Pick today's weather.", executionType: "static", staticResult: "Rain" },
+  })], /ok\s+tool\[0\] roll_weather/));
+  check("a custom tool with an invalid name fails", () => rejected({
+    kind: "marinara.function", version: 1, config: { name: "Roll Weather", description: "x", executionType: "static" },
+  }, /snake_case/));
+  check("a structural story script passes and a bad one fails", () => {
+    accepted([fixture("story", { storyVersion: 1, flags: [], directions: [], events: [], cutscenes: [] })], /ok\s+story script/);
+    rejected({ storyVersion: 1, flags: [{ id: "Bad Id", kind: "bool", initial: false }] }, /story script/);
+  });
+  check("a chat settings profile with 2.5.2 fields passes; an unknown setting fails", () => {
+    accepted([fixture("profile", { type: "marinara_chat_settings_profile", version: 1,
+      data: { name: "Night", mode: "roleplay", settings: { personaId: null, lorebookIds: ["a"] } } })], /ok\s+settings profile settings/);
+    rejected({ type: "marinara_chat_settings_profile", version: 1,
+      data: { name: "Night", mode: "roleplay", settings: { invented: true } } }, /settings profile settings/);
+  });
+  check("relative manifest paths still check files[] hashes beside the manifest", () => {
+    const dir = join(temporary, "pkg");
+    mkdirSync(dir);
+    const manifest = JSON.parse(readFileSync(join(templates, "agent-package/manifest.json"), "utf8"));
+    writeFileSync(join(dir, "manifest.json"), JSON.stringify(manifest));
+    writeFileSync(join(dir, "agents.json"), readFileSync(join(templates, "agent-package/agents.json")));
+    const result = spawnSync(process.execPath, [...process.execArgv, validator, "manifest.json"], {
+      encoding: "utf8", env: process.env, cwd: dir, timeout: 30000,
+    });
+    assert.match(result.stdout, /warn\s+files\[\] entry agents\.json does not match/, result.stdout + result.stderr);
+  });
+  check("a package agent description that is only a prefix of the manifest's fails or warns", () => {
+    const dir = join(temporary, "desc");
+    mkdirSync(dir);
+    const manifest = JSON.parse(readFileSync(join(templates, "agent-package/manifest.json"), "utf8"));
+    const agents = JSON.parse(readFileSync(join(templates, "agent-package/agents.json"), "utf8"));
+    agents[0].description = "Totally different text.";
+    writeFileSync(join(dir, "manifest.json"), JSON.stringify(manifest));
+    writeFileSync(join(dir, "agents.json"), JSON.stringify(agents));
+    const result = run([join(dir, "manifest.json")]);
+    assert.equal(result.status, 1, result.output);
+    assert.match(result.output, /description must equal manifest\.description/);
+  });
+  check("an extension manifest shadowed by a root collection file is not silently swapped", () => {
+    const dir = join(temporary, "Shadowed");
+    mkdirSync(dir);
+    writeFileSync(join(dir, "manifest.json"), JSON.stringify({
+      kind: "marinara.personal-extension", version: 1,
+      config: { name: "Broken", runtime: "client", capabilities: [], jsPath: "missing.js" },
+    }));
+    writeFileSync(join(dir, "marinara-extensions.json"), JSON.stringify({ extensions: [{ name: "Other", runtime: "client", capabilities: [], css: "a{}" }] }));
+    const result = run([join(dir, "manifest.json")]);
+    assert.equal(result.status, 1, result.output);
+    assert.match(result.output, /would use another file/);
+  });
+  check("a tool folder resolves its script beside its own manifest; a loose file warns", () => {
+    const dir = join(temporary, "roll_weather");
+    mkdirSync(dir);
+    writeFileSync(join(dir, "script.js"), "return 'rain';");
+    const tool = { kind: "marinara.function", version: 1,
+      config: { name: "roll_weather", description: "Pick weather.", executionType: "script", scriptBodyPath: "script.js" } };
+    writeFileSync(join(dir, "manifest.json"), JSON.stringify(tool));
+    accepted([join(dir, "manifest.json")], /ok\s+tool\[0\] roll_weather/);
+    writeFileSync(join(dir, "loose-tool.json"), JSON.stringify(tool));
+    const loose = run([join(dir, "loose-tool.json")]);
+    assert.match(loose.output, /loose JSON tool file is imported without resolving/);
+    assert.match(loose.output, /script tool with no script body/);
+  });
+  check("a ruleset package with a tampered document fails the Engine reader", () => rejected({
+    format: "marinara-ruleset", version: 1, manifest: {}, files: { "ruleset.json": "e30=" },
+  }, /FAIL\s+ruleset package/));
 } finally { rmSync(temporary, { recursive: true, force: true }); }
 console.log(`${count - failures}/${count} checks passed.`);
 process.exitCode = failures ? 1 : 0;

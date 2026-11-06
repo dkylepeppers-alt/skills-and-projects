@@ -1,0 +1,5 @@
+/* Styles only the constrained iframe windows opened with marinara.ui.showWindow.
+   Panels and buttons registered with ui.registerContribution always use Marinara's theme. */
+[data-ext-root] {
+  font-size: 15px;
+}

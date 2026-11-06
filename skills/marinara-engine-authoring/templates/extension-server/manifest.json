@@ -1,0 +1,12 @@
+{
+  "kind": "marinara.personal-server-extension",
+  "version": 1,
+  "config": {
+    "name": "Uptime Log",
+    "version": "1.0.0",
+    "description": "Counts server starts and logs an hourly uptime line.",
+    "runtime": "server",
+    "capabilities": [],
+    "serverJsPath": "server-extension.js"
+  }
+}

@@ -4,12 +4,15 @@
  *   MARINARA_ENGINE_ROOT=~/dev/Marinara-Engine npx tsx validate-artifact.ts file.json [more.json …]
  *
  * Map hierarchy profiles additionally need MARINARA_AGENTS_ROOT (the Hierarchical
- * Maps package owns that schema, not the Engine). Everything else needs only the
+ * Maps package owns that schema, not the Engine). Extension packages, custom tools
+ * and ruleset packages reuse Engine client/server importers, so they need a full
  * Engine checkout. See README.md in this directory for setup.
  */
-import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { registerHooks } from "node:module";
-import { dirname, resolve } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve } from "node:path";
+import { lintExtensionSource } from "./lint-extension.mjs";
 
 const engineRoot = process.env.MARINARA_ENGINE_ROOT;
 const agentsRoot = process.env.MARINARA_AGENTS_ROOT;
@@ -40,6 +43,24 @@ function problem(message: string) {
   console.log(`  FAIL  ${message}`);
 }
 
+let warnings = 0;
+function warn(message: string) {
+  warnings += 1;
+  console.log(`  warn  ${message}`);
+}
+
+/** Engine release this skill targets; every build assumes it or later. */
+const ENGINE_FLOOR = [2, 5, 2];
+const SUPPORTED_CAPABILITY_MINOR = 816;
+
+function semverBelow(value: unknown, floor: number[]) {
+  const match = typeof value === "string" ? /^(\d+)\.(\d+)\.(\d+)/.exec(value) : null;
+  if (!match) return false;
+  const parts = match.slice(1, 4).map(Number);
+  for (let i = 0; i < 3; i += 1) if (parts[i] !== floor[i]) return parts[i]! < floor[i]!;
+  return false;
+}
+
 function uniqueIds(items: any[], label: string) {
   const seen = new Set<string>();
   for (const [index, item] of items.entries()) {
@@ -67,7 +88,33 @@ function report(label: string, result: { success: boolean; error?: any }) {
 }
 
 /** Native envelopes wrap the payload; bare payloads are accepted too. */
+const EXTENSION_KINDS = new Set([
+  "marinara.personal-extension",
+  "marinara.personal-server-extension",
+  "marinara.extension",
+  "marinara.server-extension",
+]);
+const TOOL_COLLECTION_KEYS = ["functions", "customTools", "tools"];
+
 function unwrap(raw: any): { kind: string; payload: any } {
+  if (record(raw) && raw.format === "marinara-ruleset") return { kind: "ruleset_package", payload: raw };
+  if (record(raw) && EXTENSION_KINDS.has(raw.kind)) return { kind: "extension_manifest", payload: raw };
+  if (
+    record(raw) &&
+    (raw.kind === "marinara.function" ||
+      raw.kind === "marinara.function-folder" ||
+      TOOL_COLLECTION_KEYS.some((key) => Array.isArray(raw[key])))
+  )
+    return { kind: "custom_tools", payload: raw };
+  if (record(raw) && typeof raw.id === "string" && record(raw.entrypoints) && Array.isArray(raw.kind))
+    return { kind: "agent_manifest", payload: raw };
+  if (Array.isArray(raw) && raw.length > 0 && raw.every((item) => record(item) && "defaultPromptTemplate" in item))
+    return { kind: "agent_definitions", payload: raw };
+  if (record(raw) && "storyVersion" in raw) return { kind: "story_script", payload: raw };
+  if (record(raw) && (raw.type === "marinara_chat_settings_profile" || raw.type === "marinara_chat_preset")) {
+    if (raw.version !== 1) throw new Error(`unsupported envelope version (${String(raw.version)})`);
+    return { kind: "chat_settings_profile", payload: raw.data };
+  }
   if (record(raw) && raw.kind === "marinara.regex-scripts") {
     if (raw.version !== 1) throw new Error(`unsupported regex export version (${String(raw.version)})`);
     if (!Array.isArray(raw.regexScripts)) throw new Error("regexScripts must be an array");
@@ -317,6 +364,208 @@ function validateRegexScripts(scripts: any[]) {
   }
 }
 
+// ── Engine modules beyond the schema directory ────────────────────────────
+// These reuse the Engine's own importers/readers (client and server source) so
+// the checks follow the real import path. They need a full Engine checkout.
+let sharedIndex: any;
+let engineHooks: { deregister(): void } | null = null;
+async function engineShared() {
+  if (!sharedIndex) {
+    const index = resolve(engineRoot!, "packages/shared/src/index.ts");
+    engineHooks = registerHooks({ resolve(specifier, context, nextResolve) {
+      return nextResolve(specifier === "@marinara-engine/shared" ? index : specifier, context);
+    } });
+    sharedIndex = await import(index);
+  }
+  return sharedIndex;
+}
+async function engineModule(relativePath: string) {
+  await engineShared();
+  const path = resolve(engineRoot!, relativePath);
+  if (!existsSync(path)) throw new Error(`MARINARA_ENGINE_ROOT has no ${relativePath}; use a full Engine checkout`);
+  return import(path);
+}
+
+function listTextFiles(root: string, prefix: string, out: Array<{ path: string; text: string }> = []) {
+  for (const name of readdirSync(root)) {
+    if (name === "node_modules" || name.startsWith(".")) continue;
+    const full = join(root, name);
+    if (statSync(full).isDirectory()) listTextFiles(full, `${prefix}${name}/`, out);
+    else if (/\.(json|js|mjs|cjs|css|md|txt)$/i.test(name)) out.push({ path: `${prefix}${name}`, text: readFileSync(full, "utf8") });
+  }
+  return out;
+}
+
+async function validateAgentManifest(manifest: any, filePath: string) {
+  const shared = await engineShared();
+  report("capability package manifest", shared.capabilityPackageManifestSchema.safeParse(manifest));
+  if (semverBelow(manifest.engine?.min, ENGINE_FLOOR))
+    warn(`engine.min ${manifest.engine.min} is below the 2.5.2 floor this skill builds for`);
+  const minor = manifest.capabilityApi?.minor;
+  if (typeof minor === "number" && minor > SUPPORTED_CAPABILITY_MINOR)
+    problem(`capabilityApi.minor ${minor} is above the ${SUPPORTED_CAPABILITY_MINOR} that Engine v2.5.2 supports; it will not install`);
+  const dir = resolve(dirname(filePath));
+  for (const file of Array.isArray(manifest.files) ? manifest.files : []) {
+    const target = typeof file?.path === "string" ? resolve(dir, file.path) : null;
+    if (!target || !inside(dir, target) || !existsSync(target)) continue;
+    const bytes = readFileSync(target);
+    const sha = createHash("sha256").update(bytes).digest("hex");
+    if (file.sha256 !== sha || file.bytes !== bytes.length)
+      warn(`files[] entry ${file.path} does not match the file on disk; run the catalog builder to regenerate it`);
+  }
+  const agentsPath = typeof manifest.entrypoints?.agents === "string" ? resolve(dir, manifest.entrypoints.agents) : null;
+  if (agentsPath && existsSync(agentsPath)) {
+    const definitions = JSON.parse(readFileSync(agentsPath, "utf8"));
+    await validateAgentDefinitions(definitions, `${relative(dir, agentsPath)} `);
+    const own = Array.isArray(definitions) ? definitions.find((item: any) => item?.id === manifest.id) : null;
+    if (!own) problem(`agents.json has no agent whose id equals the package id "${manifest.id}"`);
+    else await checkPackageDescription(manifest, own);
+  }
+}
+
+function inside(dir: string, target: string) {
+  const rel = relative(dir, target);
+  return rel !== "" && !rel.startsWith("..") && !isAbsolute(rel);
+}
+
+/**
+ * The Agents catalog rule (validate-catalog.mjs): the package-id agent's description equals
+ * manifest.description, or manifest.description without this package's activation sentence
+ * from catalog-package-guidance.mjs. That sentence is known only with MARINARA_AGENTS_ROOT.
+ */
+async function checkPackageDescription(manifest: any, own: any) {
+  const manifestText = String(manifest.description ?? "").trim();
+  const agentText = String(own.description ?? "");
+  if (agentText === manifest.description) return;
+  if (agentsRoot) {
+    const guidancePath = resolve(agentsRoot, "scripts/catalog-package-guidance.mjs");
+    if (existsSync(guidancePath)) {
+      const guidance = await import(guidancePath);
+      if (agentText !== guidance.withoutPackageActivationGuidance(manifest.id, manifest.description))
+        problem("the package agent's description must equal manifest.description, or it without this package's activation sentence");
+      return;
+    }
+  }
+  if (manifestText.startsWith(`${agentText.trim()} `) && agentText.trim())
+    warn("the package agent's description is manifest.description minus a trailing part; set MARINARA_AGENTS_ROOT to confirm that part is this package's activation sentence");
+  else problem("the package agent's description must equal manifest.description (or it without the activation sentence)");
+}
+
+async function validateAgentDefinitions(definitions: any, label = "") {
+  const shared = await engineShared();
+  report(`${label}packaged agent definitions`, shared.packagedAgentDefinitionsSchema.safeParse(definitions));
+}
+
+async function validateExtensionManifest(manifest: any, filePath: string) {
+  const transfer = await engineModule("packages/client/src/lib/folder-package-transfer.ts");
+  const importer = await engineModule("packages/client/src/lib/personal-extension-import.ts");
+  const shared = await engineShared();
+  const dir = resolve(dirname(filePath));
+  const folder = dir.split(/[\\/]/).pop() || "Extension";
+  const files = listTextFiles(dir, `${folder}/`);
+  const entries = transfer.collectFolderPackageEntries(files, {
+    rootFilenames: ["marinara-extensions.json", "marinara-extension.json", "marinara-personal-extensions.json"],
+    collectionKeys: ["extensions", "personalExtensions"],
+  });
+  const wanted = `${folder}/${relative(dir, resolve(filePath)).replace(/\\/g, "/")}`;
+  const entry = entries.find((item: any) => item.path === wanted);
+  if (!entry) {
+    // The Engine prefers a root collection file (marinara-extensions.json …) over manifest.json.
+    problem(entries.length
+      ? `the Engine's folder import would use another file in this folder (${entries[0].path}) instead of this manifest`
+      : "the Engine importer finds no extension here");
+    return;
+  }
+  const draft = importer.normalizePersonalExtensionImportEntry(entry, folder);
+  if (!draft) {
+    problem("the Engine importer finds no extension here: check the manifest's relative paths (server needs JS; browser needs CSS or JS)");
+    return;
+  }
+  report(`personal extension "${draft.name}" (${draft.runtime})`, shared.createPersonalExtensionSchema.safeParse(draft));
+  if (manifest.kind === "marinara.extension" && !Object.prototype.hasOwnProperty.call(manifest.config ?? manifest, "capabilities"))
+    warn("legacy marinara.extension without capabilities imports as full_page_access; add \"capabilities\": [] for the sandbox");
+  if (draft.capabilities?.includes("full_page_access"))
+    warn("full_page_access runs unsandboxed in Marinara's page; use it only for code the user fully trusts");
+  const source = draft.runtime === "server" ? draft.serverJs : draft.js;
+  if (source) {
+    const lint = lintExtensionSource(source, { runtime: draft.runtime, capabilities: draft.capabilities ?? [] });
+    for (const finding of lint) (finding.level === "error" ? problem : warn)(`lint: ${finding.message}`);
+    if (!lint.length) console.log("  ok    extension lint");
+  }
+}
+
+const TOOL_PACKAGE_FILES = new Set(["marinara-functions.json", "manifest.json"]);
+
+/**
+ * Mirrors the Functions panel import. A ZIP or folder package (a marinara-functions.json
+ * collection, or manifest.json per tool) goes through collectFolderPackageEntries, which
+ * resolves each tool's *Path fields beside that tool's own manifest. A loose JSON file is
+ * imported with no file resolution at all, so its *Path fields are ignored.
+ */
+async function validateCustomTools(raw: any, filePath: string) {
+  const transfer = await engineModule("packages/client/src/lib/custom-tool-transfer.ts");
+  const folders = await engineModule("packages/client/src/lib/folder-package-transfer.ts");
+  const shared = await engineShared();
+  const dir = resolve(dirname(filePath));
+  const name = filePath.split(/[\\/]/).pop()!.toLowerCase();
+  let entries: Array<{ raw: unknown; resolveTextFile: (path: unknown) => string | null }>;
+  if (TOOL_PACKAGE_FILES.has(name)) {
+    const folder = dir.split(/[\\/]/).pop() || "Functions";
+    entries = folders.collectFolderPackageEntries(listTextFiles(dir, `${folder}/`), {
+      rootFilenames: ["marinara-functions.json"],
+      collectionKeys: TOOL_COLLECTION_KEYS,
+    });
+    console.log(`  info  checked as a folder/ZIP package rooted at ${folder}/ (paths resolve beside each tool manifest)`);
+  } else {
+    entries = shared.getFolderImportEntries(raw, TOOL_COLLECTION_KEYS)
+      .map((entry: unknown) => ({ raw: entry, resolveTextFile: () => null }));
+    const pathKeys = /"(parametersSchemaPath|parametersPath|staticResultPath|scriptBodyPath|scriptPath|scriptPaths)"/;
+    if (pathKeys.test(JSON.stringify(raw)))
+      warn("a loose JSON tool file is imported without resolving *Path fields; ship the folder as a ZIP (marinara-functions.json or manifest.json per tool) instead");
+  }
+  if (!entries.length) problem("the Engine importer finds no custom tools here");
+  for (const [index, entry] of entries.entries()) {
+    const prepared = transfer.prepareCustomToolImportEntry(entry.raw, entry.resolveTextFile);
+    if (!prepared) {
+      problem(`tool[${index}] is not an importable custom tool (it needs a name and description)`);
+      continue;
+    }
+    report(`tool[${index}] ${prepared.config.name}`, shared.createCustomToolSchema.safeParse(prepared.config));
+    if (prepared.config.executionType === "script" && !prepared.config.scriptBody)
+      problem(`tool[${index}] is a script tool with no script body`);
+    if (prepared.review) warn(`tool[${index}] is a ${prepared.config.executionType} tool: it imports disabled and needs review`);
+  }
+}
+
+async function validateRulesetPackage(raw: any) {
+  const reader = await engineModule("packages/server/src/services/game/ruleset-package-file.ts");
+  const result = reader.readRulesetPackageFile(raw);
+  if (result.ok) {
+    console.log(`  ok    ruleset package (${Object.keys(result.catalogs).length} catalog(s), ${Object.keys(result.locales).length} translation(s))`);
+    return;
+  }
+  failures += 1;
+  console.log("  FAIL  ruleset package");
+  for (const issue of result.issues) console.log(`        ${issue}`);
+}
+
+async function validateStoryScript(raw: any) {
+  const shared = await engineShared();
+  report("story script (structure only; world bindings need the game's world)", shared.storyScriptSchema.safeParse(raw));
+}
+
+async function validateChatSettingsProfile(data: any) {
+  const shared = await engineShared();
+  if (!record(data)) {
+    problem("settings profile data must be an object");
+    return;
+  }
+  if (typeof data.name !== "string" || !data.name.trim()) problem("settings profile needs a name");
+  const mode = data.mode === "visual_novel" ? "roleplay" : data.mode;
+  report("chat mode", shared.chatModeSchema.safeParse(mode));
+  report("settings profile settings", shared.chatPresetSettingsSchema.safeParse(data.settings ?? {}));
+}
+
 async function main() {
   if (process.argv.length < 3) {
     console.error("Usage: validate-artifact.ts file.json [more.json …]");
@@ -392,6 +641,27 @@ async function main() {
       case "regex_scripts":
         validateRegexScripts(payload);
         break;
+      case "agent_manifest":
+        await validateAgentManifest(payload, path);
+        break;
+      case "agent_definitions":
+        await validateAgentDefinitions(payload);
+        break;
+      case "extension_manifest":
+        await validateExtensionManifest(payload, path);
+        break;
+      case "custom_tools":
+        await validateCustomTools(payload, path);
+        break;
+      case "ruleset_package":
+        await validateRulesetPackage(payload);
+        break;
+      case "story_script":
+        await validateStoryScript(payload);
+        break;
+      case "chat_settings_profile":
+        await validateChatSettingsProfile(payload);
+        break;
       default:
         problem(`unrecognized artifact type (${kind}); no schema validation was performed`);
       }
@@ -400,7 +670,9 @@ async function main() {
     }
   }
 
-  console.log(failures === 0 ? "\nAll checks passed." : `\n${failures} problem(s) found.`);
+  engineHooks?.deregister();
+  const warned = warnings ? ` (${warnings} warning(s))` : "";
+  console.log(failures === 0 ? `\nAll checks passed${warned}.` : `\n${failures} problem(s) found${warned}.`);
   process.exit(failures === 0 ? 0 : 1);
 }
 

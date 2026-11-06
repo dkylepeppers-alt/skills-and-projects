@@ -1,0 +1,13 @@
+{
+  "kind": "marinara.personal-extension",
+  "version": 1,
+  "config": {
+    "name": "Scene Notes",
+    "version": "1.0.0",
+    "description": "Keeps private notes for each chat in a Marinara-rendered side panel.",
+    "runtime": "client",
+    "capabilities": [],
+    "jsPath": "extension.js",
+    "cssPath": "extension.css"
+  }
+}

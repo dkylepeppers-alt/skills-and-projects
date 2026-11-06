@@ -116,6 +116,14 @@ This reference covers the file contract, packaging and trust gates. It does **no
 
 Use only APIs those guides document for 2.5.2 or the later release being targeted.
 
+Start from `templates/extension-browser/` (sandboxed panel, context, storage, command, cleanup) or `templates/extension-server/` (storage, managed timer, cleanup). Before handing over an extension:
+
+1. Run `scripts/lint-extension.mjs <manifest.json>`. It flags undocumented `marinara.*` calls, sandbox-forbidden globals, capability mismatches and missing cleanup.
+2. Exercise its logic offline with `scripts/marinara-extension-stub.mjs`: activate contributions, send panel events, change context, advance timers, roll dice, then `stop()` to check cleanup.
+3. Run `scripts/validate-artifact.ts <manifest.json>` with a full Engine checkout. It runs the Engine's own folder importer and extension schema, then the lint.
+
+None of these replaces importing, reviewing and approving the exact hash in the app; say so when handing over.
+
 ### Extension files and packages
 
 The Settings extension importer accepts `.zip`, `.json`, `.css`, `.js`, `.mjs`, `.cjs`, `.server.js`, `.server.mjs`, `.server.cjs` and folders. Loose `.server.*` files become server extensions; ordinary JS/CSS become client drafts. JSON may contain a direct config, a manifest/config, or `extensions` / `personalExtensions` collections. Folder/ZIP manifests can name `cssPath` / `cssPaths`, `jsPath` / `jsPaths`, or `serverJsPath` / `serverJsPaths`; inline `css`, `js` and `serverJs` are also supported. Paths resolve within the selected package, not arbitrary local files.

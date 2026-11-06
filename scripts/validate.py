@@ -53,8 +53,9 @@ def main():
     require([loc['id'] for loc in pack['definition']['locations'][:50]] == release_index,
             'Archived v2 location order does not match its released index')
     subprocess.run(['node', '--test', 'skills/marinara-world-maps/tests/regression.test.mjs'], cwd=ROOT, check=True)
+    subprocess.run(['node', 'skills/marinara-engine-authoring/scripts/test-extension-tools.mjs'], cwd=ROOT, check=True)
     subprocess.run(['node', 'skills/marinara-world-maps/scripts/validate-map.mjs', str(pack_path)], cwd=ROOT, check=True)
-    print(f'PASS: {count} JSON files; both skills; release checksums; 79 locations; 82 images.')
+    print(f'PASS: {count} JSON files; both skills; release checksums; 79 locations; 82 images; extension tools.')
     print('Scope: local structural and integrity checks. No live app import or upstream source check in this command.')
 
 

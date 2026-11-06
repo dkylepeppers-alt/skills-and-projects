@@ -1,6 +1,6 @@
 # Hierarchical maps (spatial context)
 
-Verified against **Engine v2.5.2**, commit `fc0333c3fe978cda5e0b919bd6faec985901704e`, and **World Maps 1.8.0** (Capability API 1.380, `engine.min` 2.5.1, so it installs only on 2.5.2) in Agents commit `ffde8ea4035868c064eb3b2ffd675f1f807c57ed` (2026-11-05). The spatial-context schema is unchanged from 2.5.1, and the World Maps changelog from 1.4 to 1.8 adds no file-format change beyond the 5,000-location cap. Engine sources: [schema](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/shared/src/schemas/spatial-context.schema.ts), [structural validator](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/shared/src/utils/spatial-context.ts). Agents sources: [model](https://github.com/Pasta-Devs/Marinara-Agents/blob/ffde8ea4035868c064eb3b2ffd675f1f807c57ed/packages/hierarchical-maps/src/engine/packages/maps-shared/src/maps-model.ts), [library importer](https://github.com/Pasta-Devs/Marinara-Agents/blob/ffde8ea4035868c064eb3b2ffd675f1f807c57ed/packages/hierarchical-maps/src/engine/packages/client/src/features/spatial-context/SpatialMapLibrary.tsx), [workspace exporter/artwork parser](https://github.com/Pasta-Devs/Marinara-Agents/blob/ffde8ea4035868c064eb3b2ffd675f1f807c57ed/packages/hierarchical-maps/src/engine/packages/client/src/features/spatial-context/SpatialMapWorkspace.tsx), [portable lore parser](https://github.com/Pasta-Devs/Marinara-Agents/blob/ffde8ea4035868c064eb3b2ffd675f1f807c57ed/packages/hierarchical-maps/src/engine/packages/client/src/features/spatial-context/portable-lore.ts).
+Verified against **Engine v2.5.2**, commit `fc0333c3fe978cda5e0b919bd6faec985901704e`, and **World Maps 1.8.0** (Capability API 1.380) in Agents commit `ffde8ea4035868c064eb3b2ffd675f1f807c57ed` (2026-11-05). The spatial-context schema is unchanged from 2.5.1, and the World Maps changelog from 1.4 to 1.8 adds no file-format change beyond the 5,000-location cap. Engine sources: [schema](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/shared/src/schemas/spatial-context.schema.ts), [structural validator](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/shared/src/utils/spatial-context.ts). Agents sources: [model](https://github.com/Pasta-Devs/Marinara-Agents/blob/ffde8ea4035868c064eb3b2ffd675f1f807c57ed/packages/hierarchical-maps/src/engine/packages/maps-shared/src/maps-model.ts), [library importer](https://github.com/Pasta-Devs/Marinara-Agents/blob/ffde8ea4035868c064eb3b2ffd675f1f807c57ed/packages/hierarchical-maps/src/engine/packages/client/src/features/spatial-context/SpatialMapLibrary.tsx), [workspace exporter/artwork parser](https://github.com/Pasta-Devs/Marinara-Agents/blob/ffde8ea4035868c064eb3b2ffd675f1f807c57ed/packages/hierarchical-maps/src/engine/packages/client/src/features/spatial-context/SpatialMapWorkspace.tsx), [portable lore parser](https://github.com/Pasta-Devs/Marinara-Agents/blob/ffde8ea4035868c064eb3b2ffd675f1f807c57ed/packages/hierarchical-maps/src/engine/packages/client/src/features/spatial-context/portable-lore.ts).
 
 This is the World Maps Agent's hierarchy. Game Mode's generated worlds, `.world.json`, tile packs and battlefield art use different contracts; see [game-content.md](game-content.md).
 
@@ -30,7 +30,7 @@ The first is the minimal reusable template shape in this skill. The current work
 schemaVersion: 1                  literal
 ownerMode: "roleplay" | "game"
 enabled: boolean                  false for a template
-locations: SpatialLocation[]      max 5,000 (500 before Engine 2.5.0)
+locations: SpatialLocation[]      max 5,000
 startingLocationId: string|null
 revision: number                  0 for a fresh template
 ```
@@ -73,7 +73,7 @@ Beyond the field types, `validateSpatialContextDefinition` rejects:
 - more than 5,000 locations, more than 50 links on one location
 - a child of a `layers` parent with no `layerOrder`, or two siblings sharing one
 
-Limits live in `SPATIAL_CONTEXT_LIMITS`. The location cap rose from 500 to 5,000 in Engine 2.5.0, and the Hierarchical Maps package applies the same ceiling. A map over 500 locations will not load on an older Engine, so check the user's version before shipping one that large. The three that bite most often: the layer-order requirement, the parent cycle check, and link targets typo'd out of existence.
+Limits live in `SPATIAL_CONTEXT_LIMITS`. The Hierarchical Maps package applies the same 5,000-location ceiling. The three that bite most often: the layer-order requirement, the parent cycle check, and link targets typo'd out of existence.
 
 ## Hierarchy profile
 

@@ -26,7 +26,7 @@ Marinara's card is `chara_card_v2` with `spec_version: "2.0"`. The `data` object
 | `versioningEnabled` | `true` | keep card revisions and bump the visible version on edit |
 | `convoDisplayName`, `convoDisplayNameInCard`, `aboutMe`, `convoBehavior` | optional | Conversation mode only |
 | `onboarding` | optional | Interactive persona/card questions; absent or disabled means no onboarding. See the concrete contract below |
-| `cardFieldAlternatives` | optional (2.5.2+) | Per-chat replacements for one prose field: `[{ id, field, value, chatIds[] }]`, `field` one of `summary`, `description`, `personality`, `backstory`, `appearance`, `scenario`, `mes_example`. Ids must be unique, and a field may have only one alternative per chat. Card export/import, duplication and character↔persona conversion keep the text but clear `chatIds`; whole-profile backups keep them. Author offline alternatives with `chatIds: []` and let the user tick chats in the app |
+| `cardFieldAlternatives` | optional | Per-chat replacements for one prose field: `[{ id, field, value, chatIds[] }]`, `field` one of `summary`, `description`, `personality`, `backstory`, `appearance`, `scenario`, `mes_example`. Ids must be unique, and a field may have only one alternative per chat. Card export/import, duplication and character↔persona conversion keep the text but clear `chatIds`; whole-profile backups keep them. Author offline alternatives with `chatIds: []` and let the user tick chats in the app |
 | `rulesetSheets` | optional | Game Mode starting builds keyed by ruleset id. Size-bounded but not shape-checked; on import an unusable sheet is dropped with a warning rather than failing the card. Leave it out unless the user has a ruleset package installed and supplies a sheet |
 
 `convoBehavior` is `{ instruction, insertionStrategy }` where the strategy is one of `constant_before`, `constant_after`, `post_history_replace`, `post_history_before`, `post_history_after`, `macro`. Choosing `macro` means the text appears only where `{{convo_behavior}}` is placed.
@@ -62,9 +62,9 @@ Native and Compatible PNG card exports retain onboarding; Compatible JSON omits 
 
 The player-side card. Only `name` is required; everything else is optional.
 
-**Text fields:** `comment`, `creator`, `personaVersion`, `versioningEnabled`, `creatorNotes`, `phoneticName`, `summary` (2.5.2+, library blurb only), `mes_example` (2.5.2+, **Example Dialogue**, reaches the prompt), `description`, `personality`, `scenario`, `backstory`, `appearance`, `imageAppearanceEnabled` / `imageAppearance` (image-prompt override, as on cards), `convoDisplayName`, `aboutMe`, nullable `convoBehavior` (`instruction` plus the same insertion strategies as cards), `tags[]`, `savedStatusOptions[]`.
+**Text fields:** `comment`, `creator`, `personaVersion`, `versioningEnabled`, `creatorNotes`, `phoneticName`, `summary` (library blurb only), `mes_example` (**Example Dialogue**, reaches the prompt), `description`, `personality`, `scenario`, `backstory`, `appearance`, `imageAppearanceEnabled` / `imageAppearance` (image-prompt override, as on cards), `convoDisplayName`, `aboutMe`, nullable `convoBehavior` (`instruction` plus the same insertion strategies as cards), `tags[]`, `savedStatusOptions[]`.
 
-Personas also accept `cardFieldAlternatives` (2.5.2+, same shape and rules as on cards) and can have a TTS voice. **Import character as persona** copies the phonetic name, image appearance override, Conversation profile and ruleset sheets.
+Personas also accept `cardFieldAlternatives` (same shape and rules as on cards) and can have a TTS voice. **Import character as persona** copies the phonetic name, image appearance override, Conversation profile and ruleset sheets.
 
 `{{persona}}` expands to description, personality, backstory, appearance, and scenario joined by newlines; each also has its own macro.
 
@@ -89,7 +89,7 @@ The schema will accept anything; these are the choices that make a card work.
 - **`mes_example` uses `<START>` blocks** with `{{user}}:` and `{{char}}:` turns. One or two exchanges that demonstrate voice beat five that demonstrate plot.
 - **`first_mes` sets the format contract** — if it opens with narration in asterisks and quoted dialogue, the model will follow. Whatever prose habits appear here will be copied all session.
 - **`alternate_greetings` are entry points, not variations in tone.** Each should open a different scene.
-- **Creator notes never reach the model** (2.5.2+): not through presets, `{{<id>}}` macros, agents or summaries, and an ID macro written only in creator notes no longer pulls another card in. Put model instructions in real prompt fields. Card CSS in `creator_notes` still works, and Professor Mari still reads them on request.
+- **Creator notes never reach the model**: not through presets, `{{<id>}}` macros, agents or summaries, and an ID macro written only in creator notes no longer pulls another card in. Put model instructions in real prompt fields. Card CSS in `creator_notes` still works, and Professor Mari still reads them on request.
 - **Card CSS controls moved.** **Card Theming** (Disabled / Exclusive / Chat) is now in **Chat Settings → Characters** (**Party** in Game), and inline name coloring is per chat (**Color Character Names in Text**).
 - **Keep `system_prompt` and `post_history_instructions` empty** unless the card genuinely needs to override the user's preset. Cards that ship opinionated system prompts fight whatever preset the user has chosen.
 

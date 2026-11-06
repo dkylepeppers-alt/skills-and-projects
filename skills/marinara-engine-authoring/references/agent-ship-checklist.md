@@ -56,7 +56,7 @@ Feature packages that vendor Engine sources also run `node scripts/validate-vend
 
 `npm run format` applies Prettier. Generated bundles, artifacts, catalogs, and captured Engine snapshots are excluded from formatting — rebuild them instead.
 
-Then install or update through **Agents → Agent Organizer** (Download Agents before 2.5.2) in a compatible Engine checkout and verify the supported modes, restart behavior, uninstall cleanup, and an offline restart where relevant. Describe exactly what was tested. Do not tick checklist items you did not personally verify.
+Then install or update through **Agents → Agent Organizer** in a compatible Engine checkout and verify the supported modes, restart behavior, uninstall cleanup, and an offline restart where relevant. Describe exactly what was tested. Do not tick checklist items you did not personally verify.
 
 ## Engine version lanes
 
@@ -68,7 +68,7 @@ Then install or update through **Agents → Agent Organizer** (Download Agents b
 
 `catalog/catalog.json` is an exact v2 alias for older Engine releases. Never hand-place or copy entries between lanes. For `schemaVersion: 2`, `builtAgainst.engineVersion` must fall inside the declared range. Set `engine.min` to the earliest Engine whose required behavior you can demonstrate, and declare the Capability API that behavior needs; a checkout's branch name alone does not establish a minimum version. Do not lower either requirement to force visibility for an incompatible Engine.
 
-Engine v2.5.2 (`fc0333c`) supports Capability API 1.816; v2.5.1 supported 1.341. The loader accepts manifest schemas 1 and 2, checks the Engine range separately from the schema-2 API requirement, and does not offer incompatible newer package versions as updates. An `engine.min` of `2.5.1` with a Capability API minor above 341 (World Maps 1.380, Otome Hearth and Story Writer 1.386, Long-Term Memory 1.390 at Agents `ffde8ea`) installs only on 2.5.2, so state that in user-facing copy; verify the actual manifest and archive before promising a successful install. The manifest schema and installer remain the authority over README shorthand.
+Engine v2.5.2 (`fc0333c`) supports Capability API 1.816. New packages declare `engine.min: "2.5.2"`. The loader accepts manifest schemas 1 and 2, checks the Engine range separately from the schema-2 API requirement, and does not offer incompatible newer package versions as updates. An `engine.min` of `2.5.1` with a Capability API minor above 341 (World Maps 1.380, Otome Hearth and Story Writer 1.386, Long-Term Memory 1.390 at Agents `ffde8ea`) installs only on 2.5.2, so state that in user-facing copy; verify the actual manifest and archive before promising a successful install. The manifest schema and installer remain the authority over README shorthand.
 
 ## Visibility tiers
 

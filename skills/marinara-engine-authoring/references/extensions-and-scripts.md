@@ -87,13 +87,34 @@ CSS is capped at **262,144 UTF-8 bytes (256 KiB)**, shared with themes; characte
 
 Approval takes `{ contentHash: "sha256:<64 hex>", acknowledgeSandboxedCode: true, acknowledgeFullPageAccess?: true }`, and rollback targets a prior content hash. Contribution kinds are `button`, `menu-item`, `panel`, and `command`. A command targets an existing contribution from the same extension revision using `targetContributionId`; it has no callback. Surface contributions use `top-bar`, `chats`, `bots`, `characters`, `personas`, `lorebooks`, `presets`, `connections`, `agents`, or `settings`, with `header`, `before-content`, or `after-content` positions. UI descriptors are validated plain data, not host HTML/React callbacks.
 
-Browser extensions gain `marinara.dice.registerFormat(options)` in 2.5.2, teaching `/roll` a custom notation (`id`, `label`, `parse(notation)` returning null for notation it does not read; see Engine `docs/extending/writing-personal-extensions.md` → **Add a dice format**). Extension dice text in a `/roll` message always renders as escaped plain text (#8773). Guard with `typeof marinara.dice?.registerFormat === "function"` for older Engines.
+Browser extensions gain `marinara.dice.registerFormat(options)` in 2.5.2, teaching `/roll` a custom notation (`id`, `label`, `parse(notation)` returning null for notation it does not read; see Engine `docs/extending/writing-personal-extensions.md` → **Add a dice format**). Extension dice text in a `/roll` message always renders as escaped plain text (#8773).
 
 Revision history keeps 0-10 revisions per extension (default 10): `GET` / `PATCH /api/personal-extensions/revision-history` with `{ limit, confirmPrune?: true }` (2.5.2).
 
-Every runtime (browser, full-page, and server) gets `marinara.estimateTextTokens(text): number`, a synchronous model-agnostic estimate needing no capability. Guard with `typeof marinara.estimateTextTokens === "function"` for older Engines.
+Every runtime (browser, full-page, and server) gets `marinara.estimateTextTokens(text): number`, a synchronous model-agnostic estimate needing no capability.
 
 Browser extensions normally run in an opaque-origin Worker sandbox, not in the host DOM. `full_page_access` is an external-only trust mode requiring its extra acknowledgement, not an extra sandbox capability for Professor Mari drafts. A Personal Extension row never keeps it (it is stripped on save), and since 2.5.2 Professor Mari refuses to draft a Personal Extension with it rather than saving one that switches itself off at restart (#8113). Server code runs in a separate restricted process, never by in-process import. Prefer narrow context capabilities and declarative contributions.
+
+### Writing the code: read the Engine docs
+
+This reference covers the file contract, packaging and trust gates. It does **not** cover the runtime APIs or working code. Before writing extension JavaScript, read the pinned Engine guides (v2.5.2), and recheck them against the user's installed version:
+
+| Need | Engine doc |
+|---|---|
+| Browser extension quickstart with working code | [Browser Extension quickstart](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#browser-extension-quickstart) |
+| Full browser API (`ui.registerContribution`, `ui.showWindow`, `marinara.storage`, timers, `onCleanup`, `dice.registerFormat`) | [Browser API reference](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#browser-api-reference) |
+| What each context capability unlocks | [Context capabilities](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#context-capabilities), [What a Browser Extension can do](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#what-a-browser-extension-can-do) |
+| Marinara-rendered panels and their element descriptors | [Add a Marinara-rendered panel](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#add-a-marinara-rendered-panel) |
+| Reading the active chat, characters and persona | [Use active chat context](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#use-active-chat-context) |
+| Token estimates and dice formats | [Estimate text tokens](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#estimate-text-tokens), [Add a dice format](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#add-a-dice-format) |
+| Full-page (unsandboxed) External Extensions and legacy code | [Legacy and full page extensions](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#legacy-and-full-page-extensions) |
+| Server extension quickstart and API | [Server Extension quickstart](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#server-extension-quickstart) |
+| Manifest fields and validation limits | [Package and manifest reference](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#package-and-manifest-reference), [Validation limits](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#validation-limits) |
+| Updating, rollback, recovery and debugging | [Update and recovery lifecycle](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#update-and-recovery-lifecycle), [Debugging](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#debugging) |
+| User-side install, the two External Extension gates, platform support, revisions | [Personal Extensions](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/personal-extensions.md) |
+| Security invariants and how each runtime is isolated | [Personal Extension Architecture](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/development/personal-extensions.md) |
+
+Use only APIs those guides document for 2.5.2 or the later release being targeted.
 
 ### Extension files and packages
 

@@ -45,7 +45,7 @@ Placing `{{char_about}}` / `{{persona_about}}` yourself in a one-character conve
 
 `{{lorebooksize::<lorebookId>}}` resolves to that book's total entry count, including disabled entries and folders' contents; unknown IDs resolve to `0`.
 
-`{{include::ENTRY}}` (Engine 2.5.0+) pastes the content of a lorebook entry, found by ID or by case-insensitive name. Inside an entry, a name is looked up in that entry's own book; elsewhere, in the books this chat uses. `{{include::BOOK::ENTRY}}` names the book explicitly, and that book need not be attached or enabled. The included entry need not activate and may be disabled, so "include-only" entries are a valid pattern. Included text resolves its own macros and may include further entries; a cycle or a missing target resolves to nothing. Names are plain text — `{{include::{{char}}}}` does not work.
+`{{include::ENTRY}}` pastes the content of a lorebook entry, found by ID or by case-insensitive name. Inside an entry, a name is looked up in that entry's own book; elsewhere, in the books this chat uses. `{{include::BOOK::ENTRY}}` names the book explicitly, and that book need not be attached or enabled. The included entry need not activate and may be disabled, so "include-only" entries are a valid pattern. Included text resolves its own macros and may include further entries; a cycle or a missing target resolves to nothing. Names are plain text — `{{include::{{char}}}}` does not work.
 
 An unqualified **entry ID** can find an entry in any book; only an unqualified name is restricted to the current books. Book names also ignore case. Use unique names to avoid ambiguous first matches. Includes copy **content only**: they do not activate the source entry or copy its images, keys, position, timing, or decision-activation field. In a lorebook scan, expansion happens before recursion and token budgeting, so the pasted text can seed recursion and counts against the including entry's budget. Put a text conditional in the included content if that text itself needs a condition.
 
@@ -55,7 +55,7 @@ Because names are portable and IDs are not, offline-authored content should incl
 
 `{{date}}` (`YYYY-MM-DD`), `{{time}}` (`HH:MM`), `{{datetime}}` / `{{isotime}}`, `{{weekday}}`, `{{timezone}}`.
 
-Story clock (2.5.2+): `{{date.world_state}}`, `{{time.world_state}}` and `{{weekday.world_state}}` read the in-world date and time tracked by the World State agent, in its original format. `weekday` uses a custom Weekday / Day of Week field, a weekday written in the tracked date, or the weekday of a valid `YYYY-MM-DD` date. They follow the swipe being shown (regeneration uses the state the replacement reply starts from), are empty when nothing is tracked, never fall back to real time, and work in conditions: `{{#if weekday.world_state == "Monday"}}…{{/if}}`. They work in prompts and agent templates.
+Story clock: `{{date.world_state}}`, `{{time.world_state}}` and `{{weekday.world_state}}` read the in-world date and time tracked by the World State agent, in its original format. `weekday` uses a custom Weekday / Day of Week field, a weekday written in the tracked date, or the weekday of a valid `YYYY-MM-DD` date. They follow the swipe being shown (regeneration uses the state the replacement reply starts from), are empty when nothing is tracked, never fall back to real time, and work in conditions: `{{#if weekday.world_state == "Monday"}}…{{/if}}`. They work in prompts and agent templates.
 
 `{{random}}` (0–100), `{{random:X:Y}}`, `{{random::A::B::C}}` (picks one option), `{{random::A@2::B@0.5}}` (weighted), `{{roll:XdY}}` (also `{{roll:d20}}` for one die and `{{roll:1d8+3}}` with a modifier, as documented in v2.5.2; `{{roll:...}}` typed in the chat message box resolves before sending).
 
@@ -96,7 +96,7 @@ Equality lists may use the compact form `{{#if character == "Maukie" || "Pantalo
 
 **Group blocks.** A standalone `[` line, text containing character macros or character conditions, and standalone `]` line repeat that block once per character when the chat has at least two characters. Each pass resolves `char`, fields, and character conditions against that character. In a solo chat the brackets remain literal. Outside the block, character macros refer to the current/primary character.
 
-### Decision conditions (Engine 2.5.0+)
+### Decision conditions
 
 A condition can ask the user's **Decision model** about the recent chat:
 

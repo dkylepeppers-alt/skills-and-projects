@@ -1,6 +1,6 @@
 # Templates
 
-The six content templates below pass against **Engine v2.5.2** at `fc0333c3fe978cda5e0b919bd6faec985901704e` (Zod 4). The map hierarchy profile also passes the companion Agents model at `ffde8ea4035868c064eb3b2ffd675f1f807c57ed`, loaded through the validator's Zod 4 bridge shim. None of them use 2.5.2-only fields; they passed the v2.5.1 schemas before this update. Replace content while preserving each format's actual shape; run the validator after edits.
+The six content templates below pass against **Engine v2.5.2** at `fc0333c3fe978cda5e0b919bd6faec985901704e` (Zod 4). The map hierarchy profile also passes the companion Agents model at `ffde8ea4035868c064eb3b2ffd675f1f807c57ed`, loaded through the validator's Zod 4 bridge shim. Replace content while preserving each format's actual shape; run the validator after edits.
 
 | File | What it demonstrates |
 |---|---|

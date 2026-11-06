@@ -72,7 +72,7 @@ skipWrap: boolean                           default false
 
 `ordered` follows the preset's **`sectionOrder` ID array**. The assembler iterates that array; `injectionOrder` is stored metadata and does not independently sort it. Supply IDs and a complete `sectionOrder` in an authored export: omitted IDs are not automatically rendered merely because a section exists in `sections[]`. `depth` injects the section `injectionDepth` messages back inside the chat history — the same interruption effect as a lorebook entry at position 2, and worth the same restraint.
 
-`skipWrap` (Engine 2.5.0+) sends one plain section without the preset's XML tag or Markdown heading while the rest stays wrapped. It round-trips through export and import, coerced like the other booleans. A group's own wrapper can still surround it, it has no effect when `wrapFormat` is `none`, and assembly ignores it on markers even if an imported marker stores true.
+`skipWrap` sends one plain section without the preset's XML tag or Markdown heading while the rest stays wrapped. It round-trips through export and import, coerced like the other booleans. A group's own wrapper can still surround it, it has no effect when `wrapFormat` is `none`, and assembly ignores it on markers even if an imported marker stores true.
 
 `forbidOverrides` is stored and imported for compatibility, but the v2.5.2 assembler still does not read it. The [database schema](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/db/schema/prompts.ts) marks it, `wrapInXml`, and `xmlTagName` as legacy columns no longer used by assembly. Do not promise that this flag enforces a prompt rule; write required guidance in the prompt surface the mode actually uses.
 
@@ -151,4 +151,4 @@ stopSequences: []            strictRoleFormatting (true)  singleUserMessage (fal
 
 ## Chat settings profiles
 
-Separate and much smaller (`chat-preset.schema.ts`, exported as `marinara_chat_settings_profile`): `{ name, mode, settings: { connectionId?, promptPresetId?, personaId?, lorebookIds?, metadata? } }`, with `settings` strict. `personaId` (nullable) and `lorebookIds` (≤200) are new in 2.5.2; an older Engine rejects a profile carrying them. It stores which connection, preset, persona and lorebooks a chat mode uses, not prompt content.
+Separate and much smaller (`chat-preset.schema.ts`, exported as `marinara_chat_settings_profile`): `{ name, mode, settings: { connectionId?, promptPresetId?, personaId?, lorebookIds?, metadata? } }`, with `settings` strict. `personaId` is nullable and `lorebookIds` holds at most 200 ids. It stores which connection, preset, persona and lorebooks a chat mode uses, not prompt content.

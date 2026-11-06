@@ -4,7 +4,7 @@ The harness imports the Engine's actual Zod schemas. The baseline is **Engine v2
 
 ## Setup and run
 
-Use Node 24 (the release supports Node >=24 and <27), **Zod 4.6.x** and a TypeScript loader. Engine v2.5.2 moved its shared schemas from Zod 3 to Zod 4 (`^4.6.7`); with Zod 3 the harness crashes before any check (`lorebookScopeSchema.prefault is not a function`). To check against Engine v2.5.1 or older, install Zod 3.25.76 instead. A full application install is unnecessary for these schema checks. The source checkout must resolve `zod` from its own directory or a parent directory; installing it only beside an unrelated CLI is insufficient.
+Use Node 24 (the release supports Node >=24 and <27), **Zod 4.6.x** and a TypeScript loader. Engine v2.5.2 moved its shared schemas from Zod 3 to Zod 4 (`^4.6.7`); with Zod 3 the harness crashes before any check (`lorebookScopeSchema.prefault is not a function`). A full application install is unnecessary for these schema checks. The source checkout must resolve `zod` from its own directory or a parent directory; installing it only beside an unrelated CLI is insufficient.
 
 ```bash
 mkdir marinara-validation

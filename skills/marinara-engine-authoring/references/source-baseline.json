@@ -1,20 +1,21 @@
 {
-  "checkedOn": "2026-10-23",
+  "checkedOn": "2026-11-06",
   "engine": {
     "repository": "Pasta-Devs/Marinara-Engine",
-    "release": "v2.5.1",
-    "commit": "8042ef6ec638801de45b8d82f82cd2dea85f51a4",
-    "url": "https://github.com/Pasta-Devs/Marinara-Engine/tree/8042ef6ec638801de45b8d82f82cd2dea85f51a4"
+    "release": "v2.5.2",
+    "commit": "fc0333c3fe978cda5e0b919bd6faec985901704e",
+    "url": "https://github.com/Pasta-Devs/Marinara-Engine/tree/fc0333c3fe978cda5e0b919bd6faec985901704e",
+    "storageFormat": 10
   },
   "agents": {
     "repository": "Pasta-Devs/Marinara-Agents",
-    "commit": "0d97d8520dfd7ae9ec0d5e2a7f016b9b233e78e3",
-    "url": "https://github.com/Pasta-Devs/Marinara-Agents/tree/0d97d8520dfd7ae9ec0d5e2a7f016b9b233e78e3"
+    "commit": "ffde8ea4035868c064eb3b2ffd675f1f807c57ed",
+    "url": "https://github.com/Pasta-Devs/Marinara-Agents/tree/ffde8ea4035868c064eb3b2ffd675f1f807c57ed"
   },
   "validation": {
-    "node": "24.19.0",
-    "zod": "3.25.76",
+    "node": "22.23.4 (release targets >=24 <27)",
+    "zod": "4.6.7",
     "tsx": "4.20.6",
-    "scope": "Source schemas and parsers, native import/export contract audit, CLI regressions; not a live application import test"
+    "scope": "Source schemas and parsers, native import/export contract audit, CLI regressions; not a live application import test. Map hierarchy profiles load through the bridge Zod 4 shim (World Maps 1.8.0 still calls Zod 3 .innerType())."
   }
 }

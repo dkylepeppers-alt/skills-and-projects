@@ -5,7 +5,7 @@
   "data": {
     "preset": {
       "name": "Grounded Roleplay",
-      "description": "A minimal v2.5.1 preset with a choice, group, plain section and markers.",
+      "description": "A minimal v2.5.x preset with a choice, group, plain section and markers.",
       "conversationPrompt": "Respond naturally to {{user}}.",
       "gamePrompt": "Narrate the situation using the active Game rules and state.",
       "wrapFormat": "xml",

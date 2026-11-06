@@ -4,11 +4,11 @@ Contents: [Export/import](#export-shape-verified-against-a-real-export) · [Pres
 
 Schema: `packages/shared/src/schemas/prompt.schema.ts`. Docs: `docs/prompts/presets.md`, `preset-variables.md`, `generation-parameters.md`. Export type: `marinara_preset`.
 
-Verified against Engine **v2.5.1**, commit `8042ef6ec638801de45b8d82f82cd2dea85f51a4`: [schema](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/schemas/prompt.schema.ts), [native import](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/services/import/marinara.importer.ts), [export route](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/routes/prompts.routes.ts), [assembly](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/services/prompt/assembler.ts). Source code wins over older docs and legacy export columns.
+Verified against Engine **v2.5.2**, commit `fc0333c3fe978cda5e0b919bd6faec985901704e`: [schema](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/shared/src/schemas/prompt.schema.ts), [native import](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/services/import/marinara.importer.ts), [export route](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/routes/prompts.routes.ts), [assembly](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/services/prompt/assembler.ts). Source code wins over older docs and legacy export columns.
 
 A preset is a container (`createPromptPresetSchema`) plus sections, groups, and choice blocks that reference it by `presetId`.
 
-**Choose the mode surface first.** Roleplay assembles sections and markers. Conversation and Game use the preset's single `conversationPrompt` or `gamePrompt`, with a possible chat-local override; they do not assemble the Sections list. Put guidance in the field used by the target mode. See [mode behavior](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/docs/prompts/presets.md#how-conversation-and-game-modes-differ).
+**Choose the mode surface first.** Roleplay assembles sections and markers. Conversation and Game use the preset's single `conversationPrompt` or `gamePrompt`, with a possible chat-local override; they do not assemble the Sections list. Put guidance in the field used by the target mode. See [mode behavior](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/prompts/presets.md#how-conversation-and-game-modes-differ).
 
 ## Export shape (verified against a real export)
 
@@ -74,9 +74,9 @@ skipWrap: boolean                           default false
 
 `skipWrap` (Engine 2.5.0+) sends one plain section without the preset's XML tag or Markdown heading while the rest stays wrapped. It round-trips through export and import, coerced like the other booleans. A group's own wrapper can still surround it, it has no effect when `wrapFormat` is `none`, and assembly ignores it on markers even if an imported marker stores true.
 
-`forbidOverrides` is stored and imported for compatibility, but the v2.5.1 assembler does not read it. The [database schema](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/db/schema/prompts.ts) marks it, `wrapInXml`, and `xmlTagName` as legacy columns no longer used by assembly. Do not promise that this flag enforces a prompt rule; write required guidance in the prompt surface the mode actually uses.
+`forbidOverrides` is stored and imported for compatibility, but the v2.5.2 assembler still does not read it. The [database schema](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/db/schema/prompts.ts) marks it, `wrapInXml`, and `xmlTagName` as legacy columns no longer used by assembly. Do not promise that this flag enforces a prompt rule; write required guidance in the prompt surface the mode actually uses.
 
-Image/video **Prompt Overrides** are a separate feature using `${name}` variables from each registered media template, not preset sections or general `{{macro}}` syntax. See [media prompt overrides](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/docs/prompts/prompt-overrides.md).
+Image/video **Prompt Overrides** are a separate feature using `${name}` variables from each registered media template, not preset sections or general `{{macro}}` syntax. See [media prompt overrides](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/prompts/prompt-overrides.md).
 
 **Decision blocks and caching.** A section can hold `{{#if decision:"…"}}` so its text is sent only on turns where a statement about the chat is true. Statements in disabled sections and groups are never asked. Put branches that change often late in the prompt, such as post-history instructions: a changed branch stops the provider's prompt cache from reusing everything after it.
 
@@ -121,7 +121,7 @@ Option values are ordinary prompt text, so they can hold `{{#if decision:"…"}}
 
 ## SillyTavern preset import
 
-The [ST preset importer](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/services/import/st-prompt.importer.ts) intentionally ignores generation parameters too. It prefers `prompt_order` for `character_id: 100001`, falling back to the first order. Description/personality/scenario markers consolidate into one `character` marker, and Before/After world info into one `lorebook` marker; duplicate consolidated types are dropped. Recognized post-history/jailbreak entries placed after history become ungrouped user-role depth-0 sections. Unknown markers become ordinary content sections. It can infer groups from wrapper patterns and variable groups from `setvar` assignments, but this is a conversion, not a lossless native preset contract; inspect order, markers, roles and variable choices after import.
+The [ST preset importer](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/services/import/st-prompt.importer.ts) intentionally ignores generation parameters too. It prefers `prompt_order` for `character_id: 100001`, falling back to the first order. Description/personality/scenario markers consolidate into one `character` marker, and Before/After world info into one `lorebook` marker; duplicate consolidated types are dropped. Recognized post-history/jailbreak entries placed after history become ungrouped user-role depth-0 sections. Unknown markers become ordinary content sections. It can infer groups from wrapper patterns and variable groups from `setvar` assignments, but this is a conversion, not a lossless native preset contract; inspect order, markers, roles and variable choices after import.
 
 ## Generation parameters
 
@@ -141,10 +141,14 @@ squashSystemMessages (true)  showThoughts (true)  useMaxContext (false)
 stopSequences: []            strictRoleFormatting (true)  singleUserMessage (false)
 ```
 
+**Token limits are ignored since 2.5.2.** `maxTokens`, `maxContext` and `useMaxContext` remain in the schema and older files still load, but presets no longer set context or output limits. The context window comes from the Connections account (**Max context window**), output limits from the account or the chat's **Advanced Parameters**; with nothing set, output starts at 4096 tokens. Do not ship a preset that relies on its token limits. The built-in **Marinara's Universal Preset** contributes prompt text only, no generation parameters. Layering, later wins: preset parameters (or built-in defaults) → account **Chat defaults** → chat **Advanced Parameters** → mode rules (Engine `docs/prompts/generation-parameters.md`).
+
+**Assistant Prefill placement (2.5.2).** The prefill now always ends the request, after depth-0 prompts, post-history instructions, the generation guide, mention/regeneration instructions, notes and whispers. Prompts that relied on depth-0 text landing after the prefill behave differently. Models that refuse a request ending on an AI turn get the prefill at the start of the last AI reply in the history instead.
+
 `enabledParameters` is the on/off layer: a parameter with a value but no enable flag may not be sent. Providers reject unsupported parameters, so `reasoningEffort` and `verbosity` should be `null` unless the target model takes them.
 
 `singleUserMessage` collapses the whole prompt into one user turn — necessary for some providers, destructive to role-sensitive prompting elsewhere.
 
 ## Chat settings profiles
 
-Separate and much smaller (`chat-preset.schema.ts`, exported as `marinara_chat_settings_profile`): `{ name, mode, settings: { connectionId?, promptPresetId?, metadata? } }`, with `settings` strict. It stores which connection and preset a chat mode uses, not prompt content.
+Separate and much smaller (`chat-preset.schema.ts`, exported as `marinara_chat_settings_profile`): `{ name, mode, settings: { connectionId?, promptPresetId?, personaId?, lorebookIds?, metadata? } }`, with `settings` strict. `personaId` (nullable) and `lorebookIds` (≤200) are new in 2.5.2; an older Engine rejects a profile carrying them. It stores which connection, preset, persona and lorebooks a chat mode uses, not prompt content.

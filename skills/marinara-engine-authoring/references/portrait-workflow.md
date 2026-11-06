@@ -1,6 +1,6 @@
 # Marinara photorealistic portrait workflow and reusable template
 
-Version 1.0 production defaults | Import/export contract checked Engine v2.5.1, 2026-10-23
+Version 1.0 production defaults | Import/export contract checked Engine v2.5.2, 2026-11-06
 
 ## 1. Recommended result
 
@@ -8,7 +8,7 @@ Create **one character identity sheet, 16 facial-expression portraits, and 16 ma
 
 Assumption: these are character sprites for Marinara's Facial Expressions and Full-body categories, intended for use during roleplay. The character card and identity references will be supplied when this workflow is executed. This document is the reusable production guide; it is not itself a Marinara-importable portrait asset.
 
-The production defaults below are recommendations, not app requirements. The file structure and import behavior in section 8 were checked against Engine source at commit `8042ef6ec638801de45b8d82f82cd2dea85f51a4`.
+The production defaults below are recommendations, not app requirements. The file structure and import behavior in section 8 were checked against Engine source at commit `fc0333c3fe978cda5e0b919bd6faec985901704e`.
 
 ## 2. Production brief: fill in once
 
@@ -310,7 +310,7 @@ Expand the ledger to include every selected label. Generation completion is not 
 
 ### Animated avatar boundary
 
-The expression package below contains static sprites. The v2.5.1 **2D Avatars** agent can reuse them as a PNGTuber setup, with optional `_talk`, `_blink`, and `_blink_talk` variants. It uses portraits whenever any are present, otherwise full-body sprites. Read `avatars.md` for all accepted suffixes, face mappings, `.save` / `.mavatar` / `.vrm` / `.vrma` imports, settings and validation. Keep this workflow's 16+16 art defaults unless the user requests an animated-avatar set.
+The expression package below contains static sprites. The **2D Avatars** agent (Engine 2.5.1+) can reuse them as a PNGTuber setup, with optional `_talk`, `_blink`, and `_blink_talk` variants. It uses portraits whenever any are present, otherwise full-body sprites. Since 2.5.2 sprites alone do not show as an avatar until **Show this avatar in chats** is on for that owner. Read `avatars.md` for all accepted suffixes, face mappings, `.save` / `.mavatar` / `.vrm` / `.vrma` / MMD / GLB / FBX imports, settings and validation. Keep this workflow's 16+16 art defaults unless the user requests an animated-avatar set.
 
 Native character export embeds sprites and static profile pictures, **not** the separate `avatar-models` files or their `avatar.json` settings. Profile export/backup includes those files. Deliver avatar models separately with setup instructions when transferring only a character.
 
@@ -358,7 +358,7 @@ Packing procedure:
 7. Parse the finished JSON. Decode every embedded image and verify its bytes match the corresponding accepted PNG. Check signatures and image readability, not just the filename extension.
 8. Import through Marinara's character import flow and inspect the resulting character's sprite categories.
 
-**Import behavior:** the checked native character importer creates a character record. Treat importing the assembled file as creating a new character copy, not as an automatic update or merge into an existing character. To add sprites to an existing character in place, use the folder route below. After upload, a native export from that character provides the single portable file with the app's own packaging.
+**Import behavior:** the checked native character importer creates a character record. Treat importing the assembled file as creating a new character copy, not as an automatic update or merge into an existing character. To add sprites to an existing character in place, use the image-upload route below. After upload, a native export from that character provides the single portable file with the app's own packaging.
 
 ### Include the identity sheet in the same native file
 
@@ -391,15 +391,15 @@ This is an entry template, not a standalone import envelope. Replace all placeho
 
 | Folder | Contents | Upload destination |
 |---|---|---|
-| `upload/facial/` | `neutral.png`, `happy.png`, and the other facial PNGs | Character editor → Sprites → Facial Expressions → Upload Folder |
-| `upload/full-body/` | `full_neutral.png`, `full_happy.png`, and the other full-body PNGs | Character editor → Sprites → Full-body → Upload Folder |
+| `upload/facial/` | `neutral.png`, `happy.png`, and the other facial PNGs | Character editor → Sprites → Facial Expressions → Add sprites → Upload images (select all files in the folder) → Import |
+| `upload/full-body/` | `full_neutral.png`, `full_happy.png`, and the other full-body PNGs | Character editor → Sprites → Full-body → Add sprites → Upload images (select all files in the folder) → Import |
 | `upload/identity/` | `character_identity_sheet.png` | Character editor → Character Sheet section → upload the individual image; enable its reference switch |
 | `source/` | Original renders and reference masters | Keep outside the upload selection |
 | `review/` | Contact sheets, prompts, production brief, and checks | Keep outside the upload selection |
 
-The Full-body tab adds `full_` when needed. The Facial Expressions tab removes that prefix during label normalization. **Do not upload both categories together through the Facial Expressions tab:** body images can be relabeled as facial images and replace matching labels. Select each category's own folder.
+The Full-body tab adds `full_` when needed. The Facial Expressions tab removes that prefix during label normalization. **Do not upload both categories together through the Facial Expressions tab:** body images can be relabeled as facial images and replace matching labels. Select each category's own files.
 
-The checked sprite UI uploads individual images or an image folder. Its ZIP feature exports sprites; do not assume an exported ZIP is directly accepted by the same uploader. If distributing folders as a ZIP, extract it before selecting a folder. Where the phone's picker does not support folder selection, upload each image under its intended label in the correct category.
+Engine 2.5.2 removed the character Sprites tab's **Upload Folder** button (#8851): **Upload images** takes a multi-file selection, imports them outside any folder, and does not scan subfolders; use **New folder** afterward if wanted. Sprite folders now exist and travel in native exports. The persona editor still has **Upload Folder**, which turns subfolders into sprite folders. Sprite ZIP export is not an upload format; extract a distributed ZIP before selecting its files. Sprite labels may also carry outfit/condition facets after the mood (`happy_pajamas`), with word-by-word fallback (`characters-personas.md`).
 
 Upload the identity sheet through the Character Sheet section's dedicated image control. In the checked editor, that upload stores it in the character gallery and selects it as the sheet; the reference-use switch is a separate setting. Save the character changes and verify the selection. Do not place `character_identity_sheet.png` inside either sprite-upload folder, where its filename would instead become an expression label.
 
@@ -448,15 +448,15 @@ Deliver the assembled character file, the accepted images grouped by category, a
 
 ## 12. Source references
 
-Checked release notes: [Engine v2.5.1](https://github.com/Pasta-Devs/Marinara-Engine/releases/tag/v2.5.1), especially 2D/3D Avatars and character import/export changes. These links pin the checked revision. Recheck them against the user's installed version before changing import mechanics or promising new runtime behavior.
+Checked release notes: [Engine v2.5.2](https://github.com/Pasta-Devs/Marinara-Engine/releases/tag/v2.5.2) (sprite folders, faceted names, Upload Folder removal, avatar visibility) and [v2.5.1](https://github.com/Pasta-Devs/Marinara-Engine/releases/tag/v2.5.1) (2D/3D Avatars and character import/export changes). These links pin the checked revision. Recheck them against the user's installed version before changing import mechanics or promising new runtime behavior.
 
-- [Character editor: expression labels, category normalization, folder upload](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/client/src/components/characters/CharacterEditor.tsx)
-- [Shared sprite label normalization](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/utils/sprite-labels.ts)
-- [Native character export envelope and embedded sprites](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/routes/characters.routes.ts)
-- [Native importer: character creation, sprite decoding, and collection limits](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/services/import/marinara.importer.ts)
-- [Shared file-size constants](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/constants/defaults.ts)
-- [Sprite routes: image upload, ZIP export, and matched-body references](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/routes/sprites.routes.ts)
-- [Sprite overlay: display pools and expression selection](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/client/src/components/chat/SpriteOverlay.tsx)
-- [Expression matching and semantic fallbacks](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/client/src/lib/sprite-expression-match.ts)
+- [Character editor: expression labels, category normalization, image upload](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/client/src/components/characters/CharacterEditor.tsx)
+- [Shared sprite label normalization](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/shared/src/utils/sprite-labels.ts)
+- [Native character export envelope and embedded sprites](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/routes/characters.routes.ts)
+- [Native importer: character creation, sprite decoding, and collection limits](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/services/import/marinara.importer.ts)
+- [Shared file-size constants](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/shared/src/constants/defaults.ts)
+- [Sprite routes: image upload, ZIP export, and matched-body references](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/routes/sprites.routes.ts)
+- [Sprite overlay: display pools and expression selection](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/client/src/components/chat/SpriteOverlay.tsx)
+- [Expression matching and semantic fallbacks](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/client/src/lib/sprite-expression-match.ts)
 
 End of workflow.

@@ -1,20 +1,20 @@
 # Validate authored artifacts against the release source
 
-The harness imports the Engine's actual Zod schemas. The baseline is **Engine v2.5.1**, commit `8042ef6ec638801de45b8d82f82cd2dea85f51a4`, with **Agents** commit `0d97d8520dfd7ae9ec0d5e2a7f016b9b233e78e3` for map hierarchy profiles. Repository pins are also in `../references/source-baseline.json`.
+The harness imports the Engine's actual Zod schemas. The baseline is **Engine v2.5.2**, commit `fc0333c3fe978cda5e0b919bd6faec985901704e`, with **Agents** commit `ffde8ea4035868c064eb3b2ffd675f1f807c57ed` for map hierarchy profiles. Repository pins are also in `../references/source-baseline.json`.
 
 ## Setup and run
 
-Use Node 24 (the release supports Node >=24 and <27), Zod 3.25.76 and a TypeScript loader. A full application install is unnecessary for these schema checks. The source checkout must resolve `zod` from its own directory or a parent directory; installing it only beside an unrelated CLI is insufficient.
+Use Node 24 (the release supports Node >=24 and <27), **Zod 4.6.x** and a TypeScript loader. Engine v2.5.2 moved its shared schemas from Zod 3 to Zod 4 (`^4.6.7`); with Zod 3 the harness crashes before any check (`lorebookScopeSchema.prefault is not a function`). To check against Engine v2.5.1 or older, install Zod 3.25.76 instead. A full application install is unnecessary for these schema checks. The source checkout must resolve `zod` from its own directory or a parent directory; installing it only beside an unrelated CLI is insufficient.
 
 ```bash
 mkdir marinara-validation
 cd marinara-validation
 npm init -y
-npm install zod@3.25.76 tsx@4.20.6
+npm install zod@4.6.7 tsx@4.20.6
 git clone https://github.com/Pasta-Devs/Marinara-Engine.git
-git -C Marinara-Engine checkout 8042ef6ec638801de45b8d82f82cd2dea85f51a4
+git -C Marinara-Engine checkout fc0333c3fe978cda5e0b919bd6faec985901704e
 git clone https://github.com/Pasta-Devs/Marinara-Agents.git
-git -C Marinara-Agents checkout 0d97d8520dfd7ae9ec0d5e2a7f016b9b233e78e3
+git -C Marinara-Agents checkout ffde8ea4035868c064eb3b2ffd675f1f807c57ed
 
 MARINARA_ENGINE_ROOT="$PWD/Marinara-Engine" \
 MARINARA_AGENTS_ROOT="$PWD/Marinara-Agents" \
@@ -40,6 +40,8 @@ Folder-shaped exports and binary `.marinara` packages need their actual loader/u
 
 A configured but unloadable Agents model fails a map with a hierarchy profile. Without `MARINARA_AGENTS_ROOT`, profile checks are explicitly skipped. The source-only bridge re-exports the real Engine spatial schemas/utilities for the pinned maps model; a built Engine checkout uses its actual shared `dist/index.js`. No fabricated replacement schema is used. Future maps model imports may need a bridge update.
 
+Zod 4 shim: World Maps 1.8.0 (`maps-model.ts:49-50` at the pinned Agents commit) still calls Zod 3 `.innerType()` on the Engine's refined `spatialContextDefinitionSchema`. Under Engine v2.5.2 that throws `innerType is not a function`. The bridge adds `innerType()` only when it is missing, returning the same Engine schema cloned without its refinement checks, which is what Zod 3 returned. Engine parsing is unchanged. A **built** Engine checkout bypasses the bridge, so the shim does not apply there; use the source checkout for profile checks until World Maps drops `.innerType()`. A regression confirms an invalid profile still fails.
+
 ## Regression checks
 
 Use the same environment and loader:
@@ -50,6 +52,6 @@ MARINARA_AGENTS_ROOT="$PWD/Marinara-Agents" \
 node --import tsx /absolute/path/to/skill/scripts/test-validate-artifact.mjs
 ```
 
-These exercise all six templates plus failure cases: unknown/unsupported envelopes, missing inputs, malformed/null data, duplicate preset source IDs, serialized-null markers, invalid marker types and regex flags, scoped-regex normalization, new preset fields, and continuing after a bad file. Fixtures use a temporary directory under the working directory and are removed afterward.
+These exercise all six templates plus failure cases: unknown/unsupported envelopes, missing inputs, malformed/null data, duplicate preset source IDs, serialized-null markers, invalid marker types and regex flags, scoped-regex normalization, new preset fields, an invalid hierarchy profile (when `MARINARA_AGENTS_ROOT` is set), and continuing after a bad file. Fixtures use a temporary directory under the working directory and are removed afterward.
 
 Schema success is not a live import test. If the application differs, compare its exact source release and normalization path before changing a valid artifact or promising lossless behavior.

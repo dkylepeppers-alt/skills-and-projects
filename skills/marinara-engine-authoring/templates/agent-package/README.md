@@ -10,7 +10,11 @@ placeholder, then run `node scripts/build-agent-catalog.mjs <id>`.
   `scripts/catalog-package-guidance.mjs`.
 - The manifest and the matching agent definition must carry the identical
   `description`.
-- These templates target the Download Agents catalog, not the in-app custom
+- Add the package's Agent Organizer store data (`store/store.json` entry,
+  banner, icon) and run `node scripts/build-store.mjs`; catalog validation
+  fails without it. See `references/agent-packages.md`.
+- These templates target the Agent Organizer catalog (Download Agents before
+  Engine 2.5.2), not the in-app custom
   Agent file/folder importer; see `references/agent-definition.md` for that format.
 - Select and test `engine.min` for the behavior used. The template's `2.3.0`
   is the catalog baseline, not a compatibility test for a new package.

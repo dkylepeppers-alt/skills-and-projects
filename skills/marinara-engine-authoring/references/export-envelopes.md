@@ -1,6 +1,6 @@
 # Export envelopes and import paths
 
-Checked against Engine **v2.5.1**, commit `8042ef6ec638801de45b8d82f82cd2dea85f51a4`, 2026-10-23; [checked release notes](https://github.com/Pasta-Devs/Marinara-Engine/releases/tag/v2.5.1).
+Checked against Engine **v2.5.2**, commit `fc0333c3fe978cda5e0b919bd6faec985901704e`, 2026-11-06; [checked release notes](https://github.com/Pasta-Devs/Marinara-Engine/releases/tag/v2.5.2). The envelope union in `export.ts` is unchanged from 2.5.1; 2.5.2 changes payloads only (see [2.5.2 payload changes](#payload-changes-in-252)).
 
 The standard `marinara_*` entity exports use this wrapper, defined in `packages/shared/src/types/export.ts`. Other packages, themes, extensions, custom tools/functions, regex scripts and avatar models use different contracts below:
 
@@ -61,7 +61,7 @@ Other non-envelope contracts:
 | Custom tool/function | JSON `marinara.function-folder` / `marinara.function` manifest entries, or `marinara-functions.zip` with schema/script companion files | `extensions-and-scripts.md` |
 | Personal extension | Source files, JSON, folder or `.personal-extension.zip`; native `manifest.json` kind `marinara.personal-extension` / `marinara.personal-server-extension` and source paths | `extensions-and-scripts.md` |
 | Theme | CSS, direct `{ name, css }` JSON or `marinara.theme-folder` JSON with `marinara.theme` entries | `extensions-and-scripts.md` |
-| Animated avatar | `.save`, `.mavatar`, `.vrm`, `.vrma` imported for an existing character/persona; strict `avatar.json` settings stored separately | `avatars.md` |
+| Animated avatar | `.save`, `.mavatar`, `.vrm`, `.vrma`, and since 2.5.2 MMD (`.pmx` or a ZIP with textures, optional `.vmd`) and `.glb` / `.fbx` imported for an existing character/persona; strict `avatar.json` settings stored separately | `avatars.md` |
 | Game packages | Ruleset, creature, story, tile and other Game content have package-specific manifests/archives | Read the matching Game/package reference; never guess a `marinara_*` type |
 
 Detection is route-specific: entity envelopes by `type`, some content by shape, packages by manifest, and model/card files by extension plus checked content.
@@ -70,13 +70,22 @@ Detection is route-specific: entity envelopes by `type`, some content by shape, 
 
 Do not call native export universally lossless:
 
-- A **preset** export carries no `parameters` or stock `systemKey`; the importer hardcodes `parameters: {}`. Temperature, token limits, and penalties stay behind. `scopedRegexMode` and `defaultChoices` do travel; section/group IDs are remapped.
+- A **preset** export carries no `parameters` or stock `systemKey`; the importer hardcodes `parameters: {}`. Temperature, token limits, and penalties stay behind; since 2.5.2 presets cannot set token limits at all (`presets-and-prompts.md`). `scopedRegexMode` and `defaultChoices` do travel; section/group IDs are remapped.
 - Preset **section** exports include `wrapInXml` and `xmlTagName`, which the importer ignores.
 - A **map template** drops chat-scoped image references; only Global Gallery references travel.
 - **Compatible** mappings have entity-specific losses, particularly card galleries/onboarding/PNG differences above.
 - **Animated avatar models/settings** are absent from character/persona card exports. Native profile export and backup include `avatar-models`, as well as static image directories. Keep original model files for a card-only transfer.
 - **Profile exports** redact credentials and local destinations: Discord Mirror webhook, DeepL API key, DeepLX URL and Intiface URL do not transfer. Restoring onto the same install preserves its existing local destinations. Token-count settings such as agents' Max Output Tokens are retained; they are not credentials. Profile import quarantines executable extensions/tools and themes rather than activating them. Agent-owned data tables are excluded (full data-directory backup is the install backup).
 - **Lorebook entry images** travel as embedded data URLs, capped at 64 MiB of images per export. A missing image file is skipped on export with a warning.
+
+## Payload changes in 2.5.2
+
+- Character and persona exports carry `cardFieldAlternatives` with `chatIds` cleared (backups keep them) and sprite folders.
+- Compatible card exports write embedded-book entry settings back in SillyTavern's `extensions` shape.
+- Chat settings profiles may carry `settings.personaId` and `settings.lorebookIds` (≤200); `settings` is still strict, so 2.5.1 rejects them.
+- Full backups and profile exports include the new `connection_accounts` table (restore relinks rows to accounts) and `avatar-models/` with the new `mmd/` and `glb-fbx/` folders. Connection exports never carry keys; Connections → **Import a backup** restores connections without keys.
+- ZIP imports read Japanese file names.
+- A **data folder** opened by 2.5.2 is storage format 10, which 2.5.1 refuses; that gate is separate from these file exports. See the upgrade note in `SKILL.md`.
 
 ## Other route boundaries
 
@@ -86,10 +95,10 @@ Do not call native export universally lossless:
 
 ## Pinned implementation sources
 
-- [Entity envelope union](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/types/export.ts)
-- [Native importer and restoration](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/services/import/marinara.importer.ts)
-- [JSON/native ZIP/JSONL/foreign card routes](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/routes/import.routes.ts)
-- [Native/compatible character and persona exports](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/routes/characters.routes.ts)
-- [Profile/backup assets, redaction and quarantine](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/routes/backup.routes.ts)
-- [Extension package transfer](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/client/src/lib/personal-extension-transfer.ts)
-- [Theme transfer UI](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/client/src/components/panels/SettingsPanel.tsx)
+- [Entity envelope union](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/shared/src/types/export.ts)
+- [Native importer and restoration](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/services/import/marinara.importer.ts)
+- [JSON/native ZIP/JSONL/foreign card routes](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/routes/import.routes.ts)
+- [Native/compatible character and persona exports](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/routes/characters.routes.ts)
+- [Profile/backup assets, redaction and quarantine](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/routes/backup.routes.ts)
+- [Extension package transfer](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/client/src/lib/personal-extension-transfer.ts)
+- [Theme transfer UI](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/client/src/components/panels/SettingsPanel.tsx)

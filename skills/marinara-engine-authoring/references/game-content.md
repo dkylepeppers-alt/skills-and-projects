@@ -1,6 +1,6 @@
 # Game content files
 
-Verified against **Engine v2.5.1**, commit `8042ef6ec638801de45b8d82f82cd2dea85f51a4`. Source parsers and routes below are authoritative; do not infer an import contract from a filename, changelog, design proposal or generic export envelope. These are data formats, with their own discriminators, rather than `.marinara.json` envelopes.
+Verified against **Engine v2.5.2**, commit `fc0333c3fe978cda5e0b919bd6faec985901704e`. Source parsers and routes below are authoritative; do not infer an import contract from a filename, changelog, design proposal or generic export envelope. These are data formats, with their own discriminators, rather than `.marinara.json` envelopes.
 
 ## Choose the format first
 
@@ -19,7 +19,7 @@ There is **no `.mruleset` format in this pinned source**. The portable ruleset p
 
 ## Rulesets: data, catalogs, and manifests
 
-Primary sources: [ruleset schema and semantic parser](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/schemas/ruleset.schema.ts), [author guide](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/docs/extending/writing-rulesets.md), [small 2d6 example](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/docs/examples/rulesets/ember-roads.json), [import/check routes](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/routes/game-rulesets.routes.ts).
+Primary sources: [ruleset schema and semantic parser](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/shared/src/schemas/ruleset.schema.ts), [author guide](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-rulesets.md), [small 2d6 example](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/examples/rulesets/ember-roads.json), [import/check routes](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/routes/game-rulesets.routes.ts).
 
 Start from an example with the right resolution kind. Required root fields are `schemaVersion: 1`, `id`, `version`, `name`, `coverage`, `resolution`, `sheet`, `gm`; `rests` defaults to `[]`. Optional blocks include `edition`, `license`, `party`, `clocks`, `gmReference`, `catalogs`, `items`, `battle`, `combat`, `layers`. Root and declared nested objects are strict: do not invent formulas or keys.
 
@@ -35,9 +35,9 @@ Catalog declarations can contain inline `entries` or name their external `asset`
 
 ### A capability manifest is not a ruleset definition
 
-The package's `manifest` uses [capabilityPackageManifestSchema](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/schemas/capability-package.schema.ts). It describes compatibility, contributors, assets and hashes. Its `version` is semver text, unlike the ruleset's integer version. A v2 manifest adds `capabilityApi: {major, minor}` and `builtAgainst: {engineVersion, engineCommit}`; v2.5.1 supports Capability API **1.341**. Engine version, manifest schema version, ruleset schema version and Capability API version are different axes.
+The package's `manifest` uses [capabilityPackageManifestSchema](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/shared/src/schemas/capability-package.schema.ts). It describes compatibility, contributors, assets and hashes. Its `version` is semver text, unlike the ruleset's integer version. A v2 manifest adds `capabilityApi: {major, minor}` and `builtAgainst: {engineVersion, engineCommit}`; v2.5.2 supports Capability API **1.816** (v2.5.1: 1.341). Engine version, manifest schema version, ruleset schema version and Capability API version are different axes.
 
-A generic capability package can have code entrypoints, permissions, UI contributions and kinds `agent`, `maps`, `conversation-calls`, `turn-game`, `ruleset`. A portable **ruleset-only** file must pass the stricter [package reader](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/services/game/ruleset-package-file.ts):
+A generic capability package can have code entrypoints, permissions, UI contributions and kinds `agent`, `maps`, `conversation-calls`, `turn-game`, `ruleset`. A portable **ruleset-only** file must pass the stricter [package reader](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/services/game/ruleset-package-file.ts):
 
 ```json
 {
@@ -60,7 +60,7 @@ For a concrete validation/review use `POST /api/game-rulesets/check` with `{defi
 
 ## Creature packs: art is separate from bestiary mechanics
 
-Sources: [creature schema/parser](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/features/world/creature-pack.ts), [author guide](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/docs/extending/writing-creature-packs.md), [routes](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/routes/game-creature-packs.routes.ts).
+Sources: [creature schema/parser](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/shared/src/features/world/creature-pack.ts), [author guide](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-creature-packs.md), [routes](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/routes/game-creature-packs.routes.ts).
 
 Strict root: `{creaturePackVersion: 1, id, name, version, author?, tileSize, sheets, creatures}`. Creature mechanics belong in a ruleset bestiary catalog, not here. Imported art files become `local/<id>`; changed art needs a higher integer `version` (1–100,000).
 
@@ -74,7 +74,7 @@ Import with Pixelforge's Creatures tab or `POST /api/game-tile-packs/creatures/i
 
 ## Tile and board art packs
 
-Sources: [tile parsers/constants](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/features/world/tile-pack.ts), [board parser/constants](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/features/world/board-pack.ts), [tile routes](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/routes/game-tile-packs.routes.ts), [board routes](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/routes/game-board-packs.routes.ts).
+Sources: [tile parsers/constants](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/shared/src/features/world/tile-pack.ts), [board parser/constants](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/shared/src/features/world/board-pack.ts), [tile routes](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/routes/game-tile-packs.routes.ts), [board routes](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/routes/game-board-packs.routes.ts).
 
 | Contract | Authoring constraints |
 |---|---|
@@ -90,7 +90,7 @@ Imports use `{definition: "<JSON text>"}` at `/api/game-tile-packs/import` or `/
 
 ## Setting kits, world files, and stories
 
-Sources: [kit schema](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/schemas/world-kit.schema.ts), [share readers/exporters](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/features/world/share-files.ts), [world-library/story routes](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/routes/game-worlds.routes.ts), [story schema/checker](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/features/world/story.ts), [story author guide](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/docs/extending/writing-story-scripts.md).
+Sources: [kit schema](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/shared/src/schemas/world-kit.schema.ts), [share readers/exporters](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/shared/src/features/world/share-files.ts), [world-library/story routes](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/routes/game-worlds.routes.ts), [story schema/checker](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/shared/src/features/world/story.ts), [story author guide](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-story-scripts.md).
 
 A kit file is `{format:"marinara-world-kit",version:1,exportedAt,kit}`. `kit` itself has `schemaVersion:1`: setting words/scales/layers, sizes, group kinds, travel and change controls; optional terrain, people, loot, money, shop and other supported vocabularies. IDs start with a lowercase letter and use lowercase letters/digits/underscores, max 40. Exactly one of the 1–8 layers marks `settlements:true`. Use `parseWorldKit`; a kit is not a free-form lorebook or a location tree.
 
@@ -99,6 +99,21 @@ A current world file is `{format:"marinara-world",version:2,exportedAt,name,kit,
 `readWorldFile` can repair unsupported brief details and drop invalid edits, unplayable battlefields, unfit towns or a story that no longer fits, returning **notes**. This differs from a direct story save, which rejects the invalid story whole. A generator version this Engine cannot regenerate can load from a valid snapshot only when snapshot and recipe name the same generator; otherwise import fails. Review the parsed result/notes before claiming lossless portability. Library import: `POST /api/game-worlds/import` with `{text:"<world-file text>"}`; it needs privileged access and creates a reusable world, not a running campaign save.
 
 An Experience can contribute a map pack with `contributions.gameSurface.mapPack: {kit, worlds?, tiles?}` in its capability manifest: assets end `.worldkit.json`, `.world.json`, `.tilepack.json`; at most 32 worlds. Paths must be declared/hash-pinned package assets; the manifest requires schema 2, Capability API ≥1.72, `contributions.gameSurface.setup` (Engine-owned setup), and the game-surface slot. It locks new-game setup to that kit and its provided worlds. This is a generic capability package workflow, not a ruleset-only envelope.
+
+Engine 2.5.2 (Capability API up to 1.816) extends map packs and Experiences; declare the minor of the newest piece you ship (comments above `supportedCapabilityApi` in the schema):
+
+| Minor | Addition |
+|---|---|
+| 1.344 | `mapPack.creatures`: `.creaturepack.json` assets, drawn before the library's creatures |
+| 1.345 | Audio assets (`.ogg`, `.mp3`, `.wav`, ≤16 MB each) and map-pack `music` by place, elsewhere and in fights; a story `music` action cues a track |
+| 1.346 | `mapPack.people`: a `.people.json` asset with named people, portraits, expressions, walking look, speech and lore |
+| 1.355 | `mapPack.rulesets`: a ruleset id plus `.overlay.json` merged into that ruleset while the Experience is on; an overlay that does not fit is dropped whole |
+| 1.357 | `mapPack.dungeons`: `.tilepack.json` dungeon sets for hand-made maps |
+| 1.372 | `contributions.gameSurface.setup.defaults`: GM setup values filled into the Game wizard |
+| 1.373 | Data-only Experience (`kind: ["experience"]`): no entrypoints, permissions or code; shared as one `.experience.json` the user reviews before import |
+| 1.374 | A ruleset in the Agents catalog is a `<id>.ruleset.json` package file, never a ZIP, and declares 1.374 or newer |
+
+Story scripts gain more in the same range (knowledge 1.348, seasons 1.351, 256 flags 1.353, party-size fight variants 1.356, and further script features from 1.358); check the schema comments before using one. Since 2.5.2 the agent catalog lists `.ruleset.json` and `.experience.json` entries (#8390).
 
 ### Story scripts are bound to the actual world
 

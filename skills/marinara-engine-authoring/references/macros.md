@@ -4,7 +4,7 @@ Contents: [Identity](#identity) · [Conversation](#conversation-mode) · [Runtim
 
 Docs: `docs/prompts/macros.md`, `docs/prompts/conditional-prompts.md`, `docs/prompts/preset-variables.md`.
 
-Verified against Engine **v2.5.1**, commit `8042ef6ec638801de45b8d82f82cd2dea85f51a4`: [macro implementation](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/shared/src/utils/macro-engine.ts), [prompt assembler](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/packages/server/src/services/prompt/assembler.ts), [conditional guide](https://github.com/Pasta-Devs/Marinara-Engine/blob/8042ef6ec638801de45b8d82f82cd2dea85f51a4/docs/prompts/conditional-prompts.md). Source code wins when documentation differs.
+Verified against Engine **v2.5.2**, commit `fc0333c3fe978cda5e0b919bd6faec985901704e`: [macro implementation](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/shared/src/utils/macro-engine.ts), [prompt assembler](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/packages/server/src/services/prompt/assembler.ts), [conditional guide](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/prompts/conditional-prompts.md). Source code wins when documentation differs.
 
 A macro is `{{tag}}` text replaced when the prompt is built. There is no switch — any field that supports macros always resolves them. Built-in names are case-insensitive. Macros work in character cards, personas, lorebook entries, prompt sections, and chat messages.
 
@@ -15,7 +15,7 @@ A macro is `{{tag}}` text replaced when the prompt is built. There is no switch 
 | `{{user}}` / `{{userName}}` | persona name, or `User` |
 | `{{char}}` / `{{charName}}` | current character's name, or `Character` |
 | `{{userNamePhonetic}}` / `{{charNamePhonetic}}` | phonetic name, falling back to the plain name |
-| `{{characters}}` | every character in the chat, comma-joined |
+| `{{characters}}` | every character in the chat, comma-joined, **including inactive (turned-off) characters** since 2.5.2; names only, it adds no cards to the prompt. For the active cast use `{{char}}` with `{{group}}` |
 | `{{group}}` | the other active characters in a group, excluding the responder |
 | `{{persona}}` | persona description + personality + backstory + appearance + scenario |
 | `{{personaDescription}}`, `{{personaPersonality}}`, `{{personaBackstory}}`, `{{personaAppearance}}`, `{{personaScenario}}` | individual persona fields |
@@ -23,7 +23,7 @@ A macro is `{{tag}}` text replaced when the prompt is built. There is no switch 
 | `{{<21-char-card-ID>}}` | another character's name; in Roleplay chats with a prompt preset it also pulls that card's description, personality, appearance, backstory, scenario, and examples into context. Elsewhere it is only the name |
 | `{{persona-<21-char-card-ID>}}` | the same for another persona |
 
-ID macros need a real card ID copied from the app, so they cannot be pre-filled in authored content. The referenced card's greetings are excluded; its lorebooks keep their normal activation rules. A card already in the chat just becomes its name and is not added twice.
+ID macros need a real card ID copied from the app, so they cannot be pre-filled in authored content. Since 2.5.2 an ID macro written only in a card's creator notes no longer pulls that card into the prompt, and pulled-in cards never contribute their creator notes. The referenced card's greetings are excluded; its lorebooks keep their normal activation rules. A card already in the chat just becomes its name and is not added twice.
 
 ## Conversation mode
 
@@ -55,7 +55,9 @@ Because names are portable and IDs are not, offline-authored content should incl
 
 `{{date}}` (`YYYY-MM-DD`), `{{time}}` (`HH:MM`), `{{datetime}}` / `{{isotime}}`, `{{weekday}}`, `{{timezone}}`.
 
-`{{random}}` (0–100), `{{random:X:Y}}`, `{{random::A::B::C}}` (picks one option), `{{random::A@2::B@0.5}}` (weighted), `{{roll:XdY}}`.
+Story clock (2.5.2+): `{{date.world_state}}`, `{{time.world_state}}` and `{{weekday.world_state}}` read the in-world date and time tracked by the World State agent, in its original format. `weekday` uses a custom Weekday / Day of Week field, a weekday written in the tracked date, or the weekday of a valid `YYYY-MM-DD` date. They follow the swipe being shown (regeneration uses the state the replacement reply starts from), are empty when nothing is tracked, never fall back to real time, and work in conditions: `{{#if weekday.world_state == "Monday"}}…{{/if}}`. They work in prompts and agent templates.
+
+`{{random}}` (0–100), `{{random:X:Y}}`, `{{random::A::B::C}}` (picks one option), `{{random::A@2::B@0.5}}` (weighted), `{{roll:XdY}}` (also `{{roll:d20}}` for one die and `{{roll:1d8+3}}` with a modifier, as documented in v2.5.2; `{{roll:...}}` typed in the chat message box resolves before sending).
 
 Range endpoints are inclusive nonnegative integers (reversed endpoints are normalized). A missing weight is 1; decimal and zero weights work, and all-zero weights produce empty text. **Keep random options free of variable writes.** The conditional-resolution pass processes variable operations before the random choice, so `setvar` in an unselected option can still run. The selected option then receives a nested macro-resolution pass; that does not make random options lazy for side effects.
 
@@ -65,7 +67,7 @@ Range endpoints are inclusive nonnegative integers (reversed endpoints are norma
 
 Chat variables are the same per-chat storage, also editable in **Chat Settings → Chat Variables**. Once set, a chat variable resolves as a bare `{{name}}` — names must match `^[A-Za-z_]\w{0,63}$`, must not be 21 characters long (reserved for card IDs), and cannot shadow a built-in macro. A `{{setvar}}` in a section or entry overwrites a chat variable of the same name.
 
-Variable operations run left to right and persist across turns and app restarts in that chat. Use `getvar` / `setvar` for names containing dots or dashes; they are not bare-variable names. An earlier user message keeps displaying the tag the user typed, and resolves with the variable's current value when a prompt is built.
+Variable operations run left to right and persist across turns and app restarts in that chat. Use `getvar` / `setvar` for names containing dots or dashes; they are not bare-variable names. An earlier user message keeps displaying the tag the user typed, and resolves with the variable's current value when a prompt is built. Since 2.5.2 messages also fill in chat variables when **shown**: `{{getvar::name}}` in a message reads the chat's variables when the chat has any, so a name that exists only as a preset variable shows empty there. Greetings can show card-question answers as chat variables (`{{relationshipToUser}}`).
 
 ## Formatting
 

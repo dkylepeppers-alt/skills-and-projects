@@ -106,6 +106,13 @@ try {
     value.data = {};
     rejected(value, /map definition/);
   });
+  if (process.env.MARINARA_AGENTS_ROOT) {
+    check("an invalid hierarchy profile fails the loaded maps model", () => {
+      const value = JSON.parse(readFileSync(resolve(scripts, "../templates/map-template.json"), "utf8"));
+      value.hierarchyProfile.types[0].baseKind = "not-a-kind";
+      rejected(value, /FAIL\s+hierarchyProfile/);
+    });
+  }
 } finally { rmSync(temporary, { recursive: true, force: true }); }
 console.log(`${count - failures}/${count} checks passed.`);
 process.exitCode = failures ? 1 : 0;

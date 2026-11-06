@@ -182,6 +182,54 @@ try {
     rejected({ type: "marinara_chat_settings_profile", version: 1,
       data: { name: "Night", mode: "roleplay", settings: { invented: true } } }, /settings profile settings/);
   });
+  check("relative manifest paths still check files[] hashes beside the manifest", () => {
+    const dir = join(temporary, "pkg");
+    mkdirSync(dir);
+    const manifest = JSON.parse(readFileSync(join(templates, "agent-package/manifest.json"), "utf8"));
+    writeFileSync(join(dir, "manifest.json"), JSON.stringify(manifest));
+    writeFileSync(join(dir, "agents.json"), readFileSync(join(templates, "agent-package/agents.json")));
+    const result = spawnSync(process.execPath, [...process.execArgv, validator, "manifest.json"], {
+      encoding: "utf8", env: process.env, cwd: dir, timeout: 30000,
+    });
+    assert.match(result.stdout, /warn\s+files\[\] entry agents\.json does not match/, result.stdout + result.stderr);
+  });
+  check("a package agent description that is only a prefix of the manifest's fails or warns", () => {
+    const dir = join(temporary, "desc");
+    mkdirSync(dir);
+    const manifest = JSON.parse(readFileSync(join(templates, "agent-package/manifest.json"), "utf8"));
+    const agents = JSON.parse(readFileSync(join(templates, "agent-package/agents.json"), "utf8"));
+    agents[0].description = "Totally different text.";
+    writeFileSync(join(dir, "manifest.json"), JSON.stringify(manifest));
+    writeFileSync(join(dir, "agents.json"), JSON.stringify(agents));
+    const result = run([join(dir, "manifest.json")]);
+    assert.equal(result.status, 1, result.output);
+    assert.match(result.output, /description must equal manifest\.description/);
+  });
+  check("an extension manifest shadowed by a root collection file is not silently swapped", () => {
+    const dir = join(temporary, "Shadowed");
+    mkdirSync(dir);
+    writeFileSync(join(dir, "manifest.json"), JSON.stringify({
+      kind: "marinara.personal-extension", version: 1,
+      config: { name: "Broken", runtime: "client", capabilities: [], jsPath: "missing.js" },
+    }));
+    writeFileSync(join(dir, "marinara-extensions.json"), JSON.stringify({ extensions: [{ name: "Other", runtime: "client", capabilities: [], css: "a{}" }] }));
+    const result = run([join(dir, "manifest.json")]);
+    assert.equal(result.status, 1, result.output);
+    assert.match(result.output, /would use another file/);
+  });
+  check("a tool folder resolves its script beside its own manifest; a loose file warns", () => {
+    const dir = join(temporary, "roll_weather");
+    mkdirSync(dir);
+    writeFileSync(join(dir, "script.js"), "return 'rain';");
+    const tool = { kind: "marinara.function", version: 1,
+      config: { name: "roll_weather", description: "Pick weather.", executionType: "script", scriptBodyPath: "script.js" } };
+    writeFileSync(join(dir, "manifest.json"), JSON.stringify(tool));
+    accepted([join(dir, "manifest.json")], /ok\s+tool\[0\] roll_weather/);
+    writeFileSync(join(dir, "loose-tool.json"), JSON.stringify(tool));
+    const loose = run([join(dir, "loose-tool.json")]);
+    assert.match(loose.output, /loose JSON tool file is imported without resolving/);
+    assert.match(loose.output, /script tool with no script body/);
+  });
   check("a ruleset package with a tampered document fails the Engine reader", () => rejected({
     format: "marinara-ruleset", version: 1, manifest: {}, files: { "ruleset.json": "e30=" },
   }, /FAIL\s+ruleset package/));

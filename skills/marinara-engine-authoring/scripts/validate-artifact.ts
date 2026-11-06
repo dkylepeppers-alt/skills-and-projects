@@ -11,7 +11,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, readdirSync, readFileSync, statSync } from "node:fs";
 import { registerHooks } from "node:module";
-import { dirname, join, relative, resolve } from "node:path";
+import { dirname, isAbsolute, join, relative, resolve } from "node:path";
 import { lintExtensionSource } from "./lint-extension.mjs";
 
 const engineRoot = process.env.MARINARA_ENGINE_ROOT;
@@ -404,10 +404,10 @@ async function validateAgentManifest(manifest: any, filePath: string) {
   const minor = manifest.capabilityApi?.minor;
   if (typeof minor === "number" && minor > SUPPORTED_CAPABILITY_MINOR)
     problem(`capabilityApi.minor ${minor} is above the ${SUPPORTED_CAPABILITY_MINOR} that Engine v2.5.2 supports; it will not install`);
-  const dir = dirname(filePath);
+  const dir = resolve(dirname(filePath));
   for (const file of Array.isArray(manifest.files) ? manifest.files : []) {
     const target = typeof file?.path === "string" ? resolve(dir, file.path) : null;
-    if (!target || !target.startsWith(dir) || !existsSync(target)) continue;
+    if (!target || !inside(dir, target) || !existsSync(target)) continue;
     const bytes = readFileSync(target);
     const sha = createHash("sha256").update(bytes).digest("hex");
     if (file.sha256 !== sha || file.bytes !== bytes.length)
@@ -419,10 +419,36 @@ async function validateAgentManifest(manifest: any, filePath: string) {
     await validateAgentDefinitions(definitions, `${relative(dir, agentsPath)} `);
     const own = Array.isArray(definitions) ? definitions.find((item: any) => item?.id === manifest.id) : null;
     if (!own) problem(`agents.json has no agent whose id equals the package id "${manifest.id}"`);
-    else if (typeof own.description === "string" && typeof manifest.description === "string"
-      && !manifest.description.startsWith(own.description.trim()) && !own.description.startsWith(manifest.description.trim()))
-      problem("the package agent's description must equal manifest.description (with or without the activation sentence)");
+    else await checkPackageDescription(manifest, own);
   }
+}
+
+function inside(dir: string, target: string) {
+  const rel = relative(dir, target);
+  return rel !== "" && !rel.startsWith("..") && !isAbsolute(rel);
+}
+
+/**
+ * The Agents catalog rule (validate-catalog.mjs): the package-id agent's description equals
+ * manifest.description, or manifest.description without this package's activation sentence
+ * from catalog-package-guidance.mjs. That sentence is known only with MARINARA_AGENTS_ROOT.
+ */
+async function checkPackageDescription(manifest: any, own: any) {
+  const manifestText = String(manifest.description ?? "").trim();
+  const agentText = String(own.description ?? "");
+  if (agentText === manifest.description) return;
+  if (agentsRoot) {
+    const guidancePath = resolve(agentsRoot, "scripts/catalog-package-guidance.mjs");
+    if (existsSync(guidancePath)) {
+      const guidance = await import(guidancePath);
+      if (agentText !== guidance.withoutPackageActivationGuidance(manifest.id, manifest.description))
+        problem("the package agent's description must equal manifest.description, or it without this package's activation sentence");
+      return;
+    }
+  }
+  if (manifestText.startsWith(`${agentText.trim()} `) && agentText.trim())
+    warn("the package agent's description is manifest.description minus a trailing part; set MARINARA_AGENTS_ROOT to confirm that part is this package's activation sentence");
+  else problem("the package agent's description must equal manifest.description (or it without the activation sentence)");
 }
 
 async function validateAgentDefinitions(definitions: any, label = "") {
@@ -434,15 +460,23 @@ async function validateExtensionManifest(manifest: any, filePath: string) {
   const transfer = await engineModule("packages/client/src/lib/folder-package-transfer.ts");
   const importer = await engineModule("packages/client/src/lib/personal-extension-import.ts");
   const shared = await engineShared();
-  const dir = dirname(filePath);
+  const dir = resolve(dirname(filePath));
   const folder = dir.split(/[\\/]/).pop() || "Extension";
   const files = listTextFiles(dir, `${folder}/`);
   const entries = transfer.collectFolderPackageEntries(files, {
     rootFilenames: ["marinara-extensions.json", "marinara-extension.json", "marinara-personal-extensions.json"],
     collectionKeys: ["extensions", "personalExtensions"],
   });
-  const entry = entries.find((item: any) => item.path === `${folder}/${relative(dir, filePath).replace(/\\/g, "/")}`) ?? entries[0];
-  const draft = entry ? importer.normalizePersonalExtensionImportEntry(entry, folder) : null;
+  const wanted = `${folder}/${relative(dir, resolve(filePath)).replace(/\\/g, "/")}`;
+  const entry = entries.find((item: any) => item.path === wanted);
+  if (!entry) {
+    // The Engine prefers a root collection file (marinara-extensions.json …) over manifest.json.
+    problem(entries.length
+      ? `the Engine's folder import would use another file in this folder (${entries[0].path}) instead of this manifest`
+      : "the Engine importer finds no extension here");
+    return;
+  }
+  const draft = importer.normalizePersonalExtensionImportEntry(entry, folder);
   if (!draft) {
     problem("the Engine importer finds no extension here: check the manifest's relative paths (server needs JS; browser needs CSS or JS)");
     return;
@@ -460,25 +494,45 @@ async function validateExtensionManifest(manifest: any, filePath: string) {
   }
 }
 
+const TOOL_PACKAGE_FILES = new Set(["marinara-functions.json", "manifest.json"]);
+
+/**
+ * Mirrors the Functions panel import. A ZIP or folder package (a marinara-functions.json
+ * collection, or manifest.json per tool) goes through collectFolderPackageEntries, which
+ * resolves each tool's *Path fields beside that tool's own manifest. A loose JSON file is
+ * imported with no file resolution at all, so its *Path fields are ignored.
+ */
 async function validateCustomTools(raw: any, filePath: string) {
   const transfer = await engineModule("packages/client/src/lib/custom-tool-transfer.ts");
+  const folders = await engineModule("packages/client/src/lib/folder-package-transfer.ts");
   const shared = await engineShared();
-  const dir = dirname(filePath);
-  const resolveText = (path: unknown) => {
-    if (typeof path !== "string") return null;
-    const target = resolve(dir, path);
-    return target.startsWith(dir) && existsSync(target) ? readFileSync(target, "utf8") : null;
-  };
-  const collected = shared.getFolderImportEntries(raw, TOOL_COLLECTION_KEYS);
-  const candidates = collected.length ? collected : [raw];
-  if (!candidates.length) problem("no custom tools found");
-  for (const [index, candidate] of candidates.entries()) {
-    const prepared = transfer.prepareCustomToolImportEntry(candidate, resolveText);
+  const dir = resolve(dirname(filePath));
+  const name = filePath.split(/[\\/]/).pop()!.toLowerCase();
+  let entries: Array<{ raw: unknown; resolveTextFile: (path: unknown) => string | null }>;
+  if (TOOL_PACKAGE_FILES.has(name)) {
+    const folder = dir.split(/[\\/]/).pop() || "Functions";
+    entries = folders.collectFolderPackageEntries(listTextFiles(dir, `${folder}/`), {
+      rootFilenames: ["marinara-functions.json"],
+      collectionKeys: TOOL_COLLECTION_KEYS,
+    });
+    console.log(`  info  checked as a folder/ZIP package rooted at ${folder}/ (paths resolve beside each tool manifest)`);
+  } else {
+    entries = shared.getFolderImportEntries(raw, TOOL_COLLECTION_KEYS)
+      .map((entry: unknown) => ({ raw: entry, resolveTextFile: () => null }));
+    const pathKeys = /"(parametersSchemaPath|parametersPath|staticResultPath|scriptBodyPath|scriptPath|scriptPaths)"/;
+    if (pathKeys.test(JSON.stringify(raw)))
+      warn("a loose JSON tool file is imported without resolving *Path fields; ship the folder as a ZIP (marinara-functions.json or manifest.json per tool) instead");
+  }
+  if (!entries.length) problem("the Engine importer finds no custom tools here");
+  for (const [index, entry] of entries.entries()) {
+    const prepared = transfer.prepareCustomToolImportEntry(entry.raw, entry.resolveTextFile);
     if (!prepared) {
-      problem(`tool[${index}] is not an importable custom tool (check name, description and script/schema paths)`);
+      problem(`tool[${index}] is not an importable custom tool (it needs a name and description)`);
       continue;
     }
     report(`tool[${index}] ${prepared.config.name}`, shared.createCustomToolSchema.safeParse(prepared.config));
+    if (prepared.config.executionType === "script" && !prepared.config.scriptBody)
+      problem(`tool[${index}] is a script tool with no script body`);
     if (prepared.review) warn(`tool[${index}] is a ${prepared.config.executionType} tool: it imports disabled and needs review`);
   }
 }

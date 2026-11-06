@@ -62,6 +62,13 @@ await check("lint: contribution ids, kinds and command rules", () => {
   ].join("\n"));
   assert.equal(found.length, 4, found.join("\n"));
 });
+await check("lint: interpolations, regex literals and side-effect imports", () => {
+  assert.deepEqual(errors("const s = `a ${'document'} b`; const r = /document|window|fetch/g; marinara.log.info(s, r);"), []);
+  assert.ok(errors("const x = `${(() => `in ${window}`)()}`;").some((m) => /window/.test(m)));
+  assert.ok(errors("const half = 4 / 2 / 1; document.title = half;").some((m) => /document/.test(m)));
+  assert.ok(errors("import './helpers.js';").some((m) => /import statements/.test(m)));
+  assert.deepEqual(errors("const n = 1; marinara.ui.registerContribution({ id: `note-${n}`, kind: 'button', label: 'x' });"), []);
+});
 await check("lint: more than four dice formats is an error", () => {
   const one = "marinara.dice.registerFormat({ id: 'f', parse: () => null, read: () => ({ total: 0 }) });";
   assert.ok(errors(Array(5).fill(one).join("\n")).some((m) => /at most 4/.test(m)));
@@ -83,6 +90,20 @@ await check("stub: browser template keeps a note per chat and cleans up", async 
   assert.equal(stub.contribution("scene-notes").elements.find((e) => e.id === "note").value, "");
   await stub.stop();
   assert.equal(stub.contributions.size, 0);
+});
+await check("stub: browser template never writes or shows a note in the wrong chat after a switch", async () => {
+  const stub = createMarinaraStub({ storage: { notesByChat: { a: "note A", b: "note B" } } });
+  await runExtension(template("extension-browser/extension.js"), stub);
+  stub.setContext({ chatId: "a" });
+  await new Promise((done) => setImmediate(done));
+  // Start a save for chat a, then switch to b before its storage calls finish.
+  const saving = stub.event("scene-notes", { elementId: "save", values: { note: "edited A" } });
+  stub.setContext({ chatId: "b" });
+  await saving;
+  await new Promise((done) => setImmediate(done));
+  assert.deepEqual(stub.storage.notesByChat, { a: "edited A", b: "note B" });
+  assert.equal(stub.contribution("scene-notes").elements.find((e) => e.id === "note").value, "note B");
+  await stub.stop();
 });
 await check("stub: server template counts starts and logs on its managed timer", async () => {
   const stub = createMarinaraStub({ runtime: "server", storage: { starts: 2 } });
@@ -116,6 +137,18 @@ await check("stub: invalid contributions, updates and storage are rejected", asy
   for (let i = 0; i < 23; i += 1) marinara.ui.registerContribution({ id: `b${i}`, kind: "button", label: "x" });
   assert.throws(() => marinara.ui.registerContribution({ id: "one-too-many", kind: "button", label: "x" }), /at most 24/);
   await assert.rejects(marinara.storage.patch({ big: "x".repeat(1_000_001) }), /limit/);
+});
+await check("stub: updates are validated like registration", () => {
+  const { marinara } = createMarinaraStub();
+  const button = marinara.ui.registerContribution({ id: "b", kind: "button", label: "x" });
+  assert.throws(() => button.update({ surface: "unknown" }), /unknown surface/);
+  assert.throws(() => button.update({ position: "unknown" }), /unknown position/);
+  const panel = marinara.ui.registerContribution({ id: "p", kind: "panel", label: "x", elements: [] });
+  assert.throws(() => panel.update({ elements: [{ kind: "button", label: "No id" }] }), /needs an id/);
+  const win = marinara.ui.showWindow({ title: "w", elements: [] });
+  assert.throws(() => win.update({ elements: [{ kind: "html" }] }), /element kind/);
+  assert.throws(() => win.update({ elements: Array(61).fill({ kind: "spacer" }) }), /at most 60/);
+  assert.throws(() => win.update({ onEvent() {} }), /cannot update "onEvent"/);
 });
 await check("stub: dice formats roll through parse and read with documented bounds", async () => {
   const stub = createMarinaraStub();

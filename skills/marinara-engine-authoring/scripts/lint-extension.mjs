@@ -54,48 +54,111 @@ const SERVER_FORBIDDEN = [
 
 /** Blank out comments and string/template contents so text inside them is not linted. */
 export function stripCode(source) {
-  let out = "";
-  let i = 0;
+  // A small lexer: blanks comments, string and template text, and regex literal bodies
+  // (also inside `${...}` interpolations) while keeping every offset and newline, so
+  // findings point at the original source and only executable code is scanned.
+  const out = source.split("");
   const n = source.length;
-  while (i < n) {
-    const c = source[i];
-    const next = source[i + 1];
-    if (c === "/" && next === "/") {
-      while (i < n && source[i] !== "\n") { out += " "; i += 1; }
-    } else if (c === "/" && next === "*") {
-      out += "  "; i += 2;
-      while (i < n && !(source[i] === "*" && source[i + 1] === "/")) { out += source[i] === "\n" ? "\n" : " "; i += 1; }
-      out += "  "; i += 2;
-    } else if (c === "\"" || c === "'") {
-      out += c; i += 1;
-      while (i < n && source[i] !== c && source[i] !== "\n") {
-        if (source[i] === "\\") { out += " "; i += 1; }
-        out += " "; i += 1;
+  const blank = (from, to) => { for (let k = from; k < to; k += 1) if (out[k] !== "\n") out[k] = " "; };
+  const KEYWORDS_BEFORE_REGEX = new Set(["return", "typeof", "instanceof", "in", "of", "new", "delete", "void", "throw", "case", "do", "else", "yield", "await"]);
+  let i = 0;
+  let last = ""; // last significant token: an identifier/keyword or a punctuator character
+
+  const regexAllowed = () =>
+    last === "" || KEYWORDS_BEFORE_REGEX.has(last) || (last.length === 1 && "(,=:[!&|?{};+-*%<>~^".includes(last));
+
+  function skipString(quote) {
+    const begin = i;
+    i += 1;
+    while (i < n && source[i] !== quote && source[i] !== "\n") i += source[i] === "\\" ? 2 : 1;
+    blank(begin + 1, Math.min(i, n));
+    i += 1;
+    last = "a";
+  }
+
+  function skipRegex() {
+    const begin = i;
+    i += 1;
+    let inClass = false;
+    while (i < n && source[i] !== "\n") {
+      const c = source[i];
+      if (c === "\\") { i += 2; continue; }
+      if (c === "[") inClass = true;
+      else if (c === "]") inClass = false;
+      else if (c === "/" && !inClass) break;
+      i += 1;
+    }
+    blank(begin + 1, Math.min(i, n));
+    i += 1;
+    while (i < n && /[a-z]/i.test(source[i])) i += 1;
+    last = "a";
+  }
+
+  function skipTemplate() {
+    i += 1;
+    let textStart = i;
+    while (i < n) {
+      const c = source[i];
+      if (c === "\\") { i += 2; continue; }
+      if (c === "`") { blank(textStart, i); i += 1; last = "a"; return; }
+      if (c === "$" && source[i + 1] === "{") {
+        blank(textStart, i);
+        i += 2;
+        last = "{";
+        code(true);
+        textStart = i;
+        continue;
       }
-      out += c; i += 1;
-    } else if (c === "`") {
-      out += c; i += 1;
-      while (i < n && source[i] !== "`") {
-        if (source[i] === "\\") { out += "  "; i += 2; continue; }
-        if (source[i] === "$" && source[i + 1] === "{") {
-          // Keep interpolated code; track nested braces.
-          let depth = 0;
-          while (i < n) {
-            const ch = source[i];
-            out += ch; i += 1;
-            if (ch === "{") depth += 1;
-            else if (ch === "}") { depth -= 1; if (depth === 0) break; }
-          }
-          continue;
+      i += 1;
+    }
+    blank(textStart, n);
+  }
+
+  /** Scan code; inside an interpolation, stop after its closing brace. */
+  function code(interpolation) {
+    let depth = 0;
+    while (i < n) {
+      const c = source[i];
+      const next = source[i + 1];
+      if (c === "/" && next === "/") {
+        const begin = i;
+        while (i < n && source[i] !== "\n") i += 1;
+        blank(begin, i);
+      } else if (c === "/" && next === "*") {
+        const begin = i;
+        const close = source.indexOf("*/", i + 2);
+        i = close < 0 ? n : close + 2;
+        blank(begin, i);
+      } else if (c === "\"" || c === "'") {
+        skipString(c);
+      } else if (c === "`") {
+        skipTemplate();
+      } else if (c === "/" && regexAllowed()) {
+        skipRegex();
+      } else if (/[A-Za-z_$]/.test(c)) {
+        const begin = i;
+        while (i < n && /[\w$]/.test(source[i])) i += 1;
+        last = source.slice(begin, i);
+      } else if (/\d/.test(c)) {
+        while (i < n && /[\w.]/.test(source[i])) i += 1;
+        last = "0";
+      } else if (/\s/.test(c)) {
+        i += 1;
+      } else {
+        if (c === "{") depth += 1;
+        if (c === "}") {
+          if (interpolation && depth === 0) { i += 1; return; }
+          depth -= 1;
         }
-        out += source[i] === "\n" ? "\n" : " "; i += 1;
+        // `)` and `]` end an expression, after which `/` divides.
+        last = c === ")" || c === "]" ? "a" : c;
+        i += 1;
       }
-      out += "`"; i += 1;
-    } else {
-      out += c; i += 1;
     }
   }
-  return out;
+
+  code(false);
+  return out.join("");
 }
 
 /** Spans of each `ui.registerContribution({...})` options object in stripped code. */
@@ -163,7 +226,7 @@ export function lintExtensionSource(source, { runtime = "client", capabilities =
       const match = pattern.exec(code);
       if (match) add("error", `\`${global}\`: ${why}`, match.index);
     }
-    const imp = /(?:^|[;\n])\s*import\s*(?:[\w{*]|\()/.exec(code);
+    const imp = /(?:^|[;\n])\s*import\s*(?:[\w{*]|\(|["'`])/.exec(code);
     if (imp) add("error", "import statements are not supported; Marinara runs plain JavaScript, so bundle dependencies first", imp.index);
   } else if (/(?<![\w$.])fetch\s*\(/.test(code)) {
     add("warning", "use marinara.fetch(...) instead of window fetch so the extension's traffic is attributed in Settings");
@@ -201,11 +264,13 @@ export function lintExtensionSource(source, { runtime = "client", capabilities =
     // The stripper keeps offsets, so the original text at the same span still holds the literals.
     const text = source.slice(call.start, call.end);
     const top = topLevelText(code.slice(call.start, call.end), text);
-    const id = /\bid\s*:\s*["'`]([^"'`]*)["'`]/.exec(top);
-    const target = /\btargetContributionId\s*:\s*["'`]([^"'`]*)["'`]/.exec(top);
+    const id = /\bid\s*:\s*(["'`])([^"'`]*)\1/.exec(top);
+    const target = /\btargetContributionId\s*:\s*(["'`])([^"'`]*)\1/.exec(top);
     for (const found of [id, target]) {
-      if (found && !/^[A-Za-z0-9._-]+$/.test(found[1]))
-        add("error", `contribution id "${found[1]}" may contain only letters, numbers, ".", "_" and "-"`, call.start);
+      // An interpolated template literal's value is unknown statically; only plain literals are checked.
+      const interpolated = found?.[1] === "`" && found[2].includes("$");
+      if (found && !interpolated && !/^[A-Za-z0-9._-]+$/.test(found[2]))
+        add("error", `contribution id "${found[2]}" may contain only letters, numbers, ".", "_" and "-"`, call.start);
     }
     const kind = /\bkind\s*:\s*["']([\w-]+)["']/.exec(top)?.[1];
     if (kind && !["button", "menu-item", "panel", "command"].includes(kind))

@@ -7,6 +7,13 @@
 const PANEL_ID = "scene-notes";
 let chatId = null;
 
+// Storage calls are async and the user can switch chats while one is pending.
+// Every handler captures the chat it started for, writes only that chat's note,
+// and skips the panel update if a different chat is open by the time it finishes.
+const render = (forChat, note, status) => {
+  if (forChat === chatId) panel.update({ elements: elements(note, status) });
+};
+
 const notesFor = async (id) => {
   const saved = await marinara.storage.get();
   return (saved.notesByChat ?? {})[id] ?? "";
@@ -31,17 +38,18 @@ const panel = marinara.ui.registerContribution({
   icon: "notebook-pen",
   elements: elements("", ""),
   onActivate: async () => {
-    panel.update({ elements: elements(chatId ? await notesFor(chatId) : "", "") });
+    const forChat = chatId;
+    render(forChat, forChat ? await notesFor(forChat) : "", "");
   },
   onEvent: async ({ elementId, values }) => {
-    if (!chatId) return;
+    const forChat = chatId;
+    if (!forChat || (elementId !== "save" && elementId !== "clear")) return;
     const saved = await marinara.storage.get();
     const notesByChat = { ...(saved.notesByChat ?? {}) };
-    if (elementId === "save") notesByChat[chatId] = String(values.note ?? "");
-    else if (elementId === "clear") delete notesByChat[chatId];
-    else return;
+    if (elementId === "save") notesByChat[forChat] = String(values.note ?? "");
+    else delete notesByChat[forChat];
     await marinara.storage.patch({ notesByChat });
-    panel.update({ elements: elements(notesByChat[chatId] ?? "", elementId === "save" ? "Saved." : "Cleared.") });
+    render(forChat, notesByChat[forChat] ?? "", elementId === "save" ? "Saved." : "Cleared.");
   },
 });
 
@@ -53,8 +61,9 @@ const command = marinara.ui.registerContribution({
 });
 
 const unsubscribe = marinara.context.subscribe(async (context) => {
-  chatId = context.chatId;
-  panel.update({ elements: elements(chatId ? await notesFor(chatId) : "", "") });
+  const forChat = context.chatId;
+  chatId = forChat;
+  render(forChat, forChat ? await notesFor(forChat) : "", "");
 });
 
 marinara.onCleanup(() => {

@@ -61,8 +61,11 @@ function checkElements(elements, where) {
   for (const element of elements) {
     if (!element || typeof element !== "object") throw new TypeError(`${where}: each element must be an object`);
     if (!ELEMENT_KINDS.has(element.kind)) throw new TypeError(`${where}: element kind "${element.kind}" is not one of ${[...ELEMENT_KINDS].join(", ")}`);
-    if (element.id !== undefined && (typeof element.id !== "string" || element.id.length > LIMITS.idLength))
-      throw new RangeError(`${where}: element id must be a string of at most ${LIMITS.idLength} characters`);
+    const interactive = ["button", "input", "select", "toggle", "slider", "color"].includes(element.kind);
+    if ((interactive || element.id !== undefined) && (typeof element.id !== "string" || !element.id || element.id.length > LIMITS.idLength))
+      throw new RangeError(`${where}: ${interactive ? `a ${element.kind} needs an` : "element"} id of 1-${LIMITS.idLength} characters`);
+    if ((element.kind === "button" || element.kind === "toggle") && typeof element.label !== "string")
+      throw new TypeError(`${where}: a ${element.kind} needs a label`);
     if (typeof element.text === "string") {
       if (element.text.length > LIMITS.textLength) throw new RangeError(`${where}: element text is over ${LIMITS.textLength} characters`);
       text += element.text.length;
@@ -75,6 +78,11 @@ function checkElements(elements, where) {
       throw new TypeError(`${where}: a slider needs numeric min and max`);
   }
   if (text > LIMITS.totalPanelTextLength) throw new RangeError(`${where}: panel text totals over ${LIMITS.totalPanelTextLength} characters`);
+}
+
+function checkPlacement(spec) {
+  if (spec.surface !== undefined && !SURFACES.has(spec.surface)) throw new TypeError(`unknown surface "${spec.surface}"`);
+  if (spec.position !== undefined && !POSITIONS.has(spec.position)) throw new TypeError(`unknown position "${spec.position}"`);
 }
 
 function checkDescriptor(spec) {
@@ -202,10 +210,7 @@ export function createMarinaraStub(options = {}) {
           if (spec.onActivate || spec.onEvent) throw new TypeError("a command cannot use onActivate or onEvent");
           if (typeof spec.targetContributionId !== "string") throw new TypeError("a command needs targetContributionId");
         }
-        if (spec.kind === "button") {
-          if (spec.surface !== undefined && !SURFACES.has(spec.surface)) throw new TypeError(`unknown surface "${spec.surface}"`);
-          if (spec.position !== undefined && !POSITIONS.has(spec.position)) throw new TypeError(`unknown position "${spec.position}"`);
-        }
+        if (spec.kind === "button") checkPlacement(spec);
         if (spec.kind === "panel") checkElements(spec.elements ?? [], `panel "${spec.id}"`);
         const state = { ...spec, surface: spec.kind === "button" ? spec.surface ?? "top-bar" : spec.surface };
         contributions.set(spec.id, state);
@@ -217,6 +222,7 @@ export function createMarinaraStub(options = {}) {
               if (!UPDATE_FIELDS[spec.kind].includes(key)) throw new TypeError(`a ${spec.kind} handle cannot update "${key}"`);
             }
             if (patch.elements) checkElements(patch.elements, `panel "${spec.id}"`);
+            if (spec.kind === "button") checkPlacement(patch);
             checkDescriptor({ ...state, ...patch });
             Object.assign(state, clone(patch));
           },
@@ -229,7 +235,14 @@ export function createMarinaraStub(options = {}) {
         const state = { ...spec, open: true };
         windows.push(state);
         return Object.freeze({
-          update(patch) { Object.assign(state, clone(patch)); },
+          update(patch) {
+            alive("window update");
+            for (const key of Object.keys(patch ?? {})) {
+              if (key !== "title" && key !== "elements") throw new TypeError(`a window handle cannot update "${key}"`);
+            }
+            if (patch.elements) checkElements(patch.elements, "window");
+            Object.assign(state, clone(patch));
+          },
           close() { state.open = false; state.onClose?.(); },
         });
       },

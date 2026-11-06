@@ -95,6 +95,27 @@ Every runtime (browser, full-page, and server) gets `marinara.estimateTextTokens
 
 Browser extensions normally run in an opaque-origin Worker sandbox, not in the host DOM. `full_page_access` is an external-only trust mode requiring its extra acknowledgement, not an extra sandbox capability for Professor Mari drafts. A Personal Extension row never keeps it (it is stripped on save), and since 2.5.2 Professor Mari refuses to draft a Personal Extension with it rather than saving one that switches itself off at restart (#8113). Server code runs in a separate restricted process, never by in-process import. Prefer narrow context capabilities and declarative contributions.
 
+### Writing the code: read the Engine docs
+
+This reference covers the file contract, packaging and trust gates. It does **not** cover the runtime APIs or working code. Before writing extension JavaScript, read the pinned Engine guides (v2.5.2), and recheck them against the user's installed version:
+
+| Need | Engine doc |
+|---|---|
+| Browser extension quickstart with working code | [Browser Extension quickstart](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#browser-extension-quickstart) |
+| Full browser API (`ui.registerContribution`, `ui.showWindow`, `marinara.storage`, timers, `onCleanup`, `dice.registerFormat`) | [Browser API reference](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#browser-api-reference) |
+| What each context capability unlocks | [Context capabilities](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#context-capabilities), [What a Browser Extension can do](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#what-a-browser-extension-can-do) |
+| Marinara-rendered panels and their element descriptors | [Add a Marinara-rendered panel](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#add-a-marinara-rendered-panel) |
+| Reading the active chat, characters and persona | [Use active chat context](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#use-active-chat-context) |
+| Token estimates and dice formats | [Estimate text tokens](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#estimate-text-tokens), [Add a dice format](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#add-a-dice-format) |
+| Full-page (unsandboxed) External Extensions and legacy code | [Legacy and full page extensions](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#legacy-and-full-page-extensions) |
+| Server extension quickstart and API | [Server Extension quickstart](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#server-extension-quickstart) |
+| Manifest fields and validation limits | [Package and manifest reference](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#package-and-manifest-reference), [Validation limits](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#validation-limits) |
+| Updating, rollback, recovery and debugging | [Update and recovery lifecycle](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#update-and-recovery-lifecycle), [Debugging](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/writing-personal-extensions.md#debugging) |
+| User-side install, the two External Extension gates, platform support, revisions | [Personal Extensions](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/extending/personal-extensions.md) |
+| Security invariants and how each runtime is isolated | [Personal Extension Architecture](https://github.com/Pasta-Devs/Marinara-Engine/blob/fc0333c3fe978cda5e0b919bd6faec985901704e/docs/development/personal-extensions.md) |
+
+Use only APIs those guides document for the targeted release. Guard newer ones with a `typeof` check, as above.
+
 ### Extension files and packages
 
 The Settings extension importer accepts `.zip`, `.json`, `.css`, `.js`, `.mjs`, `.cjs`, `.server.js`, `.server.mjs`, `.server.cjs` and folders. Loose `.server.*` files become server extensions; ordinary JS/CSS become client drafts. JSON may contain a direct config, a manifest/config, or `extensions` / `personalExtensions` collections. Folder/ZIP manifests can name `cssPath` / `cssPaths`, `jsPath` / `jsPaths`, or `serverJsPath` / `serverJsPaths`; inline `css`, `js` and `serverJs` are also supported. Paths resolve within the selected package, not arbitrary local files.

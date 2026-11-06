@@ -52,7 +52,7 @@ compare repository and installed skill revisions before reconciling differences.
 | A hierarchical / spatial map | `references/maps.md` |
 | A prompt preset, sections, markers, generation parameters | `references/presets-and-prompts.md` |
 | Macros, `{{#if}}` conditionals, preset variables | `references/macros.md` |
-| Regex scripts, custom tools, personal extensions, themes | `references/extensions-and-scripts.md` |
+| Regex scripts, custom tools, personal/External extensions, themes | `references/extensions-and-scripts.md`; for extension JavaScript (browser and server APIs, quickstarts, debugging) also the Engine guides it links in `docs/extending/` |
 | A downloadable Agent package | `references/agent-packages.md` |
 | An in-app custom Agent, its file/folder export, activation, capabilities, or output contract | `references/agent-definition.md` and `references/agent-prompt-craft.md` |
 | A Game ruleset, creature/tile/board pack, world kit, generated world, Experience map pack, or world-bound story script | `references/game-content.md` |

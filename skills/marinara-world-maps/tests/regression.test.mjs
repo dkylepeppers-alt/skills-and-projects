@@ -81,8 +81,12 @@ function flatMap(count) {
   return d;
 }
 test("storage cap is the released 5,000 locations, not the retired 500", () => {
-  assert.equal(validate(flatMap(500)).status, 0);
-  assert.equal(validate(flatMap(501)).status, 0);
+  const atOldCap = validate(flatMap(500));
+  assert.equal(atOldCap.status, 0);
+  assert.ok(!atOldCap.report.warnings.some((w) => w.code === "legacy_location_cap"));
+  const pastOldCap = validate(flatMap(501));
+  assert.equal(pastOldCap.status, 0);
+  assert.ok(pastOldCap.report.warnings.some((w) => w.code === "legacy_location_cap"));
   assert.equal(validate(flatMap(5000)).status, 0);
   const over = validate(flatMap(5001));
   assert.equal(over.status, 1);

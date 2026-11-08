@@ -1,0 +1,190 @@
+// Tests for the Cheats module and its patcher. Runs with no upstream files.
+// Set MLS_SERVER=/path/to/upstream/server.mjs to also check against a real bundle, read as text only:
+// the bundle is never imported or executed here.
+import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { createHash } from "node:crypto";
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync, existsSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { dirname, join } from "node:path";
+import { test } from "node:test";
+import { fileURLToPath } from "node:url";
+import vm from "node:vm";
+import { patchServerSource } from "../apply-cheats.mjs";
+
+const projectDir = join(dirname(fileURLToPath(import.meta.url)), "..");
+const moduleSource = readFileSync(join(projectDir, "cheats-module.js"), "utf8");
+const loadModule = () => vm.runInNewContext(`${moduleSource}\n__mlsCheats`, {});
+const sha256 = (data) => createHash("sha256").update(data).digest("hex");
+const upstream = process.env.MLS_SERVER ? readFileSync(process.env.MLS_SERVER, "utf8") : null;
+
+// Hook names the 0.3.2 bundle accepts (its RX table); a module with any other key is refused at startup.
+const HOOKS_032 =
+  "state cleanIn set migrate view dayTick tick arrived spans castMeet partyTick partyActs partyActChosen specials sheet setCharacter sceneBlocks content pictureGuidance stayWhy factWeight shutTo keepsOut places farewellAsk goodbye goodbyeWords goodbyeChosen stayHere tonight tonightChosen weddingNight tripNight tripNightChosen extraOf isNpc extraName hasNpcs activities backdrops backdropHere freeActs freeJump freeApply owns sceneReply sceneDecide sceneEnd faintMemory faintKept background cardFields castRead cardReread jobWhy routes guide changelog catalog covered".split(
+    " ",
+  );
+const xpFor = (level) => ((level * (level + 1)) / 2) * 50;
+const life = (over = {}) => ({
+  wallet: { cash: 40, ledger: [] },
+  needs: { energy: 12, hunger: 50 },
+  skills: { fitness: 0, charm: 120, knowledge: 0, cooking: 30 },
+  ...over,
+});
+
+test("module passes the game's registration rules", () => {
+  const mod = loadModule();
+  assert.match(mod.id, /^[a-z][a-z0-9-]{1,30}$/);
+  assert.ok(mod.catalog.name && mod.catalog.about);
+  for (const key of Object.keys(mod)) if (key !== "id") assert.ok(HOOKS_032.includes(key), `unknown hook ${key}`);
+  const keys = new Set();
+  for (const option of mod.catalog.options) {
+    assert.ok(!keys.has(option.key), `duplicate option ${option.key}`);
+    keys.add(option.key);
+    assert.ok(["check", "pick"].includes(option.kind), `client renders only check/pick, not ${option.kind}`);
+    assert.equal(option.needsRule, undefined);
+    assert.equal(option.needsOption, undefined);
+    if (option.kind === "pick") {
+      assert.ok(option.choices.some(([value]) => value === option.start), `${option.key} start is a choice`);
+      for (const choice of option.choices) assert.equal(choice.length, 3);
+    }
+  }
+});
+
+test("hook list matches the real bundle", { skip: !upstream && "set MLS_SERVER to check" }, () => {
+  const start = upstream.indexOf("RX={");
+  const end = upstream.indexOf(",LX=/^[a-z]", start);
+  assert.ok(start > 0 && end > start, "found the hook table");
+  const keys = [...upstream.slice(start, end).matchAll(/[{,]([a-zA-Z]+):[`"']/g)].map((m) => m[1]);
+  assert.deepEqual(keys, HOOKS_032);
+  // The curves cheats-module.js mirrors.
+  assert.ok(upstream.includes("return t*(t+1)/2*50}"), "skill XP curve unchanged");
+  assert.ok(upstream.includes('Ar=["fitness","charm","knowledge","cooking"]'), "skill list unchanged");
+  assert.ok(/va=100,.*?hr=\(e=0\)=>va\+Math\.max\(0,Math\.trunc\(e\)\)\*3/.test(upstream), "energy max unchanged");
+  assert.ok(upstream.includes("ye=e=>vp(e.skills)"), "energy max reads skill levels only");
+});
+
+test("switching on through set() applies cheats immediately", () => {
+  const mod = loadModule();
+  const state = { ...mod.state(), on: false };
+  const save = life();
+  assert.equal(mod.set(save, state, { on: true }).ok, true);
+  assert.equal(state.on, true);
+  assert.equal(save.wallet.cash, 40, "wallet off by default");
+  assert.equal(save.needs.energy, 12, "energy off by default");
+  assert.equal(save.skills.charm, 120, "skills as earned by default");
+
+  assert.equal(mod.set(save, state, { wallet: true }).ok, true);
+  assert.equal(save.wallet.cash, 10000);
+  mod.set(save, state, { floor: "1000000" });
+  assert.equal(save.wallet.cash, 1000000);
+  mod.set(save, state, { energy: true });
+  assert.equal(save.needs.energy, 100);
+  mod.set(save, state, { fitness: "10", cooking: "4" });
+  assert.equal(save.skills.fitness, xpFor(10));
+  assert.equal(save.skills.cooking, xpFor(4));
+  assert.equal(save.skills.charm, 120);
+  mod.tick(save, state);
+  assert.equal(save.needs.energy, 130, "fitness 10 raises the cap to 130");
+});
+
+test("tick holds locks, never lowers money or energy", () => {
+  const mod = loadModule();
+  const state = { ...mod.state(), on: true, wallet: true, floor: "1000", energy: true, charm: "3" };
+  const save = life({ wallet: { cash: 5000, ledger: [] }, needs: { energy: 100, hunger: 5 } });
+  mod.tick(save, state);
+  assert.equal(save.wallet.cash, 5000, "above the floor stays");
+  assert.equal(save.skills.charm, xpFor(3), "charm 120 XP lowered to its locked level 3");
+  save.wallet.cash = 3;
+  save.needs.energy = 1;
+  save.skills.charm += 400;
+  mod.tick(save, state);
+  assert.equal(save.wallet.cash, 1000);
+  assert.equal(save.needs.energy, 100);
+  assert.equal(save.skills.charm, xpFor(3));
+  assert.equal(save.needs.hunger, 5, "hunger is left to the game's own rule");
+  mod.set(save, state, { charm: "earned" });
+  save.skills.charm = 777;
+  mod.tick(save, state);
+  assert.equal(save.skills.charm, 777, "as earned releases the lock");
+});
+
+test("does nothing while off, and ignores junk", () => {
+  const mod = loadModule();
+  const state = { ...mod.state(), on: false, wallet: true, energy: true, fitness: "10" };
+  const save = life();
+  const before = JSON.stringify(save);
+  mod.tick(save, state);
+  assert.equal(JSON.stringify(save), before);
+  const on = { ...mod.state(), on: true };
+  assert.equal(mod.set(save, on, { floor: "5", fitness: "11", charm: 3, junk: true }).ok, false);
+  assert.deepEqual({ ...on }, { ...mod.state(), on: true });
+  mod.tick(null, on);
+  mod.tick({}, { ...on, wallet: true, energy: true, fitness: "2" });
+});
+
+test("cleanIn builds state for a new life", () => {
+  const mod = loadModule();
+  assert.equal(mod.cleanIn(null), null);
+  assert.equal(mod.cleanIn({ on: false }), null);
+  const state = mod.cleanIn({ on: true, confirmed: true, wallet: true, knowledge: "7", bogus: 1 });
+  assert.deepEqual({ ...state }, { ...mod.state(), on: true, wallet: true, knowledge: "7" });
+});
+
+const fakeBundle = 'var q3={id:"adult"};var DQ=[q3];for(let e of DQ)ur().some(t=>t.id===e.id)||fY(e);export{};\n';
+
+test("patcher injects once and refuses unknown or patched bundles", () => {
+  assert.throws(() => patchServerSource(fakeBundle, moduleSource), /not a Modern Life Sim release/);
+  const { patched } = patchServerSource(fakeBundle, moduleSource, { force: true });
+  assert.ok(patched.includes("var DQ=[q3,__mlsCheats];for(let e of DQ)"));
+  assert.throws(() => patchServerSource(patched, moduleSource, { force: true }), /already has/);
+  assert.throws(() => patchServerSource(fakeBundle + fakeBundle, moduleSource, { force: true }), /found it 2 times/);
+  assert.throws(() => patchServerSource("export{};", moduleSource, { force: true }), /found it 0 times/);
+  execFileSync(process.execPath, ["--check", "--input-type=module"], { input: patched });
+});
+
+test("patcher accepts the real bundle", { skip: !upstream && "set MLS_SERVER to check" }, () => {
+  const { patched, known } = patchServerSource(upstream, moduleSource);
+  assert.equal(known, "0.3.2");
+  assert.ok(patched.includes("var DQ=[q3,__mlsCheats];for(let e of DQ)"));
+  execFileSync(process.execPath, ["--check", "--input-type=module"], { input: patched, maxBuffer: 1 << 26 });
+});
+
+test("data-dir patch and revert keep Engine's hashes consistent", () => {
+  const dataDir = mkdtempSync(join(tmpdir(), "mls-cheats-"));
+  const version = "0.3.2";
+  const versionDir = join(dataDir, "capability-packages", "versions", "modern-life-sim", version);
+  mkdirSync(versionDir, { recursive: true });
+  const bundle = Buffer.from(fakeBundle);
+  const files = [{ path: "server.mjs", sha256: sha256(bundle), bytes: bundle.byteLength }];
+  writeFileSync(join(versionDir, "server.mjs"), bundle);
+  writeFileSync(join(versionDir, "manifest.json"), JSON.stringify({ id: "modern-life-sim", files }));
+  const registryPath = join(dataDir, "capability-packages", "installed.json");
+  writeFileSync(
+    registryPath,
+    JSON.stringify({ schemaVersion: 1, packages: [{ id: "modern-life-sim", version, status: "active", manifest: { files } }] }),
+  );
+  const run = (...args) =>
+    execFileSync(process.execPath, [join(projectDir, "apply-cheats.mjs"), "--data-dir", dataDir, ...args], {
+      encoding: "utf8",
+    });
+  const declared = (path) => JSON.parse(readFileSync(path, "utf8"));
+  const check = () => {
+    const onDisk = readFileSync(join(versionDir, "server.mjs"));
+    for (const manifest of [declared(registryPath).packages[0].manifest, declared(join(versionDir, "manifest.json"))]) {
+      assert.equal(manifest.files[0].sha256, sha256(onDisk));
+      assert.equal(manifest.files[0].bytes, onDisk.byteLength);
+    }
+    return onDisk.toString("utf8");
+  };
+
+  assert.throws(() => run(), /not a Modern Life Sim release/, "unknown bundle needs --force");
+  run("--force", "--dry-run");
+  assert.equal(check(), fakeBundle, "dry run writes nothing");
+  run("--force");
+  assert.ok(check().includes("__mlsCheats"));
+  assert.ok(existsSync(join(dataDir, "modern-life-sim-cheats-backup", version, "server.mjs")));
+  assert.throws(() => run("--force"), /already has/);
+  run("--revert");
+  assert.equal(check(), fakeBundle);
+  assert.match(run("--revert"), /Nothing to revert/);
+});

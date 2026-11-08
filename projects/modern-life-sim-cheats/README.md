@@ -64,7 +64,7 @@ Instead of a list of approved versions, the script reads the installed game's co
 never running it) and checks each assumption the module makes:
 
 - the game still accepts the `catalog`, `state`, `cleanIn`, `set` and `tick` module hooks,
-  and still uses `set()` for option changes, `cleanIn()` for new lives, and `tick` after time passes;
+  and still uses `set()` for option changes, `cleanIn()` (given the new life) for new lives, and `tick` after time passes;
 - module settings live in `life.modules[id]`; money is `life.wallet.cash`; energy is `life.needs.energy`;
 - skills include fitness, charm, knowledge and cooking, and level L still takes 25·L·(L+1) XP, up to 10;
 - maximum energy is still 100 + 3 per Fitness level, read from the level rather than raw XP;
@@ -78,6 +78,9 @@ whether a version is one checked by hand (currently 0.3.2) or only passed the au
 
 ## Behaviour details
 
+- Cheats apply the moment they are switched on: when a life is created with Cheats ticked, and when
+  a switch changes in SETTINGS. After that they are reapplied each time time passes. Spending that
+  takes no time (an online order) can dip below the wallet floor until the clock next moves.
 - A locked skill is set to exactly its level's XP threshold on every tick. Practice can add XP
   between ticks and the game may announce a level-up that the next tick takes back.
 - *Never tired* refills after each step of time, after the game's collapse check. A single

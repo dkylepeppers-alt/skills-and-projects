@@ -121,12 +121,15 @@ var __mlsCheats = (() => {
       ],
     },
     state: () => defaults(),
-    // A new life with Cheats switched on from the creation screen.
-    cleanIn: (draft) => {
+    // A new life with Cheats switched on from the creation screen. The game passes the freshly built
+    // life as the second argument, so the cheats apply at once instead of waiting for time to pass
+    // (otherwise the life starts with its normal cash and skills, and a first purchase spends real money).
+    cleanIn: (draft, life) => {
       if (!draft || typeof draft !== "object" || draft.on === false) return null;
       const state = defaults();
       assign(state, draft);
       state.on = true;
+      apply(life, state);
       return state;
     },
     // Switching it on, and every change in SETTINGS. Applied at once, so the change shows straight away.

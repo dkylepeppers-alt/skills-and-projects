@@ -74,7 +74,10 @@ export function checkBundle(source, clientSource = null) {
     check(`the game accepts a module "${hook}" hook`, table && new RegExp(`[{,]${hook}:["'\`]`).test(table));
   }
   check("option changes go through a module's set()", has(source, /([\w$]+)\.set\?\1\.set\(/));
-  check("a new life's module settings go through cleanIn()", has(source, /([\w$]+)\.cleanIn\?\1\.cleanIn\(/));
+  check(
+    "a new life's module settings go through cleanIn(), which gets the new life",
+    has(source, /([\w$]+)\.cleanIn\?\1\.cleanIn\([\w$]+,[\w$]+\)/),
+  );
   check('"tick" runs with the life after time passes', has(source, /\([\w$]+,"tick",\{from:/));
   check("module settings are kept in life.modules[id]", has(source, /\?\.modules\?\.\[/));
   check("money is life.wallet.cash", has(source, /\.wallet\.cash\b/));

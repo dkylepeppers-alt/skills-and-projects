@@ -86,6 +86,55 @@ Node may warn that Agents files are typeless because that repository does not se
 `"type": "module"`. Leave the upstream package untouched; Node reparses those files
 as ESM and the check can still pass.
 
+## Live round trip on the release
+
+Checked 2026-11-08 on a throwaway Engine v2.5.2 (`fc0333c3`, production `pnpm build` /
+`pnpm start`, empty `DATA_DIR`) with World Maps 1.8.0 installed by
+`POST /api/capability-packages/hierarchical-maps/install` against the pinned catalog
+and then restarted. The package reported active, ready, Capability API 1.380. No model
+provider was configured. This is separate from `tests/source-contract.mjs`.
+
+The World Maps library file picker imported both skill templates and one throwaway
+route map:
+
+- `templates/world-map.export.json` opened **Restore portable map lore** (1 book, 1
+  entry). **Import separate copies** created `Salt House Lore - Salt House (World Map)`,
+  appended the import provenance to the description, set `generatedBy` `import`,
+  `sourceAgentId` `hierarchical-maps`, `imagePath` null, and tags `World Map` plus
+  `World Map: Salt House`. Location text, links, and the hierarchy profile matched the
+  file. `lorebookEntryIds` became the new entry id. Omitted book settings were filled
+  (`scanDepth` 2, `recursiveScanning` false, `maxRecursionDepth` 3,
+  `excludeFromVectorization` true, vector defaults). The entry kept its content, keys,
+  position, order, and role; omitted entry settings were filled, including `depth` 4
+  and `preventRecursion` true.
+- The editor **Download export** (linked entries, include artwork) wrote
+  `formatVersion` 4, the same profile, and `artwork: []`. The new fingerprint was
+  `entry-v1:32d24ca745675831`, not the source's `entry-v1:c1c6f7848f0525a6`, because
+  the export fingerprints the filled destination entry. `originalId` values were the
+  destination ids.
+- `templates/map-template.json` has no root `name`. The library named it from the
+  filename, `map template`. Every location field and the hierarchy profile matched.
+- A throwaway map with one PNG data URL restored that image into Global Gallery and
+  rewrote `referenceImageId` to `global-gallery:<id>` with `useReferenceImage` still
+  true. The link key `far-place|room-b` survived.
+
+Library import persisted the template immediately. The editor Save control stayed
+disabled until a further edit. Putting the route map on a Roleplay chat with
+`enableAgents` and `activeAgentIds: ["hierarchical-maps"]` saved `enabled: true` and
+raised `revision` from 0 to 1. `POST /api/chats/:id/spatial-context/turn` then:
+
+- accepted a one-hop parent move and returned no `travel` object
+- rejected a hidden link and a blocked link, with and without `travel_now`, as
+  `spatial_destination_unreachable`
+- `travel_now` to a farther place committed the target by `room-a → root → room-b →
+  far-place`
+- `step_by_step` committed only the next hop and listed the remainder
+- the same `travel_now` back from `far-place` failed because that available link is
+  not bidirectional
+
+An assistant `spatial_move` was not sent through generation. No mock model was wired,
+so that consumer remains source-confirmed rather than runtime-imported.
+
 Refresh affected reference claims AND tests after upstream changes. Keep a mismatch
 as evidence until understood; never weaken a test merely to make local code pass.
 Do not edit upstream sources or file an issue while only authoring a personal map.

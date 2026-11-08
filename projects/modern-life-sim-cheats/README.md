@@ -22,8 +22,8 @@ the package. It **patches your installed copy**:
    (`catalog`, `state`, `cleanIn`, `set`, `tick`). It touches only `life.wallet.cash`,
    `life.needs.energy` and `life.skills`, and never lowers money or energy.
 2. `apply-cheats.mjs` inserts it before the built-in module list and adds it to that list.
-   It finds the spot by shape, refuses unless it matches exactly once, and by default only
-   patches upstream bundles it knows by hash (currently **0.3.2**).
+   It finds the spot by shape and refuses unless it matches exactly once. It works with **any
+   version** of the game that still does what the module relies on (see *Compatibility checks*).
 3. Engine verifies installed files against hashes in `capability-packages/installed.json`,
    so the script updates `server.mjs`'s hash there and in the installed `manifest.json`.
 
@@ -55,9 +55,26 @@ The original is restored from `<data dir>/modern-life-sim-cheats-backup/<version
 Lives keep their Cheats settings in the save; the unpatched game ignores them.
 
 **Updates:** updating Modern Life Sim from the catalog installs a clean copy, so the cheats
-disappear. If the new version is one this project knows, rerun the script. Otherwise it refuses;
-`--force` tries anyway (the injection point still has to match exactly once), but the module's
-copies of the game's skill and energy curves may then be wrong, so test before trusting it.
+disappear. Stop Engine and rerun the script. It patches the new version as long as the
+compatibility checks still pass.
+
+## Compatibility checks
+
+Instead of a list of approved versions, the script reads the installed game's code (as text,
+never running it) and checks each assumption the module makes:
+
+- the game still accepts the `catalog`, `state`, `cleanIn`, `set` and `tick` module hooks,
+  and still uses `set()` for option changes, `cleanIn()` for new lives, and `tick` after time passes;
+- module settings live in `life.modules[id]`; money is `life.wallet.cash`; energy is `life.needs.energy`;
+- skills include fitness, charm, knowledge and cooking, and level L still takes 25·L·(L+1) XP, up to 10;
+- maximum energy is still 100 + 3 per Fitness level, read from the level rather than raw XP;
+- the phone app still draws switch and choice options and saves module settings.
+
+If one fails, nothing is written and the message names it, e.g. *"a skill reaches level L at
+25·L·(L+1) XP, up to level 10"*. That is the part of `cheats-module.js` to update.
+`--force` patches anyway, with a warning, but then a skill lock or the energy refill may write
+wrong values into your saves, so test on a throwaway life first. The script's output also says
+whether a version is one checked by hand (currently 0.3.2) or only passed the automatic checks.
 
 ## Behaviour details
 
@@ -71,9 +88,10 @@ copies of the game's skill and energy curves may then be wrong, so test before t
 ## Verification
 
 `node --test tests/cheats.test.mjs` checks the module's behaviour, its fit with the game's
-module registration rules, and patch/revert on a fixture Engine data folder. With
-`MLS_SERVER=/path/to/upstream/server.mjs` it also checks the hook table, skill/energy curves and
-injection point against a real bundle, read as text.
+module registration rules, patch/revert on a fixture Engine data folder, that a made-up later
+release with the same shapes patches without `--force`, and that each broken assumption is
+refused by name. With `MLS_SERVER=/path/to/upstream/server.mjs` it also runs the compatibility
+checks and the injection against a real bundle, read as text.
 
 Verified against upstream 0.3.2 (`server.mjs` sha256 `d5672272…c890`, Agents commit `ffde8ea`):
 the patch applies once and the result passes `node --check`. **Not yet verified in a running

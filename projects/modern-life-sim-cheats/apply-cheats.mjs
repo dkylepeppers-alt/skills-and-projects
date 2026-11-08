@@ -5,8 +5,12 @@
 //   node apply-cheats.mjs --data-dir <Engine data folder> --revert   put the original back
 //   node apply-cheats.mjs --server-file <in.mjs> --out <out.mjs>     patch a loose copy (for testing)
 //
-// Options: --dry-run (check everything, write nothing), --force (patch a server.mjs whose hash is not
-// a known upstream release; the injection point is still found by shape and must match exactly once).
+// Options: --dry-run (check everything, write nothing), --force (patch even when a compatibility check
+// fails; the injection point must still match exactly once).
+//
+// Any Modern Life Sim version is accepted when the game still works the way cheats-module.js assumes.
+// Those assumptions are checked in the bundle's text (see checkBundle), so an update that leaves them
+// alone needs no change here, and one that breaks them is refused with the assumption it broke.
 //
 // Stop Marinara Engine first. Engine checks every installed file against the hashes in
 // capability-packages/installed.json, so this script updates server.mjs's entry there too.
@@ -21,7 +25,8 @@ const PACKAGE_ID = "modern-life-sim";
 const SERVER_FILE = "server.mjs";
 const MARKER = "/* modern-life-sim-cheats module v1:";
 const MODULE_VAR = "__mlsCheats";
-// Upstream server.mjs bundles this module was written and checked against.
+// Upstream server.mjs bundles this module has been checked against by hand. Informational only:
+// checkBundle decides whether a bundle can be patched.
 const KNOWN_UPSTREAM = new Map([
   ["d5672272a8267f205537f524a3ab2d52cc0531f4567ea624c06de1e67f95c890", "0.3.2"],
 ]);
@@ -49,16 +54,78 @@ function parseArgs(argv) {
   return args;
 }
 
+const escapeName = (name) => name.replace(/\$/g, "\\$");
+const has = (source, pattern) => pattern.test(source);
+
+/**
+ * Checks, in the bundle's text, every assumption cheats-module.js makes about the game. Minified names
+ * change from build to build, so each check matches code by its shape. Returns [{ name, ok }].
+ * `clientSource` (client.js) is optional; without it the client checks are skipped.
+ */
+export function checkBundle(source, clientSource = null) {
+  const checks = [];
+  const check = (name, ok) => checks.push({ name, ok: !!ok });
+
+  // The game refuses a module with a key it does not know; the keys live in a table it validates against.
+  const validator = /!([\w$]+)\[[\w$]+\]\)throw new Error\(`The module \$\{[\w$]+\.id\} has [^`]*which is no hook\.`\)/.exec(source);
+  const tableStart = validator && new RegExp(`[,;\\s]${escapeName(validator[1])}=\\{`).exec(source);
+  const table = tableStart && tableStart.index < validator.index ? source.slice(tableStart.index, validator.index) : "";
+  for (const hook of ["catalog", "state", "cleanIn", "set", "tick"]) {
+    check(`the game accepts a module "${hook}" hook`, table && new RegExp(`[{,]${hook}:["'\`]`).test(table));
+  }
+  check("option changes go through a module's set()", has(source, /([\w$]+)\.set\?\1\.set\(/));
+  check("a new life's module settings go through cleanIn()", has(source, /([\w$]+)\.cleanIn\?\1\.cleanIn\(/));
+  check('"tick" runs with the life after time passes', has(source, /\([\w$]+,"tick",\{from:/));
+  check("module settings are kept in life.modules[id]", has(source, /\?\.modules\?\.\[/));
+  check("money is life.wallet.cash", has(source, /\.wallet\.cash\b/));
+  check("energy is life.needs.energy", has(source, /\.needs\.energy\b/));
+  check(
+    "skills include fitness, charm, knowledge and cooking",
+    [...source.matchAll(/=\[((?:"[a-z]+",)*"[a-z]+")\]/g)].some(([, list]) =>
+      ["fitness", "charm", "knowledge", "cooking"].every((skill) => list.split(",").includes(`"${skill}"`)),
+    ),
+  );
+  check(
+    "a skill reaches level L at 25·L·(L+1) XP, up to level 10",
+    has(source, /function ([\w$]+)\(([\w$]+)\)\{let ([\w$]+)=Math\.min\(10,Math\.max\(0,Math\.trunc\(\2\)\)\);return \3\*\(\3\+1\)\/2\*50\}/),
+  );
+  const energy = /([\w$]+)=100,[^;]{0,200}?([\w$]+)=\(([\w$]+)=0\)=>\1\+Math\.max\(0,Math\.trunc\(\3\)\)\*3/.exec(source);
+  check(
+    "maximum energy is 100 + 3 per Fitness level",
+    energy && new RegExp(`energyMax:${escapeName(energy[2])}\\(`).test(source),
+  );
+  const levels = /[,;\s]([\w$]+)=([\w$]+)=>([\w$]+)\(\2\.skills\)/.exec(source);
+  check(
+    "maximum energy reads the Fitness level, not raw XP",
+    levels &&
+      new RegExp(`fitness:${escapeName(levels[1])}\\([\\w$]+\\)\\.fitness`).test(source) &&
+      new RegExp(
+        `function ${escapeName(levels[3])}\\(([\\w$]+)\\)\\{let ([\\w$]+)=\\{\\};for\\(let ([\\w$]+) of [\\w$]+\\)\\2\\[\\3\\]=[\\w$]+\\(\\1\\[\\3\\]\\?\\?0\\)\\.level;return \\2\\}`,
+      ).test(source),
+  );
+  if (clientSource !== null) {
+    check('the client draws "check" options', clientSource.includes('kind==="check"'));
+    check('the client draws "pick" options', clientSource.includes('kind==="pick"'));
+    check("the client saves module options", clientSource.includes("data-set-module"));
+  }
+  return checks;
+}
+
 /** Returns the patched bundle text. Throws unless the injection point matches exactly once. */
-export function patchServerSource(source, moduleSource, { force = false } = {}) {
+export function patchServerSource(source, moduleSource, { force = false, clientSource = null, warn = () => {} } = {}) {
   if (source.includes(MARKER)) throw new Error("This server.mjs already has the Cheats module.");
   if (source.includes(MODULE_VAR)) throw new Error(`This server.mjs already uses the name ${MODULE_VAR}.`);
-  const known = KNOWN_UPSTREAM.get(sha256(Buffer.from(source)));
-  if (!known && !force) {
-    throw new Error(
-      "This server.mjs is not a Modern Life Sim release the Cheats module was checked against " +
-        `(known: ${[...KNOWN_UPSTREAM.values()].join(", ")}). Rerun with --force to try anyway, then test it.`,
-    );
+  const known = KNOWN_UPSTREAM.get(sha256(Buffer.from(source))) ?? null;
+  const failed = checkBundle(source, clientSource).filter((item) => !item.ok);
+  if (failed.length) {
+    const list = failed.map((item) => `  - ${item.name}`).join("\n");
+    if (!force) {
+      throw new Error(
+        `This Modern Life Sim no longer works the way the Cheats module expects:\n${list}\n` +
+          "Update cheats-module.js for this version, or rerun with --force to patch anyway (then test it).",
+      );
+    }
+    warn(`--force: patching although these checks failed:\n${list}`);
   }
   const matches = [...source.matchAll(REGISTRATION)];
   if (matches.length !== 1) {
@@ -69,7 +136,11 @@ export function patchServerSource(source, moduleSource, { force = false } = {}) 
   const replacement = `${moduleSource.trim()}\nvar ${listName}=[${entries},${MODULE_VAR}];${whole.slice(
     `var ${listName}=[${entries}];`.length,
   )}`;
-  return { patched: source.slice(0, match.index) + replacement + source.slice(match.index + whole.length), known };
+  return {
+    patched: source.slice(0, match.index) + replacement + source.slice(match.index + whole.length),
+    known,
+    forced: failed.length > 0,
+  };
 }
 
 async function writeAtomic(path, data, mode) {
@@ -138,6 +209,12 @@ async function commitBundle({ registryPath, registry, entry, versionDir, serverP
   }
 }
 
+const describe = ({ known, forced }) =>
+  forced
+    ? "FORCED past failed compatibility checks; test before trusting it"
+    : known
+      ? `the ${known} release, checked by hand`
+      : "a version not checked by hand; its compatibility checks passed";
 const declaredHash = (entry) => entry.manifest.files.find((file) => file.path === SERVER_FILE)?.sha256;
 
 async function patchInstalled(args, moduleSource) {
@@ -146,10 +223,16 @@ async function patchInstalled(args, moduleSource) {
   if (declaredHash(installed.entry) !== sha256(original)) {
     throw new Error("The installed server.mjs does not match Engine's registry. Reinstall Modern Life Sim, then try again.");
   }
-  const { patched, known } = patchServerSource(original.toString("utf8"), moduleSource, args);
-  const patchedBuffer = Buffer.from(patched);
+  const clientPath = join(installed.versionDir, "client.js");
+  const clientSource = existsSync(clientPath) ? await readFile(clientPath, "utf8") : null;
+  const result = patchServerSource(original.toString("utf8"), moduleSource, {
+    ...args,
+    clientSource,
+    warn: (message) => console.warn(message),
+  });
+  const patchedBuffer = Buffer.from(result.patched);
   const backupDir = join(args.dataDir, "modern-life-sim-cheats-backup", installed.entry.version);
-  console.log(`Modern Life Sim ${installed.entry.version} (${known ? `known upstream ${known}` : "unrecognized, --force"})`);
+  console.log(`Modern Life Sim ${installed.entry.version}: ${describe(result)}`);
   if (args.dryRun) {
     await commitBundle(installed, patchedBuffer, { dryRun: true });
     console.log("Dry run: the patch applies cleanly. Nothing was written.");
@@ -207,9 +290,12 @@ async function main() {
   if (args.serverFile) {
     if (args.revert) throw new Error("--revert works with --data-dir only.");
     if (!args.out && !args.dryRun) throw new Error("--server-file needs --out <path> (or --dry-run).");
-    const { patched, known } = patchServerSource(await readFile(args.serverFile, "utf8"), moduleSource, args);
-    if (!args.dryRun) await writeFile(resolve(args.out), patched);
-    console.log(`${args.dryRun ? "Dry run: patch applies" : `Wrote ${args.out}`} (${known ? `upstream ${known}` : "--force"})`);
+    const result = patchServerSource(await readFile(args.serverFile, "utf8"), moduleSource, {
+      ...args,
+      warn: (message) => console.warn(message),
+    });
+    if (!args.dryRun) await writeFile(resolve(args.out), result.patched);
+    console.log(`${args.dryRun ? "Dry run: patch applies" : `Wrote ${args.out}`} (${describe(result)})`);
     return;
   }
   args.dataDir = resolve(args.dataDir);

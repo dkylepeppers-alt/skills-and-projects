@@ -10,7 +10,7 @@ import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import vm from "node:vm";
-import { patchServerSource } from "../apply-cheats.mjs";
+import { checkBundle, patchServerSource } from "../apply-cheats.mjs";
 
 const projectDir = join(dirname(fileURLToPath(import.meta.url)), "..");
 const moduleSource = readFileSync(join(projectDir, "cheats-module.js"), "utf8");
@@ -133,7 +133,7 @@ test("cleanIn builds state for a new life", () => {
 const fakeBundle = 'var q3={id:"adult"};var DQ=[q3];for(let e of DQ)ur().some(t=>t.id===e.id)||fY(e);export{};\n';
 
 test("patcher injects once and refuses unknown or patched bundles", () => {
-  assert.throws(() => patchServerSource(fakeBundle, moduleSource), /not a Modern Life Sim release/);
+  assert.throws(() => patchServerSource(fakeBundle, moduleSource), /no longer works the way/);
   const { patched } = patchServerSource(fakeBundle, moduleSource, { force: true });
   assert.ok(patched.includes("var DQ=[q3,__mlsCheats];for(let e of DQ)"));
   assert.throws(() => patchServerSource(patched, moduleSource, { force: true }), /already has/);
@@ -177,7 +177,7 @@ test("data-dir patch and revert keep Engine's hashes consistent", () => {
     return onDisk.toString("utf8");
   };
 
-  assert.throws(() => run(), /not a Modern Life Sim release/, "unknown bundle needs --force");
+  assert.throws(() => run(), /no longer works the way/, "unknown bundle needs --force");
   run("--force", "--dry-run");
   assert.equal(check(), fakeBundle, "dry run writes nothing");
   run("--force");
@@ -227,4 +227,54 @@ test("revert repairs hashes left behind by an interrupted run", () => {
   const registry = JSON.parse(readFileSync(registryPath, "utf8"));
   assert.equal(registry.packages[0].manifest.files[0].sha256, sha256(Buffer.from(fakeBundle)));
   assert.match(run("--revert"), /Nothing to revert/);
+});
+
+// A made-up later release: different minified names, unknown hash, but every shape the module relies on.
+const compatibleBundle = [
+  'var Hk={catalog:"how it shows",state:"its state",cleanIn:"a new life",set:"a change",tick:"time passes"},Zq=/^[a-z]/;',
+  "function Mz(e){for(let o of Object.keys(e))if(o!==\"id\"&&!Hk[o])throw new Error(`The module ${e.id} has \\xAB${o}\\xBB, which is no hook.`)}",
+  "function Qa(n,e,i,a,o,r){n.set?n.set(e,i,a):0;o.cleanIn?o.cleanIn(r,e):0;Wv(e,\"tick\",{from:1,to:2});return e?.modules?.[a]}",
+  'function Pb(e){e.wallet.cash+=1;e.needs.energy-=1}var Kc=["fitness","charm","knowledge","cooking","singing"];',
+  "function Rn(e){let t=Math.min(10,Math.max(0,Math.trunc(e)));return t*(t+1)/2*50}",
+  "function Jv(e){let t={};for(let o of Kc)t[o]=Lm(e[o]??0).level;return t}",
+  "var Xa=100,Yb=4,Gw=(e=0)=>Xa+Math.max(0,Math.trunc(e))*3,Tf=e=>Jv(e.skills);",
+  "function Sd(e,t){return{energyMax:Gw(t),fitness:Tf(e).fitness}}",
+  'var Bb={id:"adult"};var Cc=[Bb];for(let e of Cc)Ee().some(t=>t.id===e.id)||Mz(e);export{};',
+].join("\n");
+const compatibleClient = 'x.kind==="check";y.kind==="pick";`<input data-set-module="1">`';
+
+test("a later release that keeps the module's assumptions patches without --force", () => {
+  assert.deepEqual(checkBundle(compatibleBundle, compatibleClient).filter((c) => !c.ok), []);
+  const { patched, known, forced } = patchServerSource(compatibleBundle, moduleSource, { clientSource: compatibleClient });
+  assert.equal(known, null);
+  assert.equal(forced, false);
+  assert.ok(patched.includes("var Cc=[Bb,__mlsCheats];for(let e of Cc)"));
+  execFileSync(process.execPath, ["--check", "--input-type=module"], { input: patched });
+});
+
+test("a broken assumption is refused by name, and --force goes past it", () => {
+  const broken = {
+    "a skill reaches level L at 25·L·(L+1) XP, up to level 10": compatibleBundle.replace("/2*50}", "/2*60}"),
+    "maximum energy is 100 + 3 per Fitness level": compatibleBundle.replace("*3,", "*4,"),
+    "skills include fitness, charm, knowledge and cooking": compatibleBundle.replace(',"cooking"', ""),
+    "money is life.wallet.cash": compatibleBundle.replace("e.wallet.cash", "e.purse.cash"),
+    'the game accepts a module "tick" hook': compatibleBundle.replace('tick:"time passes"', 'tock:"time passes"'),
+    "maximum energy reads the Fitness level, not raw XP": compatibleBundle.replace("e[o]??0).level", "e[o]??0).xp"),
+  };
+  for (const [name, source] of Object.entries(broken)) {
+    const failed = checkBundle(source).filter((c) => !c.ok).map((c) => c.name);
+    assert.deepEqual(failed, [name]);
+    assert.throws(() => patchServerSource(source, moduleSource), (error) => error.message.includes(name));
+    const warnings = [];
+    const result = patchServerSource(source, moduleSource, { force: true, warn: (m) => warnings.push(m) });
+    assert.equal(result.forced, true);
+    assert.ok(warnings[0].includes(name));
+  }
+  const clientFailures = checkBundle(compatibleBundle, "nothing here").filter((c) => !c.ok);
+  assert.equal(clientFailures.length, 3);
+});
+
+test("the real bundle passes every check", { skip: !upstream && "set MLS_SERVER to check" }, () => {
+  assert.deepEqual(checkBundle(upstream).filter((c) => !c.ok), []);
+  assert.equal(patchServerSource(upstream, moduleSource).forced, false);
 });

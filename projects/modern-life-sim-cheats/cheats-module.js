@@ -21,8 +21,8 @@ var __mlsCheats = (() => {
 
   // These mirror Modern Life Sim 0.3.2's own curves (checked against its server bundle):
   // a skill reaches level L at 25·L·(L+1) XP, capped at level 10, and maximum energy is
-  // 100 plus 3 for each Fitness level. apply-cheats.mjs refuses unknown bundles by default,
-  // so a release that changes these curves is noticed before this module runs against it.
+  // 100 plus 3 for each Fitness level. apply-cheats.mjs checks the installed game for these
+  // curves (checkBundle) and refuses to patch a release that changed them.
   const xpFor = (level) => ((level * (level + 1)) / 2) * 50;
   const levelOf = (xp) => {
     let level = 0;

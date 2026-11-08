@@ -17,7 +17,9 @@ import { readFileSync } from "node:fs";
 import { portableLoreIsValid } from "./portable-lore.mjs";
 
 const LIMITS = {
-  maxLocations: 500,
+  // Engine v2.5.2 SPATIAL_CONTEXT_LIMITS.maxLocations and World Maps 1.8.0
+  // SPATIAL_MAP_LOCATION_LIMIT. World Maps 1.5.0 retired the 500-location cap.
+  maxLocations: 5_000,
   maxDepth: 20,
   maxLinksPerLocation: 50,
   maxNameLength: 200,
@@ -201,6 +203,12 @@ if (d.locations.length > LIMITS.maxLocations)
   err(
     "too_many_locations",
     `A spatial map can contain at most ${LIMITS.maxLocations} locations.`,
+    "$.locations",
+  );
+else if (d.locations.length > 500)
+  warn(
+    "legacy_location_cap",
+    `${d.locations.length} locations need Marinara Engine v2.5.0 or newer and World Maps 1.5.0 or newer. Older Engines cap a map at 500 and skip a larger map when a game starts.`,
     "$.locations",
   );
 

@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 // Differential proof against actual checkouts, not a second copy of the local checks.
-// Node 24+: --engine PATH --agents PATH [--zod PATH/TO/zod/index.js] [--fixture MAP.json]
+// Node 24 strips TypeScript while loading these sources. A second loader such as tsx
+// re-enters the same module and fails.
+//   node tests/source-contract.mjs --engine PATH --agents PATH [--zod PATH/TO/zod/index.js] [--fixture MAP.json]
 import assert from "node:assert/strict";
 import { readFileSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
@@ -15,19 +17,18 @@ if (!args.includes("--engine") || !args.includes("--agents"))
   throw new Error("Pass real --engine and --agents source checkout paths.");
 const engine = resolve(flag("engine")),
   agents = resolve(flag("agents"));
+process.env.MARINARA_ENGINE_ROOT = engine;
 const overlay = agents + "/packages/hierarchical-maps/src/engine/packages/";
 const zod = args.includes("--zod")
   ? pathToFileURL(resolve(flag("zod"))).href
   : null;
+const bridge = pathToFileURL(
+  fileURLToPath(new URL("../scripts/engine-contract-bridge.mjs", import.meta.url)),
+).href;
 registerHooks({
   resolve(specifier, context, next) {
     if (specifier === "zod" && zod) return next(zod, context);
-    if (specifier === "@marinara-engine/shared")
-      return next(
-        pathToFileURL(engine + "/packages/shared/src/utils/spatial-context.ts")
-          .href,
-        context,
-      );
+    if (specifier === "@marinara-engine/shared") return next(bridge, context);
     if (
       specifier.startsWith(".") &&
       specifier.endsWith(".js") &&
@@ -161,15 +162,27 @@ for (const [key, value] of [
   d.locations[0][key] = value;
   compare(d, key + " boundary");
 }
-for (const n of [20, 21, 500, 501]) {
+for (const n of [20, 21]) {
   const d = minimal();
   d.locations = Array.from({ length: n }, (_, i) => ({
     ...d.locations[0],
     id: i ? "n" + i : "root",
-    parentId: i && n < 30 ? (i === 1 ? "root" : "n" + (i - 1)) : null,
+    parentId: i === 0 ? null : i === 1 ? "root" : "n" + (i - 1),
   }));
-  compare(d, "count/depth " + n);
+  compare(d, "depth " + n);
 }
+for (const n of [500, 501, 5000, 5001]) {
+  const d = minimal();
+  d.locations = Array.from({ length: n }, (_, i) => ({
+    ...d.locations[0],
+    id: i ? "n" + i : "root",
+    parentId: null,
+  }));
+  compare(d, "count " + n);
+}
+assert.equal(spatial.SPATIAL_CONTEXT_LIMITS.maxLocations, 5000);
+assert.equal(profiles.SPATIAL_MAP_LOCATION_LIMIT, 5000);
+assert.equal(profiles.spatialLinkPresentationKey("salt-house", "quay"), "quay|salt-house");
 for (const filename of ["definition.minimal.json", "world-map.export.json"]) {
   const e = JSON.parse(
     readFileSync(new URL("../templates/" + filename, import.meta.url)),

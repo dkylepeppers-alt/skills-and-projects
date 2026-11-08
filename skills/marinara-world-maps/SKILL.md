@@ -119,10 +119,12 @@ Marinara documentation just because it exists.
 
 - Emit literal emoji or compact symbols for `icon`, not Lucide names. Do not
   rewrite every symbol without reviewing existing choices.
-- Do not describe 50 names as a 50-location storage cap, a proximity-selected index
-  or the server's complete set of recognizable locations.
-- Do not equate graph hops with user turns: distinguish ordinary movement,
-  explicit routed travel and assistant directives.
+- Do not describe the first 50 known names as a storage cap, a proximity-selected
+  index or the server's complete set of recognizable locations. The pinned release
+  stores 5,000 locations; 500 is the cap World Maps retired in 1.5.0.
+- Do not equate graph hops with user turns. Ordinary movement is one hop, explicit
+  routed travel and an assistant `spatial_move` follow the shortest available route,
+  and a hidden or blocked link stays closed.
 - Do not promise that narrative discovery opens a pre-existing hidden link.
 - Treat `modelMemory` as model guidance, not a secure secret or a state machine.
 - Do not rely on `awarenessSummary` for owner-prompt facts without finding its consumer.

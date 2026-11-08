@@ -70,6 +70,28 @@ function validate(value) {
   return { ...r, report: JSON.parse(r.stdout) };
 }
 
+function flatMap(count) {
+  const d = minimal();
+  d.locations = Array.from({ length: count }, (_, i) => ({
+    ...d.locations[0],
+    id: i ? "n" + i : "root",
+    parentId: null,
+    name: "Node " + i,
+  }));
+  return d;
+}
+test("storage cap is the released 5,000 locations, not the retired 500", () => {
+  const atOldCap = validate(flatMap(500));
+  assert.equal(atOldCap.status, 0);
+  assert.ok(!atOldCap.report.warnings.some((w) => w.code === "legacy_location_cap"));
+  const pastOldCap = validate(flatMap(501));
+  assert.equal(pastOldCap.status, 0);
+  assert.ok(pastOldCap.report.warnings.some((w) => w.code === "legacy_location_cap"));
+  assert.equal(validate(flatMap(5000)).status, 0);
+  const over = validate(flatMap(5001));
+  assert.equal(over.status, 1);
+  assert.ok(over.report.errors.some((error) => error.code === "too_many_locations"));
+});
 test("minimal and shipped templates pass structural preflight", () => {
   assert.equal(validate(minimal()).status, 0);
   for (const name of ["definition.minimal.json", "world-map.export.json"])

@@ -8,7 +8,7 @@ Two owners: the **definition** schema is Engine-side at `packages/shared/src/sch
 
 Template: `templates/map-template.json` — validated against both schemas. Under Engine v2.5.2 the hierarchy profile check needs the validator's Zod 4 bridge shim, because World Maps 1.8.0's maps model still calls Zod 3 `.innerType()` (`scripts/README.md`).
 
-Runtime additions that need no file change: since World Maps 1.7 a chat can give the World Maps agent its own **Reference lorebook** (Chat Settings → Agents; `lorebooks.md`), whose matching entries feed chat-specific map creation, replacement, expansion and previews. Since 2.5.2 the Illustrator receives the current place's path and description, and since World Maps 1.6 a Game Master move to a place more than one step away follows the shortest route.
+Runtime additions that need no file change: since World Maps 1.7 a chat can give the World Maps agent its own **Reference lorebook** (Chat Settings → Agents; `lorebooks.md`), whose matching entries are appended to chat-specific map creation, replacement, expansion and preview prompts. Since 2.5.2, Roleplay agent context includes the current place's path and public description (`currentLocation`), which the Illustrator reads under Tracker data; private `modelMemory` stays out of that block. Since World Maps 1.6 an assistant `spatial_move`, including a Game Master move, follows the shortest route of active containment and available links. Hidden and blocked links stay closed. Engine staging `27e363843f768bbedf04b8467e10f443fa832d09` and Agents staging `819692bc7d0e1636d427c1044897d56ff0d26ce0` (both inspected 2026-11-08) do not change this file contract or the World Maps package; they are unreleased.
 
 ## What the importer accepts
 
@@ -84,10 +84,12 @@ name: string (1–120)
 types: [{ id, label (≤80), baseKind, description? (≤240) }]   1–40, ids unique
 locationTypeIds: { "<locationId>": "<typeId>" }         defaults {}, values must name real types
 showConnections: boolean                             defaults true
-linkPresentations: { "<a>::<b>": { color?, lineStyle? } }   defaults {}
+linkPresentations: { "<id>|<id>": { color?, lineStyle? } }   defaults {}
 ```
 
 Types are the display layer over `kind`; IDs use the location-ID character pattern but max 80 characters. `color` is `#rrggbb`; `lineStyle` is `solid`, `dashed` or `dotted`. Assign every location a type for predictable display; the default template gives one type per base kind (`type_region` … `type_room`). Missing assignments are valid and normalization fills them by base kind (then the first type). The profile schema checks type IDs, not whether every location key exists in the definition; normalize/validate against the definition as well.
+
+`spatialLinkPresentationKey` sorts the two endpoint IDs with `localeCompare` and joins them with `|`. Normalization drops any other key, including a `::` key.
 
 ## Authoring a map by hand
 
@@ -99,9 +101,9 @@ Pick the hierarchy first — the tree is the map. `region → settlement → pla
 - **`layers`** — children are stacked levels and every one needs a unique `layerOrder`. Use for a building's floors.
 - **`list`** — children are a plain list. Use for rooms and anything where geography does not matter.
 
-The three text fields do different jobs. `description` is prose the player reads. `awarenessSummary` is the one-liner shown when the place is merely nearby, so keep it short and non-spoiling. `modelMemory` is private — put the secret the room is hiding here, not in `description`.
+The three text fields do different jobs. `description` is prose the player reads and the text the owner prompt carries for the current place. `awarenessSummary` is an optional editor and draft field (inspector hint: "Short orientation cue"); the audited owner prompt does not read it, so do not put facts there that the model must see. `modelMemory` is private — put the secret the room is hiding here, not in `description`.
 
-Link `state` controls traversal. A passage the player has not found is `hidden`; one they know about but cannot use is `blocked`. Only `available` links to active locations are offered as destinations. Parent/child travel and available links form routes (maximum 64 locations); hidden/blocked links require an authoritative state update before they become traversable. Do not promise that visible AI narration alone reveals a link or moves the marker.
+Link `state` controls traversal. A passage the player has not found is `hidden`; one they know about but cannot use is `blocked`. Only `available` links to active locations are offered as one-hop destinations. Parent/child travel and available links also form routes (maximum 64 locations). An assistant `spatial_move` to a farther active place commits when that route exists. Hidden and blocked links stay closed until an authoritative state update. Do not promise that visible AI narration alone reveals a link or moves the marker.
 
 ## Cross-linking lore
 

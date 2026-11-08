@@ -126,7 +126,7 @@ prefer updating the same stable location where possible and never silently renam
 
 ## Scale without arbitrary caps
 
-The 500-node storage bound is not a target. The first-50 prompt name index is not an
+The 5,000-location storage bound is not a target. The first-50 prompt name index is not an
 instruction to discard a 73-node academy. In-app draft presets also do not limit
 externally authored worlds. Choose breadth and detail based on the brief.
 

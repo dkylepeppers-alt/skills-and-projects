@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Differential proof against actual checkouts, not a second copy of the local checks.
 // Node 24 strips TypeScript while loading these sources. A second loader such as tsx
-// re-enters the same module and fails. 
+// re-enters the same module and fails.
 //   node tests/source-contract.mjs --engine PATH --agents PATH [--zod PATH/TO/zod/index.js] [--fixture MAP.json]
 import assert from "node:assert/strict";
 import { readFileSync, existsSync } from "node:fs";

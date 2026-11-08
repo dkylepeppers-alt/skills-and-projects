@@ -18,7 +18,9 @@ Do not infer package compatibility from an Engine version alone. Engine v2.5.2
 the running Engine. World Maps 1.380 therefore installs on 2.5.2 and is rejected by
 2.5.1 even though the manifest says `engine.min` `2.5.1`. Read the installed manifest
 before promising an install. The spatial-context schema blob is unchanged from v2.5.1;
-the 5,000-location cap is already in that release.
+the 5,000-location cap arrived in Engine v2.5.0 (`f043ebe59`) and World Maps 1.5.0.
+Engines before v2.5.0 cap a map at 500 and skip a larger map when a game starts;
+`validate-map.mjs` warns `legacy_location_cap` above 500.
 
 ## Read the implementation in this order
 
@@ -80,8 +82,9 @@ Check out Engine `fc0333c3fe978cda5e0b919bd6faec985901704e` and Agents
 `ffde8ea4035868c064eb3b2ffd675f1f807c57ed`. `--zod` redirects dependency resolution
 without modifying source checkouts. Use Zod 4.6.x; Zod 3 crashes this Engine before
 a map check. The sample lore importer test uses an in-memory API checked by real
-destination schemas; it is not a live app import. A built `packages/shared/dist/index.js`
-is optional. Without it, the bridge loads the spatial schema and utility sources.
+destination schemas; it is not a live app import. The bridge always loads the
+checkout's spatial schema and utility sources, never a built `packages/shared/dist/`,
+so a stale build cannot stand in for the pinned commit.
 Node may warn that Agents files are typeless because that repository does not set
 `"type": "module"`. Leave the upstream package untouched; Node reparses those files
 as ESM and the check can still pass.

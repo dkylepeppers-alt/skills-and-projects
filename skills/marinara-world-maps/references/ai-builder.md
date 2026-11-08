@@ -30,8 +30,9 @@ A chat-specific draft, replacement, expansion or preview can also append the Wor
 Maps reference lorebook selected in Chat Settings → Agents. That text is prompt
 source data for the request. It is not a field in the map file, and it does not
 replace grounding-mode lore sources. The host method is
-`resolveAgentLorebookEntries`; World Maps 1.7.1 refuses the call on an Engine that
-does not provide it. Engine v2.5.2 does.
+`resolveAgentLorebookEntries`; at the pinned World Maps 1.8.0 the package returns
+`host_feature_unavailable` when the Engine does not provide it (1.7.1 also raised the
+required Engine). Engine v2.5.2 provides it.
 
 Review a draft for scene usefulness, isolated-context quality, floor/room completeness,
 duplicate names, route plausibility, secret bypasses and artwork policy. Expansion is

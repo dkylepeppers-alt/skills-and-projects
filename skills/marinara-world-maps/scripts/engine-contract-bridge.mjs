@@ -5,17 +5,16 @@
 // its refinement checks, which is what Zod 3 returned. Parsing the original
 // Engine schema is unchanged. Set MARINARA_ENGINE_ROOT before importing this file.
 // Node 24 strips these TypeScript sources. No replacement schema is fabricated.
-import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 
 const engineRoot = process.env.MARINARA_ENGINE_ROOT;
 if (!engineRoot) throw new Error("Set MARINARA_ENGINE_ROOT to the Engine checkout.");
 
-const built = resolve(engineRoot, "packages/shared/dist/index.js");
-const shared = existsSync(built)
-  ? await import(pathToFileURL(built).href)
-  : await loadSourceContracts(engineRoot);
+// Always load the checkout's source. A built dist/ can be stale relative to the
+// pinned commit and would be a second schema instance from the one the contract
+// test compares against.
+const shared = await loadSourceContracts(engineRoot);
 
 const definitionSchema = shared.spatialContextDefinitionSchema;
 if (definitionSchema && typeof definitionSchema.innerType !== "function" && definitionSchema._zod?.def) {

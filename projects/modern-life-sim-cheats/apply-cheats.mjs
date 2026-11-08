@@ -100,26 +100,50 @@ function setFileHash(manifest, buffer) {
   declared.bytes = buffer.byteLength;
 }
 
-async function saveRegistryAndManifest({ registryPath, registry, entry, versionDir }, serverBuffer, dryRun) {
-  setFileHash(entry.manifest, serverBuffer);
+/**
+ * Replaces server.mjs and records its hash in installed.json and the installed manifest.json as one step.
+ * Everything is read and validated before the first write; if any write fails, all three files are put
+ * back as they were, so Engine never sees a bundle whose hash its registry does not record.
+ */
+async function commitBundle({ registryPath, registry, entry, versionDir, serverPath }, serverBuffer, { dryRun = false } = {}) {
   const manifestPath = join(versionDir, "manifest.json");
-  let manifestOnDisk = null;
+  const targets = [
+    { path: serverPath, data: serverBuffer },
+    { path: registryPath, json: registry, manifest: entry.manifest },
+  ];
   if (existsSync(manifestPath)) {
-    manifestOnDisk = JSON.parse(await readFile(manifestPath, "utf8"));
-    setFileHash(manifestOnDisk, serverBuffer);
+    const manifestOnDisk = JSON.parse(await readFile(manifestPath, "utf8"));
+    targets.push({ path: manifestPath, json: manifestOnDisk, manifest: manifestOnDisk });
+  }
+  for (const target of targets) {
+    if (target.manifest) setFileHash(target.manifest, serverBuffer);
+    if (target.json) target.data = Buffer.from(`${JSON.stringify(target.json, null, 2)}\n`);
+    target.before = await readFile(target.path);
+    target.mode = (await stat(target.path)).mode;
   }
   if (dryRun) return;
-  await writeAtomic(registryPath, `${JSON.stringify(registry, null, 2)}\n`, (await stat(registryPath)).mode);
-  if (manifestOnDisk) {
-    await writeAtomic(manifestPath, `${JSON.stringify(manifestOnDisk, null, 2)}\n`, (await stat(manifestPath)).mode);
+  const written = [];
+  try {
+    for (const target of targets) {
+      await writeAtomic(target.path, target.data, target.mode);
+      written.push(target);
+    }
+  } catch (error) {
+    const failed = [];
+    for (const target of written.reverse()) {
+      await writeAtomic(target.path, target.before, target.mode).catch(() => failed.push(target.path));
+    }
+    const restored = failed.length ? ` Could not restore: ${failed.join(", ")}.` : " All files were put back.";
+    throw new Error(`${error.message}.${restored}`);
   }
 }
+
+const declaredHash = (entry) => entry.manifest.files.find((file) => file.path === SERVER_FILE)?.sha256;
 
 async function patchInstalled(args, moduleSource) {
   const installed = await loadRegistry(args.dataDir);
   const original = await readFile(installed.serverPath);
-  const declared = installed.entry.manifest.files.find((file) => file.path === SERVER_FILE);
-  if (declared?.sha256 !== sha256(original)) {
+  if (declaredHash(installed.entry) !== sha256(original)) {
     throw new Error("The installed server.mjs does not match Engine's registry. Reinstall Modern Life Sim, then try again.");
   }
   const { patched, known } = patchServerSource(original.toString("utf8"), moduleSource, args);
@@ -127,15 +151,14 @@ async function patchInstalled(args, moduleSource) {
   const backupDir = join(args.dataDir, "modern-life-sim-cheats-backup", installed.entry.version);
   console.log(`Modern Life Sim ${installed.entry.version} (${known ? `known upstream ${known}` : "unrecognized, --force"})`);
   if (args.dryRun) {
-    await saveRegistryAndManifest(installed, patchedBuffer, true);
+    await commitBundle(installed, patchedBuffer, { dryRun: true });
     console.log("Dry run: the patch applies cleanly. Nothing was written.");
     return;
   }
   await mkdir(backupDir, { recursive: true });
   await copyFile(installed.serverPath, join(backupDir, SERVER_FILE));
   await copyFile(installed.registryPath, join(backupDir, "installed.json"));
-  await writeAtomic(installed.serverPath, patchedBuffer, (await stat(installed.serverPath)).mode);
-  await saveRegistryAndManifest(installed, patchedBuffer, false);
+  await commitBundle(installed, patchedBuffer);
   console.log(`Patched ${installed.serverPath}`);
   console.log(`Backup in ${backupDir}`);
   console.log("Start Marinara Engine, open Life Sim → SETTINGS, and switch on Cheats in the Modules group.");
@@ -143,9 +166,19 @@ async function patchInstalled(args, moduleSource) {
 
 async function revertInstalled(args) {
   const installed = await loadRegistry(args.dataDir);
-  const current = await readFile(installed.serverPath, "utf8");
-  if (!current.includes(MARKER)) {
-    console.log("The installed server.mjs has no Cheats module. Nothing to revert.");
+  const currentBuffer = await readFile(installed.serverPath);
+  if (!currentBuffer.toString("utf8").includes(MARKER)) {
+    if (declaredHash(installed.entry) === sha256(currentBuffer)) {
+      console.log("The installed server.mjs has no Cheats module. Nothing to revert.");
+      return;
+    }
+    // An interrupted earlier run left the original bundle with the patched hashes: record the real ones.
+    if (args.dryRun) {
+      console.log("Dry run: would record the unpatched server.mjs's hash in Engine's registry.");
+      return;
+    }
+    await commitBundle(installed, currentBuffer);
+    console.log("The original server.mjs was already back; Engine's recorded hashes now match it. Restart Marinara Engine.");
     return;
   }
   const backupPath = join(args.dataDir, "modern-life-sim-cheats-backup", installed.entry.version, SERVER_FILE);
@@ -158,8 +191,7 @@ async function revertInstalled(args) {
     console.log(`Dry run: would restore ${installed.serverPath} from ${backupPath}.`);
     return;
   }
-  await writeAtomic(installed.serverPath, original, (await stat(installed.serverPath)).mode);
-  await saveRegistryAndManifest(installed, original, false);
+  await commitBundle(installed, original);
   console.log(`Restored the original ${installed.serverPath}. Restart Marinara Engine.`);
   console.log("Lives keep their Cheats settings in their save; the game ignores them without the module.");
 }

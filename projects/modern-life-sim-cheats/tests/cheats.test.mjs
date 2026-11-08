@@ -188,3 +188,43 @@ test("data-dir patch and revert keep Engine's hashes consistent", () => {
   assert.equal(check(), fakeBundle);
   assert.match(run("--revert"), /Nothing to revert/);
 });
+
+function fixture({ manifestFiles } = {}) {
+  const dataDir = mkdtempSync(join(tmpdir(), "mls-cheats-"));
+  const versionDir = join(dataDir, "capability-packages", "versions", "modern-life-sim", "0.3.2");
+  mkdirSync(versionDir, { recursive: true });
+  const bundle = Buffer.from(fakeBundle);
+  const files = [{ path: "server.mjs", sha256: sha256(bundle), bytes: bundle.byteLength }];
+  writeFileSync(join(versionDir, "server.mjs"), bundle);
+  writeFileSync(join(versionDir, "manifest.json"), JSON.stringify({ id: "modern-life-sim", files: manifestFiles ?? files }));
+  const registryPath = join(dataDir, "capability-packages", "installed.json");
+  writeFileSync(
+    registryPath,
+    JSON.stringify({ schemaVersion: 1, packages: [{ id: "modern-life-sim", version: "0.3.2", status: "active", manifest: { files } }] }),
+  );
+  const run = (...args) =>
+    execFileSync(process.execPath, [join(projectDir, "apply-cheats.mjs"), "--data-dir", dataDir, ...args], {
+      encoding: "utf8",
+      stdio: "pipe",
+    });
+  return { dataDir, versionDir, registryPath, run };
+}
+
+test("a manifest problem found mid-patch leaves every file untouched", () => {
+  const { versionDir, registryPath, run } = fixture({ manifestFiles: [] });
+  const before = [join(versionDir, "server.mjs"), registryPath, join(versionDir, "manifest.json")].map((p) => readFileSync(p));
+  assert.throws(() => run("--force"), /does not declare server\.mjs/);
+  const after = [join(versionDir, "server.mjs"), registryPath, join(versionDir, "manifest.json")].map((p) => readFileSync(p));
+  assert.deepEqual(after, before);
+});
+
+test("revert repairs hashes left behind by an interrupted run", () => {
+  const { versionDir, registryPath, run } = fixture();
+  run("--force");
+  // Simulate an earlier revert that restored the bundle and then died before updating the hashes.
+  writeFileSync(join(versionDir, "server.mjs"), fakeBundle);
+  assert.match(run("--revert"), /hashes now match/);
+  const registry = JSON.parse(readFileSync(registryPath, "utf8"));
+  assert.equal(registry.packages[0].manifest.files[0].sha256, sha256(Buffer.from(fakeBundle)));
+  assert.match(run("--revert"), /Nothing to revert/);
+});

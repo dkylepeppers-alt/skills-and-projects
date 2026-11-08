@@ -132,8 +132,25 @@ raised `revision` from 0 to 1. `POST /api/chats/:id/spatial-context/turn` then:
 - the same `travel_now` back from `far-place` failed because that available link is
   not bidirectional
 
-An assistant `spatial_move` was not sent through generation. No mock model was wired,
-so that consumer remains source-confirmed rather than runtime-imported.
+A local OpenAI-compatible mock at `http://127.0.0.1:8799/v1` (provider `custom`,
+model `mock-spatial`, key `local-mock-not-a-real-key`) answered `POST /api/generate`.
+The saved assistant text omitted the command. Results:
+
+- `MOVE:far-place` produced `[spatial_move: destination_id="far-place"]`. The stream
+  event `spatial_transition_committed` stored `far-place` with command id
+  `assistant:<messageId>:0`. The route was the available multi-hop path.
+- `MOVE:hidden-place` and `MOVE:blocked-place` produced the same command form. No
+  transition event was emitted and the stored location stayed `room-a`.
+
+In the chat story map, clicking the Second Room marker and **Travel now**, then
+sending `Look around the room.`, stored `room-b`. The mock reply was `The party
+stays where it is.` and did not contain `spatial_move`, so the stored move came
+from the queued marker. The story map then showed Second Room as the current place.
+
+A 96×64 PNG (blue band, green band, red square) imported through the library file
+picker was added to Global Gallery. The location inspector image
+`Painted Room location reference` decoded at naturalWidth 96 and naturalHeight 64
+from `/api/global-gallery/file/<id>.png`. The CSS box was larger than the file.
 
 Refresh affected reference claims AND tests after upstream changes. Keep a mismatch
 as evidence until understood; never weaken a test merely to make local code pass.

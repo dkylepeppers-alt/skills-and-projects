@@ -208,7 +208,7 @@ if (d.locations.length > LIMITS.maxLocations)
 else if (d.locations.length > 500)
   warn(
     "legacy_location_cap",
-    `${d.locations.length} locations needs Marinara Engine v2.5.0 or newer and World Maps 1.5.0 or newer. Older Engines cap a map at 500 and skip a larger map when a game starts.`,
+    `${d.locations.length} locations need Marinara Engine v2.5.0 or newer and World Maps 1.5.0 or newer. Older Engines cap a map at 500 and skip a larger map when a game starts.`,
     "$.locations",
   );
 

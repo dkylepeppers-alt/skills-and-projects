@@ -33,7 +33,7 @@ The definition object is strict: unknown keys are rejected.
 | schemaVersion | Required literal 1 |
 | ownerMode | Required roleplay or game |
 | enabled | Required boolean |
-| locations | Required array, at most 500 (archived count too) |
+| locations | Required array, at most 5,000 (archived count too) |
 | startingLocationId | Required null or valid ID of an existing active location |
 | revision | Required nonnegative safe integer |
 
@@ -107,8 +107,11 @@ linkPresentations (default {}). A type has id (trimmed 1–80 with the ID patter
 label (trimmed 1–80), baseKind (six native kinds), optional trimmed description ≤240.
 Link styles allow an optional six-digit hex color and solid/dashed/dotted lineStyle.
 
-Author unique type IDs and assign each location to a real type. Use the actual
-`spatialLinkPresentationKey` helper for connection styling; do not invent key syntax.
+Author unique type IDs and assign each location to a real type. Style a connection
+with `spatialLinkPresentationKey`: sort the two location IDs with `localeCompare`
+and join them with `|` (`quay|salt-house`). The profile schema accepts any string
+key, and normalization keeps only keys that helper would produce. A `::` key is
+not that format.
 A profile has a stricter exported schema, but import calls normalization using its BASE
 schema: invalid base shape falls back to defaults; valid base shape can receive repaired
 assignments and filtered link styles. Thus profile defects can silently lose custom

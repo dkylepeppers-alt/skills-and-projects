@@ -11,7 +11,7 @@ At the pinned package, ai-draft.ts exposes these specs:
 | medium | 16 | 24 | 5 | 24,000 |
 | large | 28 | 40 | 7 | 40,000 |
 
-These are draft-generation specs, NOT the map's 500-node storage limit. Custom target
+These are draft-generation specs, NOT the map's 5,000-location storage limit. Custom target
 preferences are bounded separately. Connection output settings, remaining map capacity
 and expansion depth can reduce effective output. Recheck current consumers before
 diagnosing truncation from a table.
@@ -25,6 +25,13 @@ Grounding modes include setup, lore_strict and lore_expand. The request schema r
 lore sources for lore modes and excludes them from setup mode. Strict canon and
 permitted invention are separate authoring intentions; validate actual generated
 provenance instead of believing a prompt instruction proves factual fidelity.
+
+A chat-specific draft, replacement, expansion or preview can also append the World
+Maps reference lorebook selected in Chat Settings → Agents. That text is prompt
+source data for the request. It is not a field in the map file, and it does not
+replace grounding-mode lore sources. The host method is
+`resolveAgentLorebookEntries`; World Maps 1.7.1 refuses the call on an Engine that
+does not provide it. Engine v2.5.2 does.
 
 Review a draft for scene usefulness, isolated-context quality, floor/room completeness,
 duplicate names, route plausibility, secret bypasses and artwork policy. Expansion is

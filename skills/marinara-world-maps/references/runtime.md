@@ -40,11 +40,11 @@ regional detail have different no-code solutions.
 
 | Goal | Best supported approach | Boundary |
 | --- | --- | --- |
-| Store and navigate more than 50 locations | Keep one hierarchical definition and use containment, available links and routed travel | Definition remains bounded at 500; ordinary assistant movement remains one hop |
+| Store and navigate more than 50 locations | Keep one hierarchical definition and use containment, available links and routed travel | Definition remains bounded at 5,000; an assistant move follows the shortest available route, not only one hop |
 | Keep the most useful names globally visible | Put a strategic spine in the first 50 active `locations[]` records | Selection follows raw definition order, not `sortOrder`, proximity, recency or current branch |
 | Give the model detailed awareness of the current region | Reuse a compact regional-directory lore entry on every location where it should apply | Exact-current attachments are not inherited; lore budgets still apply and lore does not create travel authority |
 | Limit context by campaign act or lifecycle | Manually archive and restore genuinely unavailable branches | Archived nodes leave the active index and ordinary reachability; this is state editing, not prompt-only paging |
-| Add a static atlas outside the map projection | Use a dedicated campaign preset section or literal text in the global map turn template | No turn-template variable exposes locations 51–500; global Roleplay/Game map templates affect every matching chat and static text can drift |
+| Add a static atlas outside the map projection | Use a dedicated campaign preset section or literal text in the global map turn template | No turn-template variable exposes locations past the first 50; global Roleplay/Game map templates affect every matching chat and static text can drift |
 | Separate genuinely independent settings | Use separate templates/shared worlds and manually select or relink the chat | A chat resolves one effective definition; switching is not automatic regional paging and current/history constraints can block a seamless swap |
 
 Use this default design for one large continuous world:
@@ -98,12 +98,13 @@ Only available links count. Containment traversal remains independent of link st
 | Ordinary transition without travel mode | Existing one-hop destination |
 | Explicit routed `step_by_step` | Resolve an available directed route; commit next hop |
 | Explicit routed `travel_now` | Resolve the route; commit target, with route summary |
-| Assistant `spatial_move` | Current location or an existing one-hop destination |
+| Assistant `spatial_move` | Current location, an existing one-hop destination, or a farther active location when the shortest available route exists |
 | Assistant `spatial_discover` | Separate discovery logic, not arbitrary route repair |
 
 Route payloads are bounded to 64 destination IDs. Do not confuse this with the 50-name
-index or 500-node definition limit. UI access, owner modes, revision checks and current
-location expectations also matter. Inspect `validateSpatialTransition` when debugging.
+index or the 5,000-location definition limit. UI access, owner modes, revision checks and
+current location expectations also matter. Inspect `validateSpatialTransition` for an
+explicit travel request and `materializeAssistantSpatialState` for an assistant move.
 
 A sibling trip through a parent has two graph hops, not necessarily two user turns.
 A 25-floor building should normally have sibling floors with layer order; a 25-level
@@ -123,13 +124,18 @@ For discovery, an unambiguous reachable existing name can be reused. A unique ex
 but unreachable name is rejected rather than linked; ambiguity is rejected. A new
 durable `enter` place becomes a child. A `link` place becomes a sibling and requires
 explicit outgoing/incoming/both direction. New places default to kind place, list,
-active, empty lore links, with schema validation and the 500-node guard. They do not
+active, empty lore links, with schema validation and the 5,000-location guard. They do not
 arrive with bespoke lore, art or full room semantics.
 
-Known source contradiction: prompt wording promises a direct route for known arrivals
-through newly revealed/secret paths, but `spatial_move` still accepts only the existing
-one-hop set. Do not promise automatic opening of hidden/blocked links or add a fake
-discovery to bypass a known unreachable node.
+Known source contradiction: the turn prompt tells the assistant to emit `spatial_move`
+for a known arrival even through a newly revealed or secret route, and says the
+application records that direct route. The move consumer does not open hidden or
+blocked links. It commits only the current place, an existing one-hop destination, or
+another active place that `resolveSpatialRoute` can already reach through active
+containment and available links. Name-only location guidance, without a move directive,
+still requires an existing one-hop destination. Do not promise automatic opening of
+hidden or blocked links, and do not add a fake discovery to bypass a known unreachable
+node.
 
 For each secret, design three separate things:
 
@@ -173,6 +179,9 @@ Backgrounds are UI assets. Current-location references can guide image generatio
 the saved map, toggle, owner pipeline, real Gallery record, file and backend capacity
 all permit it. A successful reference lookup is not proof the provider honored it.
 Trace caller budgets; do not publish a permanent provider-limit table from old docs.
+On Engine v2.5.2, Roleplay agent context also gives image agents the current place's
+breadcrumb path and public description. That block is not the reference image, and it
+does not include `modelMemory`.
 
 ## Verify in a disposable chat
 

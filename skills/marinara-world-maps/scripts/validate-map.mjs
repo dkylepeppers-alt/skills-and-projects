@@ -17,7 +17,9 @@ import { readFileSync } from "node:fs";
 import { portableLoreIsValid } from "./portable-lore.mjs";
 
 const LIMITS = {
-  maxLocations: 500,
+  // Engine v2.5.2 SPATIAL_CONTEXT_LIMITS.maxLocations and World Maps 1.8.0
+  // SPATIAL_MAP_LOCATION_LIMIT. World Maps 1.5.0 retired the 500-location cap.
+  maxLocations: 5_000,
   maxDepth: 20,
   maxLinksPerLocation: 50,
   maxNameLength: 200,

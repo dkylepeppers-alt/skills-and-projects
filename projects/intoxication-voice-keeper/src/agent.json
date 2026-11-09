@@ -1,0 +1,57 @@
+{
+  "type": "intoxication-voice-keeper",
+  "name": "Intoxication Voice Keeper",
+  "description": "Tracks how drunk or high each character is from what the story shows, sobers them up in story time, and tells the writer how to bend each character's own voice for this level without turning them into a generic drunk.",
+  "phase": "pre_generation",
+  "resultType": "context_injection",
+  "defaultStyle": "grounded",
+  "presets": [
+    {
+      "id": "grounded",
+      "name": "Grounded",
+      "description": "Realistic intoxication with consequences. The default.",
+      "style": "styles/grounded.md"
+    },
+    {
+      "id": "heightened",
+      "name": "Heightened Comedy",
+      "description": "Comic timing and escalating bits, still built from each character's own voice.",
+      "style": "styles/heightened.md"
+    },
+    {
+      "id": "lean",
+      "name": "Lean",
+      "description": "Shorter directives for cheap or small agent models; same state tracking.",
+      "style": "styles/lean.md"
+    },
+    {
+      "id": "custom",
+      "name": "Custom",
+      "description": "Replace the [YOUR INSTRUCTIONS] line with your own tone rules; keep the rest so tracking keeps working.",
+      "style": "styles/custom.md"
+    }
+  ],
+  "promptValues": {
+    "soberingRate": "about one level per in-story hour once the last dose has peaked (slower for low tolerance, faster for high)",
+    "slurFromLevel": "3",
+    "maxDirectiveWords": "220"
+  },
+  "settings": {
+    "author": "dkylepeppers-alt",
+    "resultType": "context_injection",
+    "jsonContextOutput": true,
+    "contextSources": {
+      "chatHistory": true,
+      "characters": true,
+      "persona": true,
+      "activatedLorebookEntries": true,
+      "chatSummary": true,
+      "authorNotes": false,
+      "trackerData": true,
+      "recalledMemories": false,
+      "previousOutput": true
+    },
+    "contextSize": 12,
+    "maxTokens": 2048
+  }
+}

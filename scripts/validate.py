@@ -16,6 +16,19 @@ def require(condition, message):
         raise ValueError(message)
 
 
+def verify_checksums(release):
+    for line in (release / 'SHA256SUMS').read_text().splitlines():
+        expected, relative = line.split('  ', 1)
+        path = release / relative
+        require(path.resolve().is_relative_to(release.resolve()), 'Invalid checksum path')
+        digest = hashlib.sha256()
+        with path.open('rb') as stream:
+            for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+                digest.update(chunk)
+        actual = digest.hexdigest()
+        require(actual == expected, f'Archived release changed: {path.relative_to(ROOT)}')
+
+
 def main():
     ignored = {'.git', 'node_modules', '.venv', '__pycache__', 'build'}
     count = 0
@@ -32,16 +45,7 @@ def main():
         skill = (ROOT / 'skills' / name / 'SKILL.md').read_text(encoding='utf-8')
         require(skill.startswith('---\n') and f'name: {name}' in skill,
                 f'Missing skill frontmatter: {name}')
-    for line in (RELEASE / 'SHA256SUMS').read_text().splitlines():
-        expected, relative = line.split('  ', 1)
-        path = RELEASE / relative
-        require(path.resolve().is_relative_to(RELEASE.resolve()), 'Invalid checksum path')
-        digest = hashlib.sha256()
-        with path.open('rb') as stream:
-            for chunk in iter(lambda: stream.read(1024 * 1024), b''):
-                digest.update(chunk)
-        actual = digest.hexdigest()
-        require(actual == expected, f'Archived release changed: {relative}')
+    verify_checksums(RELEASE)
     pack_path = RELEASE / 'Nevermore-Woodlands-Crypts-v2.world-map.json'
     pack = json.loads(pack_path.read_text(encoding='utf-8'))
     index = json.loads((PROJECT / 'source/global-index.json').read_text())['globalIndexIds']
@@ -55,8 +59,11 @@ def main():
     subprocess.run(['node', '--test', 'skills/marinara-world-maps/tests/regression.test.mjs'], cwd=ROOT, check=True)
     subprocess.run(['node', 'skills/marinara-engine-authoring/scripts/test-extension-tools.mjs'], cwd=ROOT, check=True)
     subprocess.run(['node', '--test', 'projects/modern-life-sim-cheats/tests/cheats.test.mjs'], cwd=ROOT, check=True)
+    subprocess.run(['node', '--test', 'projects/intoxication-voice-keeper/tests/agent.test.mjs'], cwd=ROOT, check=True)
+    for version in ['v1.0.0', 'v1.0.1']:
+        verify_checksums(PROJECT.parent / 'intoxication-voice-keeper/releases' / version)
     subprocess.run(['node', 'skills/marinara-world-maps/scripts/validate-map.mjs', str(pack_path)], cwd=ROOT, check=True)
-    print(f'PASS: {count} JSON files; both skills; release checksums; 79 locations; 82 images; extension tools; life sim cheats.')
+    print(f'PASS: {count} JSON files; both skills; release checksums; 79 locations; 82 images; extension tools; life sim cheats; intoxication agent.')
     print('Scope: local structural and integrity checks. No live app import or upstream source check in this command.')
 
 

@@ -1,0 +1,1 @@
+- Tone: brief. Give each character one Voice line and one Behavior line; skip "Keep true" unless the character is at level 3 or higher. Spend effort on accurate state, not long notes.

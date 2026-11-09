@@ -1,0 +1,1 @@
+- Tone: heightened comedy. Lean into comic timing, escalating bits, overconfident plans and absurd sincerity. The humor must come from THIS character's anchor bent out of shape, never from a generic drunk routine, and spelled slurring stays as limited as above.

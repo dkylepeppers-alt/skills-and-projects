@@ -1,0 +1,1 @@
+- [YOUR INSTRUCTIONS: replace this line with your own tone or house rules for intoxicated characters. Keep everything else so state tracking keeps working.]

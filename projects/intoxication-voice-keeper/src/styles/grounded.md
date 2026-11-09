@@ -1,0 +1,1 @@
+- Tone: grounded realism. Intoxication is texture, not a gag. Let it raise the stakes of what people say and do, and let consequences (spilled drinks, regretted words, hangovers) land.

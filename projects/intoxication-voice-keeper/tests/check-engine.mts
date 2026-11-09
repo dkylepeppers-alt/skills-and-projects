@@ -69,6 +69,11 @@ const folderEntries = folders.collectFolderPackageEntries(folderFiles, {
   collectionKeys: ["agents"],
 });
 verifyImport("folder Intoxication-Voice-Keeper/", folderEntries, "folder");
+// Folder paths carry the chosen folder's name, as the browser's webkitRelativePath does. The
+// separate prompt and settings files must resolve, not fall back to the inline copies.
+const folderConfig = shared.getFolderManifestConfig(folderEntries[0]?.raw) ?? {};
+check("promptTemplatePath resolves", folderEntries[0]?.resolveTextFile(folderConfig.promptTemplatePath) === config.promptTemplate);
+check("settingsPath resolves", folderEntries[0]?.resolveTextFile(folderConfig.settingsPath) === `${JSON.stringify(config.settings, null, 2)}\n`);
 
 // Runtime: a pre-generation context_injection custom agent is placed as a runtime agent section,
 // and the JSON-context contract adds the {"text","agent-context"} output instruction.

@@ -12,7 +12,7 @@ Levels for each character:
 0 sober | 1 buzzed: looser, warmer, quicker to laugh or snap | 2 tipsy: filters thinning, louder, repeats points, overconfident | 3 drunk: clumsy hands, loses threads, emotional swings, the odd soft-edged word | 4 very drunk: unsteady, slurring, looping, poor judgment, may cry, fight or confess | 5 incapacitated: barely verbal, nauseous, nodding off, no complex dialogue.
 Phase: rising | peak | comedown | hungover | sober.
 
-Realistic drift: alcohol peaks about 30 to 60 story-minutes after a dose, then fades at {{soberingRate}}. Measure real story time. A long exchange of dialogue is minutes; a scene cut can be hours. Never lower a level without elapsed time or a story cause. Shock (danger, terrible news, cold water) can buy a brief, shaky clarity that then lapses back. Never raise a level further than the doses explain. After heavy drinking and sleep, set phase hungover: headache, light and noise sensitivity, short temper, patchy memory of the night before.
+Realistic drift: alcohol peaks about 30 to 60 story-minutes after a dose, then fades at %%soberingRate%%. Measure real story time. A long exchange of dialogue is minutes; a scene cut can be hours. Never lower a level without elapsed time or a story cause. Shock (danger, terrible news, cold water) can buy a brief, shaky clarity that then lapses back. Never raise a level further than the doses explain. After heavy drinking and sleep, set phase hungover: headache, light and noise sensitivity, short temper, patchy memory of the night before.
 Other substances follow their own profile, combined when mixed. Cannabis: slow, drifting, giggly or paranoid, munchies, dry mouth. Stimulants: fast, talky, jaw-tight, grandiose, then a crash. Sedatives or opioids: heavy, warm, slow speech, nodding. Psychedelics: perceptual wonder, tangents, time distortion, intense feeling. Fictional brews and potions: the setting's lore wins.
 
 ## 2. Anchor each voice BEFORE you modulate it
@@ -27,12 +27,12 @@ Intoxication lowers inhibition and fine control. It does not change values, know
 - Behavior: what they likely feel or do next, and what they now struggle with (balance, fine motor, focus, secrets, volume).
 - Keep true: one line on what must not change about them.
 Then add these writer rules once, when they apply:
-- Spelled slurring only at level {{slurFromLevel}} or higher: one or two distorted words per line at most, always readable. Prefer rhythm, repetition, trailing off, wrong-word choices and narration ("the word comes out soft-edged") over phonetic spelling. No "hic" unless the card earns it.
+- Spelled slurring only at level %%slurFromLevel%% or higher: one or two distorted words per line at most, always readable. Prefer rhythm, repetition, trailing off, wrong-word choices and narration ("the word comes out soft-edged") over phonetic spelling. No "hic" unless the card earns it.
 - Show intoxication through body, timing and choices, not spelling alone. Never state level numbers in the prose.
 - Do not write {{user}}'s actions, words or feelings. For {{user}}'s character, describe only what others can perceive.
 - Stay continuous: no sudden sobering, no forgetting they drank.
 %%STYLE%%
-Write "text" as terse imperative notes for a writer, under {{maxDirectiveWords}} words, no JSON, no tags. If no present character is affected, "text" is "".
+Write "text" as terse imperative notes for a writer, under %%maxDirectiveWords%% words, no JSON, no tags. If no present character is affected, "text" is "".
 
 ## 4. Private state ("agent-context")
 Return this object, carrying over everything the latest turn did not change:

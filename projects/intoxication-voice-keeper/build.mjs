@@ -20,7 +20,17 @@ export function assemble() {
   const source = JSON.parse(readFileSync(join(SRC, "agent.json"), "utf8"));
   const body = readFileSync(join(SRC, "prompt.md"), "utf8");
   if (body.split(STYLE_SLOT).length !== 2) throw new Error(`src/prompt.md must contain ${STYLE_SLOT} exactly once`);
-  const render = (stylePath) => body.replace(STYLE_SLOT, readFileSync(join(SRC, stylePath), "utf8").trimEnd());
+  // Tunable values are written into the prompt text at build time. Engine 2.5.2's agent editor
+  // rebuilds `settings` on save and drops keys it does not know, so settings-backed
+  // {{placeholders}} would go blank after any ordinary edit.
+  const fill = (text) =>
+    text.replace(/%%([A-Za-z]+)%%/g, (match, key) => {
+      if (key === "STYLE") return match;
+      if (!Object.hasOwn(source.promptValues, key)) throw new Error(`src/prompt.md uses unknown %%${key}%%`);
+      return String(source.promptValues[key]);
+    });
+  const render = (stylePath) =>
+    fill(body).replace(STYLE_SLOT, readFileSync(join(SRC, stylePath), "utf8").trimEnd());
 
   const defaultPreset = source.presets.find((preset) => preset.id === source.defaultStyle);
   if (!defaultPreset) throw new Error(`defaultStyle ${source.defaultStyle} is not a preset`);
@@ -56,7 +66,9 @@ export function outputFiles(config) {
     kind: "marinara.agent-folder",
     version: 1,
     folderName: "Agents",
-    agents: [{ path: `Agents/${segment}/manifest.json`, manifest }],
+    // Folder import keeps the chosen folder's name in every path (webkitRelativePath), and the
+    // Engine resolves promptTemplatePath/settingsPath beside this entry path, so it carries the prefix.
+    agents: [{ path: `${folder}/Agents/${segment}/manifest.json`, manifest }],
   };
   const json = (value) => `${JSON.stringify(value, null, 2)}\n`;
   return {

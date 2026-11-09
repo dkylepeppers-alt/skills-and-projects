@@ -25,7 +25,7 @@ State persists privately between turns. Only the writer notes reach the main pro
 
 ## Import
 
-Use either file from `releases/v1.0.0/` (or a fresh `build/`):
+Use either file from `releases/v1.0.1/` (or a fresh `build/`):
 
 - **File:** `intoxication-voice-keeper.marinara-agent.json`
 - **Folder:** `Intoxication-Voice-Keeper/`
@@ -49,17 +49,21 @@ It works in every chat mode. Turning on **Enable Agents** for one chat does not 
 
 All modes share one output contract, so switching modes mid-chat keeps the stored state.
 
-## Settings you can tune
+## Tuning
 
-In the agent editor, these settings fill placeholders in the prompt:
+These values are written into the prompt text at build time. Change them in
+`src/agent.json` → `promptValues` and rebuild, or edit the sentence in the agent's prompt
+directly. They are not settings, because the Engine 2.5.2 agent editor drops settings it does
+not know when you save.
 
-| Setting | Default | Effect |
+| Value | Default | Effect |
 | --- | --- | --- |
 | `soberingRate` | about one level per story hour after the peak | How fast levels fall. |
 | `slurFromLevel` | `3` | First level at which spelled slurring may appear. |
 | `maxDirectiveWords` | `220` | Upper bound for the writer notes. |
-| **Context Size** | `12` | Recent messages read each turn. Older drinks are kept in the private state. |
-| **Max Output Tokens** | `2048` | Room for notes plus the full state. |
+
+In the editor: **Context Size** `12` (recent messages read each turn; older drinks are kept in
+the private state) and **Max Output Tokens** `2048`.
 
 Context sources: chat history, characters, persona, activated lorebook entries (for potions or
 species tolerance), chat summary, trackers (for the story clock), and **Previous output**.
@@ -93,7 +97,8 @@ Edit `src/`, never the release folder:
 
 - `src/prompt.md` is the shared prompt. `%%STYLE%%` marks where each mode's tone line goes.
 - `src/styles/*.md` holds the tone line for each mode.
-- `src/agent.json` holds the name, phase, result type, settings and mode list.
+- `src/agent.json` holds the name, phase, result type, settings, mode list and `promptValues`.
+- `%%name%%` in the prompt is replaced from `promptValues` at build time.
 
 ```bash
 node build.mjs                      # build/ (ignored)
@@ -101,7 +106,7 @@ node --test tests/agent.test.mjs    # offline structural checks
 # Engine import path (needs a full Engine checkout plus zod 4.6.x and tsx; see
 # skills/marinara-engine-authoring/scripts/README.md):
 MARINARA_ENGINE_ROOT=/path/to/Marinara-Engine node --import tsx tests/check-engine.mts
-node build.mjs --release 1.1.0      # new archived release with SHA256SUMS; never overwrites
+node build.mjs --release 1.0.2      # new archived release with SHA256SUMS; never overwrites
 ```
 
 ## Limits

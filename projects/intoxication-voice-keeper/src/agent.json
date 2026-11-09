@@ -31,6 +31,11 @@
       "style": "styles/custom.md"
     }
   ],
+  "promptValues": {
+    "soberingRate": "about one level per in-story hour once the last dose has peaked (slower for low tolerance, faster for high)",
+    "slurFromLevel": "3",
+    "maxDirectiveWords": "220"
+  },
   "settings": {
     "author": "dkylepeppers-alt",
     "resultType": "context_injection",
@@ -47,9 +52,6 @@
       "previousOutput": true
     },
     "contextSize": 12,
-    "maxTokens": 2048,
-    "soberingRate": "about one level per in-story hour once the last dose has peaked (slower for low tolerance, faster for high)",
-    "slurFromLevel": 3,
-    "maxDirectiveWords": 220
+    "maxTokens": 2048
   }
 }

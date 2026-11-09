@@ -43,11 +43,15 @@ test("every prompt option shares one output contract", () => {
   assert.match(config.settings.promptTemplates.at(-1).promptTemplate, /\[YOUR INSTRUCTIONS/);
 });
 
-test("placeholders resolve to settings or Engine macros", () => {
+test("prompts use only Engine macros, never settings-backed placeholders", () => {
+  // The 2.5.2 agent editor rebuilds settings on save and drops unknown keys, so a
+  // settings-backed {{placeholder}} would go blank after any edit. Values are inlined at build.
   for (const { id, promptTemplate } of templates) {
+    assert.ok(!/%%[A-Za-z]+%%/.test(promptTemplate), `${id}: build-time value left unfilled`);
     for (const [, key] of promptTemplate.matchAll(/\{\{\s*([a-zA-Z0-9_.-]+)\s*\}\}/g)) {
-      assert.ok(ENGINE_MACROS.has(key) || Object.hasOwn(config.settings, key), `${id}: {{${key}}} has no setting`);
+      assert.ok(ENGINE_MACROS.has(key), `${id}: {{${key}}} is not an Engine macro`);
     }
+    assert.match(promptTemplate, /only at level 3 or higher/, `${id}: slur level inlined`);
   }
 });
 
@@ -72,5 +76,6 @@ test("both import shapes carry the same config", () => {
   assert.deepEqual(JSON.parse(files[`${base}/settings.json`]), config.settings);
   const envelope = JSON.parse(files["Intoxication-Voice-Keeper/marinara-agents.json"]);
   assert.equal(envelope.kind, "marinara.agent-folder");
-  assert.equal(envelope.agents[0].path, "Agents/intoxication-voice-keeper/manifest.json");
+  assert.equal(envelope.agents[0].path, `${base}/manifest.json`);
+  assert.ok(Object.hasOwn(files, envelope.agents[0].path), "envelope entry path names a shipped file");
 });

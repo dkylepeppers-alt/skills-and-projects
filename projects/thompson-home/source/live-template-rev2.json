@@ -1,0 +1,1551 @@
+{
+ "id": "00mw8m8yr40000YY4voq-",
+ "name": "Thompson Home",
+ "description": "",
+ "data": {
+  "version": 1,
+  "definition": {
+   "schemaVersion": 1,
+   "ownerMode": "roleplay",
+   "enabled": false,
+   "locations": [
+    {
+     "id": "thompson.property",
+     "parentId": null,
+     "name": "Thompson Property",
+     "kind": "region",
+     "description": "The Thompson home and its fenced residential lot. The street is on the west; the backyard, pool and detached woodshop extend east behind the house. The concrete driveway approaches the attached garage from the west along the south side.",
+     "modelMemory": "Use the supplied property details as canon. No occupants, ages, schedules, decor style or family history are established by this map. Its plans are schematic: preserve stated dimensions without inventing a surveyed fit. Concealed items and spaces are not common knowledge; reveal them through the actual scene. Native parent/child navigation is broader than physical door-by-door movement.",
+     "icon": "🏡",
+     "referenceImageId": "global-gallery:H_14M4Du3p_vQcY4s8SI8",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv"
+     ],
+     "childPresentation": "list",
+     "links": [],
+     "status": "active",
+     "sortOrder": 0
+    },
+    {
+     "id": "thompson.lot",
+     "parentId": "thompson.property",
+     "name": "Lot",
+     "kind": "place",
+     "description": "An 80 ft wide by 140 ft deep lot with west street frontage. St. Augustine grass and foundation shrubs occupy the front; the driveway follows the south side. A 6 ft wood perimeter fence runs along the north, south and east boundaries. The house separates frontage from the backyard.",
+     "modelMemory": "For orientation only, the schematic interprets width as north-south frontage and depth as west-east. Exact setbacks and dimensions conflict in the supplied brief; do not narrate invented clearance measurements. The 8 ft north yard, 3 ft south yard and attached south garage are all retained as stated. No west perimeter fence or street connection beyond the property is invented.",
+     "icon": "📐",
+     "referenceImageId": "global-gallery:H_14M4Du3p_vQcY4s8SI8",
+     "useReferenceImage": true,
+     "mapBackgroundImageId": "global-gallery:1xHmF4SdKxsMMiaQWXZLM",
+     "mapBackgroundPosition": {
+      "x": 50,
+      "y": 50
+     },
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv"
+     ],
+     "childPresentation": "map",
+     "links": [],
+     "status": "active",
+     "sortOrder": 1
+    },
+    {
+     "id": "thompson.frontage",
+     "parentId": "thompson.lot",
+     "name": "West Frontage",
+     "kind": "place",
+     "description": "The street-facing approach west of the Thompson house. The front lawn and foundation shrubs lie beside the concrete approach; the 18 ft driveway runs along the south side toward the west-facing garage bays. A 5 ft concrete walk branches from it to the covered stoop.",
+     "modelMemory": "",
+     "icon": "🌳",
+     "referenceImageId": "global-gallery:H_14M4Du3p_vQcY4s8SI8",
+     "useReferenceImage": true,
+     "mapBackgroundImageId": "global-gallery:72paF_rcoxoOkKGieKhpx",
+     "mapBackgroundPosition": {
+      "x": 50,
+      "y": 50
+     },
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv"
+     ],
+     "childPresentation": "map",
+     "placement": {
+      "x": 18,
+      "y": 48
+     },
+     "links": [],
+     "status": "active",
+     "sortOrder": 2
+    },
+    {
+     "id": "thompson.lawn",
+     "parentId": "thompson.frontage",
+     "name": "Front Lawn",
+     "kind": "place",
+     "description": "St. Augustine grass fills the west-facing front lawn. Foundation shrubs edge the house, and the dining room west window overlooks this lawn. The street is west; the driveway and front-walk approach are to the south.",
+     "modelMemory": "",
+     "icon": "🌿",
+     "referenceImageId": "global-gallery:SJTpeaWP2IuwSyOBm8xyy",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 48,
+      "y": 33
+     },
+     "links": [
+      {
+       "targetId": "thompson.walk",
+       "label": "Across frontage to front walk",
+       "bidirectional": true,
+       "state": "available"
+      },
+      {
+       "targetId": "thompson.north-yard",
+       "label": "North-side grass route",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 3
+    },
+    {
+     "id": "thompson.driveway",
+     "parentId": "thompson.frontage",
+     "name": "Driveway",
+     "kind": "place",
+     "description": "An 18 ft concrete driveway runs in from the west street along the south lot line to the garage's two west-facing bays. Kyle's single-cab pickup is parked here. The front walk leads from the driveway to the covered stoop, and the formal living room west window looks onto the approach.",
+     "modelMemory": "Vehicle make, color, condition, parking direction and exact position are unspecified. Keep enough approach space in narration without asserting a scale-correct fit to the inconsistent lot plan.",
+     "icon": "🚙",
+     "referenceImageId": "global-gallery:eWzcZhKA_OyaVhoiphqrI",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 48,
+      "y": 76
+     },
+     "links": [
+      {
+       "targetId": "thompson.walk",
+       "label": "Front walk to stoop",
+       "bidirectional": true,
+       "state": "available"
+      },
+      {
+       "targetId": "thompson.garage",
+       "label": "West-facing garage bays",
+       "bidirectional": true,
+       "state": "available"
+      },
+      {
+       "targetId": "thompson.south-yard",
+       "label": "South-side exterior approach",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 4
+    },
+    {
+     "id": "thompson.pickup",
+     "parentId": "thompson.driveway",
+     "name": "Kyle’s Single-Cab Pickup",
+     "kind": "place",
+     "description": "Kyle's single-cab pickup sits on the concrete driveway at the Thompson property, with the west street approach and west-facing garage bays nearby.",
+     "modelMemory": "This node represents being at or beside the truck; entering or driving requires the scene to establish access. Do not invent a make, model, color, load, keys or mechanical condition. Moving the vehicle is narrative state, not an automatic relocation of this map node.",
+     "icon": "🛻",
+     "referenceImageId": "global-gallery:eWzcZhKA_OyaVhoiphqrI",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv"
+     ],
+     "childPresentation": "list",
+     "links": [],
+     "status": "active",
+     "sortOrder": 5
+    },
+    {
+     "id": "thompson.walk",
+     "parentId": "thompson.frontage",
+     "name": "Front Walk",
+     "kind": "place",
+     "description": "A 5 ft concrete walk connects the south driveway to the covered stoop at the west front door. Foundation shrubs and the St. Augustine lawn flank the approach.",
+     "modelMemory": "",
+     "icon": "🚶",
+     "referenceImageId": "global-gallery:SJTpeaWP2IuwSyOBm8xyy",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 73,
+      "y": 52
+     },
+     "links": [
+      {
+       "targetId": "thompson.stoop",
+       "label": "Concrete walk to covered stoop",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 6
+    },
+    {
+     "id": "thompson.north-yard",
+     "parentId": "thompson.lot",
+     "name": "North Side Yard",
+     "kind": "place",
+     "description": "An 8 ft strip of grass runs beside the north wall of the house, between the west frontage and the rear yard. The north gate is set in the fence even with the house's rear wall. Jennifer's north window overlooks this side yard.",
+     "modelMemory": "The fence segment containing the gate is not specified precisely. Treat the gate as the side-yard/backyard threshold at the rear-wall alignment, without inventing an off-property route through the north boundary.",
+     "icon": "🌱",
+     "referenceImageId": "global-gallery:VkNhs12VU-CqUwk1D7mW1",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 45,
+      "y": 12
+     },
+     "links": [],
+     "status": "active",
+     "sortOrder": 7
+    },
+    {
+     "id": "thompson.north-gate",
+     "parentId": "thompson.north-yard",
+     "name": "North Gate",
+     "kind": "place",
+     "description": "A gate in the north-side fencing stands even with the rear wall of the house, marking the route between the north side yard and rear lawn.",
+     "modelMemory": "Exact fence orientation, latch and lock are unspecified. The side-yard-to-backyard connection is an authoring assumption; no gate to a neighbor's property is created.",
+     "icon": "🚪",
+     "referenceImageId": "global-gallery:VkNhs12VU-CqUwk1D7mW1",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "list",
+     "links": [
+      {
+       "targetId": "thompson.rear-lawn",
+       "label": "Gate at rear-wall alignment",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 8
+    },
+    {
+     "id": "thompson.south-yard",
+     "parentId": "thompson.lot",
+     "name": "South Side Yard",
+     "kind": "place",
+     "description": "The stated 3 ft south side yard is a narrow exterior strip beside the house and south-side improvements. An AC condenser stands on its pad here. The south wood fence defines the property boundary; access continues toward the rear south walkway.",
+     "modelMemory": "Its exact relationship to the 18 ft driveway and the attached 22 ft garage is unresolved in the source. Do not claim that this narrow strip accommodates either of those widths.",
+     "icon": "🌱",
+     "referenceImageId": "global-gallery:hn7s0T2Uh64LOsPpbLEOQ",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 45,
+      "y": 91
+     },
+     "links": [
+      {
+       "targetId": "thompson.south-walk",
+       "label": "South-side route to rear",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 9
+    },
+    {
+     "id": "thompson.ac-pad",
+     "parentId": "thompson.south-yard",
+     "name": "AC Condenser Pad",
+     "kind": "place",
+     "description": "The outdoor AC condenser sits on a pad in the narrow south side yard beside the Thompson house. The unit and pad are exterior equipment, not an indoor utility room.",
+     "modelMemory": "Condenser make, size, service state and operation are unspecified. This node is the small working position beside the equipment.",
+     "icon": "⚙️",
+     "referenceImageId": "global-gallery:hn7s0T2Uh64LOsPpbLEOQ",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv"
+     ],
+     "childPresentation": "list",
+     "links": [],
+     "status": "active",
+     "sortOrder": 10
+    },
+    {
+     "id": "thompson.fence",
+     "parentId": "thompson.lot",
+     "name": "Perimeter Fence",
+     "kind": "place",
+     "description": "A 6 ft wood fence follows the north, south and east property boundaries. The street frontage is west; no west perimeter fence is specified. The separate 4 ft black aluminum pool fence encloses the pool area behind the house.",
+     "modelMemory": "This is an exterior boundary-inspection location, not a passage through the fence. Travel to the lot parent means returning to the grounds; it does not authorize crossing a boundary. No extra gates are invented.",
+     "icon": "🪵",
+     "referenceImageId": "global-gallery:jHMd-XOImdydrJEnyPZjw",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 91,
+      "y": 15
+     },
+     "links": [],
+     "status": "active",
+     "sortOrder": 11
+    },
+    {
+     "id": "thompson.house",
+     "parentId": "thompson.lot",
+     "name": "Thompson House",
+     "kind": "building",
+     "description": "A two-story home with west front entry, a stated 42 ft north-south by 36 ft east-west footprint on each floor, and a 22 by 22 ft garage attached south. All bedrooms are upstairs. The family room slider faces the east patio; laundry and garage service doors also reach that patio.",
+     "modelMemory": "First floor has no bedrooms. Preserve the stated footprint, attached-south garage and Jr's southwest room described as over the garage, while treating their vertical alignment as unresolved. House/floor nodes are scene overviews; narrate physical passage via doors and the stair rather than teleporting between rooms.",
+     "icon": "🏠",
+     "referenceImageId": "global-gallery:H_14M4Du3p_vQcY4s8SI8",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 42,
+      "y": 47
+     },
+     "links": [],
+     "status": "active",
+     "sortOrder": 12
+    },
+    {
+     "id": "thompson.west-elevation",
+     "parentId": "thompson.house",
+     "name": "West Elevation",
+     "kind": "place",
+     "description": "The street-facing side of the Thompson house includes the covered stoop and front door. West windows serve the dining room over the front lawn and formal living room over the driveway; upstairs west windows face the street, with Jr's also overlooking the driveway.",
+     "modelMemory": "Wall cladding, roof style, colors, door material and decorative details are not established. This exterior view is useful for arrival and sightline scenes.",
+     "icon": "🏠",
+     "referenceImageId": "global-gallery:H_14M4Du3p_vQcY4s8SI8",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv"
+     ],
+     "childPresentation": "list",
+     "links": [],
+     "status": "active",
+     "sortOrder": 13
+    },
+    {
+     "id": "thompson.stoop",
+     "parentId": "thompson.west-elevation",
+     "name": "Covered Stoop",
+     "kind": "place",
+     "description": "A covered stoop at the west front door receives the 5 ft concrete walk from the driveway. The front door opens into the center-west foyer; the lawn and shrubs lie beside the approach.",
+     "modelMemory": "Front-door lock, bell, steps and height are unspecified. Do not infer a broken lock from the separate upstairs door faults.",
+     "icon": "🚪",
+     "referenceImageId": "global-gallery:TNgPMpR4p76YQXEq4LI8x",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv"
+     ],
+     "childPresentation": "list",
+     "links": [
+      {
+       "targetId": "thompson.foyer",
+       "label": "West front door",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 14
+    },
+    {
+     "id": "thompson.first-floor",
+     "parentId": "thompson.house",
+     "name": "First Floor",
+     "kind": "floor",
+     "description": "The 42 ft north-south by 36 ft east-west first floor contains no bedrooms. The foyer is center-west, dining room northwest, formal living room southwest, family room east-center and kitchen southeast. The powder room is east of the foyer under the upper stair; laundry lies south of the kitchen.",
+     "modelMemory": "Use this as a circulation overview. Direct room connections not supplied are practical authoring assumptions and are identified in the source manifest. The east patio is reached through the family-room slider, laundry east door and garage east service door.",
+     "icon": "1️⃣",
+     "referenceImageId": "global-gallery:xX9kMfLuKTLw9K6_08g4u",
+     "useReferenceImage": true,
+     "mapBackgroundImageId": "global-gallery:wA0oPfK2SYeQX-C-v7JIb",
+     "mapBackgroundPosition": {
+      "x": 50,
+      "y": 50
+     },
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "2QEN9OQvbpKI0ytDVggSw"
+     ],
+     "childPresentation": "map",
+     "links": [],
+     "status": "active",
+     "sortOrder": 15
+    },
+    {
+     "id": "thompson.foyer",
+     "parentId": "thompson.first-floor",
+     "name": "Foyer",
+     "kind": "room",
+     "description": "The 8 by 10 ft foyer sits at the center of the west side of the house, immediately inside the front door. A console table stands against the south wall. A coat closet occupies space under the stair, its door facing south; the stair rises along the foyer north wall toward a mid-landing and the upstairs hall.",
+     "modelMemory": "The powder room is east under the upper stair. Nearby formal living, dining and family-room connections are circulation assumptions, not measured door locations. The console is furniture, not a separate traversable room.",
+     "icon": "🚪",
+     "referenceImageId": "global-gallery:xX9kMfLuKTLw9K6_08g4u",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "2QEN9OQvbpKI0ytDVggSw"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 27,
+      "y": 48
+     },
+     "links": [
+      {
+       "targetId": "thompson.powder",
+       "label": "East to powder room",
+       "bidirectional": true,
+       "state": "available"
+      },
+      {
+       "targetId": "thompson.living",
+       "label": "Southwest living-room approach",
+       "bidirectional": true,
+       "state": "available"
+      },
+      {
+       "targetId": "thompson.dining",
+       "label": "Northwest dining-room approach",
+       "bidirectional": true,
+       "state": "available"
+      },
+      {
+       "targetId": "thompson.family",
+       "label": "East to family room",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 16
+    },
+    {
+     "id": "thompson.coat-closet",
+     "parentId": "thompson.foyer",
+     "name": "Coat Closet",
+     "kind": "room",
+     "description": "A coat closet occupies the under-stair space off the center-west foyer. Its door faces south into the foyer; the console table is on the foyer south wall.",
+     "modelMemory": "Closet contents and dimensions are unspecified. Keep the sloping stair enclosure plausible without adding a second hidden passage.",
+     "icon": "🧥",
+     "referenceImageId": "global-gallery:NpaCJvbQOuldmYiBHbRcE",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "2QEN9OQvbpKI0ytDVggSw"
+     ],
+     "childPresentation": "list",
+     "links": [],
+     "status": "active",
+     "sortOrder": 17
+    },
+    {
+     "id": "thompson.stairs",
+     "parentId": "thompson.foyer",
+     "name": "Main Stair",
+     "kind": "place",
+     "description": "The main stair rises along the foyer north wall. Fourteen steps lead through a mid-landing toward the second-floor hall, whose arrival is on its west side. The coat closet sits beneath the stair and the powder room beneath its upper part.",
+     "modelMemory": "Fourteen is the supplied total step count; no split between flights, turn direction, rail material or landing dimension is established. Use the stair for narrated changes of level even though native containment permits broader routes.",
+     "icon": "🪜",
+     "referenceImageId": "global-gallery:xX9kMfLuKTLw9K6_08g4u",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "2QEN9OQvbpKI0ytDVggSw"
+     ],
+     "childPresentation": "list",
+     "links": [],
+     "status": "active",
+     "sortOrder": 18
+    },
+    {
+     "id": "thompson.landing",
+     "parentId": "thompson.stairs",
+     "name": "Mid-Landing",
+     "kind": "place",
+     "description": "A mid-landing interrupts the fourteen-step main stair between the foyer and upstairs hall. The upper arrival reaches the west side of the north-south hall.",
+     "modelMemory": "The exact stair turn and number of steps before and after the landing are unspecified. This is a pause or conversation point on the stair, not an additional house floor.",
+     "icon": "🪜",
+     "referenceImageId": "global-gallery:xX9kMfLuKTLw9K6_08g4u",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "2QEN9OQvbpKI0ytDVggSw"
+     ],
+     "childPresentation": "list",
+     "links": [
+      {
+       "targetId": "thompson.hall",
+       "label": "Upper stair to west hall arrival",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 19
+    },
+    {
+     "id": "thompson.powder",
+     "parentId": "thompson.first-floor",
+     "name": "Powder Room",
+     "kind": "room",
+     "description": "The first-floor powder room lies east of the foyer beneath the upper stair. It is the small downstairs bathroom serving the bedroom-free living level.",
+     "modelMemory": "No exact dimensions, fixture arrangement or door-lock condition are given. Do not copy the upstairs shared bathroom's faulty latch onto this door.",
+     "icon": "🚻",
+     "referenceImageId": "global-gallery:7gbT5eYkSz_FDoSq0skjj",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "2QEN9OQvbpKI0ytDVggSw"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 43,
+      "y": 44
+     },
+     "links": [],
+     "status": "active",
+     "sortOrder": 20
+    },
+    {
+     "id": "thompson.living",
+     "parentId": "thompson.first-floor",
+     "name": "Formal Living Room",
+     "kind": "room",
+     "description": "A 12 by 14 ft formal living room occupies the southwest first floor. Its west window overlooks the concrete driveway and the area where Kyle's single-cab pickup is parked. The center-west foyer is nearby to the north.",
+     "modelMemory": "Furniture is not specified. The view reaches the driveway, not the east pool. Connection to the foyer is an authoring assumption.",
+     "icon": "🛋️",
+     "referenceImageId": "global-gallery:pa12Y6g1uhj9BYHyoCPTA",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "2QEN9OQvbpKI0ytDVggSw"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 27,
+      "y": 75
+     },
+     "links": [],
+     "status": "active",
+     "sortOrder": 21
+    },
+    {
+     "id": "thompson.dining",
+     "parentId": "thompson.first-floor",
+     "name": "Dining Room",
+     "kind": "room",
+     "description": "The 11 by 12 ft dining room sits in the northwest first floor. Its west window looks over the St. Augustine front lawn and foundation shrubs toward the street frontage. The foyer lies toward the south and the kitchen toward the southeast.",
+     "modelMemory": "Table, chairs and exact connecting door positions are unspecified. Foyer and kitchen circulation links are reasonable assumptions, not surveyed openings.",
+     "icon": "🍽️",
+     "referenceImageId": "global-gallery:0ROZNdPTqd4yVXGS_DNEb",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "2QEN9OQvbpKI0ytDVggSw"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 27,
+      "y": 22
+     },
+     "links": [
+      {
+       "targetId": "thompson.kitchen",
+       "label": "Dining-to-kitchen circulation",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 22
+    },
+    {
+     "id": "thompson.family",
+     "parentId": "thompson.first-floor",
+     "name": "Family Room",
+     "kind": "room",
+     "description": "The 16 by 18 ft family room occupies the east-center first floor. The television is on the west wall; a sliding glass door in the east wall opens onto the patio. The southeast kitchen island faces into this room.",
+     "modelMemory": "Keep the television west and slider east. Do not add a downstairs bedroom or treat the slider as the pool itself: the patio and separation precede the pool edge.",
+     "icon": "📺",
+     "referenceImageId": "global-gallery:370SBlGSfUVpBjVhi5oLh",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "2QEN9OQvbpKI0ytDVggSw"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 67,
+      "y": 35
+     },
+     "links": [
+      {
+       "targetId": "thompson.kitchen",
+       "label": "Island / family-room opening",
+       "bidirectional": true,
+       "state": "available"
+      },
+      {
+       "targetId": "thompson.patio",
+       "label": "East sliding glass door",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 23
+    },
+    {
+     "id": "thompson.kitchen",
+     "parentId": "thompson.first-floor",
+     "name": "Kitchen",
+     "kind": "room",
+     "description": "The kitchen is in the southeast first floor. Its island faces the family room, and the sink window in the east wall looks toward the pool. A refrigerator and pantry serve the room; laundry is immediately south.",
+     "modelMemory": "Concealed inventory: liquor is above the refrigerator behind cereal. The source nests this fact under Pantry, but identifies the refrigerator top as the physical hiding place; keep that location. Reveal it only if the scene supports looking there or existing knowledge. Do not place the bottle inside the pantry instead. Cabinet finishes and appliance brands are unspecified.",
+     "icon": "🍳",
+     "referenceImageId": "global-gallery:OXzmADEqLn1odeEU37vjc",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "2QEN9OQvbpKI0ytDVggSw",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 67,
+      "y": 66
+     },
+     "links": [
+      {
+       "targetId": "thompson.laundry",
+       "label": "South to laundry",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 24
+    },
+    {
+     "id": "thompson.pantry",
+     "parentId": "thompson.kitchen",
+     "name": "Pantry",
+     "kind": "room",
+     "description": "A pantry serves the southeast kitchen beside the refrigerator and island area. From the kitchen, the sink window faces east toward the pool and the family room lies to the north.",
+     "modelMemory": "Pantry dimensions and shelving are unspecified. A concealed liquor stash associated with this kitchen is physically above the refrigerator behind cereal, not automatically visible on pantry shelves. Preserve that distinction during a search.",
+     "icon": "🥫",
+     "referenceImageId": "global-gallery:OXzmADEqLn1odeEU37vjc",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "2QEN9OQvbpKI0ytDVggSw"
+     ],
+     "childPresentation": "list",
+     "links": [],
+     "status": "active",
+     "sortOrder": 25
+    },
+    {
+     "id": "thompson.laundry",
+     "parentId": "thompson.first-floor",
+     "name": "Laundry / Mudroom",
+     "kind": "room",
+     "description": "The 6 by 10 ft laundry and mudroom lies south of the kitchen. Washer and dryer occupy the west wall. A south door leads into the attached garage, while an east door opens onto the south end of the patio.",
+     "modelMemory": "Concealed inventory: liquor is hidden in an empty bleach bottle on a shelf. Do not announce its contents from its label or invent who placed it there. The garage interior door faces back north into this room. Door locks are unspecified.",
+     "icon": "🧺",
+     "referenceImageId": "global-gallery:bwGQL2j8vblvDZBbOlZxl",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "2QEN9OQvbpKI0ytDVggSw"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 74,
+      "y": 83
+     },
+     "links": [
+      {
+       "targetId": "thompson.garage",
+       "label": "South interior door",
+       "bidirectional": true,
+       "state": "available"
+      },
+      {
+       "targetId": "thompson.patio",
+       "label": "East laundry door",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 26
+    },
+    {
+     "id": "thompson.second-floor",
+     "parentId": "thompson.house",
+     "name": "Second Floor",
+     "kind": "floor",
+     "description": "All bedrooms are on this stated 42 ft north-south by 36 ft east-west floor. A center north-south hall receives the stair on its west side. The master suite is east/northeast, Jennifer's room northwest, Melissa's east south of the master, and Jr's southwest; the shared bathroom is center-south.",
+     "modelMemory": "No downstairs bedrooms. Jr's room is also described as over the garage; that relationship is preserved despite unresolved footprint and garage alignment. The master bathroom is north of the master bedroom and entered from it, not a second hall bathroom.",
+     "icon": "2️⃣",
+     "referenceImageId": "global-gallery:pmCfpPGkDIhEOCOAoss06",
+     "useReferenceImage": true,
+     "mapBackgroundImageId": "global-gallery:K1vtV9l3PiRJ88MEFyuKp",
+     "mapBackgroundPosition": {
+      "x": 50,
+      "y": 50
+     },
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "i657qBPbBaAnczSwB473A"
+     ],
+     "childPresentation": "map",
+     "links": [],
+     "status": "active",
+     "sortOrder": 27
+    },
+    {
+     "id": "thompson.hall",
+     "parentId": "thompson.second-floor",
+     "name": "Upstairs Hall",
+     "kind": "place",
+     "description": "A north-south hall runs down the center of the second floor. The main stair arrives on its west side. Bedroom doors face into it: the master and Melissa's from the east, Jennifer's and Jr's from the west; the shared bathroom door faces north at the hall's south end.",
+     "modelMemory": "The master-bedroom door lock and shared-bathroom lock do not catch. Their doors can close but do not provide a reliable lock. Other bedroom locks are unspecified.",
+     "icon": "🚶",
+     "referenceImageId": "global-gallery:pmCfpPGkDIhEOCOAoss06",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "i657qBPbBaAnczSwB473A"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 49,
+      "y": 48
+     },
+     "links": [
+      {
+       "targetId": "thompson.master",
+       "label": "East-side bedroom / west door",
+       "bidirectional": true,
+       "state": "available"
+      },
+      {
+       "targetId": "thompson.jennifer",
+       "label": "West-side bedroom / east door",
+       "bidirectional": true,
+       "state": "available"
+      },
+      {
+       "targetId": "thompson.melissa",
+       "label": "East-side bedroom / west door",
+       "bidirectional": true,
+       "state": "available"
+      },
+      {
+       "targetId": "thompson.shared-bath",
+       "label": "South bathroom / north door",
+       "bidirectional": true,
+       "state": "available"
+      },
+      {
+       "targetId": "thompson.jr",
+       "label": "Southwest bedroom / east door",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 28
+    },
+    {
+     "id": "thompson.master",
+     "parentId": "thompson.second-floor",
+     "name": "Master Bedroom",
+     "kind": "room",
+     "description": "The 16 by 14 ft master bedroom occupies the east/northeast upstairs area. Its west door opens to the center hall. A king bed stands against the north wall. East windows look over the patio, pool, path and live oaks toward the green woodshop roof. The en-suite bathroom is north of the bedroom.",
+     "modelMemory": "The west hall-door lock does not catch. The bathroom's south-facing door opens back into this bedroom and its lock also fails to catch. Closed doors still limit sight and access narratively; a faulty lock does not make them permanently open. Do not assign occupants beyond the supplied room designation.",
+     "icon": "🛏️",
+     "referenceImageId": "global-gallery:mxlPyJBt2aSBOk1ti8SUl",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "i657qBPbBaAnczSwB473A",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 70,
+      "y": 40
+     },
+     "links": [],
+     "status": "active",
+     "sortOrder": 29
+    },
+    {
+     "id": "thompson.master-bath",
+     "parentId": "thompson.master",
+     "name": "Master Bathroom",
+     "kind": "room",
+     "description": "The 8 by 10 ft en-suite bathroom sits north of the master bedroom; its south door leads back into the bedroom. A double vanity occupies the west wall, with a medicine cabinet at the right sink. The shower is on the east wall and a linen closet in the northwest corner.",
+     "modelMemory": "The door lock does not catch. Concealed medicine: the Tylenol bottle in the medicine cabinet at the right sink contains Viagra. Its actual contents are not visible merely from the label. Concealed liquor: a pint is behind spare towels in the northwest linen closet. Preserve both exact hiding places without inventing dosages, ownership or use.",
+     "icon": "🚿",
+     "referenceImageId": "global-gallery:i-7T2Ag6ztOCLf1Nd1pfj",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "i657qBPbBaAnczSwB473A"
+     ],
+     "childPresentation": "list",
+     "links": [],
+     "status": "active",
+     "sortOrder": 30
+    },
+    {
+     "id": "thompson.linen",
+     "parentId": "thompson.master-bath",
+     "name": "Linen Closet",
+     "kind": "room",
+     "description": "The linen closet is in the northwest corner of the master bathroom, near the west-wall double vanity. Spare towels are stored here.",
+     "modelMemory": "A pint of liquor is hidden behind the spare towels. It is a concealed item rather than an automatically noticed feature. Closet size and door style are unspecified.",
+     "icon": "🧻",
+     "referenceImageId": "global-gallery:i-7T2Ag6ztOCLf1Nd1pfj",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "i657qBPbBaAnczSwB473A"
+     ],
+     "childPresentation": "list",
+     "links": [],
+     "status": "active",
+     "sortOrder": 31
+    },
+    {
+     "id": "thompson.jennifer",
+     "parentId": "thompson.second-floor",
+     "name": "Jennifer’s Bedroom",
+     "kind": "room",
+     "description": "Jennifer's 12 by 11 ft bedroom occupies the northwest second floor. Its east door opens onto the central hall. A west window faces the street and a north window overlooks the 8 ft north side yard.",
+     "modelMemory": "Furniture, age, current occupancy and lock condition are unspecified. Maintain both distinct sightlines: west street, north side yard.",
+     "icon": "🛏️",
+     "referenceImageId": "global-gallery:TzK0xMyVmmsluSuGCPxjk",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "i657qBPbBaAnczSwB473A"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 28,
+      "y": 25
+     },
+     "links": [],
+     "status": "active",
+     "sortOrder": 32
+    },
+    {
+     "id": "thompson.melissa",
+     "parentId": "thompson.second-floor",
+     "name": "Melissa’s Bedroom",
+     "kind": "room",
+     "description": "Melissa's 12 by 11 ft bedroom is on the east side of the second floor, south of the master bedroom. Its west door opens onto the hall. The east window looks toward the south pool deck, south-run gate, gravel path and detached woodshop.",
+     "modelMemory": "Furniture, age, current occupancy and lock condition are unspecified. The window establishes a view, not a second entrance or direct route through the fence.",
+     "icon": "🛏️",
+     "referenceImageId": "global-gallery:BaK0O6RhMD8UGd6iBEyao",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "i657qBPbBaAnczSwB473A",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 70,
+      "y": 65
+     },
+     "links": [],
+     "status": "active",
+     "sortOrder": 33
+    },
+    {
+     "id": "thompson.shared-bath",
+     "parentId": "thompson.second-floor",
+     "name": "Kids’ Shared Bathroom",
+     "kind": "room",
+     "description": "A 6 by 9 ft shared bathroom sits center-south upstairs. Its north-facing door opens onto the hall. Inside are a tub-shower, single vanity and toilet.",
+     "modelMemory": "The door lock does not catch. This is a closed-but-unsecured door when shut, not a permanently open doorway. Do not invent which person is inside or assign ages from the room label.",
+     "icon": "🛁",
+     "referenceImageId": "global-gallery:zv1GcJf8Tt1Hdkw-0phLk",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "i657qBPbBaAnczSwB473A"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 53,
+      "y": 84
+     },
+     "links": [],
+     "status": "active",
+     "sortOrder": 34
+    },
+    {
+     "id": "thompson.jr",
+     "parentId": "thompson.second-floor",
+     "name": "Jr’s Bedroom",
+     "kind": "room",
+     "description": "Jr's 12 by 12 ft bedroom occupies the southwest upstairs corner and is described as over the garage. Its east door opens to the hall. The west window overlooks the street and driveway; the south window faces the south fence. A 3 ft closet with bi-fold doors stands on the north wall.",
+     "modelMemory": "The 3 ft closet measurement is retained without assuming whether it is width or depth. The normal bedroom description does not disclose what lies beyond its closet. Vertical alignment over the attached garage is source canon but not resolved by the schematic.",
+     "icon": "🛏️",
+     "referenceImageId": "global-gallery:kMUAgenhqNI8bGWd6YhOF",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "i657qBPbBaAnczSwB473A"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 28,
+      "y": 72
+     },
+     "links": [],
+     "status": "active",
+     "sortOrder": 35
+    },
+    {
+     "id": "thompson.jr-closet",
+     "parentId": "thompson.jr",
+     "name": "Jr’s Closet",
+     "kind": "room",
+     "description": "A 3 ft closet on the north wall of Jr's southwest upstairs bedroom closes with bi-fold doors. A light switch is set in the left jamb; a rear panel forms the back of the enclosure.",
+     "modelMemory": "Concealed access: the left-jamb light switch is a biometric lock controlling the rear panel, which leads to Jr's lab below the foundation and past the survey lines. The lab is a separate root to prevent containment shortcuts. Its hidden link must be changed to available in the map editor after an authorized biometric opening is established in the scene. No automatic authentication or unlock trigger is installed. Do not create a duplicate lab with discovery or invent a shaft, stair or lift geometry.",
+     "icon": "🚪",
+     "referenceImageId": "global-gallery:ACkEho4TqYUbk2vGUbs9y",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "i657qBPbBaAnczSwB473A"
+     ],
+     "childPresentation": "list",
+     "links": [
+      {
+       "targetId": "thompson.lab",
+       "label": "Rear panel / biometric access",
+       "bidirectional": false,
+       "state": "hidden"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 36
+    },
+    {
+     "id": "thompson.garage",
+     "parentId": "thompson.house",
+     "name": "Garage",
+     "kind": "building",
+     "description": "The 22 by 22 ft attached garage is south of the house, with two vehicle bays opening west onto the concrete driveway. The north interior door leads to laundry; an east service door opens onto the patio's south end.",
+     "modelMemory": "Concealed inventory: a liquor bottle is taped to a joist above the south bay. It is not automatically noticed from the floor. Jr's upstairs room is described as over this garage, though the source's floor footprint and kitchen/laundry alignment do not establish a consistent measured overlay. Do not invent vehicles in the bays or tool inventories.",
+     "icon": "🚗",
+     "referenceImageId": "global-gallery:WBxNFyLk2aN8FxXu-8qDZ",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "2QEN9OQvbpKI0ytDVggSw"
+     ],
+     "childPresentation": "list",
+     "links": [
+      {
+       "targetId": "thompson.patio",
+       "label": "East garage service door",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 37
+    },
+    {
+     "id": "thompson.backyard",
+     "parentId": "thompson.lot",
+     "name": "Backyard",
+     "kind": "place",
+     "description": "Behind the east wall of the house, the patio leads toward the fenced pool and rear lawn. A 3 ft south walkway and gravel route connect the patio, south pool gate and deck area, southeast lawn, three live oaks and the west-facing woodshop door. The north and east wood fences bound the rear grass.",
+     "modelMemory": "The pool fence is black aluminum, 4 ft high, with the house wall forming its west side. The only specified pool gate is in the south run and self-latches. Trips from the enclosed deck back to the southeast lawn must reuse that gate unless a later scene explicitly establishes a supported change. No second pool gate is invented.",
+     "icon": "🌳",
+     "referenceImageId": "global-gallery:OKUX5y8BR7r-mrap2Gwks",
+     "useReferenceImage": true,
+     "mapBackgroundImageId": "global-gallery:e7zWuuQbYo3XR1fNlXRjI",
+     "mapBackgroundPosition": {
+      "x": 50,
+      "y": 50
+     },
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "map",
+     "placement": {
+      "x": 73,
+      "y": 49
+     },
+     "links": [],
+     "status": "active",
+     "sortOrder": 38
+    },
+    {
+     "id": "thompson.patio",
+     "parentId": "thompson.backyard",
+     "name": "Patio",
+     "kind": "place",
+     "description": "A patio 16 ft deep by 28 ft wide lies directly east of the family-room slider. The grill stands at its north end and a table with four chairs at its center. The south end reaches the laundry east door and garage east service door. The pool's west water edge is stated to be 8 ft east of the patio.",
+     "modelMemory": "Keep the grill north, seating center and service-door circulation south. The source does not fix all widths or fence offsets, so do not derive a new measured clearance by combining the patio gap and deck width.",
+     "icon": "🍽️",
+     "referenceImageId": "global-gallery:NjOuMI-KOhaUsXUuW3KSa",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 19,
+      "y": 46
+     },
+     "links": [
+      {
+       "targetId": "thompson.south-walk",
+       "label": "South patio approach",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 39
+    },
+    {
+     "id": "thompson.pool-enclosure",
+     "parentId": "thompson.backyard",
+     "name": "Pool Enclosure",
+     "kind": "place",
+     "description": "A 4 ft black aluminum fence surrounds the backyard pool area, using the house wall as its west side. A self-latching gate in the south run stands on the walkway. Inside is the rectangular pool and its 3 ft concrete deck on all four sides.",
+     "modelMemory": "Fence and gate describe an actual barrier in the scene. Native containment navigation does not simulate unlatching the gate; narrate the south-gate route for entry and exit. Self-latching does not establish a keyed lock, alarm or automatic map state change. The enclosure may span the patio-side gap; its exact offsets are unspecified.",
+     "icon": "🏊",
+     "referenceImageId": "global-gallery:itJ_KuXkhl_3-uWwjOPT-",
+     "useReferenceImage": true,
+     "mapBackgroundImageId": "global-gallery:NN0UKXh-V3LULhsNJu7Hl",
+     "mapBackgroundPosition": {
+      "x": 50,
+      "y": 50
+     },
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "map",
+     "placement": {
+      "x": 54,
+      "y": 35
+     },
+     "links": [],
+     "status": "active",
+     "sortOrder": 40
+    },
+    {
+     "id": "thompson.pool-gate",
+     "parentId": "thompson.pool-enclosure",
+     "name": "South Pool Gate",
+     "kind": "place",
+     "description": "The single specified pool gate is in the south run of the 4 ft black aluminum fence, on the walkway. It self-latches. The gravel/south-walkway approach is outside; the south concrete deck is inside.",
+     "modelMemory": "Use this same opening to leave the enclosure toward the southeast lawn, oaks and woodshop. No second exit is specified. Closing and latching are narrative actions; the map does not automatically update a latch state.",
+     "icon": "🚪",
+     "referenceImageId": "global-gallery:D2hD5P3PLROuwvmCdnezN",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 43,
+      "y": 91
+     },
+     "links": [
+      {
+       "targetId": "thompson.pool-deck",
+       "label": "Gate to south deck",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 41
+    },
+    {
+     "id": "thompson.pool-deck",
+     "parentId": "thompson.pool-enclosure",
+     "name": "Pool Deck",
+     "kind": "place",
+     "description": "A 3 ft concrete deck runs along all four sides of the 16 by 32 ft rectangular pool. The south side meets the self-latching gate; the house and patio are west. The pool's long axis is north-south.",
+     "modelMemory": "The deck is circulation around the water, not a second route through the fence. Melissa's east window overlooks its south part. Return through the south gate to reach the southeast lawn and shop path.",
+     "icon": "👣",
+     "referenceImageId": "global-gallery:itJ_KuXkhl_3-uWwjOPT-",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 83,
+      "y": 54
+     },
+     "links": [
+      {
+       "targetId": "thompson.pool",
+       "label": "Pool edge",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 42
+    },
+    {
+     "id": "thompson.pool",
+     "parentId": "thompson.pool-enclosure",
+     "name": "Swimming Pool",
+     "kind": "place",
+     "description": "A 16 by 32 ft in-ground rectangular pool runs north-south behind the house. Its north end is 3 ft 6 in deep and its south end 8 ft deep. The west water edge is stated to lie 8 ft east of the patio; a 3 ft concrete deck borders every side.",
+     "modelMemory": "Keep shallow north and deep south. Do not invent a diving board, ladder, stairs, cover, heater or water condition. This node represents the water or pool edge as established by the scene; ordinary map selection does not determine whether someone enters the water.",
+     "icon": "🏊",
+     "referenceImageId": "global-gallery:itJ_KuXkhl_3-uWwjOPT-",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 65,
+      "y": 44
+     },
+     "links": [],
+     "status": "active",
+     "sortOrder": 43
+    },
+    {
+     "id": "thompson.south-walk",
+     "parentId": "thompson.backyard",
+     "name": "South Walkway",
+     "kind": "place",
+     "description": "A 3 ft walkway runs along the south-side backyard approach, tying the patio's south end to the south pool gate and gravel route toward the rear lawn and woodshop.",
+     "modelMemory": "The material is not specified separately from the gravel path. Preserve both named features without inventing a second pool gate or guaranteed survey-accurate clearance beside the garage.",
+     "icon": "🚶",
+     "referenceImageId": "global-gallery:7huyDuiE-WvXSuySUJygb",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 33,
+      "y": 83
+     },
+     "links": [
+      {
+       "targetId": "thompson.gravel",
+       "label": "Gravel approach",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 44
+    },
+    {
+     "id": "thompson.gravel",
+     "parentId": "thompson.backyard",
+     "name": "Gravel Path",
+     "kind": "place",
+     "description": "The gravel route runs from the patio toward the self-latching south pool gate and south deck, then continues via the southeast lawn and three live oaks to the woodshop's west door, which faces the house.",
+     "modelMemory": "Interpret this as connected waypoints, not permission to walk through the pool fence. A visit inside the pool deck returns through the same south gate before continuing toward the oaks and shop. Path width and exact turns are unspecified.",
+     "icon": "👣",
+     "referenceImageId": "global-gallery:7huyDuiE-WvXSuySUJygb",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 64,
+      "y": 83
+     },
+     "links": [
+      {
+       "targetId": "thompson.pool-gate",
+       "label": "South-run pool gate",
+       "bidirectional": true,
+       "state": "available"
+      },
+      {
+       "targetId": "thompson.rear-lawn",
+       "label": "Southeast lawn route",
+       "bidirectional": true,
+       "state": "available"
+      },
+      {
+       "targetId": "thompson.woodshop",
+       "label": "Gravel path to west shop door",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 45
+    },
+    {
+     "id": "thompson.rear-lawn",
+     "parentId": "thompson.backyard",
+     "name": "Rear Lawn",
+     "kind": "place",
+     "description": "Grass occupies the space between the pool enclosure and the east and north perimeter fences. Toward the southeast, the lawn connects with the gravel path, three live oaks and detached woodshop. The north gate returns to the side yard beside the house.",
+     "modelMemory": "No additional gate through the east or south perimeter is supplied. Grass species in the rear is unspecified; St. Augustine is explicit only for the front lawn.",
+     "icon": "🌿",
+     "referenceImageId": "global-gallery:OKUX5y8BR7r-mrap2Gwks",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 75,
+      "y": 14
+     },
+     "links": [
+      {
+       "targetId": "thompson.oaks",
+       "label": "Toward three live oaks",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 46
+    },
+    {
+     "id": "thompson.oaks",
+     "parentId": "thompson.backyard",
+     "name": "Three Live Oaks",
+     "kind": "place",
+     "description": "Three live oaks stand in the southeast corner area of the backyard, beside the route from the pool and southeast lawn to the woodshop. The shop's west-facing door looks back toward the house; its green metal roof is visible from the master bedroom.",
+     "modelMemory": "Trunk positions, canopy spread, benches, swings and lighting are unspecified. Keep all three trees without claiming they fit a measured setback drawing.",
+     "icon": "🌳",
+     "referenceImageId": "global-gallery:OKUX5y8BR7r-mrap2Gwks",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 68,
+      "y": 65
+     },
+     "links": [
+      {
+       "targetId": "thompson.woodshop",
+       "label": "Path to unlocked west shop door",
+       "bidirectional": true,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 47
+    },
+    {
+     "id": "thompson.woodshop",
+     "parentId": "thompson.backyard",
+     "name": "Woodshop",
+     "kind": "building",
+     "description": "A 20 by 24 ft detached woodshop stands in the southeast corner area, 15 ft off the east fence and 12 ft off the south fence. Its unlocked west door faces the house. Two small east windows face the rear fence with curtains drawn. The roof is green metal, with a rusted woodstove chimney on its north pitch.",
+     "modelMemory": "The west door has no lock. Twenty-by-twenty-four orientation is unspecified; diagram dimensions are labels, not a surveyed footprint. Drawn curtains limit the east-window view; they do not imply another exit. Do not expose the concealed room from an exterior description.",
+     "icon": "🛠️",
+     "referenceImageId": "global-gallery:jELyhbILszaBXJAYY3APM",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 86,
+      "y": 66
+     },
+     "links": [],
+     "status": "active",
+     "sortOrder": 48
+    },
+    {
+     "id": "thompson.shop-floor",
+     "parentId": "thompson.woodshop",
+     "name": "Shop Floor",
+     "kind": "room",
+     "description": "Inside the woodshop, a potbelly stove occupies the northeast corner under the north-pitch chimney. A barn-wood workbench stands at center. A table saw, band saw and drill press line the east wall; pegboard tools hang on the north wall and a radio sits on the north workbench. Unfinished work includes a rocking chair, birdhouses and cutting boards. A cabinet occupies a south corner.",
+     "modelMemory": "The west door leads back toward the house and gravel path; two small east windows have curtains drawn. The south-corner cabinet has a false back leading to a concealed private room. Keep the panel a discoverable physical feature rather than announcing its destination on arrival. No corner orientation beyond south is supplied. Its hidden link is on the South Corner Cabinet node and requires manual state change after the panel is opened in the scene.",
+     "icon": "🪚",
+     "referenceImageId": "global-gallery:ek7f9fP8EMMb0snHHBSMJ",
+     "useReferenceImage": true,
+     "mapBackgroundImageId": "global-gallery:BMXkX2NHFvkQ_mc-L4TzY",
+     "mapBackgroundPosition": {
+      "x": 50,
+      "y": 50
+     },
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "map",
+     "links": [],
+     "status": "active",
+     "sortOrder": 49
+    },
+    {
+     "id": "thompson.shop-cabinet",
+     "parentId": "thompson.shop-floor",
+     "name": "South Corner Cabinet",
+     "kind": "place",
+     "description": "A cabinet stands in a south corner of the woodshop, away from the north pegboard and northeast stove. This is the working position at the cabinet rather than another full-size shop room.",
+     "modelMemory": "The cabinet has a false back panel leading into the sanctum. It is concealed but has no stated keyed or biometric lock. Once the scene establishes finding and opening the panel, manually change this node's hidden link to available. The sanctum is stored as a separate root to avoid automatic parent/child access. Do not invent a new copy with discovery.",
+     "icon": "🗄️",
+     "referenceImageId": "global-gallery:WZb4qusEBZkMNuE4vo1iT",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "list",
+     "placement": {
+      "x": 22,
+      "y": 82
+     },
+     "links": [
+      {
+       "targetId": "thompson.sanctum",
+       "label": "False back panel",
+       "bidirectional": false,
+       "state": "hidden"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 50
+    },
+    {
+     "id": "thompson.lab",
+     "parentId": null,
+     "name": "Lower Workspace",
+     "kind": "room",
+     "description": "Jr's lab occupies an underground space below the house foundation and extends past the survey lines. The established access is through the rear panel of the north-wall closet in Jr's southwest upstairs bedroom.",
+     "modelMemory": "Concealed space: do not expose it merely because its node exists. Its closet switch is a biometric lock. The access geometry, depth, dimensions, equipment, purpose and exact underground boundary are not supplied. Do not invent a stair, lift or a neighbor entrance. This separate root is a mechanical access decision, not a claim that the lab is geographically detached. An available one-way exit returns to Jr's Closet.",
+     "icon": "🔧",
+     "referenceImageId": "global-gallery:VY6Z3xjbFIouC8sIOvxSB",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "i657qBPbBaAnczSwB473A"
+     ],
+     "childPresentation": "list",
+     "links": [
+      {
+       "targetId": "thompson.jr-closet",
+       "label": "Return through rear panel",
+       "bidirectional": false,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 51
+    },
+    {
+     "id": "thompson.sanctum",
+     "parentId": null,
+     "name": "Private Room",
+     "kind": "room",
+     "description": "The concealed sanctum is entered through the false back of the woodshop's south-corner cabinet. It contains a leather recliner, mini-fridge with bourbon and whiskey, a lockbox holding deployment photos, a field journal, and an ashtray with cigars.",
+     "modelMemory": "Reveal this room only after the cabinet access is established. It has no supplied dimensions, orientation, secondary exit or window. The lockbox is a distinct container; its key, combination, current lock state and photo contents are unspecified. Do not narrate the journal's text or deployments without source. An available one-way exit returns to the cabinet. This root separation prevents containment bypass, not author access to the file.",
+     "icon": "🪑",
+     "referenceImageId": "global-gallery:gRtgXpHxPZghjIU42UwLR",
+     "useReferenceImage": true,
+     "lorebookEntryIds": [
+      "B6JIq4lnuV-k9BriQ2gXv",
+      "pGdsq_3OOxCwPoq8-fGRC"
+     ],
+     "childPresentation": "list",
+     "links": [
+      {
+       "targetId": "thompson.shop-cabinet",
+       "label": "Return through cabinet panel",
+       "bidirectional": false,
+       "state": "available"
+      }
+     ],
+     "status": "active",
+     "sortOrder": 52
+    }
+   ],
+   "startingLocationId": "thompson.stoop",
+   "revision": 0
+  },
+  "hierarchyProfile": {
+   "version": 1,
+   "mode": "custom",
+   "name": "Thompson Home",
+   "types": [
+    {
+     "id": "property",
+     "label": "Property",
+     "baseKind": "region"
+    },
+    {
+     "id": "grounds",
+     "label": "Grounds / Exterior",
+     "baseKind": "place"
+    },
+    {
+     "id": "building",
+     "label": "Building",
+     "baseKind": "building"
+    },
+    {
+     "id": "level",
+     "label": "House Level",
+     "baseKind": "floor"
+    },
+    {
+     "id": "room",
+     "label": "Room / Interior",
+     "baseKind": "room"
+    },
+    {
+     "id": "passage",
+     "label": "Passage / Threshold",
+     "baseKind": "place"
+    },
+    {
+     "id": "vehicle",
+     "label": "Vehicle Position",
+     "baseKind": "place"
+    },
+    {
+     "id": "utility",
+     "label": "Equipment Position",
+     "baseKind": "place"
+    },
+    {
+     "id": "water",
+     "label": "Pool",
+     "baseKind": "place"
+    }
+   ],
+   "locationTypeIds": {
+    "thompson.property": "property",
+    "thompson.lot": "grounds",
+    "thompson.frontage": "grounds",
+    "thompson.lawn": "grounds",
+    "thompson.driveway": "grounds",
+    "thompson.pickup": "vehicle",
+    "thompson.walk": "passage",
+    "thompson.north-yard": "grounds",
+    "thompson.north-gate": "passage",
+    "thompson.south-yard": "grounds",
+    "thompson.ac-pad": "utility",
+    "thompson.fence": "grounds",
+    "thompson.house": "building",
+    "thompson.west-elevation": "grounds",
+    "thompson.stoop": "passage",
+    "thompson.first-floor": "level",
+    "thompson.foyer": "room",
+    "thompson.coat-closet": "room",
+    "thompson.stairs": "passage",
+    "thompson.landing": "passage",
+    "thompson.powder": "room",
+    "thompson.living": "room",
+    "thompson.dining": "room",
+    "thompson.family": "room",
+    "thompson.kitchen": "room",
+    "thompson.pantry": "room",
+    "thompson.laundry": "room",
+    "thompson.second-floor": "level",
+    "thompson.hall": "passage",
+    "thompson.master": "room",
+    "thompson.master-bath": "room",
+    "thompson.linen": "room",
+    "thompson.jennifer": "room",
+    "thompson.melissa": "room",
+    "thompson.shared-bath": "room",
+    "thompson.jr": "room",
+    "thompson.jr-closet": "room",
+    "thompson.garage": "building",
+    "thompson.backyard": "grounds",
+    "thompson.patio": "grounds",
+    "thompson.pool-enclosure": "grounds",
+    "thompson.pool-gate": "passage",
+    "thompson.pool-deck": "grounds",
+    "thompson.pool": "water",
+    "thompson.south-walk": "passage",
+    "thompson.gravel": "passage",
+    "thompson.rear-lawn": "grounds",
+    "thompson.oaks": "grounds",
+    "thompson.woodshop": "building",
+    "thompson.shop-floor": "room",
+    "thompson.shop-cabinet": "grounds",
+    "thompson.lab": "room",
+    "thompson.sanctum": "room"
+   },
+   "showConnections": true,
+   "linkPresentations": {}
+  }
+ },
+ "revision": 2,
+ "createdAt": "2026-11-09T02:02:24.112Z",
+ "updatedAt": "2026-11-09T02:03:18.972Z"
+}

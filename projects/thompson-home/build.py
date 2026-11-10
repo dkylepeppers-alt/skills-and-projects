@@ -71,18 +71,25 @@ def main():
             state["lore"][key] = created[0]["id"]
             STATE.write_text(json.dumps(state, indent=1))
         lore_ids[key] = state["lore"].get(key, f"pending-lore-{key}")
-    art_ids = {}
-    for pid in maps.M:
-        if APPLY and pid not in state["art"]:
-            png = HERE / "art" / "background" / f"{pid}.png"
-            res = curl("POST", "/global-gallery/upload", form=[
-                f"file=@{png};type=image/png", "width=1254", "height=1254",
-                f"prompt=Schematic map background for {pid} (Thompson Home world map); generated from maps.py",
-                "provider=local-svg", "model=rsvg-convert"])
-            image = res.get("image") or res.get("data") or res
-            state["art"][pid] = image["id"]
-            STATE.write_text(json.dumps(state, indent=1))
-        art_ids[pid] = "global-gallery:" + state["art"].get(pid, f"pending-art-{pid}")
+    # Seedream 5.5 art (art-final/). state["art"] holds the superseded schematic uploads.
+    def upload(path, prompt, w, h):
+        res = curl("POST", "/global-gallery/upload", form=[
+            f"file=@{path};type=image/jpeg", f"width={w}", f"height={h}", f"prompt={prompt}",
+            "provider=spicyapi", "model=bytedance/seedream-5.5/edit"])
+        image = res.get("image") or res.get("data") or res
+        if "id" not in image:
+            sys.exit(f"upload failed for {path.name}: {json.dumps(res)[:300]}")
+        return image["id"]
+    art_ids, ref_ids = {}, {}
+    for kind, folder, ids, w, h in (("bg", "background", art_ids, 2048, 2048), ("ref", "reference", ref_ids, 1536, 1024)):
+        store = state.setdefault(kind, {})
+        for path in sorted((HERE / "art-final" / folder).glob("*.jpg")):
+            lid = path.stem
+            if APPLY and lid not in store:
+                store[lid] = upload(path, f"Thompson Home world map {folder} for {lid}", w, h)
+                STATE.write_text(json.dumps(state, indent=1))
+            ids[lid] = "global-gallery:" + store.get(lid, f"pending-{kind}-{lid}")
+    assert set(art_ids) == set(maps.M), set(art_ids) ^ set(maps.M)
 
     def lore_list(keys):
         return [lore_ids[k] for k in keys]
@@ -110,6 +117,7 @@ def main():
             **({"modelMemory": n["mem"]} if n["mem"] else {}),
             "icon": n["icon"],
             "lorebookEntryIds": lore_list(n["lore"]),
+            **({"referenceImageId": ref_ids[n["id"]], "useReferenceImage": True} if n["id"] in ref_ids else {}),
             "childPresentation": n["pres"],
             **({"layerOrder": n["layer"]} if n["layer"] is not None else {}),
             "links": [], "status": "active", "sortOrder": 100 + index,

@@ -12,6 +12,7 @@ Intended GitHub home: `dkylepeppers-alt/skills-and-projects` (private).
 | `projects/nevermore/releases/v2/` | Latest importable Nevermore map, handoff, checksums, and original verification reports |
 | `projects/nevermore/toolkit/` | Frozen map assembly tools for this release |
 | `projects/intoxication-voice-keeper/` | Custom Agent that tracks intoxication and keeps each character's voice while drunk or high |
+| `projects/character-voice-keeper/` | Custom Agent that profiles each character's voice, catches drift and keeps every character sounding like themselves |
 | `projects/modern-life-sim-cheats/` | Personal Cheats module and patch script for an installed Modern Life Sim |
 | `scripts/` | Repository validation and initial GitHub publishing |
 | `docs/` | Provenance and repository decisions |

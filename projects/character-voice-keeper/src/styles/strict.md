@@ -1,0 +1,1 @@
+- Emphasis: strict. Check every speaking line in the newest reply against the profiles, including small slips (a borrowed word, a wrong form of address, one sentence too long). Give each likely speaker 3 or 4 cues and one contrast line in every group scene, even when no drift was found.

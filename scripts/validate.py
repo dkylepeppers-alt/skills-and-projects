@@ -63,7 +63,9 @@ def main():
     for version in ['v1.0.0', 'v1.0.1']:
         verify_checksums(PROJECT.parent / 'intoxication-voice-keeper/releases' / version)
     subprocess.run(['node', 'skills/marinara-world-maps/scripts/validate-map.mjs', str(pack_path)], cwd=ROOT, check=True)
-    print(f'PASS: {count} JSON files; both skills; release checksums; 79 locations; 82 images; extension tools; life sim cheats; intoxication agent.')
+    subprocess.run(['node', '--test', 'projects/character-voice-keeper/tests/agent.test.mjs'], cwd=ROOT, check=True)
+    verify_checksums(PROJECT.parent / 'character-voice-keeper/releases/v1.0.0')
+    print(f'PASS: {count} JSON files; both skills; release checksums; 79 locations; 82 images; extension tools; life sim cheats; intoxication agent; character voice agent.')
     print('Scope: local structural and integrity checks. No live app import or upstream source check in this command.')
 
 

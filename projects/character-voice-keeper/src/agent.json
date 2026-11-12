@@ -1,0 +1,58 @@
+{
+  "type": "character-voice-keeper",
+  "name": "Character Voice Keeper",
+  "folderName": "Character-Voice-Keeper",
+  "description": "Builds a voice profile for every character who speaks, catches drift (characters starting to sound alike, generic phrasing, overused catchphrases, register slips) and tells the writer how each character should sound in the next reply.",
+  "phase": "pre_generation",
+  "resultType": "context_injection",
+  "defaultStyle": "balanced",
+  "presets": [
+    {
+      "id": "balanced",
+      "name": "Balanced",
+      "description": "Steady voice notes for likely speakers, with corrections when drift appears. The default.",
+      "style": "styles/balanced.md"
+    },
+    {
+      "id": "strict",
+      "name": "Strict",
+      "description": "Tighter drift checks and fuller notes, for long chats and large casts that keep blurring together.",
+      "style": "styles/strict.md"
+    },
+    {
+      "id": "lean",
+      "name": "Lean",
+      "description": "Shorter notes for cheap or small agent models; same profiles and drift tracking.",
+      "style": "styles/lean.md"
+    },
+    {
+      "id": "custom",
+      "name": "Custom",
+      "description": "Replace the [YOUR INSTRUCTIONS] line with your own voice rules; keep the rest so profiles keep working.",
+      "style": "styles/custom.md"
+    }
+  ],
+  "promptValues": {
+    "maxSpeakers": "5",
+    "maxDirectiveWords": "220",
+    "signatureLimit": "at most once per reply for each character, and not in every reply"
+  },
+  "settings": {
+    "author": "dkylepeppers-alt",
+    "resultType": "context_injection",
+    "jsonContextOutput": true,
+    "contextSources": {
+      "chatHistory": true,
+      "characters": true,
+      "persona": true,
+      "activatedLorebookEntries": true,
+      "chatSummary": true,
+      "authorNotes": false,
+      "trackerData": false,
+      "recalledMemories": false,
+      "previousOutput": true
+    },
+    "contextSize": 16,
+    "maxTokens": 2048
+  }
+}

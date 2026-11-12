@@ -1,0 +1,1 @@
+- Emphasis: brief. Give each likely speaker one Voice line, plus a Fix line only when drift was found. Skip Contrast unless two voices are actually blurring. Spend effort on accurate profiles, not long notes.

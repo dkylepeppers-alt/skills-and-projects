@@ -1,0 +1,1 @@
+- Emphasis: steady upkeep. Give each likely speaker 2 or 3 cues; spend extra words only where drift was found.

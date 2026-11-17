@@ -130,6 +130,20 @@ test("cleanIn builds state for a new life", () => {
   assert.deepEqual({ ...state }, { ...mod.state(), on: true, wallet: true, knowledge: "7" });
 });
 
+test("cleanIn applies the cheats to the new life at once, before any time passes", () => {
+  const mod = loadModule();
+  const fresh = life();
+  mod.cleanIn({ on: true, wallet: true, floor: "100000", energy: true, fitness: "10", cooking: "3" }, fresh);
+  assert.equal(fresh.wallet.cash, 100000);
+  assert.equal(fresh.skills.fitness, xpFor(10));
+  assert.equal(fresh.skills.cooking, xpFor(3));
+  assert.equal(fresh.skills.charm, 120);
+  assert.equal(fresh.needs.energy, 130);
+  // Without a life (or a half-built one) it still returns the state and writes nothing.
+  assert.equal(mod.cleanIn({ on: true, wallet: true }).wallet, true);
+  assert.doesNotThrow(() => mod.cleanIn({ on: true, wallet: true, energy: true }, {}));
+});
+
 const fakeBundle = 'var q3={id:"adult"};var DQ=[q3];for(let e of DQ)ur().some(t=>t.id===e.id)||fY(e);export{};\n';
 
 test("patcher injects once and refuses unknown or patched bundles", () => {

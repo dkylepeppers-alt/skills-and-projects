@@ -1,0 +1,14 @@
+interface:
+  display_name: Wood Stereotomy
+  short_description: Draft compound wood joinery your shop can actually cut
+  default_prompt: Use $wood-stereotomy to design this joint as parametric CAD with saw
+    settings, layout offsets and templates for a non-CNC shop.
+  icon_small: assets/icon.svg
+  icon_large: assets/icon.svg
+policy:
+  products:
+  - chatgpt
+  - codex
+  - api
+  - atlas
+  allow_implicit_invocation: true

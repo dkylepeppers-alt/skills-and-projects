@@ -41,10 +41,11 @@ def main():
                 f'Missing LFS content: {path.relative_to(ROOT)}. Run git lfs pull.')
         json.loads(path.read_text(encoding='utf-8'))
         count += 1
-    for name in ['marinara-engine-authoring', 'marinara-world-maps']:
+    for name in ['marinara-engine-authoring', 'marinara-world-maps', 'wood-stereotomy']:
         skill = (ROOT / 'skills' / name / 'SKILL.md').read_text(encoding='utf-8')
         require(skill.startswith('---\n') and f'name: {name}' in skill,
                 f'Missing skill frontmatter: {name}')
+    subprocess.run([sys.executable, '-m', 'unittest', 'discover', '-s', 'skills/wood-stereotomy/tests'], cwd=ROOT, check=True)
     verify_checksums(RELEASE)
     pack_path = RELEASE / 'Nevermore-Woodlands-Crypts-v2.world-map.json'
     pack = json.loads(pack_path.read_text(encoding='utf-8'))
@@ -65,7 +66,7 @@ def main():
     subprocess.run(['node', 'skills/marinara-world-maps/scripts/validate-map.mjs', str(pack_path)], cwd=ROOT, check=True)
     subprocess.run(['node', '--test', 'projects/character-voice-keeper/tests/agent.test.mjs'], cwd=ROOT, check=True)
     verify_checksums(PROJECT.parent / 'character-voice-keeper/releases/v1.0.0')
-    print(f'PASS: {count} JSON files; both skills; release checksums; 79 locations; 82 images; extension tools; life sim cheats; intoxication agent; character voice agent.')
+    print(f'PASS: {count} JSON files; three skills; wood-stereotomy geometry tests; release checksums; 79 locations; 82 images; extension tools; life sim cheats; intoxication agent; character voice agent.')
     print('Scope: local structural and integrity checks. No live app import or upstream source check in this command.')
 
 

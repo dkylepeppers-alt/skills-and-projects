@@ -23,3 +23,10 @@ Original release reports and handoff preserve their historical paths. Those path
 identify the original verification run and are not instructions to recreate that
 workspace. Use the project README for current build paths. The archive hash proves
 release integrity; it does not prove a live Marinara app import.
+
+`skills/wood-stereotomy/` was written in this repository from two reports: the supplied
+*Stereotomy in wood* design-principles report and a follow-up deep dive on drafting it in
+CAD for non-CNC tools. Its scripts are original; its modeling conventions follow the
+installed `cad` skill, and no upstream code is copied. Its geometry tests run on the
+standard library in CI; the build123d model tests and examples need the pinned packages
+in its `requirements.txt` and are skipped when those are absent.

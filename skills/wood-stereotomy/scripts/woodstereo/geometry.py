@@ -101,6 +101,26 @@ def corner_offsets(n: Vec, frame: Frame, size_v: float, size_w: float) -> dict[s
     }
 
 
+def waste_direction(n: Vec, frame: Frame) -> int:
+    """+1 when the waste lies toward +u of the cut, -1 when it lies toward -u.
+
+    Convention, shared with model.trim: the cut normal points at the waste. An end cut at
+    the far (+u) end of a member has n . u > 0; one at the near end has n . u < 0."""
+    nu = dot(unit(n), frame.u)
+    if abs(nu) < 1e-9:
+        raise ValueError("cut plane is parallel to the member axis: no end cut exists")
+    return 1 if nu > 0 else -1
+
+
+def layout_lengths(n: Vec, frame: Frame, size_v: float, size_w: float,
+                   datum_back: float) -> dict[str, float]:
+    """Distance L along each corner edge from a square datum line on the kept stock,
+    `datum_back` from the centerline point, to the cut. Waste is always beyond L."""
+    side = waste_direction(n, frame)
+    return {k: datum_back + side * t
+            for k, t in corner_offsets(n, frame, size_v, size_w).items()}
+
+
 def face_trace_angles(n: Vec, frame: Frame) -> dict[str, float]:
     """Angle from square (degrees) of the cut's trace on each pair of faces.
 

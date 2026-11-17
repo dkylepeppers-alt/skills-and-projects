@@ -30,8 +30,9 @@ post = m.box_at((POST[0] / 2, 0.0, 0.0), POST)
 # ---- shop data
 text = sheet.end_cut_sheet("Brace foot at the post face", INTERFACE_NORMAL, frame, SIZE_V,
                            SIZE_W, shop_profile, DATUM_BACK)
-offsets = g.corner_offsets(INTERFACE_NORMAL, frame, SIZE_V, SIZE_W)
-lines, labels = templates.end_cut_development(offsets, SIZE_V, SIZE_W, DATUM_BACK)
+lengths = g.layout_lengths(INTERFACE_NORMAL, frame, SIZE_V, SIZE_W, DATUM_BACK)
+lines, labels = templates.end_cut_development(
+    lengths, SIZE_V, SIZE_W, g.waste_direction(INTERFACE_NORMAL, frame) > 0)
 templates.write_dxf(folder / "brace-foot-development.dxf", lines)
 templates.write_svg(folder / "brace-foot-development.svg", lines, labels)
 normal, in_plane = g.force_components(INTERFACE_NORMAL, frame.u)

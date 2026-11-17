@@ -24,7 +24,10 @@ apothem = INSIDE_BOTTOM / (2 * tan(half))        # center to inside face at the 
 # ---- model one side on the -y side as an intersection of half-spaces, then copy round
 inward = (0.0, cos(s), sin(s))                   # inside-face normal, pointing into the box
 outward = (0.0, -cos(s), -sin(s))
-side = m.box_at((0.0, -apothem, HEIGHT / 2), (40.0, 40.0, HEIGHT))          # level top, bottom
+reach = HEIGHT * tan(s) + THICKNESS / cos(s)      # how far the outside top sits beyond the inside bottom
+span_x = 2 * (panel.outside_top + 1.0)           # wider than the longest edge
+span_y = 2 * (reach + 1.0)                       # deeper than the panel's lean and thickness
+side = m.box_at((0.0, -apothem, HEIGHT / 2), (span_x, span_y, HEIGHT))    # level top, bottom
 side = m.trim(side, (0.0, -apothem, 0.0), inward)                            # inside face
 side = m.trim(side, (0.0, -apothem - THICKNESS / cos(s), 0.0), outward)      # outside face
 miter_r = (cos(half), sin(half), 0.0)            # corner planes contain the vertical axis
@@ -38,6 +41,7 @@ along = (1.0, 0.0, 0.0)                          # panel length
 up_slant = (0.0, -sin(s), cos(s))                # up the panel face
 tilt, miter = g.saw_settings(miter_r, along, up_slant, inward)   # panel lying on a face
 assert abs(tilt - panel.tilt) < 1e-6 and abs(miter - panel.miter) < 1e-6
+assert abs(m.bbox_in(side)[0] - panel.outside_top) < 1e-4, "starting box clipped the panel"
 verdicts, method = shop.plan_cut(shop_profile, [g.Orientation("face", THICKNESS, tilt, miter)])
 
 text = "\n".join([
@@ -63,6 +67,8 @@ finish(folder, text, {
         round(m.interference_in3(sides[names[0]], sides[names[1]]), 6),
     "miter contact area, sq in": round(m.contact_area_in2(sides[names[0]], sides[names[1]]), 3),
     "closed-form settings match the model's miter plane": True,
+    "outside top edge measured on the model, in": round(m.bbox_in(side)[0], 3),
+    "outside top edge expected, in": round(panel.outside_top, 3),
     "0.25 deg miter-gauge error over the slant, in": round(g.angle_error_offset(panel.slant, 0.25), 4),
     "0.25 deg tilt error across the thickness, in": round(g.angle_error_offset(THICKNESS, 0.25), 4),
 })

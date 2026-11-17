@@ -62,7 +62,9 @@ the project, edit it and pass its path to `shop.load_shop()`.
    corner offsets from a square datum line, trace angles for the bevel gauge, and tilt and
    miter for each way the blank can lie on the table, each checked against the shop
    profile. Cuts that fit no orientation get a hand method and, where useful, a guide block
-   or carrier wedge modeled in the same file. Never set the blade to the trace angle on the
+   or carrier wedge modeled in the same file. Give every cut normal pointing at the waste, the same
+   convention as `model.trim`: the sheet and the template take the waste side and the
+   datum side from it. Never set the blade to the trace angle on the
    upright edge: that is not the tilt unless the miter is zero.
 8. **Check material and assembly.** Grain arrow on every part; no short grain behind a
    loaded lip, peg or tenon; grain direction on both sides of each bearing face; seasonal
@@ -75,7 +77,7 @@ the project, edit it and pass its path to `shop.load_shop()`.
 10. **Look at it.** Write `model.save_preview_svg` and view the result, or hand the STEP to
     `cad-viewer` when installed. Do not skip the visual check because the numbers passed.
 11. **Deliver.** STEP file, generator source, shop sheet (Markdown), and 1:1 templates
-    (`templates.end_cut_development`, DXF and SVG) where a template helps. Run the
+    (`geometry.layout_lengths` into `templates.end_cut_development`, DXF and SVG) where a template helps. Run the
     shop-ready checklist in `references/verification.md` and report each item honestly.
 
 ## Reporting rules

@@ -59,12 +59,34 @@ class Brace(unittest.TestCase):
         text = sheet.end_cut_sheet("Brace foot", self.n, self.f, 1.5, 3.5, s, 2.0)
         self.assertIn("3 13/32", text)
         lines, labels = templates.end_cut_development(
-            g.corner_offsets(self.n, self.f, 1.5, 3.5), 1.5, 3.5, 2.0)
+            g.layout_lengths(self.n, self.f, 1.5, 3.5, 2.0), 1.5, 3.5)
+        labels.append((0.0, -0.3, "Rail & stile <A>"))
         with tempfile.TemporaryDirectory() as d:
             dxf = templates.write_dxf(Path(d) / "t.dxf", lines)
             svg = templates.write_svg(Path(d) / "t.svg", lines, labels)
             self.assertTrue(dxf.read_text().rstrip().endswith("EOF"))
             self.assertIn('width="', svg.read_text())
+            import xml.etree.ElementTree as ET
+            ET.parse(svg)                      # labels with & and < must stay valid XML
+
+    def test_waste_side_follows_the_normal(self):
+        """A cut at the near end keeps the +u side, so L runs back from a datum ahead of it."""
+        f = g.member_frame(0, 0)
+        tilted = (-1.0, 0.0, 0.5)             # near-end cut, normal pointing at the waste
+        self.assertEqual(g.waste_direction(tilted, f), -1)
+        self.assertEqual(g.waste_direction((1.0, 0.0, 0.0), f), 1)
+        near = g.layout_lengths(tilted, f, 1.5, 3.5, 2.0)
+        far = g.layout_lengths((1.0, 0.0, -0.5), f, 1.5, 3.5, 2.0)   # same plane, other side kept
+        for k in "ABCD":
+            self.assertAlmostEqual(near[k] + far[k], 4.0, 9)
+        # top (+w) corners: the plane leans toward +u going up, so the kept +u stock is
+        # shorter there: L from a datum 2 in ahead is 2 - 0.875
+        self.assertAlmostEqual(near["C"], 2 - 0.875, 9)
+        text = sheet.end_cut_sheet("Near end", tilted, f, 1.5, 3.5, shop.load_shop(), 2.0)
+        self.assertIn("toward -u", text)
+        lines, _ = templates.end_cut_development(near, 1.5, 3.5, waste_toward_plus_u=False)
+        self.assertEqual(lines[1 + 5][:2], (0.0, near["A"]))          # first trace starts at A
+        self.assertAlmostEqual(lines[1 + 5][2], 3.5)                  # and crosses the -v face
 
 
 class Polygons(unittest.TestCase):

@@ -35,7 +35,7 @@ onto the stock. CAD replaces the first two; the third still has to be designed.
 | --- | --- | --- |
 | Epure, the full-size floor drawing used to mark timbers ([French Timber Framing](https://frenchtimberframing.blogspot.com/2014)) | Axes and intersections at 1:1 | Model space; the parameter skeleton |
 | Rabattement: turning a plane about a fold line into the drawing plane ([Rabattement](https://wiki.riteme.site/wiki/Folding_line)); the herse is that view of a roof plane | True shape of a face | A view normal to the face; `templates.end_cut_development` |
-| Rembarrement: carrying points from plan to elevation to the timber; straight, square stock only ([French Timber Framing](https://frenchtimberframing.blogspot.com/2014)) | Points on the stock | `geometry.corner_offsets` from a datum line |
+| Rembarrement: carrying points from plan to elevation to the timber; straight, square stock only ([French Timber Framing](https://frenchtimberframing.blogspot.com/2014)) | Points on the stock | `geometry.layout_lengths` from a datum line |
 | Rabattement surface for hip and jack rafters ([SBE Builders](https://sbebuilders.blogspot.com/2013/04/traditional-layout-using-rabattement.html)) | Edge and side bevels | `geometry.face_trace_angles` |
 | Kiku-jutsu and the sashigane's back scale, devised for roof corners ([JAANUS kiku](https://projects.mcah.columbia.edu/jaanus/node/3075), [JAANUS kanejaku](https://aisf.or.jp/~jaanus/deta/k/kanejaku.htm)) | Hip proportions without drawing | Closed-form functions in `geometry.py` |
 | Square rule | Repeatable joints on slightly irregular stock | Housing to a defined internal section, measured from reference faces |
@@ -55,5 +55,7 @@ if needed, and measure the 2 in calibration square with a steel rule before usin
 other line ([Docuslice](https://docuslice.com/blog/2026-08-05-How-to-Print-a-Life-Size-Template-at-1-to-1-Scale/)).
 Label each template with the part, its reference face and its grain direction.
 
-The development is drawn as seen from outside the blank, going round A, B, C, D, A with the
-cut end toward the top of the sheet, so the paper wraps the stock the right way round.
+The development is drawn as seen from outside the blank with the cut end toward the top of
+the sheet, so the paper wraps the stock the right way round: A, B, C, D, A when the waste
+is toward +u, the mirror order when it is toward -u. The cut normal always points at the
+waste (`geometry.waste_direction`), the same convention as `model.trim`.

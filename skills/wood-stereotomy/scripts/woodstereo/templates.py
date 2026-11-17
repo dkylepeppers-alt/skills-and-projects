@@ -6,8 +6,7 @@ print with a steel rule before trusting any other line.
 from __future__ import annotations
 
 from pathlib import Path
-
-from .geometry import CORNERS
+from xml.sax.saxutils import escape
 
 Line = tuple[float, float, float, float]
 Label = tuple[float, float, str]
@@ -44,7 +43,7 @@ def write_svg(path: str | Path, lines: list[Line], labels: list[Label] = (),
              for a, b, c, d in lines]
     body.append("</g>")
     body += [f'<text x="{x:.4f}" y="{fy(y):.4f}" font-size="0.14" font-family="sans-serif">'
-             f"{text}</text>" for x, y, text in labels]
+             f"{escape(text)}</text>" for x, y, text in labels]
     body.append("</svg>")
     path = Path(path)
     path.write_text("\n".join(body) + "\n", encoding="utf-8")
@@ -57,24 +56,30 @@ def calibration_square(x: float, y: float, size: float = 2.0) -> tuple[list[Line
     return lines, [(x + 0.08, y + size / 2, f"{size:g} in square: measure before use")]
 
 
-def end_cut_development(offsets: dict[str, float], size_v: float, size_w: float,
-                        datum_back: float, face_names: tuple[str, str, str, str] =
-                        ("-w FACE", "+v FACE", "+w FACE", "-v FACE")
-                        ) -> tuple[list[Line], list[Label]]:
+def end_cut_development(lengths: dict[str, float], size_v: float, size_w: float,
+                        waste_toward_plus_u: bool = True) -> tuple[list[Line], list[Label]]:
     """Four faces of a blank unfolded side by side, seen from outside, with the cut traces.
 
-    The x axis runs round the blank A-B-C-D-A; y is distance along the member from a square
-    datum line `datum_back` behind the point where the centerline meets the cut plane.
-    `offsets` comes from geometry.corner_offsets. Waste is on the +y side of each trace.
+    `lengths` comes from geometry.layout_lengths: distance along each corner edge from a
+    square datum line on the kept stock to the cut. y on the sheet is that distance, so the
+    cut end is toward the top and waste is above each trace. x runs round the blank so the
+    paper wraps the stock the right way: A-B-C-D-A when the waste is toward +u, and the
+    mirror order A-D-C-B-A when it is toward -u (geometry.waste_direction).
     """
-    order = [c[0] for c in CORNERS] + ["A"]
-    widths = [size_v, size_w, size_v, size_w]
+    if waste_toward_plus_u:
+        order = ["A", "B", "C", "D", "A"]
+        widths = [size_v, size_w, size_v, size_w]
+        names = ["-w FACE", "+v FACE", "+w FACE", "-v FACE"]
+    else:
+        order = ["A", "D", "C", "B", "A"]
+        widths = [size_w, size_v, size_w, size_v]
+        names = ["-v FACE", "+w FACE", "+v FACE", "-w FACE"]
     xs = [0.0]
     for width in widths:
         xs.append(xs[-1] + width)
-    ls = {k: datum_back + t for k, t in offsets.items()}
+    ls = lengths
     if min(ls.values()) < 0:
-        raise ValueError("datum_back is too small: a trace falls behind the datum line")
+        raise ValueError("datum is too close: a trace falls behind the datum line")
     top = max(ls.values()) + 0.5
     lines: list[Line] = [(xs[0], 0, xs[-1], 0)]                      # square datum line
     lines += [(x, 0, x, top) for x in xs]                            # arrises
@@ -82,8 +87,9 @@ def end_cut_development(offsets: dict[str, float], size_v: float, size_w: float,
     for i in range(4):
         a, b = order[i], order[i + 1]
         lines.append((xs[i], ls[a], xs[i + 1], ls[b]))               # trace on this face
-        labels.append((xs[i] + 0.06, 0.12, face_names[i]))
+        labels.append((xs[i] + 0.06, 0.12, names[i]))
         labels.append((xs[i] + 0.04, ls[a] + 0.08, f"{a} {ls[a]:.3f}"))
     labels.append((xs[4] - 0.75, ls["A"] + 0.08, f"A {ls['A']:.3f}"))
+    labels.append((xs[0] + 0.06, top - 0.1, "WASTE ABOVE THE TRACE"))
     cal_lines, cal_labels = calibration_square(xs[-1] + 0.75, 0.0)
     return lines + cal_lines, labels + cal_labels

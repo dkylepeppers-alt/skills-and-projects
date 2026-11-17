@@ -80,7 +80,7 @@ whether a version is one checked by hand (currently 0.3.2) or only passed the au
 
 - Cheats apply the moment they are switched on: when a life is created with Cheats ticked, and when
   a switch changes in SETTINGS. After that they are reapplied each time time passes. Spending that
-  takes no time (an online order) can dip below the wallet floor until the clock next moves.
+  takes no time (e.g., an online order) can dip below the wallet floor until the clock next moves.
 - A locked skill is set to exactly its level's XP threshold on every tick. Practice can add XP
   between ticks and the game may announce a level-up that the next tick takes back.
 - *Never tired* refills after each step of time, after the game's collapse check. A single

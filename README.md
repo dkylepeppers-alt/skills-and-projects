@@ -7,7 +7,7 @@ Intended GitHub home: `dkylepeppers-alt/skills-and-projects` (private).
 | --- | --- |
 | `skills/marinara-engine-authoring/` | Complete Marinara Engine authoring skill, references, scripts, and templates |
 | `skills/marinara-world-maps/` | Complete hierarchical world map skill, tools, templates, and regression tests |
-| `skills/wood-stereotomy/` | Wood stereotomy and joinery drafting skill: build123d modeling helpers, saw-setting and layout math, shop profile, templates, examples, and tests |
+| `skills/wood-stereotomy/` | Wood stereotomy, joinery and shop-jig drafting skill: build123d modeling helpers, saw-setting, layout and jig math, machine profile, templates, examples, and tests |
 | `projects/nevermore/source/` | Original map and lorebook, authored lore, location index, art prompts, and change manifest |
 | `projects/nevermore/art/` | New reference artwork and the Jericho Woods background |
 | `projects/nevermore/releases/v2/` | Latest importable Nevermore map, handoff, checksums, and original verification reports |

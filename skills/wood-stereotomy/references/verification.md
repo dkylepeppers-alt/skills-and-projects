@@ -54,6 +54,13 @@ Material and assembly
   an adjuster.
 - Every part has a reference face, edge and end, and all numbers are measured from them.
 
+Jigs
+- Registers on a named machine feature; fit built from runner_section or straddle_fit.
+- No hardware in the blade's path at 0 deg and at full tilt (model and formula).
+- No stop traps an offcut; the rip fence is never a stop with a sled or miter gauge.
+- Guard block and travel stop contain the blade where it exits; checked on the model.
+- Placeholders in the shop profile replaced with measurements, or listed as open.
+
 Model
 - Interference between mating parts is zero (`model.interference_in3`).
 - Contact area matches the intended bearing (`model.contact_area_in2`).

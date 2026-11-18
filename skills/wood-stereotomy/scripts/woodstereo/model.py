@@ -138,11 +138,14 @@ def save_step(shape, path: str | Path, label: str | None = None) -> Path:
 
 
 def assembly(parts: dict) -> Compound:
-    """Labeled compound from {label: shape}."""
+    """Labeled compound from {label: shape}. Children are copies, so the originals stay free
+    to be exported or reused on their own."""
+    from copy import copy
     children = []
     for label, shape in parts.items():
-        shape.label = label
-        children.append(shape)
+        child = copy(shape)
+        child.label = label
+        children.append(child)
     return Compound(label="assembly", children=children)
 
 

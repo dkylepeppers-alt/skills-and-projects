@@ -1,6 +1,6 @@
 ---
 name: wood-stereotomy
-description: Design, draft and model wood stereotomy and joinery that can be cut with non-CNC power tools and hand tools, as parametric build123d CAD with shop-ready output. Use for compound and skewed cuts, braces meeting faces at an angle, hoppers and splayed boxes, polygon columns, segmented rings, interlocking blocks and flat vaults, hip/valley-type intersections, mortise and tenon, dovetails, laps and scarfs, saw tilt and miter settings, corner-offset layout, 1:1 templates, grain and seasonal-movement checks, and "can my shop cut this" reviews of a wood design.
+description: Design, draft and model wood stereotomy, joinery and shop jigs that can be cut with non-CNC power tools and hand tools, as parametric build123d CAD with shop-ready output. Use for compound and skewed cuts, braces meeting faces at an angle, hoppers and splayed boxes, polygon columns, segmented rings, interlocking blocks and flat vaults, hip/valley-type intersections, mortise and tenon, dovetails, laps and scarfs, saw tilt and miter settings, corner-offset layout, 1:1 templates, grain and seasonal-movement checks, jigs and fixtures for the table saw, router table and bandsaw (sleds, carrier wedges, tenoning jigs, circle jigs, stops, guard blocks), and "can my shop cut this" reviews of a wood design.
 ---
 
 # Wood stereotomy and joinery
@@ -25,17 +25,20 @@ python3 -m unittest discover -s <skill>/tests        # no build123d needed for t
 Keep build123d in a virtual environment and inside the pinned range: build123d 0.12 with
 cadquery-ocp 7.9 is the combination verified here. Put the scripts folder on `sys.path`
 (the examples' `_common.py` shows how) and `from woodstereo import geometry, shop, sheet,
-templates, model`.
+templates, jigs, model, jigmodels`.
 
 ## The shop
 
 Read `assets/shop-profile.json` first. It lists the machines the design may assume and
-their limits; every cut is checked against it. The default profile is: table saw with
-miter gauge (tilt 0-45, one direction), bandsaw, handheld router and router table, drill
-press, handsaws, chisels and planes. No miter saw, no mill, no CNC. Saw capacities in the
-default file are typical figures, flagged as such: ask for measured values when a cut lands
-within about 1/4 in of a depth limit or on a tilt stop. For another shop, copy the file into
-the project, edit it and pass its path to `shop.load_shop()`.
+their limits; every cut is checked against it. The shop is a Grizzly G1023RLWX 10 in
+cabinet saw (left tilt, 0-45, miter gauge, built-in router table extension, Shop Fox
+Classic T-square fence with a 4.5 in auxiliary fence carrying a face T-slot and top
+T-track), a Shop Fox W1849 14 in bandsaw, a handheld router, drill press, handsaws,
+chisels and planes. No miter saw, no mill, no CNC. Each value is marked spec
+(manufacturer data) or measure (placeholder). Ask for a measured value when a cut lands
+within about 1/4 in of a depth limit or on a tilt stop, or when a jig is built to a
+placeholder. For another shop, copy the file into the project, edit it and pass its path
+to `shop.load_shop()`.
 
 ## Required workflow
 
@@ -76,7 +79,12 @@ the project, edit it and pass its path to `shop.load_shop()`.
    the model's own plane normals, as `examples/hopper.py` does with an `assert`.
 10. **Look at it.** Write `model.save_preview_svg` and view the result, or hand the STEP to
     `cad-viewer` when installed. Do not skip the visual check because the numbers passed.
-11. **Deliver.** STEP file, generator source, shop sheet (Markdown), and 1:1 templates
+11. **Jigs, when the work needs one or the user asks.** Draft the jig with the machine
+    feature it rides on and the blade, per `references/jigs.md`: register on a named
+    feature, keep hardware out of the blade's path at 0 deg and full tilt, no trapped
+    offcuts, contain the blade where it exits, and check all of it on the model
+    (`jigs.py`, `jigmodels.py`). Use a carrier wedge when a cut is outside the saw's range.
+12. **Deliver.** STEP file, generator source, shop sheet (Markdown), and 1:1 templates
     (`geometry.layout_lengths` into `templates.end_cut_development`, DXF and SVG) where a template helps. Run the
     shop-ready checklist in `references/verification.md` and report each item honestly.
 
@@ -101,8 +109,10 @@ the project, edit it and pass its path to `shop.load_shop()`.
   face that goes down, mirrored parts, fixtures. Read before producing shop data.
 - `references/joinery.md` — ordinary joints (mortise and tenon, dovetail, lap, scarf,
   housing) drafted by the same rules, with default proportions and their sources.
-- `references/worked-examples.md` — the five runnable examples, what each proves, and the
-  numbers they must reproduce.
+- `references/jigs.md` — machines on file, jig safety rules, jig types and their math,
+  modeling a jig against the blade. Read before designing any jig or fixture.
+- `references/worked-examples.md` — the nine runnable examples (five joints, four jigs),
+  what each proves, and the numbers they must reproduce.
 - `references/verification.md` — tolerance tables, the verification sequence and the
   shop-ready checklist. Read before delivering.
 - `references/build123d-notes.md` — the build123d patterns this skill relies on, units,

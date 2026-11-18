@@ -33,3 +33,32 @@ class BraceModel(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+@unittest.skipUnless(HAVE, "build123d not installed")
+class MachineModel(unittest.TestCase):
+    def test_blade_height_and_lean(self):
+        from woodstereo import jigmodels as jm
+        from woodstereo import shop
+        saw = shop.load_shop()["table_saw"]
+        from math import radians, sin
+        for tilt, h in ((0, 3.0), (45, 2.125)):
+            b = jm.blade(saw, h, tilt, 17.0)
+            # mid-plane rim at h; the tilted kerf's upper corner sits kerf/2 * sin(tilt) higher
+            want = h + saw["kerf"] / 2 * sin(radians(tilt))
+            self.assertAlmostEqual(b.bounding_box().max.Z / m.IN, want, 3)
+        leaning = jm.blade(saw, 2.125, 45, 17.0).bounding_box()
+        self.assertLess(leaning.min.X / m.IN, -1.5)   # left tilt: top leans toward -x
+
+    def test_sled_clear_of_blade(self):
+        from woodstereo import jigmodels as jm
+        from woodstereo import jigs, shop
+        saw = shop.load_shop()["table_saw"]
+        p = dict(base_t=0.71875, width=30.0, x_left=-14.0, depth=20.0, fence_y=3.5, fence_t=1.4375,
+                 fence_h=3.5, rear_t=0.71875, rear_h=2.5, block_depth=3.0, block_height=3.5,
+                 block_width_left=3.5, block_width_right=1.5, screw_xs=[-4.5, 4.0], cleat_len=3.0)
+        parts, hardware = jm.crosscut_sled(saw, p)
+        t = jigs.sled_travel(saw, 0.71875, 2.03125, 3.5, 1.4375, 3.0, 3.5, 5.0)
+        b = jm.blade(saw, t.blade_height, 0, t.arbor_y)
+        for name, solid in hardware.items():
+            self.assertAlmostEqual(m.interference_in3(b, solid), 0, 6, name)

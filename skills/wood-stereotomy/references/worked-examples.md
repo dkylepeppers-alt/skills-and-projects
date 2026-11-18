@@ -1,6 +1,6 @@
 # Worked examples
 
-Run any of them with `python scripts/examples/<name>.py --out build`. Each writes a STEP
+Run any of them with `python scripts/examples/<name>.py --out build`. The four jig examples use the machines in the shop profile. Each writes a STEP
 file, a hidden-line preview SVG and `shop-sheet.md`; the brace also writes a 1:1
 development as DXF and SVG. Copy the nearest one as the starting point for a new design.
 
@@ -11,6 +11,10 @@ development as DXF and SVG. Copy the nearest one as the starting point for a new
 | `segmented_ring.py` | A mitered ring with chordwise grain and the closure-error rule | 12 segments: outer flat 3.215, inner 2.412, 15 deg miters; 0.25 deg per face gives 6 deg around |
 | `abeille_vault.py` | Identical interlocking blocks, frame strips, grain choice, thrust, movement and stack-up | 2 x 2 x 1 in block at 25 deg: travel 0.466, tops 1.067 and 2.933; zero interference with neighbours and frame; thrust 1.07 per face |
 | `mortise_tenon.py` | Ordinary joinery by the same rules: shared envelope, relieved bottom, drawbore | 3/4 rail: 1/4 tenon; zero interference; 1/16 gap behind the tenon end |
+| `crosscut_sled.py` | G1023RLWX sled: runners, reference fence, guard block, travel stop, checked against the blade at 0 and 45 deg | Blade 3.000 for 2.031 stock; one travel stop (cleat face 13.75 in from the table front) for square and 45 deg; guard block needs 1.95 deep x 2.78 tall square, 3.25 wide at 45; no hardware touched; zero blade volume outside the block |
+| `carrier_wedge.py` | A 60 deg end bevel past the 45 deg limit: 15 deg ramp on the sled + 45 deg blade | Bevel measured on the model 60.00 deg; blade 2.074 of 2.125 at 45; ramp clear of the leaning blade |
+| `tenon_jig.py` | Straddle jig on the 4.5 in aux fence with a sacrificial work stop | Zero overlap with fence and track; 1/64 side play; blade path meets only the stop; fence thickness is a placeholder |
+| `circle_jig.py` | W1849 circle sled: runner, front lip stop, sliding pivot bar | Pin on the pivot line; blade at the stop clear of bar, pin, runner and lip from 2.5 to 11 in radius; slot and table-front figures are placeholders |
 
 ## Notes that carry over to new designs
 

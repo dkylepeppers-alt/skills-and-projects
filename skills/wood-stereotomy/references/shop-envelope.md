@@ -7,8 +7,9 @@ thickness, holes, and ruled faces worked between straight guides. Draft inside t
 
 | Tool | Makes | Design around |
 | --- | --- | --- |
-| Table saw + miter gauge | Rips, crosscuts, bevels, compound cuts | Tilt one way, 0-45. Typical 10 in saws cut about 3-1/8 in deep at 90 and 2-1/8 to 2-1/4 in at 45 ([DeWalt](https://dewalt.ca/product/dwe7491rs/10-jobsite-table-saw-and-rolling-stand), [Rikon](https://toolstoday.com/rikon-10-205-10-inch-contractor-saw-with-steel-wings.html)). Mirrored compound ends need the other miter slot. Small parts go on a sled. |
-| Bandsaw | A 2D profile straight through; tilted table for tilted profiles; two crossing profiles | Surface is straight along the blade. Fair to the line afterwards. |
+| Table saw + miter gauge (G1023RLWX) | Rips, crosscuts, bevels, compound cuts | Tilts left only, 0-45; 3 in deep at 90 and 2-1/8 in at 45 ([Grizzly](https://www.grizzly.com/products/g1023rlwx)). Mirrored compound ends need the other miter slot. Small parts go on a sled. |
+| Bandsaw (W1849) | A 2D profile straight through; tilted table (45 R, 5 L) for tilted profiles; two crossing profiles; resaw to 14 in | Surface is straight along the blade. Fair to the line afterwards. |
+| Router table (saw extension wing) | Edge profiles, rebates and grooves against the saw's rip fence; template work with a bearing | Fence is the saw fence; slot and insert sizes not on file. |
 | Router, handheld or table, with bearings and templates | Copies of a template outline; rebates, grooves, dados; chamfers at the bit's angle | Inside corners keep the bit radius. Bevels only at owned bit angles. |
 | Drill press | Holes at a set angle | Axis must be reachable from a stable face. |
 | Planes, shooting boards | True flat faces and edges to a knife line | Needs a registration face. |
@@ -59,6 +60,8 @@ Two turns that are easy to confuse when ripping both edges of a strip:
 - Turn it **end-for-end** for converging bevels (a strip that narrows toward one face).
 
 ## Fixtures that simplify cuts
+
+Full jig design rules and the worked jigs are in `jigs.md`.
 
 Hold the part at its compound orientation and let the tool make a simple cut. Design the
 fixture in the same model from the same planes.

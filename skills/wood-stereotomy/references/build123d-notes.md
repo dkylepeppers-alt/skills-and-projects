@@ -24,6 +24,11 @@ Verified with build123d 0.12.0 and cadquery-ocp 7.9.x. Keep within `requirements
   `GeomType.CYLINDER` for drilled holes and for curved profiles extruded straight through.
   Anything else is outside the hand-tool envelope.
 
+- **Machine models.** `jigmodels.blade(saw, height, tilt, center_y)` raises and tilts a
+  kerf-thick disk the saw's way about the table line; `table_top` adds rectangular miter
+  slots; `crosscut_sled` and `ramp` build jigs. Copy shapes freely: `model.assembly`
+  copies its children, so a part can be exported alone after it was assembled.
+
 ## With the cad skill
 
 This skill does not depend on `cad`. When it is installed, its tools add value on the STEP

@@ -36,6 +36,20 @@ against the solid models.
 - [WoodCentral: dovetail slopes](https://www.woodcentral.com/forums/topic/3099457/hand-cut-dovetaiols)
 - [The Wood Whisperer: drawbored mortise and tenon](https://thewoodwhisperer.com/videos/drawbored-mortise-tenon/)
 
+**Machines**
+- [Grizzly G1023RLWX product page](https://www.grizzly.com/products/g1023rlwx); [G1023RL series manual, left tilt](https://www.manualslib.com/manual/63197/Grizzly-G1023rl.html); [G1023 FAQ (miter slot)](https://support.grizzly.com/hc/en-us/articles/4411636429463-FAQ-G1023Z-10-Deluxe-Heavy-Duty-3-HP-Table-Saw-Discontinued); [G1023SLWX3 (router table and fence)](https://grizzly.com/products/G1023SLWX3)
+- [Shop Fox W1849 manual](https://www.elitemetaltools.com/sites/default/files/product-data/manuals/w1849_m.pdf)
+- [JessEm Clear-Cut TS stock guides](https://www.woodworkersjournal.com/jessem-clear-cut-ts-stock-guides/)
+- [Actual plywood thickness](https://www.inchcalculator.com/actual-plywood-thickness-size/)
+
+**Jigs**
+- [Fine Woodworking: never use the rip fence as a stop](https://www.finewoodworking.com/2017/05/25/clever-stop-block-crosscutting-tablesaw); [stick stops the sled in a safe position](https://finewoodworking.com/2024/12/17/314-small-stick-stops-crosscut-sled-in-safe-position)
+- [Woodcraft: sawing small parts (spacer against offcut trapping)](https://www.woodcraft.com/blogs/sanding-finishing/sawing-small-parts-making-little-cuts-with-big-tools)
+- [The Wood Whisperer: five-cut error x4](https://thewoodwhisperer.com/articles/how-much-error-is-too-much/)
+- [Fine Woodworking: shopmade tenoning jig](https://finewoodworking.com/2021/02/24/shopmade-tablesaw-tenoning-jig)
+- [Fine Woodworking: circle-cutting bandsaw jig](https://finewoodworking.com/?p=4213); [Woodcraft: bandsaw circle-cutting jig](https://www.woodcraft.com/blog_entries/bandsaw-circle-cutting-jig)
+- [Sawmill Creek: left tilt and crosscut fences](https://sawmillcreek.org/goto/post?id=3323908)
+
 **CAD.** build123d 0.12; the modeling conventions (STEP-first, named parameters, inches
 via `IN`, source over generated artifacts) follow the user's `cad` skill, which is based on
 earthtojake/text-to-cad (MIT). No code from that project is included here.

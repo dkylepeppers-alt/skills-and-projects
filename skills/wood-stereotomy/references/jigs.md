@@ -29,7 +29,8 @@ jig is built to a number that matters (a straddle fit, a pivot line).
 2. **Nothing hard in the blade's path at any setting.** Screws, clamps, T-track, runners
    and pins stay out of the kerf zone at 0 deg and at full tilt. On this saw the blade
    leans left, so the zone widens leftward with height (`jigs.check_hardware`,
-   `jigs.hardware_at`). Sacrificial wood (sled fences, guard blocks, a work stop strip) may
+   `jigs.hardware_at`; pass the blade radius so hardware below the table is checked
+   against the blade's real extent rather than an unbounded one). Sacrificial wood (sled fences, guard blocks, a work stop strip) may
    be cut; name it as sacrificial.
 3. **No trapped offcuts.** A stop on the offcut side, or one fixed to the table, traps the
    offcut against the blade; use the keeper side or a stand-off that the work leaves

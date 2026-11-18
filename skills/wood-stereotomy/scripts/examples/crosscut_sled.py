@@ -55,8 +55,9 @@ hw = [jigs.hardware_at(f"screw at x {x:+g}", x - 0.082, x + 0.082, 0.0, P["base_
 slot = saw["miter_slot_center_offsets_from_blade"]
 hw += [jigs.hardware_at("left runner", -slot["left"] - 0.4, -slot["left"] + 0.4, -0.4, 0.0),
        jigs.hardware_at("right runner", slot["right"] - 0.4, slot["right"] + 0.4, -0.4, 0.0)]
-formula_hits = jigs.check_hardware(hw, saw["kerf"], saw["depth_at_0_tilt"], (0.0,)) + \
-    jigs.check_hardware(hw, saw["kerf"], saw["depth_at_45_tilt"], (45.0,))
+R = saw["blade_diameter"] / 2
+formula_hits = jigs.check_hardware(hw, saw["kerf"], saw["depth_at_0_tilt"], (0.0,), radius=R) + \
+    jigs.check_hardware(hw, saw["kerf"], saw["depth_at_45_tilt"], (45.0,), radius=R)
 
 # ---- the same checks on the solid model, sled at its stop, blade at each setting
 def solid_checks(travel, tilt):
@@ -112,6 +113,7 @@ checks = {
         f"{sq_exposed:.4f} / {bv_exposed:.4f}",
     "blade above the guard block, cu in (square / 45)": f"{sq_over:.4f} / {bv_over:.4f}",
     "stop problems": jigs.check_stops(stops) or "none",
+    "each fence and the guard block one piece after the kerf": all(len(v.solids()) == 1 for k, v in parts.items() if k != "base"),
     "sheet thickness used": f"{P['base_t']:.4f} (typical, not measured)",
     "miter slot offsets used": f"{slot['left']:g} / {slot['right']:g} ({slot['are']})",
 }

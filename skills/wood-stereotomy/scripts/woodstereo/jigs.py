@@ -155,23 +155,34 @@ def hardware_at(name: str, x0: float, x1: float, z0: float, z1: float, kerf_cent
 
 
 def blade_hits(hw: Hardware, kerf: float, height: float, tilt_deg: float,
-               margin: float = 0.25) -> bool:
+               margin: float = 0.25, radius: float | None = None) -> bool:
     """True if any part of the hardware lies within `margin` of the blade's path, with the
-    blade raised to `height` (vertical) and tilted. The path is taken as unlimited along
-    the feed, which is conservative."""
-    z0, z1 = max(hw.z_min, 0.0), min(hw.z_max, height)
+    blade's mid-plane rim raised to `height` (vertical) and tilted. The path is taken as
+    unlimited along the feed, which is conservative.
+
+    A tilted kerf is kerf / cos(tilt) wide measured level, and its upper corner sits
+    kerf/2 x sin(tilt) above the mid-plane rim; both are included. Below the table the blade
+    continues (leaning the other way); pass `radius` to bound it at the blade's bottom,
+    otherwise hardware below the table is checked against an unbounded downward envelope.
+    """
+    t = radians(tilt_deg)
+    top = height + kerf / 2 * sin(t)
+    bottom = height - 2 * radius * cos(t) if radius else float("-inf")
+    z0, z1 = max(hw.z_min, bottom), min(hw.z_max, top)
     if z1 < z0:
         return False
-    lo = tilt_offset(z0, tilt_deg) - kerf / 2 - margin
-    hi = tilt_offset(z1, tilt_deg) + kerf / 2 + margin
+    half = kerf / (2 * cos(t)) + margin
+    xa, xb = tilt_offset(z0, tilt_deg), tilt_offset(z1, tilt_deg)
+    lo, hi = min(xa, xb) - half, max(xa, xb) + half
     return not (hw.x_max < lo or hw.x_min > hi)
 
 
 def check_hardware(items: list[Hardware], kerf: float, height: float,
-                   tilts: tuple[float, ...] = (0.0, 45.0), margin: float = 0.25) -> list[str]:
+                   tilts: tuple[float, ...] = (0.0, 45.0), margin: float = 0.25,
+                   radius: float | None = None) -> list[str]:
     """Names of hardware the blade would reach at any of the given tilts."""
     return [f"{h.name} at {t:g} deg" for t in tilts for h in items
-            if blade_hits(h, kerf, height, t, margin)]
+            if blade_hits(h, kerf, height, t, margin, radius)]
 
 
 # --------------------------------------------------------------------------- stops and offcuts
@@ -249,6 +260,10 @@ def carrier_for_tilt(n: Vec, axis: str, target_tilt: float) -> Carrier | None:
         r, base = hypot(n[0], n[2]), atan2(n[2], n[0])
     else:
         raise ValueError("axis is 'along' or 'across'")
+    if r < 1e-12:
+        # The normal lies on the rotation axis: no wedge changes the plane the blade sees.
+        tilt, miter = saw_settings(n, (1, 0, 0), (0, 1, 0), (0, 0, 1))
+        return Carrier(axis, 0.0, tilt, miter) if abs(tilt - target_tilt) < 1e-6 else None
     if r < st - 1e-12:
         return None
     a = asin(min(1.0, st / r))
@@ -291,7 +306,11 @@ class CircleJig:
 def circle_jig(radius: float, front_of_table_to_teeth: float, lip: float = 0.5) -> CircleJig:
     """Pivot location for a bandsaw circle sled whose front lip hooks the table's front edge
     as its stop. The pivot sits on the line square to the blade through the front of the
-    teeth; its distance from the blade's side facing it is the circle's radius."""
+    teeth; its distance from the blade's side facing it is the circle's radius.
+
+    `pivot_line_from_sled_front` is measured from the lip's front face, so it is the table
+    figure plus the lip thickness; from the lip's contact face (the face that meets the
+    table edge) the pivot line is at `front_of_table_to_teeth`."""
     return CircleJig(front_of_table_to_teeth + lip, radius,
                      "confirm by sliding the sled to its stop and sighting the teeth on the pivot line")
 

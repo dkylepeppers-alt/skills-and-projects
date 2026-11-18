@@ -85,8 +85,9 @@ hw = [jigs.hardware_at(f"stop screw at z {z:g}", face_x - 2.02, face_x + 0.82, z
                       kerf_c, saw["tilt_direction"]) for z in STOP_SCREW_Z]
 hw.append(jigs.hardware_at("toggle clamp", face_x - STOP_PROJ - 2.0, face_x - STOP_PROJ, CLAMP_Z, CLAMP_Z + 1.0,
                            kerf_c, saw["tilt_direction"]))
-formula = jigs.check_hardware(hw, saw["kerf"], saw["depth_at_0_tilt"], (0.0,)) + \
-    jigs.check_hardware(hw, saw["kerf"], saw["depth_at_45_tilt"], (45.0,))
+R = saw["blade_diameter"] / 2
+formula = jigs.check_hardware(hw, saw["kerf"], saw["depth_at_0_tilt"], (0.0,), radius=R) + \
+    jigs.check_hardware(hw, saw["kerf"], saw["depth_at_45_tilt"], (45.0,), radius=R)
 
 text = "\n".join([
     "## Tenoning jig, straddling the auxiliary fence", "",

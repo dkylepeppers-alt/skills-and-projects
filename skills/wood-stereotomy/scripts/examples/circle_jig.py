@@ -27,7 +27,9 @@ MARGIN = 0.25
 
 folder = out_dir("circle_jig")
 cj = jigs.circle_jig(MIN_RADIUS, F, LIP)
-pivot_y = cj.pivot_line_from_sled_front
+# Sled frame: y = 0 is the lip's contact face, the face that meets the table's front edge.
+# The lip hangs in front of it (y = -LIP .. 0), so the lip's front face is at y = -LIP.
+pivot_y = cj.pivot_line_from_sled_front - LIP
 runner = jigs.runner_section(bs["miter_slot"])
 
 base = m.box_at((X_LEFT + BASE_W / 2, BASE_D / 2, PLY / 2), (BASE_W, BASE_D, PLY))
@@ -48,15 +50,17 @@ def bar_at(radius):
 lip = m.box_at((X_LEFT + BASE_W / 2, -LIP / 2, -0.75 / 2 + PLY / 2), (BASE_W, LIP, 0.75 + PLY))
 run = m.box_at((SLOT_X, BASE_D / 2, -runner.height / 2), (runner.width, BASE_D - 1, runner.height))
 
-# ---- blade at the stop: teeth front on the pivot line, blade body behind it
-blade = m.box_at((0, pivot_y + BLADE_W / 2, 3.0), (KERF, BLADE_W, 8.0))
+# ---- blade at the stop, placed from the machine and the stop, not from the pivot: the
+# lip's contact face meets the table's front edge, so the teeth are F behind it.
+teeth_y = 0.0 + F
+blade = m.box_at((0, teeth_y + BLADE_W / 2, 3.0), (KERF, BLADE_W, 8.0))
 results = {}
 for r in (MIN_RADIUS, MAX_RADIUS):
     bar, pin = bar_at(r)
     results[r] = {k: round(m.interference_in3(blade, v), 6) for k, v in
                   {"pivot bar": bar, "pin": pin, "runner": run, "lip": lip}.items()}
 bar_min, pin_min = bar_at(MIN_RADIUS)
-pin_line_error = abs(pin_min.center().Y / m.IN - pivot_y)
+pin_line_error = abs(pin_min.center().Y / m.IN - teeth_y)   # pin vs the real teeth
 base_at_stop = m.interference_in3(blade, base)
 
 text = "\n".join([
@@ -68,7 +72,7 @@ text = "\n".join([
     f"| Pivot bar | {BAR_LEN:g} x {BAR_W:g} x {BAR_T:g} in a groove square to the blade | lock with a knob and T-nut from below |",
     f"| Pivot pin | {PIN_D:g} dia | at the bar's left end; drill the blank's underside {PIN_D:g} to match |",
     "",
-    f"**Pivot line:** {pivot_y:.3f} in from the sled's front edge (table front to blade front {F:g} + lip {LIP:g}; the table-front figure is a PLACEHOLDER). "
+    f"**Pivot line:** {cj.pivot_line_from_sled_front:.3f} in from the lip's front face ({F:g} from its contact face, plus the {LIP:g} lip; the table-front figure is a PLACEHOLDER). "
     "Confirm by sliding the sled to its stop and sighting the teeth on the line before cutting the groove.",
     f"**Radius scale:** zero at the blade's right side, {KERF / 2:.4f} in right of the kerf centerline; radius = scale reading at the pin.",
     f"**Range:** radius {MIN_RADIUS:g} to {MAX_RADIUS:g} with a {BLADE_W:g} in blade; narrower blades go smaller.",
@@ -77,7 +81,7 @@ text = "\n".join([
     ""])
 
 checks = {
-    "pin centre on the pivot line, in": round(pin_line_error, 6),
+    "pin centre vs the teeth at the stop, in": round(pin_line_error, 6),
     "blade at the stop meets pivot bar, pin, runner or lip (min / max radius)": results,
     "blade runs only in the base's kerf slot, cu in": round(base_at_stop, 6),
     "front of table to blade front": f"{F:g} ({bs['front_of_table_to_blade_front_is']})",

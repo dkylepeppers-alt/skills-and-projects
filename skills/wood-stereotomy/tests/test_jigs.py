@@ -84,6 +84,21 @@ class Hardware(unittest.TestCase):
         self.assertFalse(jigs.blade_hits(high, 0.125, 3.0, 0))
 
 
+    def test_tilted_kerf_width_and_corner(self):
+        # At 45 deg the level width of a 1/8 kerf is 0.177, not 0.125.
+        edge = jigs.hardware_at("edge", -1.08, -1.07, 0.99, 1.01)   # lean side, just past kerf/2
+        self.assertTrue(jigs.blade_hits(edge, 0.125, 2.125, 45, margin=0.0))
+        corner = jigs.hardware_at("corner", -2.2, -2.0, 2.14, 2.2)   # above the rim, below the corner
+        self.assertTrue(jigs.blade_hits(corner, 0.125, 2.125, 45, margin=0.0))
+
+    def test_below_table(self):
+        below = jigs.hardware_at("below", -0.05, 0.05, -1.0, -0.5)
+        self.assertTrue(jigs.blade_hits(below, 0.125, 3.0, 0, margin=0.0))
+        deep = jigs.hardware_at("deep", -0.05, 0.05, -9.0, -8.0)   # under a 10 in blade raised 3
+        self.assertTrue(jigs.blade_hits(deep, 0.125, 3.0, 0, margin=0.0))           # unbounded
+        self.assertFalse(jigs.blade_hits(deep, 0.125, 3.0, 0, margin=0.0, radius=5))  # bounded
+
+
 class Stops(unittest.TestCase):
     def test_rules(self):
         ok = jigs.check_stops([jigs.Stop("sled stop", "jig", "keeper"),
@@ -104,6 +119,14 @@ class Carrier(unittest.TestCase):
         self.assertIsNone(jigs.bevel_hand(jigs.normal_after_carrier(n, c), "left"))
         self.assertIsNotNone(jigs.bevel_hand(jigs.normal_after_carrier(n, c), "right"))
 
+    def test_normal_on_the_rotation_axis(self):
+        square_cut = (1.0, 0.0, 0.0)
+        c = jigs.carrier_for_tilt(square_cut, "along", 0.0)
+        self.assertEqual((c.wedge_deg, c.tilt, c.miter), (0.0, 0.0, 0.0))
+        self.assertIsNone(jigs.carrier_for_tilt(square_cut, "along", 45.0))
+        self.assertTrue(jigs.carrier_options(square_cut, SAW))
+        self.assertIsNotNone(jigs.carrier_for_tilt((0.0, 1.0, 0.0), "across", 0.0))
+
     def test_random_normals_hit_target(self):
         rng = random.Random(7)
         for _ in range(200):
@@ -121,7 +144,7 @@ class Carrier(unittest.TestCase):
 class OtherJigs(unittest.TestCase):
     def test_circle_and_straddle(self):
         cj = jigs.circle_jig(4.0, 8.0)
-        self.assertAlmostEqual(cj.pivot_line_from_sled_front, 8.5, 9)
+        self.assertAlmostEqual(cj.pivot_line_from_sled_front, 8.5, 9)   # from the lip's front face
         self.assertAlmostEqual(cj.pivot_from_blade, 4.0, 9)
         s = jigs.straddle_fit(2.75)
         self.assertAlmostEqual(s.inner_width, 2.765625, 9)

@@ -60,5 +60,8 @@ class MachineModel(unittest.TestCase):
         parts, hardware = jm.crosscut_sled(saw, p)
         t = jigs.sled_travel(saw, 0.71875, 2.03125, 3.5, 1.4375, 3.0, 3.5, 5.0)
         b = jm.blade(saw, t.blade_height, 0, t.arbor_y)
+        for name in ("front-fence", "rear-fence", "guard-block"):
+            self.assertEqual(len(parts[name].solids()), 1, f"{name} cut in two by the kerf")
+        self.assertEqual(len(parts["base"].solids()), 2)   # the base is split by design
         for name, solid in hardware.items():
             self.assertAlmostEqual(m.interference_in3(b, solid), 0, 6, name)

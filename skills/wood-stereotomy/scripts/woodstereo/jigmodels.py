@@ -69,8 +69,10 @@ def crosscut_sled(saw: dict, p: dict) -> tuple[dict, dict]:
     block = box_at(((p["block_width_right"] - p["block_width_left"]) / 2,
                     p["fence_y"] - p["block_depth"] / 2, b + p["block_height"] / 2),
                    (bw, p["block_depth"], p["block_height"]))
-    # Kerf already cut by the blade at 0 deg through base, fences and block.
-    kerf = box_at((0, d / 2, 2.5), (saw["kerf"], d + 2, 5 + 0.01))
+    # Kerf already cut by the blade at 0 deg and full height. It stops at the blade's top,
+    # so the fences and guard block keep solid wood above it and tie the two halves together.
+    top = saw["depth_at_0_tilt"]
+    kerf = box_at((0, d / 2, (top - 0.01) / 2), (saw["kerf"], d + 2, top + 0.01))
     base, front, rear, block = base - kerf, front - kerf, rear - kerf, block - kerf
     hardware = {}
     for side, sign in (("left", -1), ("right", 1)):

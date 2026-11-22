@@ -267,7 +267,7 @@ def _ordinates_x(ax, v, ox, oy, s, skip=(), below=True, fit=False, offset=0.0):
     sign = -1 if below else 1
     for fx, lx, val in zip(feats, labels, vals):
         ax.plot([fx, fx, lx], [base, base + sign * 0.1, base + sign * 0.2], color=LIGHT, lw=0.3)
-        _text(ax, lx, base + sign * 0.23, fmt_in(val + offset + 0.0 if abs(val + offset) > 1e-9 else 0.0, fit=fit), size=5.8, rotation=90,
+        _text(ax, lx, base + sign * 0.23, fmt_in(val + offset, fit=fit), size=5.8, rotation=90,
               ha="center", va="top" if below else "bottom")
     ax.plot([feats[0], feats[-1]], [base, base], color=LIGHT, lw=0.3)
     return vals
@@ -288,7 +288,7 @@ def _ordinates_y(ax, v, ox, oy, s, skip=(), left=True, fit=False, offset=0.0):
     sign = -1 if left else 1
     for fy, ly, val in zip(feats, labels, vals):
         ax.plot([base, base + sign * 0.1, base + sign * 0.2], [fy, fy, ly], color=LIGHT, lw=0.3)
-        _text(ax, base + sign * 0.23, ly, fmt_in(val + offset + 0.0 if abs(val + offset) > 1e-9 else 0.0, fit=fit), size=5.8,
+        _text(ax, base + sign * 0.23, ly, fmt_in(val + offset, fit=fit), size=5.8,
               ha="right" if left else "left", va="center")
     ax.plot([base, base], [feats[0], feats[-1]], color=LIGHT, lw=0.3)
     return vals
@@ -574,7 +574,7 @@ def _section_sheet(pdf, ps: PlanSet, sec: Section, n, total):
         size = [(b - a) * IN for a, b in zip(lo, hi)]
         clip = Pos(*[(a + b) / 2 * IN for a, b in zip(lo, hi)]) * Box(*size)
     full_lo = [float("inf")] * 2
-    for name, shape in ps.assembly.items():
+    for order, (name, shape) in enumerate(ps.assembly.items()):
         piece = split(shape, bisect_by=plane, keep=Keep.TOP)
         if piece is None or not piece.solids():
             continue
@@ -597,7 +597,7 @@ def _section_sheet(pdf, ps: PlanSet, sec: Section, n, total):
             if on_plane and abs(abs(nrm.dot(plane.z_dir)) - 1) < 1e-6:
                 rings = [[to_view(p, sec.view) for p in _wire_points(wire)]
                          for wire in [f.outer_wire(), *f.inner_wires()]]
-                faces.append((rings, len(kept) - 1))
+                faces.append((rings, order))     # assembly order: stable when parts drop out
     v = project(kept, sec.view)
     a0, a1, a2, a3 = area
     s, label = choose_scale(v.width, v.height, a2 - a0, a3 - a1, fixed_w=1.6, fixed_h=2.2,
@@ -620,8 +620,22 @@ def _section_sheet(pdf, ps: PlanSet, sec: Section, n, total):
     if clip is None:
         _ref_mark(ax, x, y)
     else:
-        msg = sec.note or "Ordinates read from the lowest, leftmost point of the whole section."
-        for k, line in enumerate(wrap(f"Ends of the detail are break lines, not edges. {msg}", 110)):
+        if sec.note:
+            msg = sec.note
+        elif sec.datum is not None:
+            msg = "Ordinates read from the point ({}) in the model.".format(", ".join(fmt_in(c) for c in sec.datum))
+        else:
+            msg = "Ordinates read from the lowest, leftmost point of the whole section."
+        # only the sides where the window cut material off are breaks; other ends are real edges
+        wx, wy = zip(*[to_view(c, sec.view) for c in
+                       [(a, b, c) for a in (lo[0], hi[0]) for b in (lo[1], hi[1]) for c in (lo[2], hi[2])]])
+        sides = [n for n, cut in (("left", abs(v.box[0] - min(wx)) < 1e-4), ("right", abs(v.box[2] - max(wx)) < 1e-4),
+                                  ("bottom", abs(v.box[1] - min(wy)) < 1e-4), ("top", abs(v.box[3] - max(wy)) < 1e-4))
+                 if cut]
+        if sides:
+            where = ", ".join(sides[:-1]) + (" and " if len(sides) > 1 else "") + sides[-1]
+            msg = f"Material ending on the {where} limit of the detail is broken off there, not an edge. {msg}"
+        for k, line in enumerate(wrap(msg, 110)):
             _text(ax, a0 + 0.1, a1 + 0.35 - k * 0.12, line, size=6, color=QUIET)
     _text(ax, a2 - 0.1, a1 + 0.05, f"SCALE {label}", size=6, ha="right")
     pdf.savefig(fig)

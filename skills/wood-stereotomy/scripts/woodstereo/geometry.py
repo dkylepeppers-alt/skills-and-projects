@@ -269,8 +269,8 @@ def stack_error(per_part: float, count: int) -> tuple[float, float]:
 
 def frac(x: float, denom: int = 32) -> str:
     """Nearest fraction of an inch as a shop string, e.g. 3.414 -> '3 13/32'."""
-    sign = "-" if x < 0 else ""
     f = Fraction(round(abs(x) * denom), denom)
+    sign = "-" if x < 0 and f else ""            # no "-0" when the value rounds to zero
     whole, rem = divmod(f.numerator, f.denominator)
     if rem == 0:
         return f"{sign}{whole}"

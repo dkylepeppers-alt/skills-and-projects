@@ -61,13 +61,13 @@ def edge_angle_label(dx: float, dy: float, tol_deg: float = 0.3) -> str | None:
 
 
 def choose_scale(need_w: float, need_h: float, avail_w: float, avail_h: float,
-                 fixed_w: float = 0.0, fixed_h: float = 0.0) -> tuple[float, str]:
-    """Largest common drawing scale at which model sizes `need_*` (inches) plus fixed paper
-    allowances fit the available paper."""
-    for s, label in ((1, "1:1"), (1 / 2, "1:2"), (1 / 3, "1:3"), (1 / 4, "1:4"), (1 / 5, "1:5"),
+                 fixed_w: float = 0.0, fixed_h: float = 0.0, max_scale: float = 1.0) -> tuple[float, str]:
+    """Largest common drawing scale, no larger than `max_scale`, at which model sizes `need_*`
+    (inches) plus fixed paper allowances fit the available paper. Details may enlarge (2:1, 4:1)."""
+    for s, label in ((4, "4:1"), (2, "2:1"), (1, "1:1"), (1 / 2, "1:2"), (1 / 3, "1:3"), (1 / 4, "1:4"), (1 / 5, "1:5"),
                      (1 / 6, "1:6"), (1 / 8, "1:8"), (1 / 10, "1:10"), (1 / 12, "1:12"),
                      (1 / 16, "1:16"), (1 / 24, "1:24"), (1 / 32, "1:32")):
-        if need_w * s + fixed_w <= avail_w and need_h * s + fixed_h <= avail_h:
+        if s <= max_scale and need_w * s + fixed_w <= avail_w and need_h * s + fixed_h <= avail_h:
             return s, label
     return 1 / 48, "1:48"
 

@@ -11,6 +11,14 @@ from woodstereo import geometry as g  # noqa: E402
 from woodstereo import joinery, sheet, shop, templates  # noqa: E402
 
 
+
+class NoNegativeZero(unittest.TestCase):
+    def test_values_rounding_to_zero_drop_the_sign(self):
+        from woodstereo.drafting import fmt_in
+        self.assertEqual(g.frac(-0.005), "0")
+        self.assertEqual(g.frac(-0.5), "-1/2")
+        self.assertEqual(fmt_in(-0.01), "0 (-0.010)")
+
 class Brace(unittest.TestCase):
     """1-1/2 x 3-1/2 brace, axis (2, 2, 1)/3, cut to the plane x = 0."""
 

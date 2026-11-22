@@ -8,7 +8,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from woodstereo import geometry as g  # noqa: E402
-from woodstereo import jigs, shop  # noqa: E402
+from woodstereo import drafting, jigs, shop  # noqa: E402
 
 SAW = shop.load_shop()["table_saw"]
 
@@ -152,6 +152,46 @@ class OtherJigs(unittest.TestCase):
     def test_base_kerf_reach(self):
         r = jigs.base_kerf_reach(SAW, 3.0, 0.71875)
         self.assertAlmostEqual(r, sqrt(21) - jigs.blade_half_chord(5, 3.0, 0.71875), 9)
+
+
+class Drafting(unittest.TestCase):
+    def test_fmt(self):
+        self.assertEqual(drafting.fmt_in(6.413), "6 13/32")          # within 1/128: no decimal
+        self.assertEqual(drafting.fmt_in(3.982), "3 31/32 (3.982)")  # 0.013 off: decimal added
+        self.assertEqual(drafting.fmt_in(0.71875), "23/32")
+        self.assertEqual(drafting.fmt_in(8.0), "8")
+
+    def test_fit_dimensions_preserve_clearance(self):
+        self.assertEqual(drafting.fmt_in(0.745, fit=True), "0.745")
+        self.assertEqual(drafting.fmt_in(0.75, fit=True), "3/4")
+
+    def test_ordinates_and_spread(self):
+        self.assertEqual(drafting.ordinates([5, 2, 2.004, 7]), [0, 3, 5])
+        out = drafting.spread([0.0, 0.05, 0.1, 2.0], 0.13)
+        self.assertTrue(all(b - a >= 0.13 - 1e-9 for a, b in zip(out, out[1:])))
+        self.assertEqual(out[-1], 2.0)
+
+    def test_angle_labels(self):
+        self.assertIsNone(drafting.edge_angle_label(1, 0))
+        self.assertIsNone(drafting.edge_angle_label(0, 1))
+        self.assertEqual(drafting.edge_angle_label(1, 0.26795), "15.00\u00b0 to horiz.")
+        self.assertEqual(drafting.edge_angle_label(0.26795, 1), "15.00\u00b0 to vert.")
+
+    def test_scale(self):
+        self.assertEqual(drafting.choose_scale(18, 15.5, 10.4, 6.6, 1.6, 2.5)[1], "1:4")
+        self.assertEqual(drafting.choose_scale(18, 15.5, 10.4, 6.6, 1.6, 3.0)[1], "1:5")
+
+
+class EveryExampleDrawsPlans(unittest.TestCase):
+    """The skill's deliverable is a plan set: every example must write one."""
+
+    def test_examples_write_plan_sets(self):
+        folder = Path(__file__).resolve().parents[1] / "scripts" / "examples"
+        examples = [p for p in folder.glob("*.py") if not p.name.startswith("_")]
+        self.assertGreaterEqual(len(examples), 9)
+        for p in examples:
+            text = p.read_text(encoding="utf-8")
+            self.assertIn("plans.write_plan_set(", text, f"{p.name} does not write a plan set")
 
 
 if __name__ == "__main__":

@@ -32,6 +32,13 @@ number and the last to the measured opening, or design in a wedge, key or drawbo
 
 Report each line as pass, fail or not checked.
 
+Plan set
+- A plan set PDF was produced from the model and every page was looked at.
+- Every part has a detail sheet; repeated parts carry their quantity.
+- Every edge, hole and recess is located from the REF corner, hidden ones included.
+- Rotated parts are drawn in true shape.
+- Every placeholder figure is in the MEASURE BEFORE BUILDING list.
+
 Geometry
 - Every surface is a plane, a through-cut profile, a hole or a ruled face between straight
   guides (`model.surface_audit`).

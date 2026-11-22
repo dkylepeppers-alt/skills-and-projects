@@ -10,6 +10,7 @@ from woodstereo import geometry as g
 from woodstereo import jigmodels as jm
 from woodstereo import jigs
 from woodstereo import model as m
+from woodstereo import plans
 from woodstereo import shop
 
 profile = shop.load_shop()
@@ -94,4 +95,16 @@ m.save_preview_svg(m.assembly({"base": parts["base"], "fence": parts["front-fenc
                    folder / "carrier-wedge-preview.svg", view_from=(-0.7, -1.2, 0.7))
 show = m.assembly({**parts, **hardware, "ramp": wedge, "part": keeper})
 m.save_step(show, folder / "carrier-wedge.step")
+plan = plans.PlanSet(
+    title=f"Carrier ramp for a {BEVEL:g} deg end bevel",
+    assembly={"Sled base": parts["base"], "Front fence": parts["front-fence"], "Ramp": wedge, "Workpiece": keeper},
+    parts=[plans.PartSpec("Ramp", wedge, 1, "hardwood or plywood laminations", [
+        f"{abs(choice.wedge_deg):.2f} deg slope, {RAMP_LOW:g} thick at the low end; low end toward the blade, "
+        f"set {abs(x_low):.3f} in left of the kerf line.",
+        "Screw to the sled from below, clear of the kerf; clamp the work to the ramp."])],
+    notes=["Rides on the crosscut sled (see crosscut-sled-plans.pdf).",
+           f"Blade {choice.tilt:.2f} deg left, miter {choice.miter:.2f}. Cut a scrap and check it with a bevel gauge first."],
+    shop_notes=text,
+)
+checks["plan set"] = plans.write_plan_set(plan, folder / "carrier-wedge-plans.pdf").name
 finish(folder, text, checks)

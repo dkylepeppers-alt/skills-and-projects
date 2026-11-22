@@ -6,6 +6,7 @@ from _common import finish, out_dir
 from woodstereo import geometry as g
 from woodstereo import jigs
 from woodstereo import model as m
+from woodstereo import plans
 from woodstereo import shop
 
 profile = shop.load_shop()
@@ -39,11 +40,14 @@ bridge_z0 = FENCE_H + TOP_CLEAR
 
 # ---- parts (y along the feed; the jig spans y 0 .. JIG_LEN; stop at the operator end)
 tall = m.box_at((FENCE_X - TALL_T / 2, JIG_LEN / 2, gap_z + TALL_H / 2), (TALL_T, JIG_LEN, TALL_H))
-short_h = bridge_z0 + BRIDGE_T - 2.0
+short_h = bridge_z0 - 2.0  # short upright butts against the underside of the bridge
 short = m.box_at((FENCE_X + inner + SHORT_T / 2, JIG_LEN / 2, 2.0 + short_h / 2), (SHORT_T, JIG_LEN, short_h))
 bridge_w = inner + SHORT_T
 bridge = m.box_at((FENCE_X + bridge_w / 2, JIG_LEN / 2, bridge_z0 + BRIDGE_T / 2), (bridge_w, JIG_LEN, BRIDGE_T))
 stop = m.box_at((face_x - STOP_PROJ / 2, STOP_W / 2, gap_z + STOP_H / 2), (STOP_PROJ, STOP_W, STOP_H))
+bridge_overlap = m.interference_in3(short, bridge)
+bridge_bearing = m.contact_area_in2(short, bridge)
+assert bridge_overlap < 1e-6 and abs(bridge_bearing - SHORT_T * JIG_LEN) < 1e-5, "bridge joint does not seat"
 parts = {"tall-upright": tall, "short-upright": short, "bridge": bridge, "work-stop": stop}
 
 aux = m.box_at((FENCE_X + FENCE_T / 2, JIG_LEN / 2, FENCE_H / 2), (FENCE_T, JIG_LEN + 20, FENCE_H))
@@ -109,6 +113,8 @@ text = "\n".join([
 
 checks = {
     "jig overlaps the fence or track, cu in": fence_clash,
+    "bridge / short upright overlap, cu in": round(bridge_overlap, 6),
+    "bridge bearing on short upright, sq in": round(bridge_bearing, 4),
     "side play built in, in": round(side_play, 4),
     "blade path meets screws, clamp or jig body, square": hits[0] or "none",
     "blade path meets screws, clamp or jig body, 45 deg": hits[45] or "none",
@@ -120,4 +126,22 @@ checks = {
 m.save_step(m.assembly({**parts, **screws, "aux-fence": aux, "top-track": track}), folder / "tenon-jig-on-fence.step")
 m.save_step(m.assembly(parts), folder / "tenon-jig.step")
 m.save_preview_svg(m.assembly({**parts, "aux-fence": aux}), folder / "tenon-jig-preview.svg", view_from=(-1.2, -1.0, 0.8))
+plan = plans.PlanSet(
+    title="Tenoning jig for the 4.5 in aux fence",
+    assembly={"Tall upright": tall, "Short upright": short, "Bridge": bridge, "Work stop": stop},
+    parts=[
+        plans.PartSpec("Tall upright", tall, 1, "two plies of 3/4 plywood, laminated", [
+            "Work face must be flat and square to the table. No screws below 3-1/2 in on the work face."]),
+        plans.PartSpec("Short upright", short, 1, "3/4 plywood", ["Seat its square top against the underside of the bridge."]),
+        plans.PartSpec("Bridge", bridge, 1, "two plies of 3/4 plywood, laminated", [
+            f"Inside width between the uprights {inner:.4f} in: fit with shims for no side play."]),
+        plans.PartSpec("Work stop", stop, 1, "hardwood, sacrificial", [
+            f"Screwed from inside the tall upright at {', '.join(str(z) for z in STOP_SCREW_Z)} in up only; replace when kerfed."]),
+    ],
+    notes=["Remove the JessEm stock guides before use; keep T-bolt heads in the face slot flush."],
+    verify=[f"Aux fence thickness: drawn at {FENCE_T:g} in." if not fence["aux_fence_thickness"] else "",
+            "Top T-track height above the fence: drawn with 1/2 in clearance."],
+    shop_notes=text,
+)
+checks["plan set"] = plans.write_plan_set(plan, folder / "tenon-jig-plans.pdf").name
 finish(folder, text, checks)

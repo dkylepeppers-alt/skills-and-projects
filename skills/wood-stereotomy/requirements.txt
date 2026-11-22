@@ -1,4 +1,6 @@
 # Only scripts/woodstereo/model.py and the examples need these.
-# geometry, shop, joinery, templates and sheet run on the standard library.
+# geometry, shop, joinery, templates, sheet, jigs and drafting run on the standard library.
+# plans.py also needs matplotlib.
 build123d>=0.12,<0.13
 cadquery-ocp>=7.9,<8
+matplotlib>=3.8,<4

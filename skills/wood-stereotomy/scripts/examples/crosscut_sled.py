@@ -8,6 +8,7 @@ from woodstereo import geometry as g
 from woodstereo import jigmodels as jm
 from woodstereo import jigs
 from woodstereo import model as m
+from woodstereo import plans
 from woodstereo import shop
 
 profile = shop.load_shop()
@@ -126,4 +127,31 @@ show = m.assembly({"table": table, "sled": at_stop,
 m.save_step(sled, folder / "crosscut-sled.step")
 m.save_step(show, folder / "crosscut-sled-on-saw.step")
 m.save_preview_svg(sled, folder / "crosscut-sled-preview.svg", view_from=(-1.0, -1.4, 1.1))
+sled_parts = {"Base": parts["base"], "Front fence": parts["front-fence"], "Rear fence": parts["rear-fence"],
+              "Guard block": parts["guard-block"], "Runner L": hardware["runner-left"],
+              "Runner R": hardware["runner-right"], "Stop cleat": hardware["stop-cleat"]}
+plan = plans.PlanSet(
+    title="Crosscut sled - Grizzly G1023RLWX",
+    assembly=sled_parts,
+    parts=[
+        plans.PartSpec("Base", parts["base"], 1, "3/4 plywood (drawn at 23/32)", [
+            "Kerf is cut by the blade after the runners are fitted; drawn for reference.",
+            "Screw fences from below, clear of the blade line: no screws within 4 in left of the kerf (the blade leans left)."]),
+        plans.PartSpec("Front fence", parts["front-fence"], 1, "two plies of 3/4 plywood, laminated", [
+            "Reference fence nearest you. Square it with the five-cut test before final screws."]),
+        plans.PartSpec("Rear fence", parts["rear-fence"], 1, "3/4 plywood", ["Ties the two halves of the base together."]),
+        plans.PartSpec("Guard block", parts["guard-block"], 1, "laminated plywood or softwood; paint it red", [
+            "Behind the front fence on the blade line; the blade must stop inside it at the travel stop."]),
+        plans.PartSpec("Runner", hardware["runner-left"], 2, "hardwood or UHMW", match=("Runner L", "Runner R"), notes=[
+            "Fit to the slots on the saw: slide with no side play, clear of the slot floor."]),
+        plans.PartSpec("Stop cleat", hardware["stop-cleat"], 1, "hardwood", [
+            f"Meets a stop block fixed to the table {STOP_FACE_TABLE_Y:.2f} in back from the table's front edge."]),
+    ],
+    notes=["Runners are glued and pinned in the slots, the base set on them on the saw, then screwed from above.",
+           "The overhead guard comes off for sled work; the guard block and travel stop take its place."],
+    verify=[f"Miter slot distances from the blade: drawn at {slot['left']:g} / {slot['right']:g} in (sizes the base only).",
+            "Blade kerf: drawn at 1/8 in.", "Plywood thickness: drawn at 23/32 in."],
+    shop_notes=text,
+)
+checks["plan set"] = plans.write_plan_set(plan, folder / "crosscut-sled-plans.pdf").name
 finish(folder, text, checks)

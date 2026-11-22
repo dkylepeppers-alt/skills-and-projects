@@ -6,6 +6,7 @@ from build123d import Rot
 
 from woodstereo import geometry as g
 from woodstereo import model as m
+from woodstereo import plans
 from woodstereo import shop
 
 # ---- parameters (inches)
@@ -43,9 +44,20 @@ text = "\n".join([
 names = list(ring)
 m.save_step(m.assembly(ring), folder / "segmented-ring.step")
 m.save_preview_svg(m.assembly(ring), folder / "segmented-ring-preview.svg")
-finish(folder, text, {
+checks = {
     "segment surfaces inside the hand-tool envelope": m.surface_audit(seg)["ok"],
     "interference between neighbours, cu in": round(m.interference_in3(ring[names[0]], ring[names[1]]), 6),
     "seam contact area, sq in": round(m.contact_area_in2(ring[names[0]], ring[names[1]]), 3),
     "expected seam area (strip x thickness / cos), sq in": round(strip / cos(half) * THICKNESS, 3),
-})
+}
+plan = plans.PlanSet(
+    title=f"{SEGMENTS}-segment ring",
+    assembly=ring,
+    parts=[plans.PartSpec("Segment", seg, SEGMENTS, f"{THICKNESS:g} stock, grain along the chord", [
+        f"Miter each end {miter_deg:.2f} deg from square on a segment sled with a stop.",
+        "Dry-fit two half rings and true their end faces before gluing them together."], match="segment-")],
+    notes=["Rout or saw the round outline after the glue-up if a round ring is wanted."],
+    shop_notes=text,
+)
+checks["plan set"] = plans.write_plan_set(plan, folder / "segmented-ring-plans.pdf").name
+finish(folder, text, checks)

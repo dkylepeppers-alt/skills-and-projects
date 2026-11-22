@@ -6,6 +6,7 @@ from build123d import Axis, Cylinder, Pos, Rot
 from woodstereo import geometry as g
 from woodstereo import joinery
 from woodstereo import model as m
+from woodstereo import plans
 from woodstereo import shop
 
 shop_profile = shop.load_shop()
@@ -65,11 +66,26 @@ text = "\n".join([
 
 m.save_step(m.assembly({"leg": leg, "rail": rail}), folder / "mortise-tenon.step")
 m.save_preview_svg(m.assembly({"leg": leg, "rail": rail}), folder / "mortise-tenon-preview.svg")
-finish(folder, text, {
+checks = {
     "leg surfaces inside the hand-tool envelope": m.surface_audit(leg)["ok"],
     "rail surfaces inside the hand-tool envelope": m.surface_audit(rail)["ok"],
     "interference leg/rail, cu in": round(m.interference_in3(leg, rail), 6),
     "contact area leg/rail (shoulders + cheeks + edges), sq in": round(m.contact_area_in2(rail, leg), 3),
     "shoulder area alone, sq in": round(RAIL_T * RAIL_W - TENON_T * TENON_W, 3),
     "gap behind the tenon end, in": MORTISE_RELIEF,
-})
+}
+plan = plans.PlanSet(
+    title="Blind mortise and tenon, rail to leg",
+    assembly={"Leg": leg, "Rail": rail},
+    parts=[
+        plans.PartSpec("Leg", leg, 1, f"{LEG:g} square, grain vertical", [
+            "Mortise to knifed lines from the leg's reference faces; bottom relieved 1/16 past the tenon.",
+            "Peg hole through both cheeks at the drawbore position." if DRAWBORE else "No peg."]),
+        plans.PartSpec("Rail", rail, 1, f"{RAIL_T:g} x {RAIL_W:g} stock", [
+            "Shoulders knifed all round and pared; the shoulder is the locating face.",
+            f"Peg hole offset {g.frac(DRAWBORE_OFFSET)} toward the shoulder (drawbore)." if DRAWBORE else ""]),
+    ],
+    shop_notes=text,
+)
+checks["plan set"] = plans.write_plan_set(plan, folder / "mortise-tenon-plans.pdf").name
+finish(folder, text, checks)

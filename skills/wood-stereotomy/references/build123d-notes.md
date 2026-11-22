@@ -29,6 +29,11 @@ Verified with build123d 0.12.0 and cadquery-ocp 7.9.x. Keep within `requirements
   slots; `crosscut_sled` and `ramp` build jigs. Copy shapes freely: `model.assembly`
   copies its children, so a part can be exported alone after it was assembled.
 
+- **Drawings.** `plans.project(shape, view)` runs build123d's hidden-line projection
+  (`project_to_viewport`) with the viewer far along the view axis and `look_at` at the
+  origin, so 2D coordinates are model coordinates in inches; matplotlib draws the sheets
+  into one PDF. `Plane.to_local_coords` puts a rotated part into its own frame.
+
 ## With the cad skill
 
 This skill does not depend on `cad`. When it is installed, its tools add value on the STEP

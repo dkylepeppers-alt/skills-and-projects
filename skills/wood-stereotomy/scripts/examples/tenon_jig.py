@@ -6,6 +6,7 @@ from _common import finish, out_dir
 from woodstereo import geometry as g
 from woodstereo import jigs
 from woodstereo import model as m
+from woodstereo import plans
 from woodstereo import shop
 
 profile = shop.load_shop()
@@ -120,4 +121,22 @@ checks = {
 m.save_step(m.assembly({**parts, **screws, "aux-fence": aux, "top-track": track}), folder / "tenon-jig-on-fence.step")
 m.save_step(m.assembly(parts), folder / "tenon-jig.step")
 m.save_preview_svg(m.assembly({**parts, "aux-fence": aux}), folder / "tenon-jig-preview.svg", view_from=(-1.2, -1.0, 0.8))
+plan = plans.PlanSet(
+    title="Tenoning jig for the 4.5 in aux fence",
+    assembly={"Tall upright": tall, "Short upright": short, "Bridge": bridge, "Work stop": stop},
+    parts=[
+        plans.PartSpec("Tall upright", tall, 1, "two plies of 3/4 plywood, laminated", [
+            "Work face must be flat and square to the table. No screws below 3-1/2 in on the work face."]),
+        plans.PartSpec("Short upright", short, 1, "3/4 plywood", ["Traps the jig on the fence."]),
+        plans.PartSpec("Bridge", bridge, 1, "two plies of 3/4 plywood, laminated", [
+            f"Inside width between the uprights {inner:.4f} in: fit with shims for no side play."]),
+        plans.PartSpec("Work stop", stop, 1, "hardwood, sacrificial", [
+            f"Screwed from inside the tall upright at {', '.join(str(z) for z in STOP_SCREW_Z)} in up only; replace when kerfed."]),
+    ],
+    notes=["Remove the JessEm stock guides before use; keep T-bolt heads in the face slot flush."],
+    verify=[f"Aux fence thickness: drawn at {FENCE_T:g} in." if not fence["aux_fence_thickness"] else "",
+            "Top T-track height above the fence: drawn with 1/2 in clearance."],
+    shop_notes=text,
+)
+checks["plan set"] = plans.write_plan_set(plan, folder / "tenon-jig-plans.pdf").name
 finish(folder, text, checks)

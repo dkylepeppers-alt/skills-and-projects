@@ -65,3 +65,32 @@ class MachineModel(unittest.TestCase):
         self.assertEqual(len(parts["base"].solids()), 2)   # the base is split by design
         for name, solid in hardware.items():
             self.assertAlmostEqual(m.interference_in3(b, solid), 0, 6, name)
+
+
+try:
+    import matplotlib  # noqa: F401
+    HAVE_MPL = True
+except ImportError:
+    HAVE_MPL = False
+
+
+@unittest.skipUnless(HAVE and HAVE_MPL, "build123d or matplotlib not installed")
+class PlanSet(unittest.TestCase):
+    def test_plan_set_pages_and_projection(self):
+        import tempfile
+        from build123d import Cylinder, Pos
+        from woodstereo import plans
+        part = m.box_at((2, 3, 0.5), (4, 6, 1)) - Pos(1 * m.IN, 1 * m.IN, 0) * Cylinder(0.25 * m.IN, 3 * m.IN)
+        v = plans.project(part, "top")
+        self.assertAlmostEqual(v.width, 4.0, 4)
+        self.assertAlmostEqual(v.height, 6.0, 4)
+        self.assertIn((1.0, 1.0, 0.25, False), v.circles)
+        ps = plans.PlanSet("Test", {"Plate": part}, [plans.PartSpec("Plate", part, 2, "plywood")],
+                           sections=[plans.Section("A-A", (0, 1.0, 0), "front")], verify=["thing"])
+        with tempfile.TemporaryDirectory() as d:
+            out = plans.write_plan_set(ps, Path(d) / "p.pdf")
+            data = out.read_bytes()
+        import re
+        self.assertTrue(data.startswith(b"%PDF"))
+        pages = len(re.findall(rb"/Type\s*/Page[^s]", data))
+        self.assertEqual(pages, 4)   # assembly, section, one part, cut list and notes

@@ -6,6 +6,8 @@ from build123d import Rot
 
 from woodstereo import geometry as g
 from woodstereo import model as m
+from woodstereo import plans
+from build123d import Plane as _P, Vector as _V
 from woodstereo import shop
 
 # ---- parameters (inches, degrees)
@@ -61,7 +63,7 @@ text = "\n".join([
 names = list(sides)
 m.save_step(m.assembly(sides), folder / "hopper.step")
 m.save_preview_svg(m.assembly(sides), folder / "hopper-preview.svg")
-finish(folder, text, {
+checks = {
     "side surfaces inside the hand-tool envelope": m.surface_audit(side)["ok"],
     "interference between neighbours, cu in":
         round(m.interference_in3(sides[names[0]], sides[names[1]]), 6),
@@ -71,4 +73,19 @@ finish(folder, text, {
     "outside top edge expected, in": round(panel.outside_top, 3),
     "0.25 deg miter-gauge error over the slant, in": round(g.angle_error_offset(panel.slant, 0.25), 4),
     "0.25 deg tilt error across the thickness, in": round(g.angle_error_offset(THICKNESS, 0.25), 4),
-})
+}
+face_plane = _P(origin=_V(0, -apothem * m.IN, 0), x_dir=_V(1, 0, 0),
+                     z_dir=_V(*outward))
+plan = plans.PlanSet(
+    title=f"{SIDES}-sided hopper, {SPLAY:g} deg splay",
+    assembly=sides,
+    parts=[plans.PartSpec("Side", side, SIDES, f"{THICKNESS:g} stock", [
+        "Drawn in true shape: the outside face lies flat in the top view.",
+        f"Rip both long edges at {panel.edge_bevel:.2f} deg, turning the blank face-over between rips.",
+        f"Corner miters: blade tilt {panel.tilt:.2f}, miter gauge {panel.miter:.2f}; mirrored ends from the other slot."],
+        frame=face_plane, match="side-")],
+    notes=["Cut and tape-fit four scrap sides before the good stock."],
+    shop_notes=text,
+)
+checks["plan set"] = plans.write_plan_set(plan, folder / "hopper-plans.pdf").name
+finish(folder, text, checks)

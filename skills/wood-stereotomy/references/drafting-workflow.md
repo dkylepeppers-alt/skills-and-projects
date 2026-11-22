@@ -44,6 +44,35 @@ onto the stock. CAD replaces the first two; the third still has to be designed.
 For straight, square stock everything can be measured from datums. For round or crooked
 timber the model gives only the nominal design; the scribe happens on the real parts.
 
+## Plan sets
+
+The plan set is what the user builds from. `plans.write_plan_set` draws it from the model,
+so the drawings and the checked geometry cannot disagree.
+
+| Sheet | Shows | Done when |
+| --- | --- | --- |
+| Assembly | Top, front, right views; overall sizes; a number on every part; parts list with quantities | Every part is numbered and listed |
+| Section | The cut faces hatched where a groove, recess, joint or stacked part hides in the outside views | Every hidden depth is drawn and dimensioned somewhere |
+| Part detail (one per distinct part) | Three views; ordinate dimensions from the REF corner to every edge, hole centre and recess, visible or hidden; hole sizes; angle of every edge that is not square; material, blank size, quantity, notes | A builder can lay out every cut with a rule from the reference edges |
+| Cut list and notes | Blank sizes T x W x L, quantities, materials; hardware; build sequence; settings; MEASURE BEFORE BUILDING list | Every placeholder is listed |
+
+Rules the drawings follow:
+
+- **Ordinate dimensions from a REF corner.** Zero is the lower-left of each view: mark those
+  faces as the reference face and edge on the part. Every layout mark is measured from them,
+  never from a neighbouring feature, so errors do not add up.
+- **True shape.** A part that sits rotated in the assembly (a brace, a hopper side) is given
+  a `frame` so its detail sheet shows it flat, with real lengths and angles.
+- **Fractions with a safety net.** Sizes print to 1/32; when rounding moves a value more than
+  1/128, the decimal follows in brackets.
+- **Hidden features are dimensioned.** Ordinates include hidden edges, so a groove depth or a
+  recess from below is located even when it only shows dashed.
+- **Placeholders are listed, not hidden.** Anything drawn from an unmeasured figure goes in
+  `verify`, and the build sequence should mark such features from the real machine where it
+  can (the circle sled's pivot line is marked from the blade, not from the table figure).
+- **Look at every page** before delivering. The generator lays out views and labels
+  automatically; a crowded part may need a section or a split into sub-parts to read well.
+
 ## Printing 1:1
 
 Print scaling is the commonest hidden error. Known traps: a "shrink to fit" setting

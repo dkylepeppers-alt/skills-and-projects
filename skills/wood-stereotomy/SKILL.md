@@ -5,6 +5,11 @@ description: Design, draft and model wood stereotomy, joinery and shop jigs that
 
 # Wood stereotomy and joinery
 
+**The deliverable is a plan set**: dimensioned shop drawings the user can build from, one
+PDF from `plans.write_plan_set`. The model, the checks, the shop sheet and the templates
+exist to make those drawings right; none of them replaces the drawings. A delivery without
+a plan set is incomplete.
+
 Draft spatial wood joints so that every surface on every part can be stated as a mark on
 the stock or a setting on a tool. A design that models cleanly but cannot be stated that
 way is not finished. Work in inches. Standalone: this skill carries its own geometry,
@@ -25,7 +30,7 @@ python3 -m unittest discover -s <skill>/tests        # no build123d needed for t
 Keep build123d in a virtual environment and inside the pinned range: build123d 0.12 with
 cadquery-ocp 7.9 is the combination verified here. Put the scripts folder on `sys.path`
 (the examples' `_common.py` shows how) and `from woodstereo import geometry, shop, sheet,
-templates, jigs, model, jigmodels`.
+templates, jigs, model, jigmodels, plans`.
 
 ## The shop
 
@@ -84,12 +89,27 @@ to `shop.load_shop()`.
     feature, keep hardware out of the blade's path at 0 deg and full tilt, no trapped
     offcuts, contain the blade where it exits, and check all of it on the model
     (`jigs.py`, `jigmodels.py`). Use a carrier wedge when a cut is outside the saw's range.
-12. **Deliver.** STEP file, generator source, shop sheet (Markdown), and 1:1 templates
-    (`geometry.layout_lengths` into `templates.end_cut_development`, DXF and SVG) where a template helps. Run the
+12. **Draw the plan set (required).** Build a `plans.PlanSet` from the same model:
+    the assembly (every part, positioned), one `PartSpec` per distinct part with quantity,
+    material and notes (a `frame` for any part that sits rotated, so it is drawn in true
+    shape; `match` for repeated parts), a `Section` wherever a joint, groove or recess is
+    hidden in the outside views, the build sequence and shop notes, and every placeholder
+    figure under `verify`. `plans.write_plan_set` produces: assembly sheet with overall
+    sizes and parts list; section sheets with cut faces hatched; one detail sheet per part
+    with every edge, hole and recess located by ordinate dimensions from the part's REF
+    corner, hole sizes and the angle of every edge that is not square; a cut list; the shop
+    notes. Then render every page to PNG (`pdftoppm -r 110 -png plans.pdf pg`) and look at
+    each one: overlapping labels, a missing depth, a feature with no dimension, or a part
+    drawn out of true shape is a defect to fix before delivery.
+13. **Deliver.** The plan set first. With it: the STEP file, the generator source, the shop
+    sheet (Markdown) and 1:1 templates (`geometry.layout_lengths` into
+    `templates.end_cut_development`, DXF and SVG) where a full-size template helps. Run the
     shop-ready checklist in `references/verification.md` and report each item honestly.
 
 ## Reporting rules
 
+- Never deliver a model or a cut list in place of plans. If a plan set cannot be produced,
+  say so plainly and say what is missing.
 - Report only checks that ran. Say which numbers are closed-form, which were measured on
   the model, and which shop capacities are placeholders.
 - Decimal inches to three places plus the nearest 1/32 for layout; degrees to two places.
@@ -104,7 +124,8 @@ to `shop.load_shop()`.
 - `references/design-principles.md` — the four questions, force paths, retained fibers,
   moisture movement, assembly types. Read at the start of every design.
 - `references/drafting-workflow.md` — the CAD workflow in detail, how the hand-drafting
-  traditions map to it, 1:1 printing. Read before modeling.
+  traditions map to it, plan sets (what each sheet must show), 1:1 printing. Read before
+  modeling.
 - `references/shop-envelope.md` — what each tool can make, saw-settings math, choosing the
   face that goes down, mirrored parts, fixtures. Read before producing shop data.
 - `references/joinery.md` — ordinary joints (mortise and tenon, dovetail, lap, scarf,

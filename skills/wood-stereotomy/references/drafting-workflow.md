@@ -53,6 +53,7 @@ so the drawings and the checked geometry cannot disagree.
 | --- | --- | --- |
 | Assembly | Top, front, right views; overall sizes; a number on every part; parts list with quantities | Every part is numbered and listed |
 | Section | The cut faces hatched where a groove, recess, joint or stacked part hides in the outside views | Every hidden depth is drawn and dimensioned somewhere |
+| Detail | A `Section` with a `window` box: only that region, enlarged up to 4:1, each part hatched its own way; a `datum` point and `note` say where its ordinates start | Small stacked hardware (a lock screw, nut plate and recess) reads at a size you can measure |
 | Part detail (one per distinct part) | Three views; ordinate dimensions from the REF corner to every edge, hole centre and recess, visible or hidden; hole sizes; angle of every edge that is not square; material, blank size, quantity, notes | A builder can lay out every cut with a rule from the reference edges |
 | Cut list and notes | Blank sizes T x W x L, quantities, materials; hardware; build sequence; settings; MEASURE BEFORE BUILDING list | Every placeholder is listed |
 
@@ -71,6 +72,10 @@ Rules the drawings follow:
 - **Placeholders are listed, not hidden.** Anything drawn from an unmeasured figure goes in
   `verify`, and the build sequence should mark such features from the real machine where it
   can (the circle sled's pivot line is marked from the blade, not from the table figure).
+- **Detail what crowds.** When a section's ordinates bunch up around small hardware, add a
+  detail of the same cut with a `window`, plus a cut at right angles through the same axis
+  (the circle sled has both at its lock screw). Put the cut on the axis of round parts so
+  their widths draw true.
 - **Look at every page** before delivering. The generator lays out views and labels
   automatically; a crowded part may need a section or a split into sub-parts to read well.
 

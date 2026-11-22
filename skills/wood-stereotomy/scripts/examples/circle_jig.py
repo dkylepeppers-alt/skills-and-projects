@@ -173,7 +173,19 @@ plan = plans.PlanSet(
         plans.PartSpec("Nut plate", plate, 1, "mild steel", [
             "Drill #7 and tap 1/4-20 through at center. Bore shown at thread major diameter."]),
     ],
-    sections=[plans.Section("A-A (just behind the pivot line)", (0.0, pivot_y + 0.03, 0.0), "front")],
+    sections=[
+        plans.Section("A-A (just behind the pivot line)", (0.0, pivot_y + 0.03, 0.0), "front"),
+        plans.Section("A-A at the lock screw", (0.0, pivot_y, 0.0), "front",
+                      window=((LOCK_X - 1.0, pivot_y - 1.0, -1.0), (LOCK_X + 1.0, pivot_y + 2.0, 2.0)),
+                      datum=(X_LEFT, pivot_y, 0.0),
+                      note=f"Cut on the lock axis. Horizontal ordinates from the base's left edge; the lock "
+                           f"axis is at {g.frac(LOCK_X - X_LEFT)}. Vertical ordinates from the underside of the base."),
+        plans.Section("B-B (across the bar at the lock screw)", (LOCK_X, 0.0, 0.0), "right",
+                      window=((LOCK_X - 1.0, pivot_y - 1.0, -1.0), (LOCK_X + 1.0, pivot_y + 1.0, 2.0)),
+                      datum=(LOCK_X, -LIP, 0.0),
+                      note=f"Horizontal ordinates from the lip's front face; the lock axis is at "
+                           f"{g.frac(pivot_y + LIP)}. Vertical ordinates from the underside of the base."),
+    ],
     notes=[
         f"Hardware: 1/4-20 x {g.frac(SCREW_L)} socket button-head screw (under-head length); "
         f"head at most {g.frac(HEAD_D)} dia x {g.frac(HEAD_H)} high. Wood screws for lip and runner.",

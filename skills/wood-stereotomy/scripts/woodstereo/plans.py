@@ -27,7 +27,7 @@ import matplotlib
 
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
-from build123d import IN, Compound, GeomType, Keep, Plane, Vector, split  # noqa: E402
+from build123d import IN, Box, Compound, GeomType, Keep, Plane, Pos, Vector, split  # noqa: E402
 from matplotlib.backends.backend_pdf import PdfPages  # noqa: E402
 from matplotlib.patches import Circle, PathPatch, Polygon, Rectangle  # noqa: E402
 from matplotlib.path import Path as MPath  # noqa: E402
@@ -49,6 +49,7 @@ VIEWS = {
 VIEW_TITLES = {"top": "TOP", "front": "FRONT", "right": "RIGHT SIDE", "bottom": "UNDERSIDE",
                "left": "LEFT SIDE", "back": "BACK"}
 INK, QUIET, LIGHT = "#111111", "#555555", "#9a9a9a"
+HATCHES = ("////", "\\\\\\\\", "xxx", "----")      # per part, in assembly order
 
 
 # --------------------------------------------------------------------------- data
@@ -83,6 +84,12 @@ class Section:
     name: str
     point: tuple[float, float, float]
     view: str = "front"          # look the way this view looks; keep material beyond the cut
+    # Optional detail window: a model-space box ((x0, y0, z0), (x1, y1, z1)) in inches. Only
+    # material inside it is drawn, at the larger scale that fits; ordinates keep the values
+    # of the full section so the two sheets read the same.
+    window: tuple | None = None
+    datum: tuple | None = None   # model point (in) that a detail's ordinates are measured from
+    note: str = ""               # that datum, in words, printed under a detail
 
 
 @dataclass
@@ -245,14 +252,14 @@ def _ordinate_points(v: View2D):
     return xs, ys
 
 
-def _ordinates_x(ax, v, ox, oy, s, skip=(), below=True, fit=False):
+def _ordinates_x(ax, v, ox, oy, s, skip=(), below=True, fit=False, offset=0.0):
     xs, _ = _ordinate_points(v)
     tol = 1e-5 if fit else 1 / 64
     allv = ordinates(xs + [v.box[0], v.box[2]], tol)
     vals = [x for x in allv if not any(abs(x - k) <= tol for k in skip)]
     if not vals:
         return []
-    if vals[0] != 0:
+    if vals[0] != 0 and not offset:
         vals = [0.0] + vals              # always show the datum the new values are measured from
     base = oy - 0.1 if below else oy + v.height * s + 0.1
     feats = [ox + x * s for x in vals]
@@ -260,20 +267,20 @@ def _ordinates_x(ax, v, ox, oy, s, skip=(), below=True, fit=False):
     sign = -1 if below else 1
     for fx, lx, val in zip(feats, labels, vals):
         ax.plot([fx, fx, lx], [base, base + sign * 0.1, base + sign * 0.2], color=LIGHT, lw=0.3)
-        _text(ax, lx, base + sign * 0.23, fmt_in(val, fit=fit), size=5.8, rotation=90,
+        _text(ax, lx, base + sign * 0.23, fmt_in(val + offset + 0.0 if abs(val + offset) > 1e-9 else 0.0, fit=fit), size=5.8, rotation=90,
               ha="center", va="top" if below else "bottom")
     ax.plot([feats[0], feats[-1]], [base, base], color=LIGHT, lw=0.3)
     return vals
 
 
-def _ordinates_y(ax, v, ox, oy, s, skip=(), left=True, fit=False):
+def _ordinates_y(ax, v, ox, oy, s, skip=(), left=True, fit=False, offset=0.0):
     _, ys = _ordinate_points(v)
     tol = 1e-5 if fit else 1 / 64
     allv = ordinates(ys + [v.box[1], v.box[3]], tol)
     vals = [y for y in allv if not any(abs(y - k) <= tol for k in skip)]
     if not vals:
         return []
-    if vals[0] != 0:
+    if vals[0] != 0 and not offset:
         vals = [0.0] + vals              # always show the datum the new values are measured from
     base = ox - 0.1 if left else ox + v.width * s + 0.1
     feats = [oy + y * s for y in vals]
@@ -281,7 +288,8 @@ def _ordinates_y(ax, v, ox, oy, s, skip=(), left=True, fit=False):
     sign = -1 if left else 1
     for fy, ly, val in zip(feats, labels, vals):
         ax.plot([base, base + sign * 0.1, base + sign * 0.2], [fy, fy, ly], color=LIGHT, lw=0.3)
-        _text(ax, base + sign * 0.23, ly, fmt_in(val, fit=fit), size=5.8, ha="right" if left else "left", va="center")
+        _text(ax, base + sign * 0.23, ly, fmt_in(val + offset + 0.0 if abs(val + offset) > 1e-9 else 0.0, fit=fit), size=5.8,
+              ha="right" if left else "left", va="center")
     ax.plot([base, base], [feats[0], feats[-1]], color=LIGHT, lw=0.3)
     return vals
 
@@ -423,7 +431,7 @@ def _assembly_sheet(pdf, ps: PlanSet, n, total):
     # parts list in the box beside the title block
     _text(ax, 0.42, 0.3 + 1.25 - 0.13, "PARTS", size=7, weight="bold")
     rows = [(i + 1, p.name, p.qty, _blank_size(p.local(), p.fit_dimensions)) for i, p in enumerate(specs)]
-    rows += [(numbers[lb], lb + " (reference)", 1, _blank_size(ps.assembly[lb])) for lb in extra]
+    rows += [(numbers[lb], lb + " (ref.)", 1, _blank_size(ps.assembly[lb])) for lb in extra]
     per_col, col_w = 7, 2.05
     for k, (num, name, qty, size) in enumerate(rows):
         col, row = divmod(k, per_col)
@@ -432,7 +440,7 @@ def _assembly_sheet(pdf, ps: PlanSet, n, total):
             break
         x = 0.42 + col * col_w
         y = 0.3 + 1.25 - 0.3 - row * 0.13
-        _text(ax, x, y, f"{num:>2} {name[:14]} x{qty}", size=5.5)
+        _text(ax, x, y, f"{num:>2} {name[:20]} x{qty}", size=5.5)
         _text(ax, x + col_w - 0.1, y, size, size=5.0, ha="right", color=QUIET)
     _text(ax, a2 - 0.05, a1 + 0.05, f"SCALE {label}", size=6.5, ha="right")
     pdf.savefig(fig)
@@ -520,6 +528,37 @@ def hatch_path(rings, to_paper=lambda p: p):
     return MPath(verts, codes)
 
 
+def _wire_points(wire) -> list[tuple[float, float, float]]:
+    """Ordered points around a closed wire in inches, keeping every vertex (corners are not
+    cut off) and sampling curved edges."""
+    chains = []
+    for e in wire.edges():
+        n = 1 if e.geom_type == GeomType.LINE else max(8, int(e.length / IN * 16))
+        chains.append([(q.X / IN, q.Y / IN, q.Z / IN) for q in (e.position_at(i / n) for i in range(n + 1))])
+    if not chains:
+        return []
+
+    def near(a, b):
+        return sum((i - j) ** 2 for i, j in zip(a, b)) < 1e-8
+
+    out = chains.pop(0)
+    while chains:
+        for k, c in enumerate(chains):
+            if near(c[0], out[-1]):
+                out += c[1:]
+            elif near(c[-1], out[-1]):
+                out += c[-2::-1]
+            else:
+                continue
+            chains.pop(k)
+            break
+        else:                            # not a connected loop: fall back to edge order
+            for c in chains:
+                out += c
+            break
+    return out[:-1] if len(out) > 1 and near(out[0], out[-1]) else out
+
+
 def _section_sheet(pdf, ps: PlanSet, sec: Section, n, total):
     W, H = PAGES[ps.page]
     fig, ax = _page(W, H)
@@ -529,10 +568,26 @@ def _section_sheet(pdf, ps: PlanSet, sec: Section, n, total):
     normal = (-d[0], -d[1], -d[2])               # points away from the viewer
     plane = Plane(origin=Vector(*(c * IN for c in sec.point)), z_dir=Vector(*normal))
     kept, faces = {}, []
+    clip = None
+    if sec.window is not None:
+        lo, hi = sec.window
+        size = [(b - a) * IN for a, b in zip(lo, hi)]
+        clip = Pos(*[(a + b) / 2 * IN for a, b in zip(lo, hi)]) * Box(*size)
+    full_lo = [float("inf")] * 2
     for name, shape in ps.assembly.items():
         piece = split(shape, bisect_by=plane, keep=Keep.TOP)
         if piece is None or not piece.solids():
             continue
+        bb = piece.bounding_box()
+        for cx in (bb.min.X, bb.max.X):
+            for cy in (bb.min.Y, bb.max.Y):
+                for cz in (bb.min.Z, bb.max.Z):
+                    u, w = to_view((cx / IN, cy / IN, cz / IN), sec.view)
+                    full_lo = [min(full_lo[0], u), min(full_lo[1], w)]
+        if clip is not None:
+            piece = piece & clip
+            if piece is None or not piece.solids():
+                continue
         kept[name] = piece
         for f in piece.faces():
             if f.geom_type != GeomType.PLANE:
@@ -540,25 +595,34 @@ def _section_sheet(pdf, ps: PlanSet, sec: Section, n, total):
             nrm, ctr = f.normal_at(f.center()), f.center()
             on_plane = abs((ctr - plane.origin).dot(plane.z_dir)) < 1e-3
             if on_plane and abs(abs(nrm.dot(plane.z_dir)) - 1) < 1e-6:
-                rings = []
-                for wire in [f.outer_wire(), *f.inner_wires()]:
-                    n_pts = max(16, int(wire.length / IN * 6))
-                    pts = [wire.position_at(i / n_pts) for i in range(n_pts)]
-                    rings.append([to_view((p.X / IN, p.Y / IN, p.Z / IN), sec.view) for p in pts])
-                faces.append(rings)
+                rings = [[to_view(p, sec.view) for p in _wire_points(wire)]
+                         for wire in [f.outer_wire(), *f.inner_wires()]]
+                faces.append((rings, len(kept) - 1))
     v = project(kept, sec.view)
     a0, a1, a2, a3 = area
-    s, label = choose_scale(v.width, v.height, a2 - a0, a3 - a1, fixed_w=1.6, fixed_h=2.2)
+    s, label = choose_scale(v.width, v.height, a2 - a0, a3 - a1, fixed_w=1.6, fixed_h=2.2,
+                            max_scale=4.0 if clip is not None else 1.0)
     x = a0 + max(1.1, (a2 - a0 - v.width * s) / 2)
     y = a1 + max(1.0, (a3 - a1 - v.height * s) / 2)
-    for rings in faces:
+    for rings, part in faces:
+        # each part hatched its own way so touching parts read separately
         ax.add_patch(PathPatch(hatch_path(rings, lambda p: (x + (p[0] - v.box[0]) * s, y + (p[1] - v.box[1]) * s)),
-                               facecolor="none", edgecolor=INK, hatch="////", lw=0.4))
+                               facecolor="none", edgecolor=INK, hatch=HATCHES[part % len(HATCHES)],
+                               lw=0.4))
     _draw_geometry(ax, v, x, y, s)
-    _view_title(ax, x, y + v.height * s + 0.12, f"SECTION {sec.name} (looking as the {sec.view} view)", label)
-    _ordinates_x(ax, v, x, y, s)
-    _ordinates_y(ax, v, x, y, s)
-    _ref_mark(ax, x, y)
+    title = f"{'DETAIL' if clip is not None else 'SECTION'} {sec.name} (looking as the {sec.view} view)"
+    _view_title(ax, x, y + v.height * s + 0.12, title, label)
+    if sec.datum is not None:
+        full_lo = list(to_view(sec.datum, sec.view))
+    dx, dy = v.box[0] - full_lo[0], v.box[1] - full_lo[1]
+    _ordinates_x(ax, v, x, y, s, offset=dx)
+    _ordinates_y(ax, v, x, y, s, offset=dy)
+    if clip is None:
+        _ref_mark(ax, x, y)
+    else:
+        msg = sec.note or "Ordinates read from the lowest, leftmost point of the whole section."
+        for k, line in enumerate(wrap(f"Ends of the detail are break lines, not edges. {msg}", 110)):
+            _text(ax, a0 + 0.1, a1 + 0.35 - k * 0.12, line, size=6, color=QUIET)
     _text(ax, a2 - 0.1, a1 + 0.05, f"SCALE {label}", size=6, ha="right")
     pdf.savefig(fig)
     plt.close(fig)

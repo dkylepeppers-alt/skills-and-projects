@@ -95,6 +95,28 @@ class PlanSet(unittest.TestCase):
         pages = len(re.findall(rb"/Type\s*/Page[^s]", data))
         self.assertEqual(pages, 4)   # assembly, section, one part, cut list and notes
 
+    def test_wire_points_keep_corners(self):
+        from woodstereo import plans
+        face = m.box_at((2, 3, 0.5), (4, 6, 1)).faces().sort_by()[0]
+        pts = plans._wire_points(face.outer_wire())
+        corners = {(round(x, 6), round(y, 6)) for x, y, _ in pts}
+        self.assertEqual(corners, {(0, 0), (4, 0), (4, 6), (0, 6)})
+
+    def test_detail_window_enlarges_and_keeps_full_ordinates(self):
+        import tempfile
+        from woodstereo import drafting, plans
+        self.assertEqual(drafting.choose_scale(1, 1, 8, 6), (1, "1:1"))
+        self.assertEqual(drafting.choose_scale(1, 1, 8, 6, max_scale=4)[1], "4:1")
+        part = m.box_at((5, 1, 0.5), (10, 2, 1))
+        ps = plans.PlanSet("Test", {"Bar": part}, [plans.PartSpec("Bar", part, 1, "oak")],
+                           sections=[plans.Section("A-A", (0, 1.0, 0), "front"),
+                                     plans.Section("A-A detail", (0, 1.0, 0), "front",
+                                                   window=((4, -1, -1), (5, 3, 2)), datum=(0, 1, 0))])
+        with tempfile.TemporaryDirectory() as d:
+            data = plans.write_plan_set(ps, Path(d) / "p.pdf").read_bytes()
+        import re
+        self.assertEqual(len(re.findall(rb"/Type\s*/Page[^s]", data)), 5)
+
     def test_fillet_radius_and_bore_diameter_callouts(self):
         from build123d import Axis, Box, Cylinder, IN, fillet
         from woodstereo import plans

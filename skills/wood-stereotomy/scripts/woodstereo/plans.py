@@ -19,6 +19,7 @@ Requires build123d and matplotlib (requirements.txt).
 from __future__ import annotations
 
 import datetime
+from math import atan2, tau
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -64,6 +65,7 @@ class PartSpec:
     frame: Plane | None = None
     views: tuple[str, str, str] = ("top", "front", "right")
     match: str | tuple | None = None   # assembly labels this part covers: a prefix or a tuple of labels
+    fit_dimensions: bool = False  # retain sub-fraction fit allowances
 
     def covers(self, label: str) -> bool:
         if self.match is None:
@@ -93,6 +95,8 @@ class PlanSet:
     shop_notes: str = ""
     verify: list[str] = field(default_factory=list)   # figures still to be measured
     page: str = "letter"
+    # Named pair of assembly parts. Dimension between their front faces in the top view.
+    front_setback: tuple[str, str] | None = None
 
 
 # --------------------------------------------------------------------------- projection
@@ -120,6 +124,7 @@ class View2D:
     circles: list          # (cx, cy, r, hidden)
     box: tuple
     hidden_lines: list = field(default_factory=list)
+    arcs: list = field(default_factory=list)  # (x, y, r, hidden), anchored on the arc
 
     @property
     def width(self):
@@ -139,6 +144,48 @@ def _polyline(edge) -> list[tuple[float, float]]:
     return [(p.X / IN, p.Y / IN) for p in pts]
 
 
+def _round_features(visible, hidden):
+    """Reassemble circular projections split by visibility or seams before labeling them."""
+    groups = {}
+    for edges, is_hidden in ((visible, False), (hidden, True)):
+        for edge in edges:
+            if edge.geom_type != GeomType.CIRCLE:
+                continue
+            c = edge.arc_center
+            key = (round(c.X / IN, 4), round(c.Y / IN, 4), round(edge.radius / IN, 4))
+            mid = edge.position_at(0.5)
+            anchor = (round(mid.X / IN, 4), round(mid.Y / IN, 4))
+            spans = groups.setdefault(key, [])
+            if edge.is_closed:
+                spans.append((0, tau, anchor, is_hidden))
+                continue
+            start, middle, end = [atan2(p.Y - c.Y, p.X - c.X) % tau
+                                  for p in (edge.position_at(0), mid, edge.position_at(1))]
+            if (middle - start) % tau > (end - start) % tau:
+                start, end = end, start
+            if end < start:
+                spans.append((start, tau, anchor, is_hidden))
+                start = 0
+            spans.append((start, end, anchor, is_hidden))
+    circles, arcs = [], []
+    for (cx, cy, r), spans in groups.items():
+        end = 0
+        for a, b, _, _ in sorted(spans):
+            if a > end + 1e-6:
+                break
+            end = max(end, b)
+        hidden_only = all(h for _, _, _, h in spans)
+        if end >= tau - 1e-6:
+            circles.append((cx, cy, r, hidden_only))
+        else:
+            # A split or duplicate span can have the same anchor on the same edge.
+            anchors = {}
+            for _, _, anchor, h in spans:
+                anchors[anchor] = anchors.get(anchor, True) and h
+            arcs.extend((*anchor, r, h) for anchor, h in anchors.items())
+    return sorted(circles), sorted(arcs)
+
+
 def project(shape, view: str) -> View2D:
     """Hidden-line projection of a shape (or {label: shape}) in a view, in inches."""
     if isinstance(shape, dict):
@@ -150,17 +197,10 @@ def project(shape, view: str) -> View2D:
     hidden = [_polyline(e) for e in hid]
     lines = [(*pl[0], *pl[-1]) for e, pl in zip(vis, visible) if e.geom_type == GeomType.LINE]
     hidden_lines = [(*pl[0], *pl[-1]) for e, pl in zip(hid, hidden) if e.geom_type == GeomType.LINE]
-    circles = set()
-    for group, flag in ((vis, False), (hid, True)):
-        for e in group:
-            if e.geom_type == GeomType.CIRCLE:
-                c = e.arc_center
-                circles.add((round(c.X / IN, 4), round(c.Y / IN, 4), round(e.radius / IN, 4), flag))
-    # a circle seen both ways is visible
-    circles = {c for c in circles if not (c[3] and (c[0], c[1], c[2], False) in circles)}
+    circles, arcs = _round_features(vis, hid)
     pts = [p for pl in visible + hidden for p in pl]
     box = (min(p[0] for p in pts), min(p[1] for p in pts), max(p[0] for p in pts), max(p[1] for p in pts))
-    return View2D(visible, hidden, lines, sorted(circles), box, hidden_lines)
+    return View2D(visible, hidden, lines, circles, box, hidden_lines, arcs)
 
 
 # --------------------------------------------------------------------------- drawing primitives
@@ -205,10 +245,11 @@ def _ordinate_points(v: View2D):
     return xs, ys
 
 
-def _ordinates_x(ax, v, ox, oy, s, skip=(), below=True):
+def _ordinates_x(ax, v, ox, oy, s, skip=(), below=True, fit=False):
     xs, _ = _ordinate_points(v)
-    allv = ordinates(xs + [v.box[0], v.box[2]])
-    vals = [x for x in allv if not any(abs(x - k) < 1 / 64 for k in skip)]
+    tol = 1e-5 if fit else 1 / 64
+    allv = ordinates(xs + [v.box[0], v.box[2]], tol)
+    vals = [x for x in allv if not any(abs(x - k) <= tol for k in skip)]
     if not vals:
         return []
     if vals[0] != 0:
@@ -219,16 +260,17 @@ def _ordinates_x(ax, v, ox, oy, s, skip=(), below=True):
     sign = -1 if below else 1
     for fx, lx, val in zip(feats, labels, vals):
         ax.plot([fx, fx, lx], [base, base + sign * 0.1, base + sign * 0.2], color=LIGHT, lw=0.3)
-        _text(ax, lx, base + sign * 0.23, fmt_in(val), size=5.8, rotation=90,
+        _text(ax, lx, base + sign * 0.23, fmt_in(val, fit=fit), size=5.8, rotation=90,
               ha="center", va="top" if below else "bottom")
     ax.plot([feats[0], feats[-1]], [base, base], color=LIGHT, lw=0.3)
     return vals
 
 
-def _ordinates_y(ax, v, ox, oy, s, skip=(), left=True):
+def _ordinates_y(ax, v, ox, oy, s, skip=(), left=True, fit=False):
     _, ys = _ordinate_points(v)
-    allv = ordinates(ys + [v.box[1], v.box[3]])
-    vals = [y for y in allv if not any(abs(y - k) < 1 / 64 for k in skip)]
+    tol = 1e-5 if fit else 1 / 64
+    allv = ordinates(ys + [v.box[1], v.box[3]], tol)
+    vals = [y for y in allv if not any(abs(y - k) <= tol for k in skip)]
     if not vals:
         return []
     if vals[0] != 0:
@@ -239,12 +281,12 @@ def _ordinates_y(ax, v, ox, oy, s, skip=(), left=True):
     sign = -1 if left else 1
     for fy, ly, val in zip(feats, labels, vals):
         ax.plot([base, base + sign * 0.1, base + sign * 0.2], [fy, fy, ly], color=LIGHT, lw=0.3)
-        _text(ax, base + sign * 0.23, ly, fmt_in(val), size=5.8, ha="right" if left else "left", va="center")
+        _text(ax, base + sign * 0.23, ly, fmt_in(val, fit=fit), size=5.8, ha="right" if left else "left", va="center")
     ax.plot([base, base], [feats[0], feats[-1]], color=LIGHT, lw=0.3)
     return vals
 
 
-def _callouts(ax, v, ox, oy, s):
+def _callouts(ax, v, ox, oy, s, fit=False):
     x0, y0 = v.box[0], v.box[1]
     stack = {}
     for cx, cy, r, hidden in v.circles:
@@ -252,9 +294,14 @@ def _callouts(ax, v, ox, oy, s):
         k = stack.get(key, 0)
         stack[key] = k + 1
         px, py = ox + (cx - x0) * s, oy + (cy - y0) * s
-        label = f"\u00d8{fmt_in(2 * r, 64)}" + (" (hidden)" if hidden else "")
+        label = f"\u00d8{fmt_in(2 * r, 64, fit=fit)}" + (" (hidden)" if hidden else "")
         _text(ax, px + 0.12, py + 0.05 + 0.11 * k, label, size=5.6, color=QUIET,
               bbox=dict(facecolor="white", edgecolor="none", pad=0.3))
+    for u, w, radius, hidden in v.arcs:
+        point = (ox + (u - x0) * s, oy + (w - y0) * s)
+        label = "R" + fmt_in(radius, 64, fit=fit) + (" (hidden)" if hidden else "")
+        ax.annotate(label, xy=point, xytext=(8, 5), textcoords="offset points", fontsize=5.6,
+                    color=QUIET, arrowprops=dict(arrowstyle="-", color=QUIET, lw=0.4))
     count = {}
     for x1, y1, x2, y2 in v.lines:
         if ((x2 - x1) ** 2 + (y2 - y1) ** 2) ** 0.5 < 0.2:
@@ -357,6 +404,11 @@ def _assembly_sheet(pdf, ps: PlanSet, n, total):
     _dim_h(ax, tx, tx + t.width * s, ty + t.height * s + 0.25, fmt_in(t.width))
     _dim_v(ax, tx - 0.25, ty, ty + t.height * s, fmt_in(t.height))
     _dim_v(ax, fx - 0.25, fy, fy + f.height * s, fmt_in(f.height))
+    if ps.front_setback:
+        base, target = (ps.assembly[name].bounding_box() for name in ps.front_setback)
+        lo, hi = base.min.Y / IN, target.min.Y / IN
+        x = tx + (min(base.max.X, target.max.X) / IN - t.box[0]) * s - 0.3
+        _dim_v(ax, x, ty + (lo - t.box[1]) * s, ty + (hi - t.box[1]) * s, fmt_in(hi - lo))
     # part numbers at each item's centre in the top view
     placed = []
     for name, shape in ps.assembly.items():
@@ -370,18 +422,16 @@ def _assembly_sheet(pdf, ps: PlanSet, n, total):
         _text(ax, px, py, str(numbers[name]), size=5.4, ha="center", va="center")
     # parts list in the box beside the title block
     _text(ax, 0.42, 0.3 + 1.25 - 0.13, "PARTS", size=7, weight="bold")
-    rows = [(i + 1, p.name, p.qty, p.local()) for i, p in enumerate(specs)]
-    rows += [(numbers[lb], lb + " (reference)", 1, ps.assembly[lb]) for lb in extra]
+    rows = [(i + 1, p.name, p.qty, _blank_size(p.local(), p.fit_dimensions)) for i, p in enumerate(specs)]
+    rows += [(numbers[lb], lb + " (reference)", 1, _blank_size(ps.assembly[lb])) for lb in extra]
     per_col, col_w = 7, 2.05
-    for k, (num, name, qty, shape) in enumerate(rows):
+    for k, (num, name, qty, size) in enumerate(rows):
         col, row = divmod(k, per_col)
         if col >= 3:
             _text(ax, 0.42 + 2 * col_w, 0.42, f"... {len(rows) - k} more: see the cut list", size=5.6, color=QUIET)
             break
         x = 0.42 + col * col_w
         y = 0.3 + 1.25 - 0.3 - row * 0.13
-        dims = sorted(_bbox_in(shape))
-        size = " x ".join(fmt_in(d, 32) for d in dims)
         _text(ax, x, y, f"{num:>2} {name[:14]} x{qty}", size=5.5)
         _text(ax, x + col_w - 0.1, y, size, size=5.0, ha="right", color=QUIET)
     _text(ax, a2 - 0.05, a1 + 0.05, f"SCALE {label}", size=6.5, ha="right")
@@ -408,37 +458,41 @@ def _bbox_in(shape):
     return (b.X / IN, b.Y / IN, b.Z / IN)
 
 
+def _blank_size(shape, fit=False):
+    return " x ".join(fmt_in(d, fit=fit) for d in sorted(_bbox_in(shape)))
+
+
 def _part_sheet(pdf, ps: PlanSet, part: PartSpec, n, total):
     W, H = PAGES[ps.page]
     fig, ax = _page(W, H)
-    t_, w_, l_ = sorted(_bbox_in(part.local()))
+    shape = part.local()
+    fit = part.fit_dimensions
     area = _frame_and_title(ax, W, H, ps.title, f"PART: {part.name}  (QTY {part.qty})", n, total, "", [
         f"Material: {part.material or '-'}",
-        f"Blank: {fmt_in(t_, 32)} x {fmt_in(w_, 32)} x {fmt_in(l_, 32)}",
+        f"Blank: {_blank_size(shape, fit)}",
         "Ordinates from the REF corner of each view."])
-    shape = part.local()
     keys = part.views
     views = {"top": project(shape, keys[0]), "front": project(shape, keys[1]), "right": project(shape, keys[2])}
     a0, a1, a2, a3 = area
     s, label, at = _three_views(ax, (a0, a1, a2, a3), views, dims=True)
-    done_x, done_y = [], []
+    done_x = []
     for slot, view_name in zip(("top", "front", "right"), keys):
         v = views[slot]
         x, y = at[slot]
         _draw_geometry(ax, v, x, y, s)
         _view_title(ax, x, y + v.height * s + (0.08 if slot != "front" else 0.08), view_name, label)
-        _callouts(ax, v, x, y, s)
+        _callouts(ax, v, x, y, s, fit=fit)
         if slot == "top":
-            done_x = _ordinates_x(ax, v, x, y, s)
-            done_y_top = _ordinates_y(ax, v, x, y, s)
+            done_x = _ordinates_x(ax, v, x, y, s, fit=fit)
+            done_y_top = _ordinates_y(ax, v, x, y, s, fit=fit)
             _ref_mark(ax, x, y)
         elif slot == "front":
-            _ordinates_x(ax, v, x, y, s, skip=done_x)
-            _ordinates_y(ax, v, x, y, s)
+            _ordinates_x(ax, v, x, y, s, skip=done_x, fit=fit)
+            _ordinates_y(ax, v, x, y, s, fit=fit)
             _ref_mark(ax, x, y)
         else:
-            _ordinates_y(ax, v, x, y, s, skip=[], left=False) if v.height * s > 0.6 else None
-            _ordinates_x(ax, v, x, y, s, skip=done_y_top)
+            _ordinates_y(ax, v, x, y, s, skip=[], left=False, fit=fit) if v.height * s > 0.6 else None
+            _ordinates_x(ax, v, x, y, s, skip=done_y_top, fit=fit)
     _text(ax, a2 - 0.05, a1 + 0.05, f"SCALE {label}", size=6.5, ha="right")
     _notes_box(ax, 0.42, 0.3 + 1.25 - 0.12, W - 0.3 - 4.4 - 0.55, part.notes or ["-"], size=6.0)
     pdf.savefig(fig)
@@ -513,8 +567,7 @@ def _section_sheet(pdf, ps: PlanSet, sec: Section, n, total):
 def _text_lines(ps: PlanSet, cut_rows) -> list[str]:
     lines = ["CUT LIST", ""]
     lines.append(f"{'#':>2}  {'PART':<28}{'QTY':>4}   {'T x W x L (in)':<34}{'MATERIAL'}")
-    for i, (name, qty, dims, mat) in enumerate(cut_rows, 1):
-        size = " x ".join(fmt_in(d, 32) for d in dims)
+    for i, (name, qty, size, mat) in enumerate(cut_rows, 1):
         lines.append(f"{i:>2}  {name[:27]:<28}{qty:>4}   {size:<34}{mat}")
     lines += ["", "NOTES", ""] + [f"- {x}" for x in ps.notes]
     if ps.verify:
@@ -567,7 +620,7 @@ def write_plan_set(ps: PlanSet, path) -> Path:
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     unique = _unique_parts(ps)
-    cut_rows = [(p.name, p.qty, sorted(_bbox_in(p.local())), p.material) for p in unique]
+    cut_rows = [(p.name, p.qty, _blank_size(p.local(), p.fit_dimensions), p.material) for p in unique]
     lines = _text_lines(ps, cut_rows)
     text_pages = max(1, -(-len(lines) // lines_per_page(ps.page)))
     total = 1 + len(ps.sections) + len(unique) + text_pages

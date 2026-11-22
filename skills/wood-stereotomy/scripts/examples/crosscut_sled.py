@@ -133,16 +133,18 @@ sled_parts = {"Base": parts["base"], "Front fence": parts["front-fence"], "Rear 
 plan = plans.PlanSet(
     title="Crosscut sled - Grizzly G1023RLWX",
     assembly=sled_parts,
+    front_setback=("Base", "Front fence"),
     parts=[
         plans.PartSpec("Base", parts["base"], 1, "3/4 plywood (drawn at 23/32)", [
             "Kerf is cut by the blade after the runners are fitted; drawn for reference.",
             "Screw fences from below, clear of the blade line: no screws within 4 in left of the kerf (the blade leans left)."]),
         plans.PartSpec("Front fence", parts["front-fence"], 1, "two plies of 3/4 plywood, laminated", [
-            "Reference fence nearest you. Square it with the five-cut test before final screws."]),
+            f"Set the near face {g.frac(P['fence_y'])} in back from the base front edge. "
+            "Square with the five-cut test before final screws."]),
         plans.PartSpec("Rear fence", parts["rear-fence"], 1, "3/4 plywood", ["Ties the two halves of the base together."]),
         plans.PartSpec("Guard block", parts["guard-block"], 1, "laminated plywood or softwood; paint it red", [
             "Behind the front fence on the blade line; the blade must stop inside it at the travel stop."]),
-        plans.PartSpec("Runner", hardware["runner-left"], 2, "hardwood or UHMW", match=("Runner L", "Runner R"), notes=[
+        plans.PartSpec("Runner", hardware["runner-left"], 2, "hardwood or UHMW", match=("Runner L", "Runner R"), fit_dimensions=True, notes=[
             "Fit to the slots on the saw: slide with no side play, clear of the slot floor."]),
         plans.PartSpec("Stop cleat", hardware["stop-cleat"], 1, "hardwood", [
             f"Meets a stop block fixed to the table {STOP_FACE_TABLE_Y:.2f} in back from the table's front edge."]),

@@ -161,6 +161,10 @@ class Drafting(unittest.TestCase):
         self.assertEqual(drafting.fmt_in(0.71875), "23/32")
         self.assertEqual(drafting.fmt_in(8.0), "8")
 
+    def test_fit_dimensions_preserve_clearance(self):
+        self.assertEqual(drafting.fmt_in(0.745, fit=True), "0.745")
+        self.assertEqual(drafting.fmt_in(0.75, fit=True), "3/4")
+
     def test_ordinates_and_spread(self):
         self.assertEqual(drafting.ordinates([5, 2, 2.004, 7]), [0, 3, 5])
         out = drafting.spread([0.0, 0.05, 0.1, 2.0], 0.13)

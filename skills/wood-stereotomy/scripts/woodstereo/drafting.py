@@ -6,11 +6,14 @@ from math import atan2, degrees
 from .geometry import frac
 
 
-def fmt_in(value: float, denom: int = 32) -> str:
+def fmt_in(value: float, denom: int = 32, *, fit: bool = False) -> str:
     """Shop dimension: nearest 1/denom in, with the decimal added when rounding moves it
-    more than 1/128 in, e.g. 6.413 -> '6 13/32 (6.413)'."""
+    more than 1/128 in. For fitted parts show non-fractional targets in decimal inches."""
+    error = abs(round(value * denom) / denom - value)
+    if fit and error > 1e-6:
+        return f"{value:.4f}".rstrip("0").rstrip(".")
     text = frac(value, denom)
-    if abs(round(value * denom) / denom - value) > 1 / 128:
+    if error > 1 / 128:
         text += f" ({value:.3f})"
     return text
 

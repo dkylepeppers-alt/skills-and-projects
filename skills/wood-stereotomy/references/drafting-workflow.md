@@ -64,7 +64,8 @@ Rules the drawings follow:
 - **True shape.** A part that sits rotated in the assembly (a brace, a hopper side) is given
   a `frame` so its detail sheet shows it flat, with real lengths and angles.
 - **Fractions with a safety net.** Sizes print to 1/32; when rounding moves a value more than
-  1/128, the decimal follows in brackets.
+  1/128, the decimal follows in brackets. Set `PartSpec.fit_dimensions=True` for runners
+  and other fitted parts to preserve decimal targets on their detail sheets and cut lists.
 - **Hidden features are dimensioned.** Ordinates include hidden edges, so a groove depth or a
   recess from below is located even when it only shows dashed.
 - **Placeholders are listed, not hidden.** Anything drawn from an unmeasured figure goes in

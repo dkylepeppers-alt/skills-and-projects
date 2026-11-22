@@ -95,6 +95,29 @@ class PlanSet(unittest.TestCase):
         pages = len(re.findall(rb"/Type\s*/Page[^s]", data))
         self.assertEqual(pages, 4)   # assembly, section, one part, cut list and notes
 
+    def test_fillet_radius_and_bore_diameter_callouts(self):
+        from build123d import Axis, Box, Cylinder, IN, fillet
+        from woodstereo import plans
+        plate = Box(4 * IN, 3 * IN, IN)
+        plate = fillet(plate.edges().filter_by(Axis.Z), IN / 4) - Cylinder(IN / 8, 2 * IN)
+        view = plans.project(plate, "top")
+        fig, ax = plans._page(11, 8.5)
+        try:
+            plans._callouts(ax, view, 0, 0, 1)
+            labels = [t.get_text() for t in ax.texts]
+            self.assertCountEqual(labels, ["R1/4"] * 4 + ["Ø1/4"])
+        finally:
+            plans.plt.close(fig)
+
+    def test_split_bore_retains_diameter(self):
+        from build123d import Edge, IN
+        from woodstereo import plans
+        first = Edge.make_circle(IN, start_angle=30, end_angle=175)
+        second = Edge.make_circle(IN, start_angle=175, end_angle=390)
+        circles, arcs = plans._round_features([first], [second])
+        self.assertEqual(circles, [(0, 0, 1, False)])
+        self.assertFalse(arcs)
+
     def test_hatch_leaves_holes_empty(self):
         from woodstereo import plans
         outer = [(0, 0), (4, 0), (4, 4), (0, 4)]

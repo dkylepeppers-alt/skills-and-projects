@@ -50,6 +50,7 @@ checks = {
     "axial force split (normal, in-plane)": f"{normal:.3f}, {in_plane:.3f}",
     "friction alone would need mu >=": round(in_plane / normal, 2),
 }
+_, method = shop.plan_cut(shop_profile, g.cut_orientations(INTERFACE_NORMAL, frame, SIZE_V, SIZE_W))
 plan = plans.PlanSet(
     title="Skewed brace to post",
     assembly={"Brace": brace, "Post": post},
@@ -57,7 +58,7 @@ plan = plans.PlanSet(
         plans.PartSpec("Brace", brace, 1, f"{SIZE_V:g} x {SIZE_W:g} stock", [
             "Drawn in its own frame: length along x, width v along y, depth w up.",
             "Mark the four corner offsets from the shop notes on the corner edges and join them on each face.",
-            "Cut on the table saw lying on its 3-1/2 face (tilt 45.00, miter 19.47), or by hand to the knifed traces."],
+            f"Method: {method}."],
             frame=m.member_plane(INTERFACE_POINT, frame)),
         plans.PartSpec("Post", post, 1, f"{POST[0]:g} x {POST[1]:g} stock", ["Receiving face is the post's -x face."]),
     ],

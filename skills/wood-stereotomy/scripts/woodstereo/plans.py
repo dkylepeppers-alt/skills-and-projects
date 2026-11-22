@@ -28,7 +28,8 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 from build123d import IN, Compound, GeomType, Keep, Plane, Vector, split  # noqa: E402
 from matplotlib.backends.backend_pdf import PdfPages  # noqa: E402
-from matplotlib.patches import Circle, Polygon, Rectangle  # noqa: E402
+from matplotlib.patches import Circle, PathPatch, Polygon, Rectangle  # noqa: E402
+from matplotlib.path import Path as MPath  # noqa: E402
 
 from .drafting import choose_scale, edge_angle_label, fmt_in, ordinates, spread, wrap  # noqa: E402
 
@@ -380,7 +381,7 @@ def _assembly_sheet(pdf, ps: PlanSet, n, total):
         x = 0.42 + col * col_w
         y = 0.3 + 1.25 - 0.3 - row * 0.13
         dims = sorted(_bbox_in(shape))
-        size = " x ".join(fmt_in(d, 32).split(" (")[0] for d in dims)
+        size = " x ".join(fmt_in(d, 32) for d in dims)
         _text(ax, x, y, f"{num:>2} {name[:14]} x{qty}", size=5.5)
         _text(ax, x + col_w - 0.1, y, size, size=5.0, ha="right", color=QUIET)
     _text(ax, a2 - 0.05, a1 + 0.05, f"SCALE {label}", size=6.5, ha="right")
@@ -413,7 +414,7 @@ def _part_sheet(pdf, ps: PlanSet, part: PartSpec, n, total):
     t_, w_, l_ = sorted(_bbox_in(part.local()))
     area = _frame_and_title(ax, W, H, ps.title, f"PART: {part.name}  (QTY {part.qty})", n, total, "", [
         f"Material: {part.material or '-'}",
-        f"Blank: {fmt_in(t_, 32).split(' (')[0]} x {fmt_in(w_, 32).split(' (')[0]} x {fmt_in(l_, 32).split(' (')[0]}",
+        f"Blank: {fmt_in(t_, 32)} x {fmt_in(w_, 32)} x {fmt_in(l_, 32)}",
         "Ordinates from the REF corner of each view."])
     shape = part.local()
     keys = part.views
@@ -444,6 +445,27 @@ def _part_sheet(pdf, ps: PlanSet, part: PartSpec, n, total):
     plt.close(fig)
 
 
+def _signed_area(ring):
+    return 0.5 * sum(a[0] * b[1] - b[0] * a[1] for a, b in zip(ring, ring[1:] + ring[:1]))
+
+
+def hatch_path(rings, to_paper=lambda p: p):
+    """Compound path for a cut face: the outer ring, then each hole wound the other way, so
+    the hatch fills material only and leaves holes empty."""
+    verts, codes = [], []
+    outer_sign = None
+    for i, ring in enumerate(rings):
+        pts = [to_paper(p) for p in ring]
+        sign = _signed_area(pts) > 0
+        if i == 0:
+            outer_sign = sign
+        elif sign == outer_sign:
+            pts = pts[::-1]
+        verts += pts + [pts[0]]
+        codes += [MPath.MOVETO] + [MPath.LINETO] * (len(pts) - 1) + [MPath.CLOSEPOLY]
+    return MPath(verts, codes)
+
+
 def _section_sheet(pdf, ps: PlanSet, sec: Section, n, total):
     W, H = PAGES[ps.page]
     fig, ax = _page(W, H)
@@ -464,18 +486,20 @@ def _section_sheet(pdf, ps: PlanSet, sec: Section, n, total):
             nrm, ctr = f.normal_at(f.center()), f.center()
             on_plane = abs((ctr - plane.origin).dot(plane.z_dir)) < 1e-3
             if on_plane and abs(abs(nrm.dot(plane.z_dir)) - 1) < 1e-6:
-                wire = f.outer_wire()
-                n_pts = max(16, int(wire.length / IN * 6))
-                pts = [wire.position_at(i / n_pts) for i in range(n_pts)]
-                faces.append([to_view((p.X / IN, p.Y / IN, p.Z / IN), sec.view) for p in pts])
+                rings = []
+                for wire in [f.outer_wire(), *f.inner_wires()]:
+                    n_pts = max(16, int(wire.length / IN * 6))
+                    pts = [wire.position_at(i / n_pts) for i in range(n_pts)]
+                    rings.append([to_view((p.X / IN, p.Y / IN, p.Z / IN), sec.view) for p in pts])
+                faces.append(rings)
     v = project(kept, sec.view)
     a0, a1, a2, a3 = area
     s, label = choose_scale(v.width, v.height, a2 - a0, a3 - a1, fixed_w=1.6, fixed_h=2.2)
     x = a0 + max(1.1, (a2 - a0 - v.width * s) / 2)
     y = a1 + max(1.0, (a3 - a1 - v.height * s) / 2)
-    for poly in faces:
-        ax.add_patch(Polygon([(x + (p[0] - v.box[0]) * s, y + (p[1] - v.box[1]) * s) for p in poly],
-                             closed=True, facecolor="none", edgecolor=INK, hatch="////", lw=0.4))
+    for rings in faces:
+        ax.add_patch(PathPatch(hatch_path(rings, lambda p: (x + (p[0] - v.box[0]) * s, y + (p[1] - v.box[1]) * s)),
+                               facecolor="none", edgecolor=INK, hatch="////", lw=0.4))
     _draw_geometry(ax, v, x, y, s)
     _view_title(ax, x, y + v.height * s + 0.12, f"SECTION {sec.name} (looking as the {sec.view} view)", label)
     _ordinates_x(ax, v, x, y, s)
@@ -490,7 +514,7 @@ def _text_lines(ps: PlanSet, cut_rows) -> list[str]:
     lines = ["CUT LIST", ""]
     lines.append(f"{'#':>2}  {'PART':<28}{'QTY':>4}   {'T x W x L (in)':<34}{'MATERIAL'}")
     for i, (name, qty, dims, mat) in enumerate(cut_rows, 1):
-        size = " x ".join(fmt_in(d, 32).split(" (")[0] for d in dims)
+        size = " x ".join(fmt_in(d, 32) for d in dims)
         lines.append(f"{i:>2}  {name[:27]:<28}{qty:>4}   {size:<34}{mat}")
     lines += ["", "NOTES", ""] + [f"- {x}" for x in ps.notes]
     if ps.verify:
@@ -505,19 +529,26 @@ def _text_lines(ps: PlanSet, cut_rows) -> list[str]:
     return out
 
 
-LINES_PER_PAGE = 58
+LINE_STEP, TEXT_TOP, TITLE_TOP = 0.118, 0.55, 0.3 + 1.25 + 0.1
+
+
+def lines_per_page(page: str) -> int:
+    """Text rows that fit between the top margin and the title block's top edge."""
+    _, H = PAGES[page]
+    return int((H - TEXT_TOP - TITLE_TOP) / LINE_STEP) + 1
 
 
 def _text_sheets(pdf, ps: PlanSet, n0, total, lines):
     W, H = PAGES[ps.page]
-    pages = [lines[i:i + LINES_PER_PAGE] for i in range(0, len(lines), LINES_PER_PAGE)] or [[]]
+    per = lines_per_page(ps.page)
+    pages = [lines[i:i + per] for i in range(0, len(lines), per)] or [[]]
     for k, chunk in enumerate(pages):
         fig, ax = _page(W, H)
         _frame_and_title(ax, W, H, ps.title, "CUT LIST AND NOTES", n0 + k, total, "-", [])
-        yy = H - 0.55
+        yy = H - TEXT_TOP
         for line in chunk:
             _text(ax, 0.5, yy, line, size=6.4, family="DejaVu Sans Mono")
-            yy -= 0.118
+            yy -= LINE_STEP
         pdf.savefig(fig)
         plt.close(fig)
 
@@ -538,7 +569,7 @@ def write_plan_set(ps: PlanSet, path) -> Path:
     unique = _unique_parts(ps)
     cut_rows = [(p.name, p.qty, sorted(_bbox_in(p.local())), p.material) for p in unique]
     lines = _text_lines(ps, cut_rows)
-    text_pages = max(1, -(-len(lines) // LINES_PER_PAGE))
+    text_pages = max(1, -(-len(lines) // lines_per_page(ps.page)))
     total = 1 + len(ps.sections) + len(unique) + text_pages
     with PdfPages(path) as pdf:
         n = 1

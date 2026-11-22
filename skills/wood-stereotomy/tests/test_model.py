@@ -94,3 +94,34 @@ class PlanSet(unittest.TestCase):
         self.assertTrue(data.startswith(b"%PDF"))
         pages = len(re.findall(rb"/Type\s*/Page[^s]", data))
         self.assertEqual(pages, 4)   # assembly, section, one part, cut list and notes
+
+    def test_hatch_leaves_holes_empty(self):
+        from woodstereo import plans
+        outer = [(0, 0), (4, 0), (4, 4), (0, 4)]
+        hole = [(1, 1), (2, 1), (2, 2), (1, 2)]          # same winding as the outer ring
+        path = plans.hatch_path([outer, hole])
+        # Render it (fill follows winding; Path.contains_point does not) and sample pixels.
+        import numpy as np
+        import matplotlib.pyplot as plt
+        from matplotlib.patches import PathPatch
+        fig = plt.figure(figsize=(4, 4), dpi=50)
+        ax = fig.add_axes((0, 0, 1, 1))
+        ax.set_xlim(0, 4)
+        ax.set_ylim(0, 4)
+        ax.axis("off")
+        ax.add_patch(PathPatch(path, facecolor="black", edgecolor="none"))
+        fig.canvas.draw()
+        img = np.asarray(fig.canvas.buffer_rgba())
+        plt.close(fig)
+
+        def dark(x, y):
+            return img[int((4 - y) * 50), int(x * 50), 0] < 128
+
+        self.assertTrue(dark(3, 3))          # material
+        self.assertFalse(dark(1.5, 1.5))     # hole
+
+    def test_text_rows_clear_the_title_block(self):
+        from woodstereo import plans
+        rows = plans.lines_per_page("letter")
+        last = plans.PAGES["letter"][1] - plans.TEXT_TOP - (rows - 1) * plans.LINE_STEP
+        self.assertGreaterEqual(last, plans.TITLE_TOP)

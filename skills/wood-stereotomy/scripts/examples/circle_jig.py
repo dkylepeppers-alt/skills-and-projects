@@ -22,10 +22,11 @@ BLADE_W, KERF = 0.5, 0.035                    # 1/2 in blade; kerf: measure on a
 MIN_RADIUS, MAX_RADIUS = 2.5, 11.0            # a 1/2 in blade handles circles over 5 in diameter
 SLOT_X = 5.0                                  # MEASURE: miter slot centerline right of the blade
 X_LEFT, BASE_W = -4.0, 18.0
-BAR_W, BAR_T, BAR_LEN = 0.75, 0.375, 10.0     # hardwood pivot bar in a 3/4 x 3/8 groove
+BAR_W, BAR_T, BAR_LEN = 0.75, 0.375, 10.25    # hardwood pivot bar in a 3/4 x 3/8 groove
 PIN_D, PIN_LEN = 0.25, 0.75                   # steel pin pressed into the bar
 KNOB_X = 11.5                                 # knob bolt (1/4-20) fixed in the base
-BAR_SLOT_W, BAR_SLOT_START, BAR_SLOT_END = 0.28, 0.75, 9.5   # along the bar from its left end
+BAR_SLOT_W, BAR_SLOT_START, BAR_SLOT_END = 0.28, 0.75, 9.75  # along the bar from its left end
+SHANK_R, SLIDE = 0.125, 1 / 32                # 1/4-20 stud radius, running clearance at the slot ends
 BOLT_HOLE, TNUT_BORE, TNUT_DEPTH = 5 / 16, 0.75, 1 / 16
 
 folder = out_dir("circle_jig")
@@ -44,8 +45,14 @@ groove = m.box_at(((groove_x0 + x_right) / 2 + 0.05, pivot_y, PLY - BAR_T / 2),
 bolt = Pos(KNOB_X * m.IN, pivot_y * m.IN, PLY / 2 * m.IN) * Cylinder(BOLT_HOLE / 2 * m.IN, PLY * m.IN + 0.2)
 tnut = Pos(KNOB_X * m.IN, pivot_y * m.IN, TNUT_DEPTH / 2 * m.IN) * Cylinder(TNUT_BORE / 2 * m.IN, TNUT_DEPTH * m.IN + 0.01)
 base = base - kerf_slot - groove - bolt - tnut
-assert BAR_SLOT_START <= KNOB_X - (KERF / 2 + MAX_RADIUS - 0.5) and KNOB_X - (KERF / 2 + MIN_RADIUS - 0.5) <= BAR_SLOT_END, \
-    "the knob must stay inside the bar's slot over the whole radius range"
+# The knob's stud, with its radius and running clearance, must sit inside the bar's slot at
+# both ends of the radius range (the knob is fixed; the bar slides past it).
+knob_along_min_r = KNOB_X - (KERF / 2 + MIN_RADIUS - 0.5)     # stud position along the bar
+knob_along_max_r = KNOB_X - (KERF / 2 + MAX_RADIUS - 0.5)
+slot_margin = min(BAR_SLOT_END - (knob_along_min_r + SHANK_R + SLIDE),
+                  (knob_along_max_r - SHANK_R - SLIDE) - BAR_SLOT_START)
+assert slot_margin >= 0, f"knob stud leaves the bar slot by {-slot_margin:.3f} in at a radius limit"
+assert BAR_LEN - BAR_SLOT_END >= 0.375, "bar end wall past the slot is too thin"
 
 
 def bar_at(radius):
@@ -100,7 +107,7 @@ checks = {
     "pin centre vs the teeth at the stop, in": round(pin_line_error, 6),
     "blade at the stop meets bar, pin, runner or lip; bar overlaps groove (min / max radius)": results,
     "blade runs only in the base's kerf slot, cu in": round(base_at_stop, 6),
-    "knob stays in the bar slot from min to max radius": True,
+    "knob stud inside the bar slot at both radius limits (margin incl. 1/32 clearance), in": round(slot_margin, 4),
     "front of table to blade front": f"{F:g} ({bs['front_of_table_to_blade_front_is']})",
     "parts inside the hand-tool envelope": all(m.surface_audit(x)["ok"] for x in (base, lip, run, bar_min)),
 }

@@ -53,6 +53,7 @@ for i in range(COLS):
         parts[f"block-{i + 1}-{j + 1}"] = grid[(i, j)]
 
 # frame strips along all four sides: each strip mirrors the block side it meets
+strip_labels_overhang, strip_labels_ramp = [], []   # carries an overhang / leans over a ramp
 edge = COLS * BASE / 2
 for k in range(COLS):
     pos = (k - (COLS - 1) / 2) * BASE
@@ -64,7 +65,9 @@ for k in range(COLS):
         x_side_is_ramp = not turned              # unturned blocks present ramps on +-x
         faces_ramp = x_side_is_ramp if side < 2 else not x_side_is_ramp
         piece = Rot(0, 0, rot) * strip_piece(under_block=not faces_ramp)
-        parts[f"strip-{side + 1}-{k + 1}"] = piece.moved(m.Location((at[0] * m.IN, at[1] * m.IN, 0)))
+        label = f"strip-{side + 1}-{k + 1}"
+        parts[label] = piece.moved(m.Location((at[0] * m.IN, at[1] * m.IN, 0)))
+        (strip_labels_ramp if faces_ramp else strip_labels_overhang).append(label)
 
 # ---- saw settings: both the rip and the crosscut are single bevels at the slope
 rip = g.Orientation("base or top face", HEIGHT, SLOPE, 0.0)
@@ -114,9 +117,14 @@ plan = plans.PlanSet(
         plans.PartSpec("Block", unit, ROWS * COLS, "dense hardwood; grain between the overhangs", match="block-", notes=[
             f"Every face {SLOPE:g} deg from vertical: rip the stick's long edges turning it end-for-end, "
             "crosscut both ends at the same tilt on a sled with a stop and hold-down."]),
-        plans.PartSpec("Frame strip", strip_piece(True), 4 * COLS, "hardwood", match="strip-", notes=[
-            "One part, installed two ways: turned end over end it changes from carrying an overhang to leaning over a ramp.",
+        plans.PartSpec("Strip A (carries overhang)", strip_piece(True), len(strip_labels_overhang), "hardwood",
+                       match=tuple(strip_labels_overhang), notes=[
+            "Face slopes like a ramp: it carries the overhang of the edge block it meets.",
             "Screw to the frame; folding wedges on two adjacent sides set the pre-compression."]),
+        plans.PartSpec("Strip B (over ramp)", strip_piece(False), len(strip_labels_ramp), "hardwood",
+                       match=tuple(strip_labels_ramp), notes=[
+            "Face overhangs: it leans over the ramp of the edge block it meets and stops it lifting.",
+            "Not interchangeable with strip A: A is 3/4 at the bottom and narrows upward, B widens upward."]),
     ],
     notes=["The assembly lists every block and strip by position; blocks are identical, turned 90 deg in a checkerboard."],
     shop_notes=text,

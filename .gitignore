@@ -25,3 +25,6 @@ projects/nevermore/checks/*-results.json
 .tmp/
 *.zip
 *.tar.gz
+
+# Immutable nativity workshop release packages (verified by SHA256SUMS)
+!projects/nativity-barn/releases/*/nativity-workshop-*.zip

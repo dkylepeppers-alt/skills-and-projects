@@ -34,8 +34,13 @@ Report each line as pass, fail or not checked.
 
 Plan set
 - A plan set PDF was produced from the model and every page was looked at.
-- Every part has a detail sheet; repeated parts carry their quantity.
-- Every edge, hole and recess is located from the REF corner, hidden ones included.
+- Every assembly occurrence maps to one drawing mark, count, stock entry and cut list.
+- Every modeled joint/feature is matched to a labelled detail on both mating members.
+- Each location has an actual datum-to-feature arrow dimension; widths, depths, shoulders,
+  angles, peg diameters and bore axes appear on the drawing, not just in notes.
+- Dimension lines and extensions are visually traceable to the actual feature; no fanned
+  coordinate labels, clipping, collisions, illegibly small type, or misleading rounding.
+- Detail scales and datum orientations are identified; hidden depths have a section or view.
 - Rotated parts are drawn in true shape.
 - Every placeholder figure is in the MEASURE BEFORE BUILDING list.
 
@@ -51,7 +56,8 @@ Tooling
 - Every planar cut has settings in a feasible orientation (`shop.plan_cut`), or a named
   hand method with its guide block or wedge in the model.
 - Mirrored parts are identified with the slot or flip that makes them.
-- Curved outlines have a 1:1 template with calibration square, reference face and grain.
+- Patterns are separately printable at 100%; each tile has a part ID, datum/grain, calibration
+  bar or square and registration marks. Check printed line lengths and all tile boundaries.
 
 Material and assembly
 - Grain arrow on every part; no short grain behind a loaded lip, peg or tenon.
@@ -72,3 +78,5 @@ Model
 - Interference between mating parts is zero (`model.interference_in3`).
 - Contact area matches the intended bearing (`model.contact_area_in2`).
 - A preview or viewer check was looked at.
+- For drawing-only revisions the accepted STEP is retained and regenerated geometry checked
+  against its part/solid count, bounds, volumes and critical features.

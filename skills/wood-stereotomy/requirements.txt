@@ -3,3 +3,4 @@
 # Let build123d resolve its own compatible OCP kernel and bindings.
 build123d>=0.13
 matplotlib>=3.8
+pymupdf>=1.24

@@ -106,11 +106,20 @@ to `shop.load_shop()`.
     hidden in the outside views, the build sequence and shop notes, and every placeholder
     figure under `verify`. `plans.write_plan_set` produces: assembly sheet with overall
     sizes and parts list; section sheets with cut faces hatched; one detail sheet per part
-    with every edge, hole and recess located by ordinate dimensions from the part's REF
-    corner, hole sizes and the angle of every edge that is not square; a cut list; the shop
-    notes. Then render every page to PNG (`pdftoppm -r 110 -png plans.pdf pg`) and look at
-    each one: overlapping labels, a missing depth, a feature with no dimension, or a part
-    drawn out of true shape is a defect to fix before delivery.
+    with conventional arrowed overall dimensions; enlarged dimension/details for crowded
+    geometry; hole diameters and angles; a cut list and shop notes. Read
+    `references/drafting-workflow.md` for the drawing acceptance rules. For timber frames
+    and other complex joinery retain each actual tongue, clipped removal volume, shoulder,
+    and bore as a named `plans.FeatureSpec`, with mate, reference face and cut direction.
+    Dimension location from the real datum, size and depth on a true-shape detail, and
+    every bore's diameter, axis and depth. Do not substitute vertex ordinate fans,
+    coordinate registers, prose or footnotes for dimensioned drawings. Use tabloid when
+    dense. Split/enlarge further if needed; there is no target page count. Render every
+    page to PNG (`pdftoppm -r 110 -png plans.pdf pg`) and view each one at readable size.
+    Reject overlap, detached extension lines, missing dimensions, projection ambiguity,
+    clipping or false scale. Check printed templates separately at 100%.
+    Run `scripts/check_pdf.py --paper tabloid plans.pdf` (or `letter`) for page size,
+    text overflow and collision candidates; inspect the actual rendered geometry too.
 13. **Deliver.** The plan set first. With it: the STEP file, the generator source, the shop
     sheet (Markdown) and 1:1 templates (`geometry.layout_lengths` into
     `templates.end_cut_development`, DXF and SVG) where a full-size template helps. Run the
@@ -122,7 +131,8 @@ to `shop.load_shop()`.
   say so plainly and say what is missing.
 - Report only checks that ran. Say which numbers are closed-form, which were measured on
   the model, and which shop capacities are placeholders.
-- Decimal inches to three places plus the nearest 1/32 for layout; degrees to two places.
+- Use exact imperial fractions where they represent CAD geometry; preserve decimal fit
+  targets and scale-model details instead of rounding them away. Degrees to two places.
 - Geometry and one-part loads are in scope. Structural sizing is not: for building work
   point to the applicable design standard and say so in the report.
 - Rules of thumb in `joinery.py` are first-pass defaults. Name them as such in the brief.

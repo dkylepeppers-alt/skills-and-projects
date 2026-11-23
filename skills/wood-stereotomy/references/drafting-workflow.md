@@ -53,26 +53,80 @@ so the drawings and the checked geometry cannot disagree.
 | --- | --- | --- |
 | Assembly | Top, front, right views; overall sizes; a number on every part; parts list with quantities | Every part is numbered and listed |
 | Section | The cut faces hatched where a groove, recess, joint or stacked part hides in the outside views | Every hidden depth is drawn and dimensioned somewhere |
-| Part detail (one per distinct part) | Three views; ordinate dimensions from the REF corner to every edge, hole centre and recess, visible or hidden; hole sizes; angle of every edge that is not square; material, blank size, quantity, notes | A builder can lay out every cut with a rule from the reference edges |
+| Part master (one per distinct part) | True-shape orthographic views; overall finished sizes, stock cross-section, reference faces, quantity, grain and feature IDs | A builder can identify the timber, orient it on the bench and find each detail |
+| Enlarged feature details | Actual tool or tongue profile, overall locator, size, position, depth, angles, bore centreline and diameter, mating part ID | A builder can knife, drill and cut every feature without guessing or reading a separate coordinate schedule |
 | Cut list and notes | Blank sizes T x W x L, quantities, materials; hardware; build sequence; settings; MEASURE BEFORE BUILDING list | Every placeholder is listed |
 
 Rules the drawings follow:
 
-- **Ordinate dimensions from a REF corner.** Zero is the lower-left of each view: mark those
-  faces as the reference face and edge on the part. Every layout mark is measured from them,
-  never from a neighbouring feature, so errors do not add up.
+- **Conventional dimensioning.** Use dimension lines parallel to the measured distance,
+  paired arrowheads, thin extension lines from actual edges or centre marks, readable
+  values and consistent text orientation. Short spans get exterior arrows. Put local
+  widths and depths nearest the object, overall size outside. Measure position from the
+  same physical REF end/face; never move the datum merely to fit a view. Chain dimensions
+  may communicate spacing but must not replace a fit-critical datum location.
+- **No ordinate fans.** Do not automatically label every vertex in a tight column or
+  displaced leader stack. Use a local detail at a larger scale and labelled locator on
+  the main part. Three lanes per axis is the default ceiling; use another sheet instead
+  of shrinking type. Do not crowd diameter leaders into hidden edges.
 - **True shape.** A part that sits rotated in the assembly (a brace, a hopper side) is given
   a `frame` so its detail sheet shows it flat, with real lengths and angles.
-- **Fractions with a safety net.** Sizes print to 1/32; when rounding moves a value more than
-  1/128, the decimal follows in brackets. Set `PartSpec.fit_dimensions=True` for runners
-  and other fitted parts to preserve decimal targets on their detail sheets and cut lists.
-- **Hidden features are dimensioned.** Ordinates include hidden edges, so a groove depth or a
-  recess from below is located even when it only shows dashed.
+- **Exact dimensions.** Prefer clean fractions when exact, otherwise decimal inches to
+  sufficient precision for the cut (especially miniature stock and fit relief).
+  Set `PartSpec.fit_dimensions=True` for fitted parts. A displayed 0 for a nonzero cut
+  is a defect. Distinguish rough blank from finished bounding box: use
+  `PartSpec.stock_size` whenever they differ.
+- **Hidden features are dimensioned.** A dashed edge is not a depth specification.
+  Use a section or complementary view showing the actual bottom/shoulder. A drilled
+  hole needs Ø, centre position, drill path (through or blind depth) and axis direction.
+  For skew bores provide a true axis-normal view and section; an oval projection is not diameter.
 - **Placeholders are listed, not hidden.** Anything drawn from an unmeasured figure goes in
   `verify`, and the build sequence should mark such features from the real machine where it
   can (the circle sled's pivot line is marked from the blade, not from the table figure).
-- **Look at every page** before delivering. The generator lays out views and labels
-  automatically; a crowded part may need a section or a split into sub-parts to read well.
+- **Look at every page** before delivering. The generator paginates dimension lanes
+  but does not infer machining intent or guarantee collision-free leaders. Review at
+  intended print size. Supplement or customize it when needed.
+
+## Timber-frame detailing and drawing coverage
+
+Design traditional joints as actual solids: housed or shouldered mortise-and-tenon,
+braces with angled shoulders and tenons, rafter seats/housings, purlin or ridge joints,
+laps or scarfs where needed, and pegs where they actually retain a joint. Do not use
+butt connections hidden under sketches or arbitrary cross-member overlaps. Check the
+remaining section, bearing, cheeks, end distances, grain and assembly order;
+proportion to actual miniature stock instead of blindly applying full-size offsets.
+Pegs must pass through intended members without colliding with other mortises.
+
+Retain blanks, trimmed bodies, finished solids, mating tongues and actual clipped cut
+volumes. For each joint record a stable ID, male/female marks, cut role, reference
+frame, clipping against stock, and intended fit. Pass the same shapes to
+`PartSpec(features=[plans.FeatureSpec("J01", cut, "MORTISE", mate="T01",
+notes=["Blind depth ..."])])`. Shapes are in assembly coordinates; the part frame
+transforms them into true local views. The cut is enlarged on the detail sheet and
+located on the full part locator. Select views that convey the cut; add a custom
+section for nonorthogonal features. For complex parts named feature details, not the
+generic projected-edge fallback, are authoritative. Include stock-profile cuts as
+features too. Provide stable drawing IDs and locator labels on master views; group
+only identical geometry with matching handedness.
+
+Set `PartSpec.datum=(x,y,z)` in local inches for the physical datum (default:
+local finished bounding-box minimum); it is projected into every feature view,
+including reversed views. Set `grain` and state the actual reference faces in
+the part notes. Use a visible-opening view for a blind recess, even if that
+requires "back", "bottom" or "left". Two complementary feature views are paired
+at one scale; request the third only if it conveys additional machining geometry.
+Specifying features declares a complete feature register and suppresses the
+repetitive projected-edge fallback. Record stock profiles and all other cuts.
+
+Before delivery reconcile the assembly occurrence list, unique marks, quantity,
+cut list, features per part, mating feature IDs and dimensioned drawing references.
+Every modeled feature must have a drawing; every drawn feature must come from
+the same model. For drafting-only revisions freeze the STEP and compare regenerated
+solids' count, bounds and volume (and relevant feature coordinates) before claiming
+geometry is unchanged. Preserve the prior revision; do not quietly redesign.
+Use `plans.coverage_report(plan)` to identify unmatched marks, ambiguous matches,
+quantity discrepancies and duplicate feature IDs; explicitly document machine
+reference geometry. The report cannot infer unrecorded machining features.
 
 ## Printing 1:1
 
@@ -84,6 +138,17 @@ The SVG files from `templates.write_svg` carry their size in inches. Print at 10
 if needed, and measure the 2 in calibration square with a steel rule before using any
 other line ([Docuslice](https://docuslice.com/blog/2026-08-05-How-to-Print-a-Life-Size-Template-at-1-to-1-Scale/)).
 Label each template with the part, its reference face and its grain direction.
+
+Keep patterns in a separate printer-friendly PDF from the scaled construction set.
+Use `templates.write_pdf(path, lines, labels, title="P01", orientation="REF at left; grain along length")`
+to produce actual-size letter sheets directly; it tiles oversized layouts without rescaling.
+If a 1:1 piece fits on one letter page, print it whole, with margin for a physical
+printer. If not, use overlapping tiles with registration marks, row/column and
+part IDs, orientation and a calibration square or check bar on every sheet. Never
+fit-to-page or crop the cut line silently. Verify the exported PDF media box and
+actual PDF line lengths, all template ink inside printable margins, registration
+between adjacent tiles, and every labeled feature against the model. Render and
+inspect all pattern pages as well as drawings.
 
 The development is drawn as seen from outside the blank with the cut end toward the top of
 the sheet, so the paper wraps the stock the right way round: A, B, C, D, A when the waste

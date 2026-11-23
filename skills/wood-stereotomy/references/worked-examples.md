@@ -2,9 +2,11 @@
 
 Run any of them with `python scripts/examples/<name>.py --out build`. The four jig
 examples use the machines in the shop profile. Each writes its plan set
-(`<name>-plans.pdf`: assembly, sections, a dimensioned sheet per part, cut list and notes),
+(`<name>-plans.pdf`: assembly, sections, master and detail sheets, cut list and notes),
 a STEP file, a hidden-line preview SVG and `shop-sheet.md`; the brace also writes a 1:1
-development as DXF and SVG. Copy the nearest one as the starting point for a new design.
+development as DXF, SVG and printable tiled PDF. Copy the nearest one as the starting point for a new design.
+Use `mortise_tenon.py` for the named feature register, clipped bore geometry, mating
+IDs, shared local datum, coverage reporting and paired detail views.
 
 | Example | Shows | Must reproduce |
 | --- | --- | --- |

@@ -36,6 +36,8 @@ lines, labels = templates.end_cut_development(
     lengths, SIZE_V, SIZE_W, g.waste_direction(INTERFACE_NORMAL, frame) > 0)
 templates.write_dxf(folder / "brace-foot-development.dxf", lines)
 templates.write_svg(folder / "brace-foot-development.svg", lines, labels)
+templates.write_pdf(folder / "brace-foot-development.pdf", lines, labels,
+                    title="Brace foot / 1:1", orientation="Datum at bottom; grain up")
 normal, in_plane = g.force_components(INTERFACE_NORMAL, frame.u)
 
 # ---- outputs and checks

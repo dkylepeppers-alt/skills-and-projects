@@ -1,7 +1,7 @@
 """Blind mortise and tenon, rail into leg, with an optional drawbore: ordinary joinery
 drafted by the same rules (shared interface, relief on inactive faces, shop-ready checks)."""
 from _common import finish, out_dir
-from build123d import Axis, Cylinder, Pos, Rot
+from build123d import Axis, Compound, Cylinder, Pos, Rot
 
 from woodstereo import geometry as g
 from woodstereo import joinery
@@ -38,13 +38,24 @@ socket = m.box_at((face - (TENON_L + MORTISE_RELIEF) / 2, 0, rail_z),
                   (TENON_L + MORTISE_RELIEF, TENON_T, TENON_W))
 rail = rail_body + tenon
 leg = leg - socket
+leg_features = [plans.FeatureSpec("J01-M",socket,"BLIND MORTISE","Rail / J01-T",
+                                  ("right","front"),["Opened from +X; bottom relieved 1/16."])]
+rail_features = [plans.FeatureSpec("J01-T",tenon,"SHOULDERED TENON","Leg / J01-M",
+                                   ("front","top"))]
 
 if DRAWBORE:
     def peg_hole(x):
         return Pos(x * m.IN, 0, rail_z * m.IN) * (Rot(90, 0, 0) * Cylinder(PEG_D / 2 * m.IN, LEG * m.IN))
-    leg = leg - peg_hole(face - PEG_FROM_SHOULDER)
+    leg_bore=peg_hole(face - PEG_FROM_SHOULDER)
+    leg = leg - leg_bore
     # The tenon's hole sits closer to the shoulder, so the peg draws the shoulder tight.
-    rail = rail - peg_hole(face - PEG_FROM_SHOULDER + DRAWBORE_OFFSET)
+    rail_tool=peg_hole(face - PEG_FROM_SHOULDER + DRAWBORE_OFFSET)
+    rail_bore=Compound(children=list(rail.intersect(rail_tool).solids()))
+    rail = rail - rail_tool
+    leg_features.append(plans.FeatureSpec("J01-P-L",leg_bore,"THROUGH BORE","Rail / J01-P-R",
+                                          ("front","top"),["Drill along Y through both cheeks."]))
+    rail_features.append(plans.FeatureSpec("J01-P-R",rail_bore,"DRAWBORE","Leg / J01-P-L",
+                                           ("front","top"),["Drill through tenon along Y."]))
 
 cheek_wall = (LEG - TENON_T) / 2
 text = "\n".join([
@@ -80,12 +91,15 @@ plan = plans.PlanSet(
     parts=[
         plans.PartSpec("Leg", leg, 1, f"{LEG:g} square, grain vertical", [
             "Mortise to knifed lines from the leg's reference faces; bottom relieved 1/16 past the tenon.",
-            "Peg hole through both cheeks at the drawbore position." if DRAWBORE else "No peg."]),
+            "Peg hole through both cheeks at the drawbore position." if DRAWBORE else "No peg."],
+            features=leg_features,grain="vertical / Z"),
         plans.PartSpec("Rail", rail, 1, f"{RAIL_T:g} x {RAIL_W:g} stock", [
             "Shoulders knifed all round and pared; the shoulder is the locating face.",
-            f"Peg hole offset {g.frac(DRAWBORE_OFFSET)} toward the shoulder (drawbore)." if DRAWBORE else ""]),
+            f"Peg hole offset {g.frac(DRAWBORE_OFFSET)} toward the shoulder (drawbore)." if DRAWBORE else ""],
+            features=rail_features,grain="along X"),
     ],
     shop_notes=text,
 )
 checks["plan set"] = plans.write_plan_set(plan, folder / "mortise-tenon-plans.pdf").name
+checks["drawing coverage"] = plans.coverage_report(plan)
 finish(folder, text, checks)

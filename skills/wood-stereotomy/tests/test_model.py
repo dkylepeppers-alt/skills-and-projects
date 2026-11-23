@@ -93,7 +93,39 @@ class PlanSet(unittest.TestCase):
         import re
         self.assertTrue(data.startswith(b"%PDF"))
         pages = len(re.findall(rb"/Type\s*/Page[^s]", data))
-        self.assertEqual(pages, 4)   # assembly, section, one part, cut list and notes
+        self.assertGreater(pages, 4)   # master plus automatically paginated detail views
+
+    def test_dense_named_features_do_not_repeat_vertex_schedule(self):
+        from woodstereo import plans
+        from build123d import Cylinder, Pos
+        stock = m.box_at((4.5, .5, .5), (9, 1, 1))
+        holes = [Pos(x*m.IN,.5*m.IN,.5*m.IN)*Cylinder(.0625*m.IN,m.IN)
+                 for x in (3,3.1875,3.375)]
+        part = stock
+        for hole in holes:
+            part = part-hole
+        spec = plans.PartSpec("Post",part,features=[
+            plans.FeatureSpec(f"D{i+1}",hole,"BORE","Peg")
+            for i,hole in enumerate(holes)])
+        views = {name:plans.project(part,name) for name in spec.views}
+        jobs=plans._detail_jobs(spec,views)
+        self.assertEqual(len(jobs),3)
+        self.assertTrue(all(len(j)==2 for j in jobs))
+        for job in jobs:
+            for _,v,batch,_,parent,feature in job:
+                self.assertTrue(parent and feature)
+                self.assertTrue(all(len(lane)<=3 for lane in batch))
+        v=views["top"]
+        self.assertGreater(len(plans._batches(v)),1)
+        fig,ax=plans._page(11,8.5)
+        try:
+            plans._arrow_dimensions(ax,v,2,3,1,plans._batches(v)[0])
+            self.assertTrue(any(t.get_text()=="9" for t in ax.texts))
+            # Conventional arrows rather than diagonal displaced ordinate leaders.
+            self.assertTrue(all(len(set(l.get_xdata()))==1 or len(set(l.get_ydata()))==1
+                                for l in ax.lines))
+        finally:
+            plans.plt.close(fig)
 
     def test_fillet_radius_and_bore_diameter_callouts(self):
         from build123d import Axis, Box, Cylinder, IN, fillet

@@ -50,6 +50,6 @@ against the solid models.
 - [Fine Woodworking: circle-cutting bandsaw jig](https://finewoodworking.com/?p=4213); [Woodcraft: bandsaw circle-cutting jig](https://www.woodcraft.com/blog_entries/bandsaw-circle-cutting-jig)
 - [Sawmill Creek: left tilt and crosscut fences](https://sawmillcreek.org/goto/post?id=3323908)
 
-**CAD.** build123d 0.12; the modeling conventions (STEP-first, named parameters, inches
-via `IN`, source over generated artifacts) follow the user's `cad` skill, which is based on
+**CAD.** build123d (see `requirements.txt`); the modeling conventions (STEP-first, named
+parameters, inches via `IN`, source over generated artifacts) follow the user's `cad` skill, which is based on
 earthtojake/text-to-cad (MIT). No code from that project is included here.

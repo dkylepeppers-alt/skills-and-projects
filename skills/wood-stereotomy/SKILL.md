@@ -19,17 +19,27 @@ them as extras for richer inspection, snapshots and viewer links on the STEP fil
 ## Setup
 
 `scripts/woodstereo/geometry.py`, `shop.py`, `joinery.py`, `templates.py` and `sheet.py`
-run on the Python standard library. Only `model.py` and the examples need build123d:
+run on the Python standard library. Use Python 3.11 or newer for CAD modeling, drawings
+and examples. Create an isolated virtual environment with a Python version supported by
+the current build123d release. If migrating an older environment with OCP 7.x, create
+a fresh environment to avoid mixing incompatible OCP bindings. Substitute the actual
+skill directory for `SKILL_DIR`:
 
 ```bash
-python3 -m venv .venv && .venv/bin/pip install -r <skill>/requirements.txt
-.venv/bin/python <skill>/scripts/examples/brace.py --out build
-python3 -m unittest discover -s <skill>/tests        # no build123d needed for test_geometry
+SKILL_DIR=/absolute/path/to/wood-stereotomy
+python3 -m venv .venv && .venv/bin/python -m pip install --upgrade -r "$SKILL_DIR/requirements.txt"
+.venv/bin/python -m pip check
+.venv/bin/python -c 'from importlib.metadata import version; print("build123d", version("build123d"))'
+.venv/bin/python -m unittest discover -s "$SKILL_DIR/tests"
+.venv/bin/python "$SKILL_DIR/scripts/examples/brace.py" --out build
 ```
 
-Keep build123d in a virtual environment and inside the pinned range: build123d 0.12 with
-cadquery-ocp 7.9 is the combination verified here. Put the scripts folder on `sys.path`
-(the examples' `_common.py` shows how) and `from woodstereo import geometry, shop, sheet,
+Use build123d 0.13 or newer and let it select its compatible OCP kernel. Do not install
+a separate OCP package or impose an upper version bound on build123d. Use the same
+virtual environment for tests, modeling and drawings; do not silently fall back to an
+older system installation. Re-run the tests after upgrades and record the resolved
+versions in project-specific lockfiles when reproducibility is required. Put the scripts
+folder on `sys.path` (the examples' `_common.py` shows how) and `from woodstereo import geometry, shop, sheet,
 templates, jigs, model, jigmodels, plans`.
 
 ## The shop

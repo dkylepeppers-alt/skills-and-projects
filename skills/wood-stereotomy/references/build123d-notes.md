@@ -1,6 +1,14 @@
 # build123d notes
 
-Verified with build123d 0.12.0 and cadquery-ocp 7.9.x. Keep within `requirements.txt`.
+Minimum supported build123d: 0.13 (Python 3.11+). The 0.13 release moved to OCP 8;
+let build123d select its compatible kernel and bindings. Test the installed versions
+using the full suite before reporting compatibility; do not pin the reusable skill to
+one kernel or release. Record exact versions in project-specific lockfiles as needed.
+
+Verified combination (2026-11-22): Python 3.12, build123d 0.13.0,
+cadquery-ocp-novtk 8.0.1.1.0 and matplotlib 3.11.2. All 49 tests passed with no
+skips, and all nine examples generated their plan sets. These are recorded test
+results, not dependency pins.
 
 - **Units.** build123d and STEP are in millimetres. Scripts here pass inches to the
   `model` helpers, which multiply by `IN` (25.4) going in and divide coming out. When

@@ -26,5 +26,8 @@ projects/nevermore/checks/*-results.json
 *.zip
 *.tar.gz
 
+# Gallery Illustrator extension ZIP in its release (verified by SHA256SUMS)
+!projects/gallery-illustrator/releases/*/gallery-reference-pool.personal-extension.zip
+
 # Immutable nativity workshop release packages (verified by SHA256SUMS)
 !projects/nativity-barn/releases/*/nativity-workshop-*.zip

@@ -68,9 +68,13 @@ never chooses, and nothing in the stock Engine accepts arbitrary gallery referen
    because image models do not know character names.
 3. PATCH10 checks every pick: the id must exist, a character's picture must belong to someone in this chat's
    cast, a persona's to this chat's persona, and a chat picture to this chat. It loads them, sorts them faces
-   first, then expression, body, outfit, location, prop and style, and appends a line such as:
-   `Reference image order: image 1 is person A's face; image 2 is person B's face; image 3 is person A's full body; image 4 is the location. …`
-   These replace the automatic avatar, map-location and lorebook references for that picture. Names never
+   first, then expression, body, outfit, location, prop and style. Following SpicyAPI's Seedream 5.5 docs
+   ("Refer to the images as Image 1, Image 2 and so on"), it points each person's first mention at their pictures
+   (`person A (Image 1 and Image 3)`, `the location reference (Image 4)`) and appends a line such as:
+   `Reference image order: Image 1 is person A's face; Image 2 is person B's face; Image 3 is person A's full body; Image 4 is the location. …`
+   People are matched by name, so Mara's face from her character gallery and her outfit from the Global Gallery
+   (owner "Mara") are both person A. Letters follow the Agent's own face order, so a picture that has since been
+   deleted does not shift everyone after it to the wrong letter. These replace the automatic avatar, map-location and lorebook references for that picture. Names never
    reach the image model; the server log lists them (`face of Mara (person A)`).
 4. The Engine then does everything it does for the Illustrator: your PATCH4 upload path, saving to the chat
    gallery and the depicted characters' galleries, attaching to the reply, clips, and **Regenerate image**.

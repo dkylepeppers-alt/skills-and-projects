@@ -12,6 +12,8 @@ import {
   characterName,
   cleanText,
   findAgent,
+  findAgents,
+  isGalleryIllustrator,
   normalizeTag,
   normalizeTags,
   pageItems,
@@ -104,6 +106,17 @@ test("library helpers read pages, rows and the agent", () => {
   assert.equal(characterName({ name: "Quinn" }), "Quinn");
   assert.equal(findAgent([{ type: "illustrator" }, { type: "gallery-illustrator", id: "g" }]).id, "g");
   assert.equal(findAgent({ items: [] }), null);
+  // The Engine renames every imported Agent's type; the real install has this shape, not the bare type.
+  const imported = { type: "custom-import-gallery-illustrator-3a5911d3-66bd-4ff8-b938-658b5c7f78c8", id: "i" };
+  assert.equal(findAgent([{ type: "illustrator" }, imported]).id, "i");
+  assert.deepEqual(
+    findAgents([imported, { type: "custom-import-other-agent-1", id: "x" }, { type: "gallery-illustrator", id: "g" }]).map(
+      (agent) => agent.id,
+    ),
+    ["i", "g"],
+  );
+  assert.equal(isGalleryIllustrator({ type: "custom-import-gallery-illustrator-extra-1" }), true);
+  assert.equal(isGalleryIllustrator({ type: "my-gallery-illustrator" }), false);
 });
 
 test("the built script is one body for the Engine's full-page wrapper", () => {

@@ -46,8 +46,6 @@ The Agent was also checked on the skill's pinned v2.5.2, `fc0333c3fe978cda5e0b91
   panel on a phone browser against the real API, the Agent running in a chat, or a SpicyAPI Seedream 5.5 request.
   SpicyAPI is not reachable from the build environment. On first use, check the server log for
   `Sending N gallery pool reference(s)` and the SpicyAPI debug payload for N `spicy://` references.
-- Seedream 5.5's own reference limit (`image_urls.maxItems` in SpicyAPI's model schema) is unknown here. The
-  Engine's adapter applies it, and the least important references are the ones cut.
 - Of the 62 Engine regressions that read the routes PATCH10 touches, 9 could not load here because client
   dependencies were not installed. Three more fail identically on unmodified `df60575` (and with PATCH2–9
   without PATCH10): `agents/manual-agent-retry-resolution`, `chat/conversation-prompts` and
@@ -56,3 +54,34 @@ The Agent was also checked on the skill's pinned v2.5.2, `fc0333c3fe978cda5e0b91
   installed here (dependencies were installed with `--ignore-scripts`).
 - The extension's thumbnail width parameter (`?w=320`) is only added for chat and Global Gallery URLs, which
   support it at staging. Character and persona pictures load full size in the panel.
+
+## SpicyAPI Seedream 5.5 Edit (from its API page, 2026-11-27)
+
+Source: https://spicyapi.ai/models/seedream-5-5/edit/api (model `bytedance/seedream-5.5/edit`).
+
+- `image_urls`: required, `minItems` 1, `maxItems` 10 ("Supplies 1 to 10 reference images"). PATCH10's cap of 10
+  matches, so the adapter never trims the Agent's picks for this model.
+- The prompt should "Refer to the images as Image 1, Image 2 and so on" (`reference_tokens`: `Image {index}`).
+  PATCH10 numbers its order line that way and writes each person's numbers next to their first mention.
+- Prompt `maxLength` 5000 characters (ByteDance recommends at most 600 English words). Files: JPG, PNG, WEBP, GIF,
+  up to 10 MB each. Every input image adds a separate charge on top of the per-picture price.
+- Not checked: the authenticated live model list (`GET /api/v1/models`), which the docs say is the authority for
+  callable ids.
+
+## PATCH10 revision (same day)
+
+Fixed after review: a person whose pictures came from two galleries (a character gallery face and a Global
+Gallery outfit owned by the same name) got two letters, and a deleted face picture shifted every later person's
+letter. People are now matched by name, letters follow the Agent's face order, and the prompt gets `Image N`
+annotations. Checked on the live install (`df60575` + PATCH2–9 + PATCH10 + PATCH8b): the
+`gallery-reference-pool` and `illustrator-reference-scope` regressions pass, and `tsc --noEmit` on the server
+reports no errors.
+
+## Live install (2026-11-27)
+
+Imported into the user's Engine through its own API (`POST /api/agents/import`, `POST /api/personal-extensions`).
+The Engine stored the Agent as `custom-import-gallery-illustrator-<uuid>`, because every import gets a fresh type.
+The extension looked for the bare `gallery-illustrator` type, so Sync would have reported "Import the Gallery
+Illustrator agent first". Fixed: the extension now matches both the authored and the imported type, and syncs
+every copy (importing twice makes two). The unit test and the browser test's mock now use the imported type. The
+browser test passes.

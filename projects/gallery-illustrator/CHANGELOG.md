@@ -12,5 +12,10 @@ First release, for Marinara Engine staging `df60575` with local PATCH2–9.
   sync the pool into every prompt of the Agent.
 - **PATCH10 `gallery-reference-pool`**. A custom image agent's `references` replace the automatic avatar,
   location and lorebook references. Picks are checked against the chat's cast, ordered faces first, numbered in
-  the prompt, capped at 10, and recorded so **Regenerate image** reuses them. Ships with a regression test.
+  the prompt as Image 1, Image 2… (SpicyAPI's Seedream 5.5 convention, also written next to each person's first
+  mention), capped at 10 (Seedream 5.5 Edit's `image_urls` maximum), and recorded so **Regenerate image** reuses
+  them. People are matched by name across galleries, and letters follow the Agent's face order. Ships with a
+  regression test.
+- The extension finds the Agent under the type the Engine gives it on import (`custom-import-gallery-illustrator-…`)
+  and syncs every imported copy.
 - **PATCH8b**: optional fix for PATCH8's `atomicWriteBuffer`, which does not exist on staging.

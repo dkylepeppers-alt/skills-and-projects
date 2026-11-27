@@ -18,7 +18,13 @@ const screenshotPath = screenshotAt >= 0 ? process.argv[screenshotAt + 1] : null
 const files = extensionFiles();
 const script = files["Gallery-Reference-Pool/extension.js"];
 const css = files["Gallery-Reference-Pool/extension.css"];
-const agent = { id: "agent-1", ...importConfig(assemble()), settings: JSON.stringify(importConfig(assemble()).settings) };
+// As the real Engine stores it: every import gets a fresh `custom-import-<type>-<uuid>` type.
+const agent = {
+  id: "agent-1",
+  ...importConfig(assemble()),
+  type: "custom-import-gallery-illustrator-3a5911d3-66bd-4ff8-b938-658b5c7f78c8",
+  settings: JSON.stringify(importConfig(assemble()).settings),
+};
 const png = Buffer.from(
   "89504e470d0a1a0a0000000d4948445200000001000000010806000000" +
     "1f15c4890000000d4944415478da63f8ffff3f0005fe02fea7d6a8f20000000049454e44ae426082",

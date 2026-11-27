@@ -1,5 +1,5 @@
 diff --git a/packages/server/src/routes/gallery.routes.ts b/packages/server/src/routes/gallery.routes.ts
-index 889336c47..e54f526b8 100644
+index 889336c474..e54f526b84 100644
 --- a/packages/server/src/routes/gallery.routes.ts
 +++ b/packages/server/src/routes/gallery.routes.ts
 @@ -41,6 +41,12 @@ import {
@@ -44,14 +44,15 @@ index 889336c47..e54f526b8 100644
            }),
          });
 diff --git a/packages/server/src/routes/generate.routes.ts b/packages/server/src/routes/generate.routes.ts
-index ed9a7b463..fb53b618b 100644
+index ed9a7b4630..5e1de361fc 100644
 --- a/packages/server/src/routes/generate.routes.ts
 +++ b/packages/server/src/routes/generate.routes.ts
-@@ -527,6 +527,11 @@ import {
+@@ -527,6 +527,12 @@ import {
    textRewriteDropsProtectedMarkup,
  } from "../services/generation/text-rewrite-safety.js";
  import { compileImagePrompt } from "../services/image/image-prompt-compiler.js";
 +import {
++  annotatePoolPrompt,
 +  createPoolReferenceStores,
 +  poolScopeFromCast,
 +  resolvePoolReferences,
@@ -59,7 +60,7 @@ index ed9a7b463..fb53b618b 100644
  import {
    mergeSpatialLocationReferenceImages,
    referenceOrderPromptLine,
-@@ -15081,12 +15086,24 @@ export async function generateRoutes(app: FastifyInstance, options: GenerateRout
+@@ -15081,12 +15087,24 @@ export async function generateRoutes(app: FastifyInstance, options: GenerateRout
                          typeof chatMeta.illustratorIncludeCharacterAppearance === "boolean"
                            ? chatMeta.illustratorIncludeCharacterAppearance
                            : imagePromptAgent?.settings?.includeCharacterAppearance === true;
@@ -90,7 +91,7 @@ index ed9a7b463..fb53b618b 100644
                        let illustratorRefImages: string[] | undefined;
                        const referenceResolution = await resolveIllustratorCharacterReferences({
                          charactersStore: chars,
-@@ -15102,7 +15119,7 @@ export async function generateRoutes(app: FastifyInstance, options: GenerateRout
+@@ -15102,7 +15120,7 @@ export async function generateRoutes(app: FastifyInstance, options: GenerateRout
                          // Only the chosen image and its explicit cast select likeness references.
                          promptText: imagePrompt,
                          fallbackToChatCharacters: false,
@@ -99,7 +100,7 @@ index ed9a7b463..fb53b618b 100644
                          includePersonaWhenMentionedInPrompt: false,
                          maxReferences: spatialLocationReferenceImage ? 5 : 6,
                        });
-@@ -15175,6 +15192,7 @@ export async function generateRoutes(app: FastifyInstance, options: GenerateRout
+@@ -15175,6 +15193,7 @@ export async function generateRoutes(app: FastifyInstance, options: GenerateRout
                        // Activated entries' pictures fill what the cap leaves, when the connection takes them (#9698).
                        // "Reference pictures go to" shows, and holds them back, only with avatar references on.
                        const lorebookReferences =
@@ -107,13 +108,15 @@ index ed9a7b463..fb53b618b 100644
                          (!avatarReferencesOn || imageModelGetsReferences) &&
                          imageConnectionTakesEntryPictures(imgConnFull)
                            ? await readLorebookReferenceImages(
-@@ -15191,6 +15209,15 @@ export async function generateRoutes(app: FastifyInstance, options: GenerateRout
+@@ -15191,6 +15210,17 @@ export async function generateRoutes(app: FastifyInstance, options: GenerateRout
                            lorebookReferences.labels.join("; "),
                          );
                        }
 +                      if (poolReferences) {
 +                        illustratorRefImages = poolReferences.images;
-+                        if (!suppressReferencePromptLine) fullPrompt += `\n\n${poolReferences.orderLine}`;
++                        if (!suppressReferencePromptLine) {
++                          fullPrompt = `${annotatePoolPrompt(fullPrompt, poolReferences)}\n\n${poolReferences.orderLine}`;
++                        }
 +                        logger.info(
 +                          "[illustrator] Sending %d gallery pool reference(s): %s",
 +                          poolReferences.images.length,
@@ -123,7 +126,7 @@ index ed9a7b463..fb53b618b 100644
  
                        const compiledPrompt = compileImagePrompt({
                          kind: "illustration",
-@@ -15335,12 +15362,14 @@ export async function generateRoutes(app: FastifyInstance, options: GenerateRout
+@@ -15335,12 +15365,14 @@ export async function generateRoutes(app: FastifyInstance, options: GenerateRout
                                ? (imageResult.effectiveNegativePrompt ?? providerAwareImageFallback.negativePrompt ?? "")
                                : finalNegativePrompt,
                              characterPrompts: illustratorCharacterPrompts,
@@ -141,14 +144,15 @@ index ed9a7b463..fb53b618b 100644
                            }),
                          });
 diff --git a/packages/server/src/routes/generate/retry-agents-route.ts b/packages/server/src/routes/generate/retry-agents-route.ts
-index 0a094bf17..210a4d7bd 100644
+index 0a094bf179..8c3f55648c 100644
 --- a/packages/server/src/routes/generate/retry-agents-route.ts
 +++ b/packages/server/src/routes/generate/retry-agents-route.ts
-@@ -145,6 +145,11 @@ import {
+@@ -145,6 +145,12 @@ import {
    resolveIllustratorImageSize,
  } from "../../services/image/image-generation-settings.js";
  import { compileImagePrompt } from "../../services/image/image-prompt-compiler.js";
 +import {
++  annotatePoolPrompt,
 +  createPoolReferenceStores,
 +  poolScopeFromCast,
 +  resolvePoolReferences,
@@ -156,7 +160,7 @@ index 0a094bf17..210a4d7bd 100644
  import {
    mergeSpatialLocationReferenceImages,
    referenceOrderPromptLine,
-@@ -3913,14 +3918,25 @@ async function applyRetryResultEffects(args: {
+@@ -3913,14 +3919,25 @@ async function applyRetryResultEffects(args: {
                (usesChatIllustratorSettings && typeof chatMeta.illustratorIncludeCharacterAppearance === "boolean"
                  ? chatMeta.illustratorIncludeCharacterAppearance
                  : imagePromptAgent?.resolved.settings?.includeCharacterAppearance === true);
@@ -190,7 +194,7 @@ index 0a094bf17..210a4d7bd 100644
              assertRetryActive();
              let referenceImages: string[] | undefined;
              const chatScope =
-@@ -3942,7 +3958,7 @@ async function applyRetryResultEffects(args: {
+@@ -3942,7 +3959,7 @@ async function applyRetryResultEffects(args: {
                // Match initial generation: mentions in dialogue/reasons do not establish visibility.
                promptText: imagePrompt,
                fallbackToChatCharacters: false,
@@ -199,7 +203,7 @@ index 0a094bf17..210a4d7bd 100644
                includePersonaWhenMentionedInPrompt: false,
                maxReferences: spatialLocationReferenceImage ? 5 : 6,
              });
-@@ -4016,6 +4032,7 @@ async function applyRetryResultEffects(args: {
+@@ -4016,6 +4033,7 @@ async function applyRetryResultEffects(args: {
              // "Reference pictures go to" shows, and holds them back, only with avatar references on.
              const lorebookReferences =
                !subjectOnly &&
@@ -207,13 +211,15 @@ index 0a094bf17..210a4d7bd 100644
                (!avatarReferencesOn || imageModelGetsReferences) &&
                imageConnectionTakesEntryPictures(imgConnFull)
                  ? await readLorebookReferenceImages(
-@@ -4042,6 +4059,15 @@ async function applyRetryResultEffects(args: {
+@@ -4042,6 +4060,17 @@ async function applyRetryResultEffects(args: {
                  lorebookReferences.labels.join("; "),
                );
              }
 +            if (poolReferences) {
 +              referenceImages = poolReferences.images;
-+              if (!suppressReferencePromptLine) fullPrompt += `\n\n${poolReferences.orderLine}`;
++              if (!suppressReferencePromptLine) {
++                fullPrompt = `${annotatePoolPrompt(fullPrompt, poolReferences)}\n\n${poolReferences.orderLine}`;
++              }
 +              logger.info(
 +                "[retry-agents] Sending %d gallery pool reference(s): %s",
 +                poolReferences.images.length,
@@ -223,7 +229,7 @@ index 0a094bf17..210a4d7bd 100644
  
              const compiledPrompt = compileImagePrompt({
                kind: "illustration",
-@@ -4248,10 +4274,11 @@ async function applyRetryResultEffects(args: {
+@@ -4248,10 +4277,11 @@ async function applyRetryResultEffects(args: {
                    connectionId: imageResult.effectiveConnection?.connectionId ?? imgConnFull.id,
                    negativePrompt: promptSubmission.negativePrompt,
                    characterPrompts: illustratorCharacterPrompts,
@@ -239,10 +245,10 @@ index 0a094bf17..210a4d7bd 100644
                });
 diff --git a/packages/server/src/services/image/gallery-reference-pool.ts b/packages/server/src/services/image/gallery-reference-pool.ts
 new file mode 100644
-index 000000000..076690dda
+index 0000000000..62c4b8d791
 --- /dev/null
 +++ b/packages/server/src/services/image/gallery-reference-pool.ts
-@@ -0,0 +1,359 @@
+@@ -0,0 +1,409 @@
 +/**
 + * Local patch (gallery-reference-pool): a custom image agent may name the gallery pictures it wants as
 + * reference images, by role, instead of the automatic one-picture-per-character selection. Edit models such as
@@ -304,8 +310,10 @@ index 000000000..076690dda
 +  kind: PoolReferenceKind;
 +  imageId: string;
 +  role: PoolReferenceRole;
-+  /** The agent's own label; used only for Global Gallery and chat images, which have no owner. */
++  /** The agent's own label: the owner's name for people, a few words for places and things. */
 +  subject: string | null;
++  /** Position in the agent's list; person letters follow it. */
++  order: number;
 +};
 +
 +function cleanSubject(value: unknown): string | null {
@@ -331,7 +339,7 @@ index 000000000..076690dda
 +export function parsePoolReferences(value: unknown, maximum = POOL_MAX_REFERENCES): PoolReferenceRequest[] {
 +  if (!Array.isArray(value)) return [];
 +  const seen = new Set<string>();
-+  const parsed: Array<PoolReferenceRequest & { order: number }> = [];
++  const parsed: PoolReferenceRequest[] = [];
 +  value.forEach((entry, order) => {
 +    if (!entry || typeof entry !== "object" || Array.isArray(entry)) return;
 +    const record = entry as Record<string, unknown>;
@@ -350,8 +358,7 @@ index 000000000..076690dda
 +  });
 +  return parsed
 +    .sort((a, b) => ROLE_RANK[a.role] - ROLE_RANK[b.role] || a.order - b.order)
-+    .slice(0, Math.max(0, Math.min(maximum, POOL_MAX_REFERENCES)))
-+    .map(({ order: _order, ...request }) => request);
++    .slice(0, Math.max(0, Math.min(maximum, POOL_MAX_REFERENCES)));
 +}
 +
 +const PERSON_ROLES = new Set<PoolReferenceRole>(["face", "expression", "body", "outfit", "other"]);
@@ -393,7 +400,7 @@ index 000000000..076690dda
 +/** Number every reference by position so edit models pair each person with that person's own pictures. */
 +export function poolReferenceOrderLine(labels: readonly string[]): string {
 +  if (labels.length === 0) return "";
-+  const order = labels.map((label, index) => `image ${index + 1} is ${label}`).join("; ");
++  const order = labels.map((label, index) => `Image ${index + 1} is ${label}`).join("; ");
 +  return `Reference image order: ${order}. Keep each person's identity from that person's own face, expression, body and outfit references and never mix features between people; take the setting from the location reference and the rendering from the art style guide. The written prompt decides composition, action, framing and mood.`;
 +}
 +
@@ -434,6 +441,10 @@ index 000000000..076690dda
 +  labels: string[];
 +  /** Log-only descriptions with owner names: "face of Mara (person A)". */
 +  named: string[];
++  /** 1-based image numbers per person letter, e.g. A → [1, 3]. */
++  personImages: Map<string, number[]>;
++  /** 1-based image numbers of location references. */
++  locationImages: number[];
 +  orderLine: string;
 +};
 +
@@ -443,66 +454,70 @@ index 000000000..076690dda
 +  return buffer.toString("base64");
 +}
 +
++/**
++ * One request's owner and image. `null` means the pick is refused (outside this chat). `base64: null` means the
++ * pick is allowed but its picture is gone or unreadable: its owner still holds a person letter, because the agent
++ * already called them person A, B, … in its prompt.
++ */
++type LoadedPoolReference = { base64: string | null; ownerName: string | null };
++
 +async function loadPoolReference(
 +  request: PoolReferenceRequest,
 +  scope: PoolReferenceScope,
 +  stores: PoolReferenceStores,
-+): Promise<{ base64: string; ownerKey: string | null; ownerName: string | null } | null> {
++): Promise<LoadedPoolReference | null> {
++  const missing: LoadedPoolReference = { base64: null, ownerName: request.subject };
 +  switch (request.kind) {
 +    case "cg": {
 +      const image = await stores.characterGallery.getById(request.imageId);
-+      if (!image) return null;
++      if (!image) return missing;
 +      if (scope.characters && !scope.characters.has(image.characterId)) return null;
-+      const stored = resolveStoredGalleryFile(image.filePath);
-+      if (!stored) return null;
-+      const base64 = await readImageFile(stored.absolutePath, stores);
 +      const ownerName =
 +        scope.characters?.get(image.characterId) ??
 +        (await stores.readOwnerName?.("cg", image.characterId)) ??
 +        request.subject;
-+      return base64 ? { base64, ownerKey: `character:${image.characterId}`, ownerName } : null;
++      const stored = resolveStoredGalleryFile(image.filePath);
++      return { base64: stored ? await readImageFile(stored.absolutePath, stores) : null, ownerName };
 +    }
 +    case "pg": {
 +      const image = await stores.personaGallery.getById(request.imageId);
-+      if (!image) return null;
++      if (!image) return missing;
 +      if (scope.personas && !scope.personas.has(image.personaId)) return null;
-+      const stored = resolveStoredGalleryFile(image.filePath);
-+      if (!stored) return null;
-+      const base64 = await readImageFile(stored.absolutePath, stores);
 +      const ownerName =
 +        scope.personas?.get(image.personaId) ??
 +        (await stores.readOwnerName?.("pg", image.personaId)) ??
 +        request.subject;
-+      return base64 ? { base64, ownerKey: `persona:${image.personaId}`, ownerName } : null;
++      const stored = resolveStoredGalleryFile(image.filePath);
++      return { base64: stored ? await readImageFile(stored.absolutePath, stores) : null, ownerName };
 +    }
 +    case "ch": {
 +      const image = await stores.chatGallery.getById(request.imageId);
-+      if (!image || image.chatId !== scope.chatId) return null;
++      if (!image) return missing;
++      if (image.chatId !== scope.chatId) return null;
 +      const path = resolveGalleryImagePath(image);
-+      if (!path) return null;
-+      const base64 = await readImageFile(path, stores);
-+      return base64 ? { base64, ...unownedSubject(request) } : null;
++      return { base64: path ? await readImageFile(path, stores) : null, ownerName: request.subject };
 +    }
 +    case "gg": {
 +      const image = await stores.globalGallery.getImageById(request.imageId);
-+      if (!image) return null;
++      if (!image) return missing;
 +      const path = resolveGalleryImagePath({ chatId: "global", filePath: image.filePath });
-+      if (!path) return null;
-+      const base64 = await readImageFile(path, stores);
-+      return base64 ? { base64, ...unownedSubject(request) } : null;
++      return { base64: path ? await readImageFile(path, stores) : null, ownerName: request.subject };
 +    }
 +  }
 +}
 +
-+/** A chat or Global Gallery picture has no owner record; the agent's subject text groups a person's pictures. */
-+function unownedSubject(request: PoolReferenceRequest): { ownerKey: string | null; ownerName: string | null } {
-+  const key = request.subject?.toLowerCase();
-+  return { ownerKey: key ? `subject:${key}` : null, ownerName: request.subject };
++/** People are matched by name, so a character's own gallery and a Global Gallery picture of them are one person. */
++function personKey(ownerName: string | null): string | null {
++  const key = ownerName?.trim().toLowerCase();
++  return key ? key : null;
 +}
 +
 +/**
 + * Load the requested pool references. Returns null when the list is absent or nothing in it can be used, so the
 + * caller keeps the automatic selection.
++ *
++ * Person letters follow the agent's own face order (the prompt tells it to letter people that way), not what
++ * happened to load, so a missing picture never shifts everyone after it to the wrong letter.
 + */
 +export async function resolvePoolReferences(args: {
 +  references: unknown;
@@ -512,36 +527,51 @@ index 000000000..076690dda
 +}): Promise<PoolReferenceResolution | null> {
 +  const requests = parsePoolReferences(args.references, args.maximum);
 +  if (requests.length === 0) return null;
++  const loaded = await Promise.all(
++    requests.map(async (request) => {
++      try {
++        return await loadPoolReference(request, args.scope, args.stores);
++      } catch (err) {
++        logger.warn(err, "[gallery-reference-pool] Could not read %s", request.id);
++        return { base64: null, ownerName: request.subject } satisfies LoadedPoolReference;
++      }
++    }),
++  );
++
++  // Faces first, in the agent's order, then anyone who only has body/outfit pictures. Refused picks hold no letter.
++  const letters = new Map<string, string>();
++  const people = requests.flatMap((request, index) => {
++    const owner = loaded[index] && PERSON_ROLES.has(request.role) ? personKey(loaded[index].ownerName) : null;
++    return owner ? [{ owner, rank: request.role === "face" ? 0 : 1, order: request.order }] : [];
++  });
++  for (const { owner } of people.sort((a, b) => a.rank - b.rank || a.order - b.order)) {
++    if (!letters.has(owner)) letters.set(owner, personLetter(letters.size));
++  }
++
 +  const images: string[] = [];
 +  const ids: string[] = [];
 +  const labels: string[] = [];
 +  const named: string[] = [];
 +  const sent: PoolReferenceRequest[] = [];
-+  const letters = new Map<string, string>();
-+  for (const request of requests) {
-+    try {
-+      const loaded = await loadPoolReference(request, args.scope, args.stores);
-+      if (!loaded) {
-+        logger.debug("[gallery-reference-pool] Skipped %s: missing, unreadable or outside this chat", request.id);
-+        continue;
-+      }
-+      images.push(loaded.base64);
-+      ids.push(request.id);
-+      sent.push(request);
-+      // Letters follow the send order, so faces (sent first) fix who is person A, B, …
-+      let person: string | null = null;
-+      if (PERSON_ROLES.has(request.role) && loaded.ownerKey) {
-+        person = letters.get(loaded.ownerKey) ?? personLetter(letters.size);
-+        letters.set(loaded.ownerKey, person);
-+      }
-+      labels.push(poolReferenceLabel(request.role, person));
-+      named.push(
-+        `${request.role}${loaded.ownerName ? ` of ${loaded.ownerName}` : ""}${person ? ` (person ${person})` : ""}`,
-+      );
-+    } catch (err) {
-+      logger.warn(err, "[gallery-reference-pool] Could not read %s", request.id);
++  const personImages = new Map<string, number[]>();
++  const locationImages: number[] = [];
++  requests.forEach((request, index) => {
++    const result = loaded[index];
++    if (!result?.base64) {
++      logger.debug("[gallery-reference-pool] Skipped %s: missing, unreadable or outside this chat", request.id);
++      return;
 +    }
-+  }
++    images.push(result.base64);
++    ids.push(request.id);
++    sent.push(request);
++    const imageNumber = images.length;
++    const owner = personKey(result.ownerName);
++    const person = PERSON_ROLES.has(request.role) && owner ? (letters.get(owner) ?? null) : null;
++    if (person) personImages.set(person, [...(personImages.get(person) ?? []), imageNumber]);
++    if (request.role === "location") locationImages.push(imageNumber);
++    labels.push(poolReferenceLabel(request.role, person));
++    named.push(`${request.role}${result.ownerName ? ` of ${result.ownerName}` : ""}${person ? ` (person ${person})` : ""}`);
++  });
 +  if (images.length === 0) return null;
 +  return {
 +    images,
@@ -549,13 +579,39 @@ index 000000000..076690dda
 +    recorded: encodeRecordedPoolReferences(sent),
 +    labels,
 +    named,
++    personImages,
++    locationImages,
 +    orderLine: poolReferenceOrderLine(labels),
 +  };
 +}
 +
++function imageList(numbers: readonly number[]): string {
++  const names = numbers.map((n) => `Image ${n}`);
++  return names.length <= 1 ? (names[0] ?? "") : `${names.slice(0, -1).join(", ")} and ${names.at(-1)}`;
++}
++
++/**
++ * Point each person's first mention at their images, as SpicyAPI's Seedream docs show ("Image 1 supplies the
++ * person"): "person A" becomes "person A (Image 1 and Image 3)", and the first "location reference" gets its
++ * number. Only the first mention is annotated; the order line covers the rest.
++ */
++export function annotatePoolPrompt(
++  prompt: string,
++  resolution: Pick<PoolReferenceResolution, "personImages" | "locationImages">,
++): string {
++  let next = prompt;
++  for (const [letter, numbers] of resolution.personImages) {
++    next = next.replace(new RegExp(`\\bperson ${letter}\\b(?!\\s*\\(Image)`, "i"), (match) => `${match} (${imageList(numbers)})`);
++  }
++  if (resolution.locationImages.length) {
++    next = next.replace(/\blocation reference\b(?!\s*\(Image)/i, (match) => `${match} (${imageList(resolution.locationImages)})`);
++  }
++  return next;
++}
++
 +/** Rebuild a role/subject request list from recorded ids (`<role>|<id>|<subject>`), for Regenerate. */
 +export function encodeRecordedPoolReferences(
-+  requests: ReadonlyArray<{ id: string; role: PoolReferenceRole; subject?: string | null }>,
++  requests: ReadonlyArray<Pick<PoolReferenceRequest, "id" | "role" | "subject">>,
 +): string[] {
 +  return requests.map((request) => [request.role, request.id, request.subject ?? ""].join("|"));
 +}
@@ -603,7 +659,7 @@ index 000000000..076690dda
 +  };
 +}
 diff --git a/packages/shared/src/utils/chat-image-generation.ts b/packages/shared/src/utils/chat-image-generation.ts
-index fb4580837..0e1c6947e 100644
+index fb45808378..0e1c6947e3 100644
 --- a/packages/shared/src/utils/chat-image-generation.ts
 +++ b/packages/shared/src/utils/chat-image-generation.ts
 @@ -33,6 +33,11 @@ export interface ChatImageGenerationRecord {
@@ -652,10 +708,10 @@ index fb4580837..0e1c6947e 100644
    });
 diff --git a/scripts/regressions/agents/gallery-reference-pool.regression.ts b/scripts/regressions/agents/gallery-reference-pool.regression.ts
 new file mode 100644
-index 000000000..20f30717e
+index 0000000000..2616a65cf1
 --- /dev/null
 +++ b/scripts/regressions/agents/gallery-reference-pool.regression.ts
-@@ -0,0 +1,175 @@
+@@ -0,0 +1,247 @@
 +// Local patch (gallery-reference-pool): a custom image agent's gallery picks replace the automatic references.
 +import assert from "node:assert/strict";
 +import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
@@ -670,6 +726,7 @@ index 000000000..20f30717e
 +const dataDir = mkdtempSync(join(tmpdir(), "gallery-reference-pool-"));
 +process.env.DATA_DIR = dataDir;
 +const {
++  annotatePoolPrompt,
 +  decodeRecordedPoolReferences,
 +  parsePoolReferences,
 +  personLetter,
@@ -716,7 +773,7 @@ index 000000000..20f30717e
 +assert.deepEqual([0, 1, 25, 26, 27].map(personLetter), ["A", "B", "Z", "AA", "AB"]);
 +assert.match(
 +  poolReferenceOrderLine(["person A's face", "the location"]),
-+  /^Reference image order: image 1 is person A's face; image 2 is the location\./,
++  /^Reference image order: Image 1 is person A's face; Image 2 is the location\./,
 +);
 +assert.equal(poolReferenceOrderLine([]), "");
 +
@@ -769,7 +826,7 @@ index 000000000..20f30717e
 +assert.equal(resolved.images[0], png.toString("base64"));
 +assert.match(
 +  resolved.orderLine,
-+  /image 1 is person A's face; image 2 is person B's face; image 3 is person B's full body/,
++  /Image 1 is person A's face; Image 2 is person B's face; Image 3 is person B's full body/,
 +);
 +assert.equal(
 +  await resolvePoolReferences({ references: [{ id: "cg:strangerFace", role: "face" }], scope, stores }),
@@ -797,6 +854,76 @@ index 000000000..20f30717e
 +assert.ok(unowned);
 +assert.deepEqual(unowned.labels, ["person A's face", "person A's full body", "the location"]);
 +
++// One person, two galleries: Mara's face from her character gallery and her outfit from the Global Gallery
++// (tagged with her name) share one letter. People are matched by name, not by which gallery holds the picture.
++const globalStores: PoolReferenceStores = {
++  ...stores,
++  globalGallery: { getImageById: async (id) => ({ filePath: `${id}.png` }) },
++};
++for (const name of ["maraOutfit", "quinnBody"]) writeFileSync(join(dataDir, "gallery", "global", `${name}.png`), png);
++const mixed = await resolvePoolReferences({
++  references: [
++    { id: "cg:maraFace", role: "face", subject: "Mara" },
++    { id: "gg:maraOutfit", role: "outfit", subject: "mara" },
++    { id: "pg:meFace", role: "face", subject: "Quinn" },
++    { id: "gg:quinnBody", role: "body", subject: "Quinn" },
++    { id: "gg:room", role: "location", subject: "Harbor" },
++  ],
++  scope,
++  stores: globalStores,
++});
++assert.ok(mixed);
++assert.deepEqual(mixed.ids, ["cg:maraFace", "pg:meFace", "gg:quinnBody", "gg:maraOutfit", "gg:room"]);
++assert.deepEqual(mixed.labels, [
++  "person A's face",
++  "person B's face",
++  "person B's full body",
++  "person A's outfit",
++  "the location",
++]);
++assert.deepEqual([...mixed.personImages], [
++  ["A", [1, 4]],
++  ["B", [2, 3]],
++]);
++assert.deepEqual(mixed.locationImages, [5]);
++
++// A missing face keeps its letter: the agent already wrote "person A" for Mara, so Quinn stays person B
++// even though Mara's face picture is gone and Quinn's face is sent first.
++const missingFace = await resolvePoolReferences({
++  references: [
++    { id: "cg:goneFace", role: "face", subject: "Mara" },
++    { id: "pg:meFace", role: "face", subject: "Quinn" },
++    { id: "gg:maraOutfit", role: "outfit", subject: "Mara" },
++  ],
++  scope,
++  stores: globalStores,
++});
++assert.ok(missingFace);
++assert.deepEqual(missingFace.labels, ["person B's face", "person A's outfit"]);
++// A refused pick (someone outside the chat) holds no letter.
++const refused = await resolvePoolReferences({
++  references: [
++    { id: "cg:strangerFace", role: "face", subject: "Stranger" },
++    { id: "pg:meFace", role: "face", subject: "Quinn" },
++  ],
++  scope,
++  stores: globalStores,
++});
++assert.deepEqual(refused?.labels, ["person A's face"]);
++
++// The prompt points each person's first mention, and the location reference, at their images, as SpicyAPI's
++// Seedream docs show ("Image 1 supplies the person").
++assert.equal(
++  annotatePoolPrompt(
++    "Person A sits beside person B; person A laughs, set in the place shown in the location reference. Person AB waits.",
++    mixed,
++  ),
++  "Person A (Image 1 and Image 4) sits beside person B (Image 2 and Image 3); person A laughs, set in the place shown in the location reference (Image 5). Person AB waits.",
++);
++const annotatedOnce = annotatePoolPrompt("person A walks.", mixed);
++assert.equal(annotatePoolPrompt(annotatedOnce, mixed), annotatedOnce, "annotating twice changes nothing");
++assert.equal(annotatePoolPrompt("An empty room.", mixed), "An empty room.");
++
 +// The record keeps the picks, and Regenerate decodes them back into the same request list.
 +const record = parseChatImageGenerationRecord(
 +  JSON.stringify(buildChatImageGenerationRecord({ prompt: "p", poolReferences: resolved.recorded })),
@@ -822,6 +949,7 @@ index 000000000..20f30717e
 +  );
 +  assert.match(source, /includeReferenceImages: useAvatarRefs && !poolReferences/, route);
 +  assert.match(source, /poolReferences: poolReferences\?\.recorded/, route);
++  assert.match(source, /annotatePoolPrompt\(fullPrompt, poolReferences\)/, route);
 +}
 +const gallerySource = readFileSync(
 +  new URL("../../../packages/server/src/routes/gallery.routes.ts", import.meta.url),

@@ -170,7 +170,20 @@ export function pageItems(value) {
   return [];
 }
 
-/** Find the Gallery Illustrator among the agent configs. */
+// The Engine gives every imported Agent a fresh type: `custom-import-gallery-illustrator-<uuid>`.
+const IMPORTED_TYPE = new RegExp(`^custom-import-${AGENT_TYPE}-`);
+
+/** Is this agent config a Gallery Illustrator (as authored, or as the Engine renamed it on import)? */
+export function isGalleryIllustrator(agent) {
+  return typeof agent?.type === "string" && (agent.type === AGENT_TYPE || IMPORTED_TYPE.test(agent.type));
+}
+
+/** Every Gallery Illustrator among the agent configs (importing twice makes two). */
+export function findAgents(agents) {
+  return pageItems(agents).filter(isGalleryIllustrator);
+}
+
+/** The first Gallery Illustrator, or null. */
 export function findAgent(agents) {
-  return pageItems(agents).find((agent) => agent?.type === AGENT_TYPE) ?? null;
+  return findAgents(agents)[0] ?? null;
 }

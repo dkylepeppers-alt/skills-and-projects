@@ -171,9 +171,22 @@ function pageItems(value) {
   return [];
 }
 
-/** Find the Gallery Illustrator among the agent configs. */
+// The Engine gives every imported Agent a fresh type: `custom-import-gallery-illustrator-<uuid>`.
+const IMPORTED_TYPE = new RegExp(`^custom-import-${AGENT_TYPE}-`);
+
+/** Is this agent config a Gallery Illustrator (as authored, or as the Engine renamed it on import)? */
+function isGalleryIllustrator(agent) {
+  return typeof agent?.type === "string" && (agent.type === AGENT_TYPE || IMPORTED_TYPE.test(agent.type));
+}
+
+/** Every Gallery Illustrator among the agent configs (importing twice makes two). */
+function findAgents(agents) {
+  return pageItems(agents).filter(isGalleryIllustrator);
+}
+
+/** The first Gallery Illustrator, or null. */
 function findAgent(agents) {
-  return pageItems(agents).find((agent) => agent?.type === AGENT_TYPE) ?? null;
+  return findAgents(agents)[0] ?? null;
 }
 
 // Gallery Reference Pool: the page panel. Runs as the body of the Engine's full-page extension
@@ -233,24 +246,38 @@ const syncNow = async () => {
   STATE.syncTimer = null;
   try {
     setStatus("Syncing…");
-    const agent = findAgent(await api("/api/agents"));
-    if (!agent) {
+    const agents = findAgents(await api("/api/agents"));
+    if (agents.length === 0) {
       setStatus("Import the Gallery Illustrator agent first, then press Sync.", "error");
       return;
     }
     const lines = buildPoolLines(STATE.tags);
-    const next = applyPoolToAgent(agent, lines);
-    if (!next) {
+    let prompts = 0;
+    let skipped = 0;
+    let unmarked = 0;
+    for (const agent of agents) {
+      const next = applyPoolToAgent(agent, lines);
+      if (!next) {
+        unmarked++;
+        continue;
+      }
+      await api(`/api/agents/${encodeURIComponent(agent.id)}`, {
+        method: "PATCH",
+        body: JSON.stringify({ promptTemplate: next.promptTemplate, settings: next.settings }),
+      });
+      prompts += next.updated;
+      skipped += next.skipped;
+    }
+    if (prompts === 0) {
       setStatus("The agent's prompts have no reference-pool markers. Re-import the agent or restore the markers.", "error");
       return;
     }
-    await api(`/api/agents/${encodeURIComponent(agent.id)}`, {
-      method: "PATCH",
-      body: JSON.stringify({ promptTemplate: next.promptTemplate, settings: next.settings }),
-    });
+    const synced = agents.length - unmarked;
     setStatus(
-      `Synced ${lines.length} picture${lines.length === 1 ? "" : "s"} to ${next.updated} prompt${next.updated === 1 ? "" : "s"}` +
-        (next.skipped ? ` (${next.skipped} without markers left alone)` : "") +
+      `Synced ${lines.length} picture${lines.length === 1 ? "" : "s"} to ${prompts} prompt${prompts === 1 ? "" : "s"}` +
+        (synced > 1 ? ` in ${synced} Gallery Illustrator agents` : "") +
+        (skipped ? ` (${skipped} without markers left alone)` : "") +
+        (unmarked ? `; ${unmarked} agent${unmarked === 1 ? " has" : "s have"} no markers` : "") +
         ".",
       "ok",
     );

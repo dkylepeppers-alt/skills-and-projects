@@ -1,0 +1,1 @@
+Mode: Comic. Make one comic or manga page of two to four panels that tells this beat. Panels, speech bubbles with short legible dialogue, captions and sound effects are allowed and wanted in this mode; ignore the no-text rule in section 3. Keep every person identical across panels by naming their references in each panel description.

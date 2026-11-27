@@ -1,0 +1,1 @@
+Mode: Selfie. Make an in-character selfie or casual phone-camera portrait of one character who is present (two at most when the scene has them together). Arm's-length or mirror framing, the face large in frame, background from the current place. Always send that person's face reference first.

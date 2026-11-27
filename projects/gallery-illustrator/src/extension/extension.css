@@ -1,0 +1,105 @@
+/* Gallery Reference Pool. Uses the app's theme variables, with fallbacks. */
+.grp-launcher {
+  position: fixed;
+  right: 12px;
+  bottom: 96px;
+  z-index: 2147483000;
+  min-width: 48px;
+  min-height: 48px;
+  padding: 0 14px;
+  border: 1px solid var(--border, #444);
+  border-radius: 999px;
+  background: var(--card, #1d1d24);
+  color: var(--foreground, #eee);
+  font: 600 14px/1 system-ui, sans-serif;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 35%);
+  cursor: pointer;
+}
+.grp-root[hidden] { display: none; }
+.grp-root {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483001;
+  display: flex;
+  justify-content: center;
+  background: rgb(0 0 0 / 55%);
+}
+.grp-panel {
+  box-sizing: border-box;
+  width: min(960px, 100%);
+  height: 100%;
+  overflow-y: auto;
+  padding: 12px 16px 32px;
+  background: var(--background, #121218);
+  color: var(--foreground, #eee);
+  font: 14px/1.4 system-ui, sans-serif;
+}
+.grp-header {
+  position: sticky;
+  top: -12px;
+  z-index: 1;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin: -12px -16px 8px;
+  padding: 12px 16px;
+  background: var(--background, #121218);
+  border-bottom: 1px solid var(--border, #333);
+}
+.grp-header strong { flex: 1; font-size: 16px; }
+.grp-panel button,
+.grp-panel select,
+.grp-panel input[type="text"],
+.grp-panel input[type="search"] {
+  box-sizing: border-box;
+  min-height: 40px;
+  border: 1px solid var(--border, #444);
+  border-radius: 8px;
+  background: var(--card, #1d1d24);
+  color: inherit;
+  font: inherit;
+}
+.grp-panel button { padding: 0 14px; cursor: pointer; }
+.grp-panel .grp-primary {
+  background: var(--primary, #6d5dfc);
+  color: var(--primary-foreground, #fff);
+  border-color: transparent;
+}
+.grp-status { min-height: 1.4em; margin: 4px 0 8px; color: var(--muted-foreground, #aaa); }
+.grp-status[data-kind="error"] { color: var(--destructive, #ff6b6b); }
+.grp-status[data-kind="ok"] { color: var(--foreground, #eee); }
+.grp-controls { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.grp-controls select { flex: 2 1 220px; padding: 0 8px; }
+.grp-controls input { flex: 1 1 160px; padding: 0 10px; }
+.grp-warnings { margin: 0 0 8px; padding-left: 20px; color: var(--destructive, #ff9b6b); }
+.grp-warnings:empty { display: none; }
+.grp-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+}
+.grp-tile {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid var(--border, #333);
+  border-radius: 10px;
+  background: var(--card, #1a1a20);
+}
+.grp-tile.grp-tagged { border-color: var(--primary, #6d5dfc); }
+.grp-tile img,
+.grp-missing {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 6px;
+  background: rgb(127 127 127 / 15%);
+}
+.grp-missing { display: grid; place-items: center; color: var(--muted-foreground, #999); }
+.grp-fields { display: flex; flex-direction: column; gap: 6px; }
+.grp-fields select,
+.grp-fields input[type="text"] { width: 100%; padding: 0 8px; }
+.grp-check { display: flex; gap: 6px; align-items: center; }
+.grp-id { overflow: hidden; color: var(--muted-foreground, #888); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
+.grp-empty { grid-column: 1 / -1; color: var(--muted-foreground, #aaa); }

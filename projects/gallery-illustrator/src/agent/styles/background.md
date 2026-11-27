@@ -1,0 +1,1 @@
+Mode: Background. Draw only places: an establishing shot of the current location with no people in frame. Send no face, body or outfit references; use a location, prop or style reference when the pool has one, and set "characters" to [].

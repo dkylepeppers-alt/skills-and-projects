@@ -1,0 +1,1 @@
+Mode: Custom. [YOUR INSTRUCTIONS: replace this line with your own rules for when to draw and what the picture should look like. Keep sections 2 to 4 as they are so references and output keep working.]

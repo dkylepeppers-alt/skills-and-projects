@@ -1,0 +1,14 @@
+{
+  "kind": "marinara.personal-extension",
+  "version": 1,
+  "config": {
+    "name": "Gallery Reference Pool",
+    "version": "1.0.0",
+    "description": "Tag gallery pictures as face, body, outfit, location, prop or style references and sync them into the Gallery Illustrator agent's reference pool. Needs full page access to read galleries and update that agent's prompt.",
+    "runtime": "client",
+    "enabled": false,
+    "capabilities": ["full_page_access"],
+    "jsPath": "extension.js",
+    "cssPath": "extension.css"
+  }
+}

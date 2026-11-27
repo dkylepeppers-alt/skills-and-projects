@@ -14,6 +14,7 @@ Intended GitHub home: `dkylepeppers-alt/skills-and-projects` (private).
 | `projects/nevermore/toolkit/` | Frozen map assembly tools for this release |
 | `projects/intoxication-voice-keeper/` | Custom Agent that tracks intoxication and keeps each character's voice while drunk or high |
 | `projects/character-voice-keeper/` | Custom Agent that profiles each character's voice, catches drift and keeps every character sounding like themselves |
+| `projects/gallery-illustrator/` | Custom Agent, pool extension and local Engine patch that let the Illustrator pick up to ten tagged gallery references (face, body, outfit, location) for Seedream |
 | `projects/modern-life-sim-cheats/` | Personal Cheats module and patch script for an installed Modern Life Sim |
 | `projects/nativity-barn/` | Timber-framed miniature nativity barn; complete, versioned V7 workshop release with CAD, construction plans, patterns, and source |
 | `scripts/` | Repository validation and initial GitHub publishing |

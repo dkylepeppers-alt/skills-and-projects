@@ -1,0 +1,70 @@
+{
+  "type": "gallery-illustrator",
+  "name": "Gallery Illustrator",
+  "folderName": "Gallery-Illustrator",
+  "description": "Draws scenes like the Illustrator, but picks up to ten reference pictures from your tagged gallery pool (a face close-up, full body, outfit, location, props) so reference-guided models such as Seedream keep every character's identity. Needs the gallery-reference-pool Engine patch and the Gallery Reference Pool extension.",
+  "phase": "post_processing",
+  "resultType": "image_prompt",
+  "defaultStyle": "illustration",
+  "presets": [
+    {
+      "id": "illustration",
+      "name": "Illustration",
+      "description": "One polished scene picture with the right references for everyone in it. The default.",
+      "style": "styles/illustration.md"
+    },
+    {
+      "id": "selfie",
+      "name": "Selfie",
+      "description": "An in-character selfie or casual portrait, face reference first.",
+      "style": "styles/selfie.md"
+    },
+    {
+      "id": "comic",
+      "name": "Comic",
+      "description": "A short comic or manga page with panels and lettering, same references in every panel.",
+      "style": "styles/comic.md"
+    },
+    {
+      "id": "background",
+      "name": "Background",
+      "description": "Places only: an establishing shot with location and style references, no people.",
+      "style": "styles/background.md"
+    },
+    {
+      "id": "custom",
+      "name": "Custom",
+      "description": "Replace the [YOUR INSTRUCTIONS] line with your own rules; references and output keep working.",
+      "style": "styles/custom.md"
+    }
+  ],
+  "promptValues": {
+    "maxReferences": "10",
+    "maxPromptWords": "180"
+  },
+  "settings": {
+    "author": "dkylepeppers-alt",
+    "resultType": "image_prompt",
+    "customCapabilities": {
+      "trigger_image_generation": true
+    },
+    "contextSources": {
+      "chatHistory": true,
+      "characters": true,
+      "persona": true,
+      "activatedLorebookEntries": true,
+      "chatSummary": false,
+      "authorNotes": false,
+      "trackerData": true,
+      "recalledMemories": false,
+      "previousOutput": true,
+      "charactersPublicFace": false,
+      "personaPublicFace": false
+    },
+    "contextSize": 8,
+    "maxTokens": 2048,
+    "runInterval": 3,
+    "useAvatarReferences": true,
+    "includeCharacterAppearance": false
+  }
+}

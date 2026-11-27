@@ -8,7 +8,6 @@ export const ROLES = ["face", "expression", "body", "outfit", "location", "prop"
 export const PERSON_ROLES = new Set(["face", "expression", "body", "outfit"]);
 export const MAX_CAPTION = 80;
 export const MAX_OWNER = 60;
-export const MAX_POOL_LINES = 120;
 export const EMPTY_POOL_TEXT =
   "(The pool is empty. Open the Gallery Reference Pool extension, tag some pictures and press Sync.)";
 
@@ -68,8 +67,15 @@ export function buildPoolLines(tags) {
         ROLE_ORDER.get(a.role) - ROLE_ORDER.get(b.role) ||
         idA.localeCompare(idB),
     )
-    .slice(0, MAX_POOL_LINES)
-    .map(([id, tag]) => `${id} | ${tag.owner || "-"} | ${tag.role} | ${tag.caption || "-"}`);
+    .map(([id, tag]) => {
+      // v1 tags already retain their gallery URL. Recover its owning card/persona/chat on sync.
+      const pattern = id.startsWith("cg:") ? /^\/api\/characters\/([^/]+)\/gallery\// :
+        id.startsWith("pg:") ? /^\/api\/characters\/personas\/([^/]+)\/gallery\// :
+        id.startsWith("ch:") ? /^\/api\/gallery\/file\/([^/]+)\// : null;
+      const source = pattern?.exec(tag.url)?.[1];
+      const row = `${id} | ${tag.owner || "-"} | ${tag.role} | ${tag.caption || "-"}`;
+      return source ? `${row} | ${source}` : row;
+    });
 }
 
 /** The text between the markers. */
@@ -149,9 +155,6 @@ export function poolWarnings(tags) {
   }
   for (const [owner, entry] of owners) {
     if (entry.any && !entry.face) warnings.push(`${owner === "-" ? "Unnamed person" : owner} has no face picture.`);
-  }
-  if (enabled.length > MAX_POOL_LINES) {
-    warnings.push(`Only the first ${MAX_POOL_LINES} tagged pictures go to the agent; untick some.`);
   }
   return warnings;
 }

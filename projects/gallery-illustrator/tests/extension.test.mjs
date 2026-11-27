@@ -160,3 +160,19 @@ test("the ZIP is valid, reproducible and mirrors the folder", () => {
   ]);
   assert.equal(storedZip([]).length, 22, "empty archive is just the end record");
 });
+
+test("sync retains late cast faces and recovers legacy gallery owners from saved URLs", () => {
+  const tags = Object.fromEntries(Array.from({ length: 121 }, (_, i) => [
+    "gg:style" + i, { role: "style", owner: "A" }
+  ]));
+  Object.assign(tags, {
+    "cg:f": { role: "face", owner: "Zoe", url: "/api/characters/zz/gallery/file/f.png" },
+    "pg:p": { role: "face", owner: "Quinn", url: "/api/characters/personas/pp/gallery/file/f.png" },
+    "ch:c": { role: "location", url: "/api/gallery/file/chat77/harbor.png" },
+  });
+  const lines = buildPoolLines(normalizeTags(tags));
+  assert.equal(lines.length, 124);
+  assert.ok(lines.includes("cg:f | Zoe | face | - | zz"));
+  assert.ok(lines.includes("pg:p | Quinn | face | - | pp"));
+  assert.ok(lines.includes("ch:c | - | location | - | chat77"));
+});

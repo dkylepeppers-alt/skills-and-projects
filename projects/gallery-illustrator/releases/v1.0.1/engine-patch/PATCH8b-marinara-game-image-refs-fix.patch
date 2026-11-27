@@ -1,0 +1,13 @@
+diff --git a/packages/server/src/services/game/game-asset-generation.ts b/packages/server/src/services/game/game-asset-generation.ts
+index dd902b868..b46a510c0 100644
+--- a/packages/server/src/services/game/game-asset-generation.ts
++++ b/packages/server/src/services/game/game-asset-generation.ts
+@@ -1317,7 +1317,7 @@ export async function saveMapLocationBackground(req: {
+     const size = resolvedSize(req.size, DEFAULT_GAME_BACKGROUND_SIZE);
+     if (!existsSync(targetDir)) mkdirSync(targetDir, { recursive: true });
+     const image = await gameBackgroundImage({ base64: req.base64, mimeType: "image/png", ext: "png" } as ImageGenResult, size);
+-    atomicWriteBuffer(generatedBackgroundPath(targetDir, slug, image.ext), image.buffer);
++    writeFileAtomicSync(generatedBackgroundPath(targetDir, slug, image.ext), image.buffer);
+     removeOtherGeneratedBackgroundFormats(targetDir, slug, image.ext);
+     buildAssetManifest();
+     logger.info('[game-asset-gen] Using map image for "%s" as background -> tag: %s', req.locationName, tag);

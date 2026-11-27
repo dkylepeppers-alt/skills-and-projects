@@ -3,7 +3,7 @@
 
 const CSRF = { "x-marinara-csrf": "1" };
 const ROOT_CLASS = "grp-root";
-const STATE = { tags: {}, syncTimer: null, view: "tagged", search: "", busy: false, disposed: false };
+const STATE = { tags: {}, syncTimer: null, view: "tagged", search: "", loaded: false, loading: false, disposed: false };
 
 const api = async (path, init = {}) => {
   const method = (init.method ?? "GET").toUpperCase();
@@ -34,11 +34,15 @@ const el = (tag, props = {}, ...children) => {
 };
 
 // ── storage ──
-const loaded = await marinara.storage.get().catch(() => ({}));
-STATE.tags = normalizeTags(loaded?.tags);
+let pendingSave = Promise.resolve();
+let savedTags = null;
 
 const saveTags = async () => {
-  await marinara.storage.patch({ version: 1, tags: STATE.tags });
+  const snapshot = STATE.tags;
+  if (snapshot === savedTags) return;
+  pendingSave = pendingSave.catch(() => {}).then(() => marinara.storage.patch({ version: 1, tags: snapshot }));
+  await pendingSave;
+  savedTags = snapshot;
 };
 
 // ── sync to the agent prompt ──
@@ -50,9 +54,7 @@ const setStatus = (text, kind = "") => {
   }
 };
 
-const syncNow = async () => {
-  marinara.clearTimeout(STATE.syncTimer);
-  STATE.syncTimer = null;
+const syncSavedTags = async () => {
   try {
     setStatus("Syncing…");
     const agents = findAgents(await api("/api/agents"));
@@ -60,7 +62,7 @@ const syncNow = async () => {
       setStatus("Import the Gallery Illustrator agent first, then press Sync.", "error");
       return;
     }
-    const lines = buildPoolLines(STATE.tags);
+    const lines = buildPoolLines(savedTags);
     let prompts = 0;
     let skipped = 0;
     let unmarked = 0;
@@ -96,6 +98,14 @@ const syncNow = async () => {
   }
 };
 
+let pendingSync = Promise.resolve();
+const syncNow = () => {
+  marinara.clearTimeout(STATE.syncTimer);
+  STATE.syncTimer = null;
+  pendingSync = pendingSync.then(syncSavedTags);
+  return pendingSync;
+};
+
 const scheduleSync = () => {
   marinara.clearTimeout(STATE.syncTimer);
   STATE.syncTimer = marinara.setTimeout(() => void syncNow(), 1500);
@@ -103,11 +113,16 @@ const scheduleSync = () => {
 
 const updateTag = async (id, patch) => {
   const merged = normalizeTag(id, { ...(STATE.tags[id] ?? {}), ...patch });
+  STATE.tags = { ...STATE.tags };
   if (merged) STATE.tags[id] = merged;
   else delete STATE.tags[id];
   renderWarnings();
-  await saveTags();
-  scheduleSync();
+  try {
+    await saveTags();
+    scheduleSync();
+  } catch (error) {
+    setStatus(`Could not save tags: ${error.message}. Press Sync to retry.`, "error");
+  }
 };
 
 // ── sources ──
@@ -269,7 +284,10 @@ const buildPanel = () => {
         "header",
         { class: "grp-header" },
         el("strong", { text: "Reference pool" }),
-        el("button", { type: "button", class: "grp-primary", text: "Sync", onclick: () => void syncNow() }),
+        el("button", { type: "button", class: "grp-primary", text: "Sync", onclick: async () => {
+          try { await saveTags(); await syncNow(); }
+          catch (error) { setStatus(`Could not save tags: ${error.message}`, "error"); }
+        } }),
         el("button", { type: "button", text: "Close", onclick: () => (root.hidden = true) }),
       ),
       el("p", { class: "grp-status", role: "status" }),
@@ -294,7 +312,26 @@ const buildPanel = () => {
 
 const openPanel = async () => {
   root.hidden = false;
-  if (!root.firstChild) buildPanel();
+  if (!STATE.loaded) {
+    if (STATE.loading) return;
+    STATE.loading = true;
+    try {
+      const saved = await marinara.storage.get();
+      STATE.tags = normalizeTags(saved?.tags);
+      savedTags = STATE.tags;
+      STATE.loaded = true;
+      root.replaceChildren();
+      buildPanel();
+    } catch (error) {
+      root.replaceChildren(el("div", { class: "grp-panel" },
+        el("p", { role: "status", text: `Could not load saved tags: ${error.message}` }),
+        el("button", { type: "button", text: "Retry", onclick: () => void openPanel() }),
+        el("button", { type: "button", text: "Close", onclick: () => (root.hidden = true) })));
+      return;
+    } finally {
+      STATE.loading = false;
+    }
+  }
   setStatus("Tag pictures with a role. Changes sync to the Gallery Illustrator automatically.");
   await loadSources();
   renderSourceSelect();

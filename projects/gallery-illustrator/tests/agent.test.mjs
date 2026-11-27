@@ -104,3 +104,15 @@ test("both import shapes carry the same config", () => {
   assert.equal(envelope.kind, "marinara.agent-folder");
   assert.ok(Object.hasOwn(files, envelope.agents[0].path));
 });
+
+test("wardrobe and composition follow each person's scene and selected mode", () => {
+  for (const { promptTemplate } of templates) {
+    assert.match(promptTemplate, /"person": "A"/);
+    assert.match(promptTemplate, /wearer by their own letter/);
+    assert.match(promptTemplate, /write "nude"/);
+    assert.match(promptTemplate, /regardless of its pose or clothing/);
+    assert.match(promptTemplate, /When a person has an identity reference/);
+  }
+  assert.match(templates.find(t => t.id === "background").promptTemplate, /Start directly with the setting/);
+  assert.match(templates.find(t => t.id === "comic").promptTemplate, /two to four panels/);
+});

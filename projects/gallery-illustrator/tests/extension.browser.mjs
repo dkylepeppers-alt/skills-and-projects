@@ -90,7 +90,8 @@ await page.goto(origin);
 
 // Host shim + the Engine's wrapper (fullPageExtensionSource) around the built body.
 await page.evaluate(() => {
-  window.__storage = {};
+  window.__storage = { tags: { "gg:kept": { role: "prop", owner: "Keys", enabled: false } } };
+  window.__readAttempts = 0;
   window.__cleanups = [];
   window.__marinaraRunFullPageExtension = (identity, main) => {
     const timeouts = new Set();
@@ -99,7 +100,10 @@ await page.evaluate(() => {
       extension: identity,
       log: { debug() {}, info() {}, warn: console.warn, error: console.error },
       storage: {
-        get: async () => structuredClone(window.__storage),
+        get: async () => {
+          if (++window.__readAttempts === 1) throw new Error("temporary storage failure");
+          return structuredClone(window.__storage);
+        },
         patch: async (value) => (window.__storage = { ...window.__storage, ...structuredClone(value) }),
         clear: async () => (window.__storage = {}),
       },
@@ -139,6 +143,10 @@ await page.evaluate(() => window.__ready);
 // Open the panel, pick Mara, tag her face.
 await page.getByRole("button", { name: "Open the gallery reference pool" }).click();
 await page.getByRole("dialog", { name: "Gallery reference pool" }).waitFor();
+await page.getByRole("button", { name: "Retry" }).waitFor();
+assert.equal(await page.locator(".grp-source, .grp-tile").count(), 0);
+assert.equal(patches.length, 0);
+await page.getByRole("button", { name: "Retry" }).click();
 await page.locator(".grp-source").selectOption("character:char1");
 await page.locator(".grp-tile").first().waitFor();
 assert.equal(await page.locator(".grp-tile").count(), 2);
@@ -162,7 +170,7 @@ assert.ok(patches.length >= 1, "synced to the agent");
 const last = patches.at(-1);
 assert.equal(last.csrf, "1", "PATCH carries the CSRF header");
 assert.match(last.type, /application\/json/);
-const expected = ["gg:g1 | Harbor | location | -", "cg:img1 | Mara | face | close-up, soft light", "cg:img2 | Mara | body | -"].join("\n");
+const expected = ["gg:g1 | Harbor | location | -", "cg:img1 | Mara | face | close-up, soft light | char1", "cg:img2 | Mara | body | - | char1"].join("\n");
 assert.ok(last.body.promptTemplate.includes(`<!-- reference-pool:start -->\n${expected}\n<!-- reference-pool:end -->`), last.body.promptTemplate);
 assert.equal(last.body.settings.promptTemplates.length, 4);
 for (const option of last.body.settings.promptTemplates) assert.ok(option.promptTemplate.includes(expected), option.id);
@@ -171,10 +179,10 @@ assert.match(await page.locator(".grp-status").textContent(), /Synced 3 pictures
 
 // Stored tags survive, and the Tagged view lists them.
 const stored = await page.evaluate(() => window.__storage);
-assert.deepEqual(Object.keys(stored.tags).sort(), ["cg:img1", "cg:img2", "gg:g1"]);
+assert.deepEqual(Object.keys(stored.tags).sort(), ["cg:img1", "cg:img2", "gg:g1", "gg:kept"]);
 await page.locator(".grp-source").selectOption("tagged");
 await page.locator(".grp-tile", { hasText: "gg:g1" }).waitFor();
-assert.equal(await page.locator(".grp-tile").count(), 3);
+assert.equal(await page.locator(".grp-tile").count(), 4);
 assert.ok((await page.locator(".grp-tile", { hasText: "cg:img1" }).getByLabel("Owner").getAttribute("readonly")) !== null);
 assert.equal(await page.locator(".grp-tile", { hasText: "gg:g1" }).getByLabel("Owner").getAttribute("readonly"), null);
 

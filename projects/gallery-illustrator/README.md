@@ -22,7 +22,7 @@ Use the files in [releases/v1.0.1](releases/v1.0.1). If PATCH10 is already insta
 | External Extension **Gallery Reference Pool** | `gallery-reference-pool.personal-extension.zip` or `Gallery-Reference-Pool/` | A **Pool** button and panel: browse character, persona, Global Gallery and chat galleries, tag pictures, and sync the pool into the Agent's prompt. |
 | Local Engine patch **PATCH10** | `engine-patch/PATCH10-marinara-gallery-reference-pool.patch` | Makes the Engine send the Agent's picks as the reference images, in role order, with a numbered order line. |
 | Local Engine patch **PATCH11** | `engine-patch/PATCH11-gallery-illustrator-identity-and-pool.patch` | Scopes the catalog to the running chat, binds references to explicit person letters, and stops regeneration if a recorded picture is unavailable. |
-| Local Engine patch **PATCH12** | `engine-patch/PATCH12-gallery-illustrator-avatars.patch` | Lets character and persona avatars be pool references (`ca:<id>`, `pa:<id>`), with the same cast checks as gallery pictures. |
+| Local Engine patch **PATCH12** | `engine-patch/PATCH12-gallery-illustrator-avatars.patch` | Lets character and persona avatars be pool references (`ca:<id>`, `pa:<id>`), with the same cast checks as gallery pictures, and adds the person-letter rule to every prompt's pool block, so edited prompts need no changes. |
 | Fix for your PATCH8 | `engine-patch/PATCH8b-marinara-game-image-refs-fix.patch` | Optional. PATCH8 calls `atomicWriteBuffer`, which does not exist on staging, so "use the map picture as the Game background" always fails quietly. This replaces it with `writeFileAtomicSync`. |
 
 ## Requirements

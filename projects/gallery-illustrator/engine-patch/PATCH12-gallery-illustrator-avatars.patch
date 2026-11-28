@@ -1,8 +1,23 @@
 diff --git a/packages/server/src/services/agents/gallery-prompt-pool.ts b/packages/server/src/services/agents/gallery-prompt-pool.ts
-index b1251c52c4..32a5c3a08a 100644
+index b1251c52c4..a3048ef1ce 100644
 --- a/packages/server/src/services/agents/gallery-prompt-pool.ts
 +++ b/packages/server/src/services/agents/gallery-prompt-pool.ts
-@@ -29,7 +29,9 @@ export function scopeGalleryPrompt(
+@@ -3,6 +3,14 @@ import type { AgentContext } from "@marinara-engine/shared";
+ const START = "<!-- reference-pool:start -->";
+ const END = "<!-- reference-pool:end -->";
+ const MAX_ROWS = 120;
++/**
++ * Always sent with the pool, so every prompt (including a user's own edited one) binds each person's pictures to an
++ * explicit letter. The Engine then never has to guess who is person A.
++ */
++export const GALLERY_PERSON_RULE =
++  'Reference letters: give each visible person one letter in scene order (A, B, C…), including people without ' +
++  'pictures, and call them "person A", "person B"… in "prompt". On every face, expression, body or outfit ' +
++  'reference, add "person" with that letter, e.g. {"id": "cg:…", "role": "face", "person": "A", "subject": "Mara"}.';
+ 
+ /** The synced roster is shared. Select the rows for this turn before the template reaches the model. */
+ export function scopeGalleryPrompt(
+@@ -29,7 +37,9 @@ export function scopeGalleryPrompt(
    for (const line of template.slice(bodyStart, end).trim().split("\n")) {
      const [id, owner, role, caption, source] = line.split(" | ");
      if (!id || !owner || !role || !caption) continue;
@@ -13,6 +28,15 @@ index b1251c52c4..32a5c3a08a 100644
      const name = owner.toLowerCase();
      if (kind === "cg" && !(source ? characters.has(source) : characterNames.has(name))) continue;
      if (kind === "pg" && !(source ? source === personaId : !characterIdentity && name === personaName)) continue;
+@@ -47,6 +57,8 @@ export function scopeGalleryPrompt(
+     template.slice(0, bodyStart) +
+     "\n" +
+     (rows.join("\n") || "(No matching references for this chat.)") +
++    "\n\n" +
++    GALLERY_PERSON_RULE +
+     "\n" +
+     template.slice(end)
+   );
 diff --git a/packages/server/src/services/image/gallery-reference-pool.ts b/packages/server/src/services/image/gallery-reference-pool.ts
 index 7c4e1647f9..202f2a3c53 100644
 --- a/packages/server/src/services/image/gallery-reference-pool.ts
@@ -103,10 +127,10 @@ index 7c4e1647f9..202f2a3c53 100644
        const image = await stores.chatGallery.getById(request.imageId);
        if (!image) return missing;
 diff --git a/scripts/regressions/agents/gallery-reference-pool.regression.ts b/scripts/regressions/agents/gallery-reference-pool.regression.ts
-index 11089e499c..b930fa6c66 100644
+index 11089e499c..de15f8df7e 100644
 --- a/scripts/regressions/agents/gallery-reference-pool.regression.ts
 +++ b/scripts/regressions/agents/gallery-reference-pool.regression.ts
-@@ -301,5 +301,65 @@ assert.match(gallerySource, /decodeRecordedPoolReferences\(references\.poolRefer
+@@ -301,5 +301,67 @@ assert.match(gallerySource, /decodeRecordedPoolReferences\(references\.poolRefer
  
  assert.match(gallerySource, /poolReplayError\(references.poolReferences, poolReplay\?\.ids \?\? \[\]\)/);
  
@@ -168,6 +192,8 @@ index 11089e499c..b930fa6c66 100644
 +  assert.match(scoped, /ca:mara \| Mara/);
 +  assert.match(scoped, /pa:me \| Quinn/);
 +  assert.doesNotMatch(scoped, /ca:stranger|pa:other/);
++  // The letter rule rides along with the pool, so a user's own edited prompt still asks for "person" letters.
++  assert.match(scoped, /"person" with that letter[\s\S]*<!-- reference-pool:end -->/);
 +}
 +
  rmSync(dataDir, { recursive: true, force: true });

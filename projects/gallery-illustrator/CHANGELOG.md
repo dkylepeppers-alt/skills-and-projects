@@ -6,6 +6,7 @@
 - The Engine filters the shared catalog for the running chat before selecting up to 120 rows. Cast faces have first priority. Existing gallery URLs supply source IDs on the next sync.
 - The extension offers Retry when it cannot read saved tags. Tag edits and sync become available after a successful read.
 - Avatars join the pool. A character's or persona's avatar shows first in that owner's Pool view and is tagged as `ca:<character id>` or `pa:<persona id>`. PATCH12 (after PATCH11) loads them with the same cast checks as gallery pictures, and an avatar shares its owner's letter with their gallery pictures.
+- The Engine adds the person-letter rule to the pool block itself, so every prompt, including a user's own edited one, returns explicit `"person"` letters without manual edits.
 - The extension finds the Agent after an import through the Engine's UI, which renames its type twice (`custom-import-custom-import-gallery-illustrator-…`); each export and re-import adds another prefix.
 - Body references supply proportions, scene action controls the pose, and each wearer uses their own wardrobe state. An explicitly unclothed person is described as nude. Background and Comic use their own composition rules.
 

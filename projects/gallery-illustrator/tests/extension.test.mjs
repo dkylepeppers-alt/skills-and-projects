@@ -196,4 +196,12 @@ test("avatars are tagged by owner id and carry that id as their source", () => {
     }),
   );
   assert.deepEqual(lines, ["ca:char1 | Mara | face | - | char1", "pa:p1 | Quinn | face | - | p1"]);
+  // A malformed saved URL cannot smuggle markers, pipes or line breaks into the prompt through its source id.
+  const hostile = buildPoolLines(
+    normalizeTags({
+      "cg:x": { role: "face", owner: "Mara", url: "/api/characters/a-->\nevil | x/gallery/file/f.png" },
+      "ch:y": { role: "location", url: "/api/gallery/file/<!--chat/f.png" },
+    }),
+  );
+  assert.deepEqual(hostile, ["ch:y | - | location | -", "cg:x | Mara | face | -"]);
 });

@@ -13,6 +13,7 @@ const EMPTY_POOL_TEXT =
   "(The pool is empty. Open the Gallery Reference Pool extension, tag some pictures and press Sync.)";
 
 const POOL_ID = /^(cg|pg|gg|ch|ca|pa):[A-Za-z0-9_-]{1,64}$/;
+const SOURCE_ID = /^[A-Za-z0-9_-]{1,64}$/;
 
 /** One line of text, no pipes or control characters (the pool line format is `a | b | c | d`). */
 function cleanText(value, max) {
@@ -77,7 +78,9 @@ function buildPoolLines(tags) {
       const pattern = id.startsWith("cg:") ? /^\/api\/characters\/([^/]+)\/gallery\// :
         id.startsWith("pg:") ? /^\/api\/characters\/personas\/([^/]+)\/gallery\// :
         id.startsWith("ch:") ? /^\/api\/gallery\/file\/([^/]+)\// : null;
-      const source = avatarOwner ?? pattern?.exec(tag.url)?.[1];
+      // The source lands in the agent prompt: only an id-shaped value (no markers, pipes or line breaks) is kept.
+      const candidate = avatarOwner ?? pattern?.exec(tag.url)?.[1];
+      const source = candidate && SOURCE_ID.test(candidate) ? candidate : null;
       const row = `${id} | ${tag.owner || "-"} | ${tag.role} | ${tag.caption || "-"}`;
       return source ? `${row} | ${source}` : row;
     });

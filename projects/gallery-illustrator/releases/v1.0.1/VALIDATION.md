@@ -20,3 +20,6 @@ Recorded November 27, 2026.
 - The extension lists each owner's avatar first in that owner's Pool view and recognizes the Agent after a UI
   import (`custom-import-custom-import-gallery-illustrator-…`). 18 unit tests and the Chromium test pass; the
   browser test tags a persona avatar and checks the synced row (`pa:p1 | Quinn | face | - | p1`).
+- Security review follow-up: a source id recovered from a saved picture URL is kept only when it matches
+  `[A-Za-z0-9_-]{1,64}`, so a malformed URL cannot put pool markers, pipes or line breaks into the agent prompt.
+  A unit test covers it.

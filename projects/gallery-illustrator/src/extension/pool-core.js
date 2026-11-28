@@ -11,7 +11,7 @@ export const MAX_OWNER = 60;
 export const EMPTY_POOL_TEXT =
   "(The pool is empty. Open the Gallery Reference Pool extension, tag some pictures and press Sync.)";
 
-const POOL_ID = /^(cg|pg|gg|ch):[A-Za-z0-9_-]{1,64}$/;
+const POOL_ID = /^(cg|pg|gg|ch|ca|pa):[A-Za-z0-9_-]{1,64}$/;
 
 /** One line of text, no pipes or control characters (the pool line format is `a | b | c | d`). */
 export function cleanText(value, max) {
@@ -24,7 +24,10 @@ export function cleanText(value, max) {
     .slice(0, max);
 }
 
-/** The prefixed pool id the agent copies: cg (character), pg (persona), gg (Global Gallery), ch (chat). */
+/**
+ * The prefixed pool id the agent copies: cg (character gallery), pg (persona gallery), gg (Global Gallery), ch (chat),
+ * ca (a character's avatar, by character id), pa (a persona's avatar, by persona id).
+ */
 export function poolId(kind, imageId) {
   const id = `${kind}:${imageId}`;
   return POOL_ID.test(id) ? id : null;
@@ -68,11 +71,12 @@ export function buildPoolLines(tags) {
         idA.localeCompare(idB),
     )
     .map(([id, tag]) => {
-      // v1 tags already retain their gallery URL. Recover its owning card/persona/chat on sync.
+      // An avatar's id is its owner's id. v1 gallery tags retain their URL: recover the owning card/persona/chat.
+      const avatarOwner = /^(ca|pa):/.test(id) ? id.slice(3) : null;
       const pattern = id.startsWith("cg:") ? /^\/api\/characters\/([^/]+)\/gallery\// :
         id.startsWith("pg:") ? /^\/api\/characters\/personas\/([^/]+)\/gallery\// :
         id.startsWith("ch:") ? /^\/api\/gallery\/file\/([^/]+)\// : null;
-      const source = pattern?.exec(tag.url)?.[1];
+      const source = avatarOwner ?? pattern?.exec(tag.url)?.[1];
       const row = `${id} | ${tag.owner || "-"} | ${tag.role} | ${tag.caption || "-"}`;
       return source ? `${row} | ${source}` : row;
     });
@@ -173,12 +177,14 @@ export function pageItems(value) {
   return [];
 }
 
-// The Engine gives every imported Agent a fresh type: `custom-import-gallery-illustrator-<uuid>`.
-const IMPORTED_TYPE = new RegExp(`^custom-import-${AGENT_TYPE}-`);
+// The Engine renames an imported Agent's type to `custom-import-<type>-<uuid>`, and an import through the UI does it
+// twice (the client, then the server route): `custom-import-custom-import-gallery-illustrator-<uuid>-<uuid>`. Each
+// export and re-import adds another prefix, so allow any number of them.
+const IMPORTED_TYPE = new RegExp(`^(?:custom-import-)*${AGENT_TYPE}(?:-|$)`);
 
 /** Is this agent config a Gallery Illustrator (as authored, or as the Engine renamed it on import)? */
 export function isGalleryIllustrator(agent) {
-  return typeof agent?.type === "string" && (agent.type === AGENT_TYPE || IMPORTED_TYPE.test(agent.type));
+  return typeof agent?.type === "string" && IMPORTED_TYPE.test(agent.type);
 }
 
 /** Every Gallery Illustrator among the agent configs (importing twice makes two). */

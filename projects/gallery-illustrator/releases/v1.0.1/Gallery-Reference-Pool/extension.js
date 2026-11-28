@@ -12,7 +12,7 @@ const MAX_OWNER = 60;
 const EMPTY_POOL_TEXT =
   "(The pool is empty. Open the Gallery Reference Pool extension, tag some pictures and press Sync.)";
 
-const POOL_ID = /^(cg|pg|gg|ch):[A-Za-z0-9_-]{1,64}$/;
+const POOL_ID = /^(cg|pg|gg|ch|ca|pa):[A-Za-z0-9_-]{1,64}$/;
 
 /** One line of text, no pipes or control characters (the pool line format is `a | b | c | d`). */
 function cleanText(value, max) {
@@ -25,7 +25,10 @@ function cleanText(value, max) {
     .slice(0, max);
 }
 
-/** The prefixed pool id the agent copies: cg (character), pg (persona), gg (Global Gallery), ch (chat). */
+/**
+ * The prefixed pool id the agent copies: cg (character gallery), pg (persona gallery), gg (Global Gallery), ch (chat),
+ * ca (a character's avatar, by character id), pa (a persona's avatar, by persona id).
+ */
 function poolId(kind, imageId) {
   const id = `${kind}:${imageId}`;
   return POOL_ID.test(id) ? id : null;
@@ -69,11 +72,12 @@ function buildPoolLines(tags) {
         idA.localeCompare(idB),
     )
     .map(([id, tag]) => {
-      // v1 tags already retain their gallery URL. Recover its owning card/persona/chat on sync.
+      // An avatar's id is its owner's id. v1 gallery tags retain their URL: recover the owning card/persona/chat.
+      const avatarOwner = /^(ca|pa):/.test(id) ? id.slice(3) : null;
       const pattern = id.startsWith("cg:") ? /^\/api\/characters\/([^/]+)\/gallery\// :
         id.startsWith("pg:") ? /^\/api\/characters\/personas\/([^/]+)\/gallery\// :
         id.startsWith("ch:") ? /^\/api\/gallery\/file\/([^/]+)\// : null;
-      const source = pattern?.exec(tag.url)?.[1];
+      const source = avatarOwner ?? pattern?.exec(tag.url)?.[1];
       const row = `${id} | ${tag.owner || "-"} | ${tag.role} | ${tag.caption || "-"}`;
       return source ? `${row} | ${source}` : row;
     });
@@ -174,12 +178,14 @@ function pageItems(value) {
   return [];
 }
 
-// The Engine gives every imported Agent a fresh type: `custom-import-gallery-illustrator-<uuid>`.
-const IMPORTED_TYPE = new RegExp(`^custom-import-${AGENT_TYPE}-`);
+// The Engine renames an imported Agent's type to `custom-import-<type>-<uuid>`, and an import through the UI does it
+// twice (the client, then the server route): `custom-import-custom-import-gallery-illustrator-<uuid>-<uuid>`. Each
+// export and re-import adds another prefix, so allow any number of them.
+const IMPORTED_TYPE = new RegExp(`^(?:custom-import-)*${AGENT_TYPE}(?:-|$)`);
 
 /** Is this agent config a Gallery Illustrator (as authored, or as the Engine renamed it on import)? */
 function isGalleryIllustrator(agent) {
-  return typeof agent?.type === "string" && (agent.type === AGENT_TYPE || IMPORTED_TYPE.test(agent.type));
+  return typeof agent?.type === "string" && IMPORTED_TYPE.test(agent.type);
 }
 
 /** Every Gallery Illustrator among the agent configs (importing twice makes two). */
@@ -328,15 +334,16 @@ const loadSources = async () => {
     api("/api/characters/personas/list?limit=100").catch(() => []),
     api("/api/chats?limit=30").catch(() => []),
   ]);
-  sources.characters = pageItems(characters).map((row) => ({ id: row.id, name: characterName(row) }));
-  sources.personas = pageItems(personas).map((row) => ({ id: row.id, name: characterName(row) }));
+  const avatarOf = (row) => (typeof row.avatarPath === "string" && row.avatarPath.startsWith("/api/") ? row.avatarPath : "");
+  sources.characters = pageItems(characters).map((row) => ({ id: row.id, name: characterName(row), avatar: avatarOf(row) }));
+  sources.personas = pageItems(personas).map((row) => ({ id: row.id, name: characterName(row), avatar: avatarOf(row) }));
   sources.chats = pageItems(chats).map((row) => ({ id: row.id, name: cleanText(row.name, 60) || "Untitled chat" }));
 };
 
 /** Pictures for the selected view, each as { id, url, owner, ownerFixed }. */
 const loadPictures = async (view) => {
   if (view === "tagged") {
-    return Object.entries(STATE.tags).map(([id, tag]) => ({ id, url: tag.url, owner: tag.owner, ownerFixed: /^(cg|pg):/.test(id) }));
+    return Object.entries(STATE.tags).map(([id, tag]) => ({ id, url: tag.url, owner: tag.owner, ownerFixed: /^(cg|pg|ca|pa):/.test(id) }));
   }
   const [kind, ownerId] = view.split(":");
   const imageRows = (rows, prefix, owner, ownerFixed) =>
@@ -344,13 +351,20 @@ const loadPictures = async (view) => {
       const id = poolId(prefix, String(row.id ?? ""));
       return id && typeof row.url === "string" ? [{ id, url: row.url, owner, ownerFixed }] : [];
     });
+  // The avatar comes first, then the gallery. Its pool id is the owner's own id (ca:/pa:).
+  const avatarTile = (prefix, source) => {
+    const id = source?.avatar ? poolId(prefix, source.id) : null;
+    return id ? [{ id, url: source.avatar, owner: source.name, ownerFixed: true, avatar: true }] : [];
+  };
   if (kind === "character") {
-    const owner = sources.characters.find((c) => c.id === ownerId)?.name ?? "";
-    return imageRows(await api(`/api/characters/${encodeURIComponent(ownerId)}/gallery`), "cg", owner, true);
+    const source = sources.characters.find((c) => c.id === ownerId);
+    const gallery = imageRows(await api(`/api/characters/${encodeURIComponent(ownerId)}/gallery`), "cg", source?.name ?? "", true);
+    return [...avatarTile("ca", source), ...gallery];
   }
   if (kind === "persona") {
-    const owner = sources.personas.find((p) => p.id === ownerId)?.name ?? "";
-    return imageRows(await api(`/api/characters/personas/${encodeURIComponent(ownerId)}/gallery`), "pg", owner, true);
+    const source = sources.personas.find((p) => p.id === ownerId);
+    const gallery = imageRows(await api(`/api/characters/personas/${encodeURIComponent(ownerId)}/gallery`), "pg", source?.name ?? "", true);
+    return [...avatarTile("pa", source), ...gallery];
   }
   if (kind === "global") return imageRows(await api("/api/global-gallery"), "gg", "", false);
   if (kind === "chat") return imageRows(await api(`/api/gallery/${encodeURIComponent(ownerId)}`), "ch", "", false);
@@ -368,7 +382,8 @@ const launcher = el("button", {
   onclick: () => void openPanel(),
 });
 
-const thumbUrl = (url) => (/^\/api\/(gallery|global-gallery)\//.test(url) ? `${url}${url.includes("?") ? "&" : "?"}w=320` : url);
+const thumbUrl = (url) =>
+  /^\/api\/(gallery|global-gallery|avatars)\//.test(url) ? `${url}${url.includes("?") ? "&" : "?"}w=320` : url;
 
 const tile = (picture) => {
   const tag = STATE.tags[picture.id];
@@ -417,7 +432,7 @@ const tile = (picture) => {
       ? el("img", { src: thumbUrl(picture.url), alt: picture.id, loading: "lazy", decoding: "async" })
       : el("div", { class: "grp-missing", text: "No preview" }),
     el("div", { class: "grp-fields" }, roleSelect, ownerInput, captionInput, el("label", { class: "grp-check" }, enabled, " Use")),
-    el("code", { class: "grp-id", text: picture.id }),
+    el("code", { class: "grp-id", text: picture.avatar || /^(ca|pa):/.test(picture.id) ? `${picture.id} (avatar)` : picture.id }),
   );
   return card;
 };

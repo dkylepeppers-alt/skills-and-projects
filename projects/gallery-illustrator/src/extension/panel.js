@@ -134,15 +134,16 @@ const loadSources = async () => {
     api("/api/characters/personas/list?limit=100").catch(() => []),
     api("/api/chats?limit=30").catch(() => []),
   ]);
-  sources.characters = pageItems(characters).map((row) => ({ id: row.id, name: characterName(row) }));
-  sources.personas = pageItems(personas).map((row) => ({ id: row.id, name: characterName(row) }));
+  const avatarOf = (row) => (typeof row.avatarPath === "string" && row.avatarPath.startsWith("/api/") ? row.avatarPath : "");
+  sources.characters = pageItems(characters).map((row) => ({ id: row.id, name: characterName(row), avatar: avatarOf(row) }));
+  sources.personas = pageItems(personas).map((row) => ({ id: row.id, name: characterName(row), avatar: avatarOf(row) }));
   sources.chats = pageItems(chats).map((row) => ({ id: row.id, name: cleanText(row.name, 60) || "Untitled chat" }));
 };
 
 /** Pictures for the selected view, each as { id, url, owner, ownerFixed }. */
 const loadPictures = async (view) => {
   if (view === "tagged") {
-    return Object.entries(STATE.tags).map(([id, tag]) => ({ id, url: tag.url, owner: tag.owner, ownerFixed: /^(cg|pg):/.test(id) }));
+    return Object.entries(STATE.tags).map(([id, tag]) => ({ id, url: tag.url, owner: tag.owner, ownerFixed: /^(cg|pg|ca|pa):/.test(id) }));
   }
   const [kind, ownerId] = view.split(":");
   const imageRows = (rows, prefix, owner, ownerFixed) =>
@@ -150,13 +151,20 @@ const loadPictures = async (view) => {
       const id = poolId(prefix, String(row.id ?? ""));
       return id && typeof row.url === "string" ? [{ id, url: row.url, owner, ownerFixed }] : [];
     });
+  // The avatar comes first, then the gallery. Its pool id is the owner's own id (ca:/pa:).
+  const avatarTile = (prefix, source) => {
+    const id = source?.avatar ? poolId(prefix, source.id) : null;
+    return id ? [{ id, url: source.avatar, owner: source.name, ownerFixed: true, avatar: true }] : [];
+  };
   if (kind === "character") {
-    const owner = sources.characters.find((c) => c.id === ownerId)?.name ?? "";
-    return imageRows(await api(`/api/characters/${encodeURIComponent(ownerId)}/gallery`), "cg", owner, true);
+    const source = sources.characters.find((c) => c.id === ownerId);
+    const gallery = imageRows(await api(`/api/characters/${encodeURIComponent(ownerId)}/gallery`), "cg", source?.name ?? "", true);
+    return [...avatarTile("ca", source), ...gallery];
   }
   if (kind === "persona") {
-    const owner = sources.personas.find((p) => p.id === ownerId)?.name ?? "";
-    return imageRows(await api(`/api/characters/personas/${encodeURIComponent(ownerId)}/gallery`), "pg", owner, true);
+    const source = sources.personas.find((p) => p.id === ownerId);
+    const gallery = imageRows(await api(`/api/characters/personas/${encodeURIComponent(ownerId)}/gallery`), "pg", source?.name ?? "", true);
+    return [...avatarTile("pa", source), ...gallery];
   }
   if (kind === "global") return imageRows(await api("/api/global-gallery"), "gg", "", false);
   if (kind === "chat") return imageRows(await api(`/api/gallery/${encodeURIComponent(ownerId)}`), "ch", "", false);
@@ -174,7 +182,8 @@ const launcher = el("button", {
   onclick: () => void openPanel(),
 });
 
-const thumbUrl = (url) => (/^\/api\/(gallery|global-gallery)\//.test(url) ? `${url}${url.includes("?") ? "&" : "?"}w=320` : url);
+const thumbUrl = (url) =>
+  /^\/api\/(gallery|global-gallery|avatars)\//.test(url) ? `${url}${url.includes("?") ? "&" : "?"}w=320` : url;
 
 const tile = (picture) => {
   const tag = STATE.tags[picture.id];
@@ -223,7 +232,7 @@ const tile = (picture) => {
       ? el("img", { src: thumbUrl(picture.url), alt: picture.id, loading: "lazy", decoding: "async" })
       : el("div", { class: "grp-missing", text: "No preview" }),
     el("div", { class: "grp-fields" }, roleSelect, ownerInput, captionInput, el("label", { class: "grp-check" }, enabled, " Use")),
-    el("code", { class: "grp-id", text: picture.id }),
+    el("code", { class: "grp-id", text: picture.avatar || /^(ca|pa):/.test(picture.id) ? `${picture.id} (avatar)` : picture.id }),
   );
   return card;
 };

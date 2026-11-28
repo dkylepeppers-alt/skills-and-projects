@@ -34,8 +34,14 @@ const png = Buffer.from(
 const patches = [];
 const routes = {
   "GET /api/agents": () => [agent],
-  "GET /api/characters": () => ({ items: [{ id: "char1", data: JSON.stringify({ name: "Mara" }) }], hasMore: false }),
-  "GET /api/characters/personas/list": () => ({ items: [{ id: "p1", name: "Quinn" }], hasMore: false }),
+  "GET /api/characters": () => ({
+    items: [{ id: "char1", data: JSON.stringify({ name: "Mara" }), avatarPath: "/api/avatars/file/character-char1.png" }],
+    hasMore: false,
+  }),
+  "GET /api/characters/personas/list": () => ({
+    items: [{ id: "p1", name: "Quinn", avatarPath: "/api/avatars/file/persona-p1.png" }],
+    hasMore: false,
+  }),
   "GET /api/chats": () => [{ id: "chat1", name: "Harbor night" }],
   "GET /api/characters/char1/gallery": () => [
     { id: "img1", url: "/api/characters/char1/gallery/file/face.png" },
@@ -149,7 +155,10 @@ assert.equal(patches.length, 0);
 await page.getByRole("button", { name: "Retry" }).click();
 await page.locator(".grp-source").selectOption("character:char1");
 await page.locator(".grp-tile").first().waitFor();
-assert.equal(await page.locator(".grp-tile").count(), 2);
+// The avatar is listed first (ca:<character id>), then the gallery.
+assert.equal(await page.locator(".grp-tile").count(), 3);
+assert.match(await page.locator(".grp-tile").first().textContent(), /ca:char1 \(avatar\)/);
+assert.match(await page.locator(".grp-tile").first().locator("img").getAttribute("src"), /character-char1\.png\?w=320$/);
 const faceTile = page.locator(".grp-tile", { hasText: "cg:img1" });
 await faceTile.getByLabel("Caption").fill("close-up, soft light");
 await faceTile.getByLabel("Role").selectOption("face");
@@ -164,25 +173,38 @@ await harbor.waitFor();
 await harbor.getByLabel("Owner").fill("Harbor");
 await harbor.getByLabel("Role").selectOption("location");
 
+// A persona's avatar is taggable too (pa:<persona id>), with its owner fixed.
+await page.locator(".grp-source").selectOption("persona:p1");
+const personaAvatar = page.locator(".grp-tile", { hasText: "pa:p1" });
+await personaAvatar.waitFor();
+assert.equal(await personaAvatar.getByLabel("Owner").inputValue(), "Quinn");
+await personaAvatar.getByLabel("Role").selectOption("face");
+
 // Auto-sync fires 1.5 s after the last change.
 await page.waitForFunction(() => document.querySelector(".grp-status")?.dataset.kind === "ok", null, { timeout: 8000 });
 assert.ok(patches.length >= 1, "synced to the agent");
 const last = patches.at(-1);
 assert.equal(last.csrf, "1", "PATCH carries the CSRF header");
 assert.match(last.type, /application\/json/);
-const expected = ["gg:g1 | Harbor | location | -", "cg:img1 | Mara | face | close-up, soft light | char1", "cg:img2 | Mara | body | - | char1"].join("\n");
+const expected = [
+  "gg:g1 | Harbor | location | -",
+  "cg:img1 | Mara | face | close-up, soft light | char1",
+  "cg:img2 | Mara | body | - | char1",
+  "pa:p1 | Quinn | face | - | p1",
+].join("\n");
 assert.ok(last.body.promptTemplate.includes(`<!-- reference-pool:start -->\n${expected}\n<!-- reference-pool:end -->`), last.body.promptTemplate);
 assert.equal(last.body.settings.promptTemplates.length, 4);
 for (const option of last.body.settings.promptTemplates) assert.ok(option.promptTemplate.includes(expected), option.id);
 assert.deepEqual(last.body.settings.customCapabilities, { trigger_image_generation: true }, "settings kept");
-assert.match(await page.locator(".grp-status").textContent(), /Synced 3 pictures to 5 prompts/);
+assert.match(await page.locator(".grp-status").textContent(), /Synced 4 pictures to 5 prompts/);
 
 // Stored tags survive, and the Tagged view lists them.
 const stored = await page.evaluate(() => window.__storage);
-assert.deepEqual(Object.keys(stored.tags).sort(), ["cg:img1", "cg:img2", "gg:g1", "gg:kept"]);
+assert.deepEqual(Object.keys(stored.tags).sort(), ["cg:img1", "cg:img2", "gg:g1", "gg:kept", "pa:p1"]);
 await page.locator(".grp-source").selectOption("tagged");
 await page.locator(".grp-tile", { hasText: "gg:g1" }).waitFor();
-assert.equal(await page.locator(".grp-tile").count(), 4);
+assert.equal(await page.locator(".grp-tile").count(), 5);
+assert.ok((await page.locator(".grp-tile", { hasText: "pa:p1" }).getByLabel("Owner").getAttribute("readonly")) !== null);
 assert.ok((await page.locator(".grp-tile", { hasText: "cg:img1" }).getByLabel("Owner").getAttribute("readonly")) !== null);
 assert.equal(await page.locator(".grp-tile", { hasText: "gg:g1" }).getByLabel("Owner").getAttribute("readonly"), null);
 
@@ -191,7 +213,7 @@ await page.locator(".grp-tile", { hasText: "cg:img1" }).getByLabel("Role").selec
 await page.locator(".grp-warnings li", { hasText: "Mara has no face picture." }).waitFor();
 await page.locator(".grp-tile", { hasText: "cg:img1" }).getByLabel("Role").selectOption("face");
 await page.getByRole("button", { name: "Sync" }).click();
-await page.waitForFunction(() => /Synced 3 pictures/.test(document.querySelector(".grp-status")?.textContent ?? ""));
+await page.waitForFunction(() => /Synced 4 pictures/.test(document.querySelector(".grp-status")?.textContent ?? ""));
 
 if (screenshotPath) await page.screenshot({ path: screenshotPath, fullPage: false });
 

@@ -12,7 +12,7 @@ never chooses, and nothing in the stock Engine accepts arbitrary gallery referen
 
 ## Upgrade from 1.0.0
 
-Use the files in [releases/v1.0.1](releases/v1.0.1). If PATCH10 is already installed, apply just PATCH11 after it and restart the Engine. Import the new extension ZIP, accept the update to the existing extension, and approve the new hash. This keeps the extension ID and its saved tags. Import the new Agent, enable that copy in the chat, and disable the old copy there. Copy over any custom mode edits you want to keep. Open **Pool → Sync** once to refresh the saved catalog.
+Use the files in [releases/v1.0.1](releases/v1.0.1). If PATCH10 is already installed, apply PATCH11 and then PATCH12 after it and restart the Engine. Import the new extension ZIP, accept the update to the existing extension, and approve the new hash. This keeps the extension ID and its saved tags. Import the new Agent, enable that copy in the chat, and disable the old copy there. Copy over any custom mode edits you want to keep. Open **Pool → Sync** once to refresh the saved catalog.
 
 ## What is in it
 
@@ -22,6 +22,7 @@ Use the files in [releases/v1.0.1](releases/v1.0.1). If PATCH10 is already insta
 | External Extension **Gallery Reference Pool** | `gallery-reference-pool.personal-extension.zip` or `Gallery-Reference-Pool/` | A **Pool** button and panel: browse character, persona, Global Gallery and chat galleries, tag pictures, and sync the pool into the Agent's prompt. |
 | Local Engine patch **PATCH10** | `engine-patch/PATCH10-marinara-gallery-reference-pool.patch` | Makes the Engine send the Agent's picks as the reference images, in role order, with a numbered order line. |
 | Local Engine patch **PATCH11** | `engine-patch/PATCH11-gallery-illustrator-identity-and-pool.patch` | Scopes the catalog to the running chat, binds references to explicit person letters, and stops regeneration if a recorded picture is unavailable. |
+| Local Engine patch **PATCH12** | `engine-patch/PATCH12-gallery-illustrator-avatars.patch` | Lets character and persona avatars be pool references (`ca:<id>`, `pa:<id>`), with the same cast checks as gallery pictures. |
 | Fix for your PATCH8 | `engine-patch/PATCH8b-marinara-game-image-refs-fix.patch` | Optional. PATCH8 calls `atomicWriteBuffer`, which does not exist on staging, so "use the map picture as the Game background" always fails quietly. This replaces it with `writeFileAtomicSync`. |
 
 ## Requirements
@@ -42,9 +43,19 @@ Use the files in [releases/v1.0.1](releases/v1.0.1). If PATCH10 is already insta
    ```bash
    git apply --check PATCH10-marinara-gallery-reference-pool.patch && git apply PATCH10-marinara-gallery-reference-pool.patch
    git apply --check PATCH11-gallery-illustrator-identity-and-pool.patch && git apply PATCH11-gallery-illustrator-identity-and-pool.patch
+   git apply --check PATCH12-gallery-illustrator-avatars.patch && git apply PATCH12-gallery-illustrator-avatars.patch
    ```
 
    Optionally do the same for `PATCH8b-marinara-game-image-refs-fix.patch`. Restart Marinara.
+
+   PATCH10 and PATCH11 each add a new source file. `start-termux.sh` runs `git clean -fd` on the source folders at
+   every launch, which deletes untracked files (and leaves the patch half-applied, so the server fails to start).
+   Plain `git clean -fd` keeps ignored files, so list both in `.git/info/exclude`:
+
+   ```bash
+   printf '%s\n' packages/server/src/services/image/gallery-reference-pool.ts \
+     packages/server/src/services/agents/gallery-prompt-pool.ts >> .git/info/exclude
+   ```
 2. **Import the extension.** Start Marinara with `ENABLE_EXTERNAL_EXTENSIONS=true`, then turn on External
    Extensions in **Settings → Advanced → Danger Zone**. In **Settings → Addons → External Extensions**, use
    **Import Extension File** with the ZIP (or **Import Extension Folder**). Review it and approve the exact hash.

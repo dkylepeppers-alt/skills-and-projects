@@ -28,6 +28,9 @@ test("ids, tags and text are validated", () => {
   assert.equal(poolId("cg", "abc_123-x"), "cg:abc_123-x");
   assert.equal(poolId("cg", "../etc"), null);
   assert.equal(poolId("zz", "abc"), null);
+  // Avatars: the id is the owner's own id.
+  assert.equal(poolId("ca", "char1"), "ca:char1");
+  assert.equal(poolId("pa", "p1"), "pa:p1");
   assert.equal(cleanText(" a |b\n<!-- c -->  ", 40), "a b c");
   assert.equal(cleanText("x".repeat(100), 10).length, 10);
   assert.equal(normalizeTag("cg:a", { role: "face" })?.role, "face");
@@ -117,6 +120,14 @@ test("library helpers read pages, rows and the agent", () => {
   );
   assert.equal(isGalleryIllustrator({ type: "custom-import-gallery-illustrator-extra-1" }), true);
   assert.equal(isGalleryIllustrator({ type: "my-gallery-illustrator" }), false);
+  // A UI import renames twice (client, then server), and every export + re-import adds another prefix.
+  assert.equal(
+    isGalleryIllustrator({ type: "custom-import-custom-import-gallery-illustrator-3a5911d3-66bd-4ff8-b938-658b5c7f78c8-0b1d" }),
+    true,
+  );
+  assert.equal(isGalleryIllustrator({ type: "custom-import-custom-import-custom-import-gallery-illustrator-a-b-c" }), true);
+  assert.equal(isGalleryIllustrator({ type: "custom-import-gallery-illustrator2-1" }), false);
+  assert.equal(isGalleryIllustrator({ type: "custom-import-my-gallery-illustrator-1" }), false);
 });
 
 test("the built script is one body for the Engine's full-page wrapper", () => {
@@ -175,4 +186,14 @@ test("sync retains late cast faces and recovers legacy gallery owners from saved
   assert.ok(lines.includes("cg:f | Zoe | face | - | zz"));
   assert.ok(lines.includes("pg:p | Quinn | face | - | pp"));
   assert.ok(lines.includes("ch:c | - | location | - | chat77"));
+});
+
+test("avatars are tagged by owner id and carry that id as their source", () => {
+  const lines = buildPoolLines(
+    normalizeTags({
+      "ca:char1": { role: "face", owner: "Mara", url: "/api/avatars/file/character-char1.png" },
+      "pa:p1": { role: "face", owner: "Quinn", url: "/api/avatars/file/persona-p1.png" },
+    }),
+  );
+  assert.deepEqual(lines, ["ca:char1 | Mara | face | - | char1", "pa:p1 | Quinn | face | - | p1"]);
 });

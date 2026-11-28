@@ -3,7 +3,7 @@
 
 const CSRF = { "x-marinara-csrf": "1" };
 const ROOT_CLASS = "grp-root";
-const STATE = { tags: {}, syncTimer: null, view: "tagged", search: "", busy: false, disposed: false };
+const STATE = { tags: {}, syncTimer: null, view: "tagged", search: "", loaded: false, loading: false, disposed: false };
 
 const api = async (path, init = {}) => {
   const method = (init.method ?? "GET").toUpperCase();
@@ -34,11 +34,15 @@ const el = (tag, props = {}, ...children) => {
 };
 
 // ── storage ──
-const loaded = await marinara.storage.get().catch(() => ({}));
-STATE.tags = normalizeTags(loaded?.tags);
+let pendingSave = Promise.resolve();
+let savedTags = null;
 
 const saveTags = async () => {
-  await marinara.storage.patch({ version: 1, tags: STATE.tags });
+  const snapshot = STATE.tags;
+  if (snapshot === savedTags) return;
+  pendingSave = pendingSave.catch(() => {}).then(() => marinara.storage.patch({ version: 1, tags: snapshot }));
+  await pendingSave;
+  savedTags = snapshot;
 };
 
 // ── sync to the agent prompt ──
@@ -50,9 +54,7 @@ const setStatus = (text, kind = "") => {
   }
 };
 
-const syncNow = async () => {
-  marinara.clearTimeout(STATE.syncTimer);
-  STATE.syncTimer = null;
+const syncSavedTags = async () => {
   try {
     setStatus("Syncing…");
     const agents = findAgents(await api("/api/agents"));
@@ -60,7 +62,7 @@ const syncNow = async () => {
       setStatus("Import the Gallery Illustrator agent first, then press Sync.", "error");
       return;
     }
-    const lines = buildPoolLines(STATE.tags);
+    const lines = buildPoolLines(savedTags);
     let prompts = 0;
     let skipped = 0;
     let unmarked = 0;
@@ -96,6 +98,14 @@ const syncNow = async () => {
   }
 };
 
+let pendingSync = Promise.resolve();
+const syncNow = () => {
+  marinara.clearTimeout(STATE.syncTimer);
+  STATE.syncTimer = null;
+  pendingSync = pendingSync.then(syncSavedTags);
+  return pendingSync;
+};
+
 const scheduleSync = () => {
   marinara.clearTimeout(STATE.syncTimer);
   STATE.syncTimer = marinara.setTimeout(() => void syncNow(), 1500);
@@ -103,11 +113,16 @@ const scheduleSync = () => {
 
 const updateTag = async (id, patch) => {
   const merged = normalizeTag(id, { ...(STATE.tags[id] ?? {}), ...patch });
+  STATE.tags = { ...STATE.tags };
   if (merged) STATE.tags[id] = merged;
   else delete STATE.tags[id];
   renderWarnings();
-  await saveTags();
-  scheduleSync();
+  try {
+    await saveTags();
+    scheduleSync();
+  } catch (error) {
+    setStatus(`Could not save tags: ${error.message}. Press Sync to retry.`, "error");
+  }
 };
 
 // ── sources ──
@@ -119,15 +134,16 @@ const loadSources = async () => {
     api("/api/characters/personas/list?limit=100").catch(() => []),
     api("/api/chats?limit=30").catch(() => []),
   ]);
-  sources.characters = pageItems(characters).map((row) => ({ id: row.id, name: characterName(row) }));
-  sources.personas = pageItems(personas).map((row) => ({ id: row.id, name: characterName(row) }));
+  const avatarOf = (row) => (typeof row.avatarPath === "string" && row.avatarPath.startsWith("/api/") ? row.avatarPath : "");
+  sources.characters = pageItems(characters).map((row) => ({ id: row.id, name: characterName(row), avatar: avatarOf(row) }));
+  sources.personas = pageItems(personas).map((row) => ({ id: row.id, name: characterName(row), avatar: avatarOf(row) }));
   sources.chats = pageItems(chats).map((row) => ({ id: row.id, name: cleanText(row.name, 60) || "Untitled chat" }));
 };
 
 /** Pictures for the selected view, each as { id, url, owner, ownerFixed }. */
 const loadPictures = async (view) => {
   if (view === "tagged") {
-    return Object.entries(STATE.tags).map(([id, tag]) => ({ id, url: tag.url, owner: tag.owner, ownerFixed: /^(cg|pg):/.test(id) }));
+    return Object.entries(STATE.tags).map(([id, tag]) => ({ id, url: tag.url, owner: tag.owner, ownerFixed: /^(cg|pg|ca|pa):/.test(id) }));
   }
   const [kind, ownerId] = view.split(":");
   const imageRows = (rows, prefix, owner, ownerFixed) =>
@@ -135,13 +151,20 @@ const loadPictures = async (view) => {
       const id = poolId(prefix, String(row.id ?? ""));
       return id && typeof row.url === "string" ? [{ id, url: row.url, owner, ownerFixed }] : [];
     });
+  // The avatar comes first, then the gallery. Its pool id is the owner's own id (ca:/pa:).
+  const avatarTile = (prefix, source) => {
+    const id = source?.avatar ? poolId(prefix, source.id) : null;
+    return id ? [{ id, url: source.avatar, owner: source.name, ownerFixed: true, avatar: true }] : [];
+  };
   if (kind === "character") {
-    const owner = sources.characters.find((c) => c.id === ownerId)?.name ?? "";
-    return imageRows(await api(`/api/characters/${encodeURIComponent(ownerId)}/gallery`), "cg", owner, true);
+    const source = sources.characters.find((c) => c.id === ownerId);
+    const gallery = imageRows(await api(`/api/characters/${encodeURIComponent(ownerId)}/gallery`), "cg", source?.name ?? "", true);
+    return [...avatarTile("ca", source), ...gallery];
   }
   if (kind === "persona") {
-    const owner = sources.personas.find((p) => p.id === ownerId)?.name ?? "";
-    return imageRows(await api(`/api/characters/personas/${encodeURIComponent(ownerId)}/gallery`), "pg", owner, true);
+    const source = sources.personas.find((p) => p.id === ownerId);
+    const gallery = imageRows(await api(`/api/characters/personas/${encodeURIComponent(ownerId)}/gallery`), "pg", source?.name ?? "", true);
+    return [...avatarTile("pa", source), ...gallery];
   }
   if (kind === "global") return imageRows(await api("/api/global-gallery"), "gg", "", false);
   if (kind === "chat") return imageRows(await api(`/api/gallery/${encodeURIComponent(ownerId)}`), "ch", "", false);
@@ -159,7 +182,8 @@ const launcher = el("button", {
   onclick: () => void openPanel(),
 });
 
-const thumbUrl = (url) => (/^\/api\/(gallery|global-gallery)\//.test(url) ? `${url}${url.includes("?") ? "&" : "?"}w=320` : url);
+const thumbUrl = (url) =>
+  /^\/api\/(gallery|global-gallery|avatars)\//.test(url) ? `${url}${url.includes("?") ? "&" : "?"}w=320` : url;
 
 const tile = (picture) => {
   const tag = STATE.tags[picture.id];
@@ -208,7 +232,7 @@ const tile = (picture) => {
       ? el("img", { src: thumbUrl(picture.url), alt: picture.id, loading: "lazy", decoding: "async" })
       : el("div", { class: "grp-missing", text: "No preview" }),
     el("div", { class: "grp-fields" }, roleSelect, ownerInput, captionInput, el("label", { class: "grp-check" }, enabled, " Use")),
-    el("code", { class: "grp-id", text: picture.id }),
+    el("code", { class: "grp-id", text: picture.avatar || /^(ca|pa):/.test(picture.id) ? `${picture.id} (avatar)` : picture.id }),
   );
   return card;
 };
@@ -269,7 +293,10 @@ const buildPanel = () => {
         "header",
         { class: "grp-header" },
         el("strong", { text: "Reference pool" }),
-        el("button", { type: "button", class: "grp-primary", text: "Sync", onclick: () => void syncNow() }),
+        el("button", { type: "button", class: "grp-primary", text: "Sync", onclick: async () => {
+          try { await saveTags(); await syncNow(); }
+          catch (error) { setStatus(`Could not save tags: ${error.message}`, "error"); }
+        } }),
         el("button", { type: "button", text: "Close", onclick: () => (root.hidden = true) }),
       ),
       el("p", { class: "grp-status", role: "status" }),
@@ -294,7 +321,26 @@ const buildPanel = () => {
 
 const openPanel = async () => {
   root.hidden = false;
-  if (!root.firstChild) buildPanel();
+  if (!STATE.loaded) {
+    if (STATE.loading) return;
+    STATE.loading = true;
+    try {
+      const saved = await marinara.storage.get();
+      STATE.tags = normalizeTags(saved?.tags);
+      savedTags = STATE.tags;
+      STATE.loaded = true;
+      root.replaceChildren();
+      buildPanel();
+    } catch (error) {
+      root.replaceChildren(el("div", { class: "grp-panel" },
+        el("p", { role: "status", text: `Could not load saved tags: ${error.message}` }),
+        el("button", { type: "button", text: "Retry", onclick: () => void openPanel() }),
+        el("button", { type: "button", text: "Close", onclick: () => (root.hidden = true) })));
+      return;
+    } finally {
+      STATE.loading = false;
+    }
+  }
   setStatus("Tag pictures with a role. Changes sync to the Gallery Illustrator automatically.");
   await loadSources();
   renderSourceSelect();

@@ -1,0 +1,200 @@
+diff --git a/packages/server/src/services/agents/gallery-prompt-pool.ts b/packages/server/src/services/agents/gallery-prompt-pool.ts
+index b1251c52c4..a3048ef1ce 100644
+--- a/packages/server/src/services/agents/gallery-prompt-pool.ts
++++ b/packages/server/src/services/agents/gallery-prompt-pool.ts
+@@ -3,6 +3,14 @@ import type { AgentContext } from "@marinara-engine/shared";
+ const START = "<!-- reference-pool:start -->";
+ const END = "<!-- reference-pool:end -->";
+ const MAX_ROWS = 120;
++/**
++ * Always sent with the pool, so every prompt (including a user's own edited one) binds each person's pictures to an
++ * explicit letter. The Engine then never has to guess who is person A.
++ */
++export const GALLERY_PERSON_RULE =
++  'Reference letters: give each visible person one letter in scene order (A, B, C…), including people without ' +
++  'pictures, and call them "person A", "person B"… in "prompt". On every face, expression, body or outfit ' +
++  'reference, add "person" with that letter, e.g. {"id": "cg:…", "role": "face", "person": "A", "subject": "Mara"}.';
+ 
+ /** The synced roster is shared. Select the rows for this turn before the template reaches the model. */
+ export function scopeGalleryPrompt(
+@@ -29,7 +37,9 @@ export function scopeGalleryPrompt(
+   for (const line of template.slice(bodyStart, end).trim().split("\n")) {
+     const [id, owner, role, caption, source] = line.split(" | ");
+     if (!id || !owner || !role || !caption) continue;
+-    const kind = id.slice(0, id.indexOf(":"));
++    // Avatars (ca:/pa:) follow the same cast rules as their owner's gallery pictures (cg:/pg:).
++    const rawKind = id.slice(0, id.indexOf(":"));
++    const kind = rawKind === "ca" ? "cg" : rawKind === "pa" ? "pg" : rawKind;
+     const name = owner.toLowerCase();
+     if (kind === "cg" && !(source ? characters.has(source) : characterNames.has(name))) continue;
+     if (kind === "pg" && !(source ? source === personaId : !characterIdentity && name === personaName)) continue;
+@@ -47,6 +57,8 @@ export function scopeGalleryPrompt(
+     template.slice(0, bodyStart) +
+     "\n" +
+     (rows.join("\n") || "(No matching references for this chat.)") +
++    "\n\n" +
++    GALLERY_PERSON_RULE +
+     "\n" +
+     template.slice(end)
+   );
+diff --git a/packages/server/src/services/image/gallery-reference-pool.ts b/packages/server/src/services/image/gallery-reference-pool.ts
+index 7c4e1647f9..202f2a3c53 100644
+--- a/packages/server/src/services/image/gallery-reference-pool.ts
++++ b/packages/server/src/services/image/gallery-reference-pool.ts
+@@ -9,6 +9,8 @@
+  *   pg:<id>  a persona gallery image     (the persona must be this chat's persona)
+  *   gg:<id>  a Global Gallery image
+  *   ch:<id>  this chat's own gallery image
++ *   ca:<id>  a character's avatar, by character id (the character must be in this chat's cast)
++ *   pa:<id>  a persona's avatar, by persona id      (the persona must be this chat's persona)
+  * Unknown, malformed, missing or out-of-scope ids are skipped. When none survive, the caller keeps the
+  * automatic selection.
+  */
+@@ -21,6 +23,8 @@ import { createCharacterGalleryStorage } from "../storage/character-gallery.stor
+ import { createGalleryStorage } from "../storage/gallery.storage.js";
+ import { createGlobalGalleryStorage } from "../storage/global-gallery.storage.js";
+ import { createPersonaGalleryStorage } from "../storage/persona-gallery.storage.js";
++import { resolveStoredAvatarFile } from "./avatar-file-lifecycle.js";
++import { createCharactersStorage } from "../storage/characters.storage.js";
+ import { resolveStoredGalleryFile } from "./gallery-file-lifecycle.js";
+ import { resolveGalleryImagePath } from "./gallery-image-path.js";
+ 
+@@ -49,9 +53,9 @@ const ROLE_RANK: Record<PoolReferenceRole, number> = {
+   other: 7,
+ };
+ 
+-const POOL_ID = /^(cg|pg|gg|ch):([A-Za-z0-9_-]{1,64})$/;
++const POOL_ID = /^(cg|pg|gg|ch|ca|pa):([A-Za-z0-9_-]{1,64})$/;
+ 
+-export type PoolReferenceKind = "cg" | "pg" | "gg" | "ch";
++export type PoolReferenceKind = "cg" | "pg" | "gg" | "ch" | "ca" | "pa";
+ 
+ export type PoolReferenceRequest = {
+   /** The prefixed id as the agent wrote it, e.g. `cg:abc123`. */
+@@ -174,6 +178,8 @@ export type PoolReferenceStores = {
+   personaGallery: { getById: (id: string) => Promise<{ personaId: string; filePath: string } | null> };
+   chatGallery: { getById: (id: string) => Promise<{ chatId: string; filePath: string } | null> };
+   globalGallery: { getImageById: (id: string) => Promise<{ filePath: string } | null> };
++  /** A character's or persona's avatar URL (`/api/avatars/file/…`); undefined when the owner does not exist. */
++  readAvatarPath?: (kind: "ca" | "pa", ownerId: string) => Promise<string | null | undefined>;
+   readOwnerName?: (kind: "cg" | "pg", ownerId: string) => Promise<string | null>;
+   readFile?: (path: string) => Promise<Buffer>;
+ };
+@@ -184,6 +190,19 @@ export function createPoolReferenceStores(db: DB): PoolReferenceStores {
+     personaGallery: createPersonaGalleryStorage(db),
+     chatGallery: createGalleryStorage(db),
+     globalGallery: createGlobalGalleryStorage(db),
++    readAvatarPath: avatarPathReader(createCharactersStorage(db)),
++  };
++}
++
++/** Avatar URLs from the character and persona stores. */
++export function avatarPathReader(store: {
++  getById: (id: string) => Promise<{ avatarPath?: unknown } | null>;
++  getPersona: (id: string) => Promise<{ avatarPath?: unknown } | null>;
++}): NonNullable<PoolReferenceStores["readAvatarPath"]> {
++  return async (kind, ownerId) => {
++    const row = kind === "pa" ? await store.getPersona(ownerId) : await store.getById(ownerId);
++    if (!row) return undefined;
++    return typeof row.avatarPath === "string" && row.avatarPath ? row.avatarPath : null;
+   };
+ }
+ 
+@@ -255,6 +274,25 @@ async function loadPoolReference(
+         ownerId: "pg:" + image.personaId,
+       };
+     }
++    case "ca":
++    case "pa": {
++      // An avatar belongs to the same person as that owner's gallery pictures: same owner id, same letter.
++      const isPersona = request.kind === "pa";
++      const owners = isPersona ? scope.personas : scope.characters;
++      if (owners && !owners.has(request.imageId)) return null;
++      const avatarPath = await stores.readAvatarPath?.(request.kind, request.imageId);
++      if (avatarPath === undefined) return missing;
++      const ownerName =
++        owners?.get(request.imageId) ??
++        (await stores.readOwnerName?.(isPersona ? "pg" : "cg", request.imageId)) ??
++        request.subject;
++      const file = resolveStoredAvatarFile(avatarPath);
++      return {
++        base64: file ? await readImageFile(file, stores) : null,
++        ownerName,
++        ownerId: (isPersona ? "pg:" : "cg:") + request.imageId,
++      };
++    }
+     case "ch": {
+       const image = await stores.chatGallery.getById(request.imageId);
+       if (!image) return missing;
+diff --git a/scripts/regressions/agents/gallery-reference-pool.regression.ts b/scripts/regressions/agents/gallery-reference-pool.regression.ts
+index 11089e499c..de15f8df7e 100644
+--- a/scripts/regressions/agents/gallery-reference-pool.regression.ts
++++ b/scripts/regressions/agents/gallery-reference-pool.regression.ts
+@@ -301,5 +301,67 @@ assert.match(gallerySource, /decodeRecordedPoolReferences\(references\.poolRefer
+ 
+ assert.match(gallerySource, /poolReplayError\(references.poolReferences, poolReplay\?\.ids \?\? \[\]\)/);
+ 
++// Avatars: ca:<characterId> and pa:<personaId>. They pass the same cast checks and share their owner's letter.
++mkdirSync(join(dataDir, "avatars"), { recursive: true });
++writeFileSync(join(dataDir, "avatars", "character-mara.png"), png);
++writeFileSync(join(dataDir, "avatars", "persona-me.png"), png);
++const avatarStores: PoolReferenceStores = {
++  ...globalStores,
++  readAvatarPath: async (kind, ownerId) =>
++    ({
++      "ca:mara": "/api/avatars/file/character-mara.png",
++      "ca:stranger": "/api/avatars/file/character-stranger.png",
++      "ca:noAvatar": null,
++      "pa:me": "/api/avatars/file/persona-me.png",
++    })[`${kind}:${ownerId}`],
++};
++const avatars = await resolvePoolReferences({
++  references: [
++    { id: "ca:mara", role: "face", subject: "Mara" },
++    { id: "pa:me", role: "face", subject: "Quinn" },
++    { id: "cg:maraBody", role: "body", subject: "Mara" },
++    { id: "ca:stranger", role: "face", subject: "Stranger" },
++  ],
++  scope,
++  stores: avatarStores,
++});
++assert.ok(avatars);
++assert.deepEqual(avatars.ids, ["ca:mara", "pa:me", "cg:maraBody"], "an avatar outside the cast is refused");
++assert.deepEqual(avatars.labels, ["person A's face", "person B's face", "person A's full body"]);
++assert.equal(avatars.images[0], png.toString("base64"));
++assert.deepEqual(avatars.named, ["face of Mara (person A)", "face of Quinn (person B)", "body of Mara (person A)"]);
++// An owner without an avatar, or one that no longer exists, sends nothing.
++assert.equal(
++  await resolvePoolReferences({
++    references: [{ id: "ca:noAvatar", role: "face" }, { id: "pa:gone", role: "face" }],
++    scope: { ...scope, characters: null, personas: null },
++    stores: avatarStores,
++  }),
++  null,
++);
++
++// The per-chat prompt filter treats avatars like their owner's gallery pictures: cast avatars stay, others go.
++{
++  const template = [
++    "<!-- reference-pool:start -->",
++    "ca:mara | Mara | face | - | mara",
++    "ca:stranger | Stranger | face | - | stranger",
++    "pa:me | Quinn | face | - | me",
++    "pa:other | Rob | face | - | other",
++    "<!-- reference-pool:end -->",
++  ].join("\n");
++  const scoped = scopeGalleryPrompt(template, {
++    chatId: "chat-1",
++    characters: [{ id: "mara", name: "Mara" }],
++    persona: { name: "Quinn" },
++    memory: { _personaId: "me", _userIdentityId: "me", _userIdentitySource: "persona" },
++  } as never);
++  assert.match(scoped, /ca:mara \| Mara/);
++  assert.match(scoped, /pa:me \| Quinn/);
++  assert.doesNotMatch(scoped, /ca:stranger|pa:other/);
++  // The letter rule rides along with the pool, so a user's own edited prompt still asks for "person" letters.
++  assert.match(scoped, /"person" with that letter[\s\S]*<!-- reference-pool:end -->/);
++}
++
+ rmSync(dataDir, { recursive: true, force: true });
+ console.log("gallery-reference-pool regression passed");

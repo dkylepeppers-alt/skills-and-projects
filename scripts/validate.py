@@ -69,7 +69,8 @@ def main():
     verify_checksums(PROJECT.parent / 'nativity-barn/releases/v7')
     subprocess.run(['node', '--test', 'projects/gallery-illustrator/tests/agent.test.mjs',
                     'projects/gallery-illustrator/tests/extension.test.mjs'], cwd=ROOT, check=True)
-    verify_checksums(PROJECT.parent / 'gallery-illustrator/releases/v1.0.0')
+    for version in ['v1.0.0', 'v1.0.1']:
+        verify_checksums(PROJECT.parent / 'gallery-illustrator/releases' / version)
     print(f'PASS: {count} JSON files; three skills; wood-stereotomy geometry tests; release checksums; 79 locations; 82 images; extension tools; life sim cheats; intoxication agent; character voice agent; gallery illustrator.')
     print('Scope: local structural and integrity checks. No live app import or upstream source check in this command.')
 

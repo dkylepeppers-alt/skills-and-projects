@@ -8,7 +8,7 @@ Draw only a moment that looks different from the last picture: a new place, a re
 
 ## 2. Choose references
 
-The pool lists the pictures the user tagged, one per line: `id | owner | role | caption`. Roles: face (a clear close-up of one person), expression, body (full figure), outfit, location, prop, style.
+The pool lists the pictures the user tagged, one per line: `id | owner | role | caption`. Card, persona and chat rows can end with a source ID. Use it to keep same-name galleries distinct. Roles: face (a clear close-up of one person), expression, body (full figure), outfit, location, prop, style.
 
 <!-- reference-pool:start -->
 (The pool is empty. Open the Gallery Reference Pool extension, tag some pictures and press Sync.)
@@ -17,19 +17,19 @@ The pool lists the pictures the user tagged, one per line: `id | owner | role | 
 Rules:
 - Use only ids that appear in the pool, copied exactly. Never invent an id.
 - Include only people who are visible in the picture. Never send references for someone who is off-screen, only mentioned, or remembered.
-- For each visible person, in the order they appear in your prompt: their best face picture first. Then, if room remains, a body or outfit picture that matches what they wear in this scene (use the scene and tracker data; prefer a caption that matches). Then at most one location picture when the pool has this place, then props or a style picture only when they matter.
+- Assign each visible person a stable letter in scene order, including anyone without a reference. Use that same letter in the prompt and the "person" field on every face, expression, body or outfit pick for them. Choose one face per visible person first. Then choose a body reference for figure and proportions regardless of its pose or clothing, and an outfit reference only when its garments match the current scene. Then at most one location picture when the pool has this place, then props or a style picture only when they matter.
 - At most %%maxReferences%% references in total; fewer is better than loosely related ones. A person with no face picture in the pool is described in words only.
 - Give each reference its role and a short "subject": the owner's name for people, a few words for places and things.
 
 ## 3. Write the prompt
 
-- The image model does not know names or personalities. Never write a character's name in "prompt". Refer to people as person A, person B, and so on, in the same order as their face references.
-- Start with one short identity sentence: "Use the reference images as the authoritative source for identity: keep each person's face, facial geometry, skin tone, eyes, hair, apparent age and body proportions exactly as shown in that person's own references, without beautifying, reshaping or blending people." Do not re-describe what the references already show.
+- The image model does not know names or personalities. Never write a character's name in "prompt". Refer to people as person A, person B, and so on, using their assigned letters.
+- When a person has an identity reference, start with one short identity sentence: "Use the reference images as the authoritative source for identity: keep each person's face, facial geometry, skin tone, eyes, hair, apparent age and body proportions exactly as shown in that person's own references, without beautifying, reshaping or blending people." Do not re-describe what the references already show.
 - Then describe the scene as a photographer or illustrator would: who is where, pose and action, expression, clothing as physical garments and materials, the setting, light and atmosphere, camera distance and angle.
-- With an outfit reference, write "wearing the outfit from person A's outfit reference" and describe only what changed (wet, torn, open jacket). Without one, describe the clothing.
+- Use the current scene and tracker for wardrobe. For a matching outfit reference, identify the wearer by their own letter and describe any changes. Otherwise describe only established garments. When the scene establishes a person is unclothed, write "nude" for that person and omit their outfit reference. Let the written action determine the pose independently of the figure reference.
 - With a location reference, write "set in the place shown in the location reference" and add only the time of day, weather or changes.
 - Do not invent scars, marks, tattoos, jewelry or props the story has not shown. Keep each person's body build consistent with their references.
-- One single frame. No text, captions, speech bubbles, watermarks or borders unless this mode asks for them.
+- Follow the selected mode's composition. Default to one frame without lettering unless the mode calls for panels or text.
 - Keep "prompt" between 60 and %%maxPromptWords%% words.
 
 ## 4. Output
@@ -46,8 +46,8 @@ A picture:
   "aspectRatio": "portrait",
   "prompt": "<the image prompt from section 3>",
   "references": [
-    {"id": "<pool id>", "role": "face", "subject": "<owner name>"},
-    {"id": "<pool id>", "role": "body", "subject": "<owner name>"},
+    {"id": "<pool id>", "role": "face", "person": "A", "subject": "<owner name>"},
+    {"id": "<pool id>", "role": "body", "person": "A", "subject": "<owner name>"},
     {"id": "<pool id>", "role": "location", "subject": "<place>"}
   ]
 }

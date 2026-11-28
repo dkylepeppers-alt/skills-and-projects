@@ -10,6 +10,10 @@ Why it is needed: the Engine's Illustrator (and every custom image agent) sends 
 character (character sheet, else avatar, else sprite), plus the map location, **six at most**. The model
 never chooses, and nothing in the stock Engine accepts arbitrary gallery references.
 
+## Upgrade from 1.0.0
+
+Use the files in [releases/v1.0.1](releases/v1.0.1). If PATCH10 is already installed, apply PATCH11 and then PATCH12 after it and restart the Engine. Import the new extension ZIP, accept the update to the existing extension, and approve the new hash. This keeps the extension ID and its saved tags. Import the new Agent, enable that copy in the chat, and disable the old copy there. Copy over any custom mode edits you want to keep. Open **Pool → Sync** once to refresh the saved catalog.
+
 ## What is in it
 
 | Part | File | Job |
@@ -17,6 +21,8 @@ never chooses, and nothing in the stock Engine accepts arbitrary gallery referen
 | Custom Agent **Gallery Illustrator** | `gallery-illustrator.marinara-agent.json` or `Gallery-Illustrator/` | Decides when to draw, writes the Seedream prompt, and picks references from the pool by id and role. |
 | External Extension **Gallery Reference Pool** | `gallery-reference-pool.personal-extension.zip` or `Gallery-Reference-Pool/` | A **Pool** button and panel: browse character, persona, Global Gallery and chat galleries, tag pictures, and sync the pool into the Agent's prompt. |
 | Local Engine patch **PATCH10** | `engine-patch/PATCH10-marinara-gallery-reference-pool.patch` | Makes the Engine send the Agent's picks as the reference images, in role order, with a numbered order line. |
+| Local Engine patch **PATCH11** | `engine-patch/PATCH11-gallery-illustrator-identity-and-pool.patch` | Scopes the catalog to the running chat, binds references to explicit person letters, and stops regeneration if a recorded picture is unavailable. |
+| Local Engine patch **PATCH12** | `engine-patch/PATCH12-gallery-illustrator-avatars.patch` | Lets character and persona avatars be pool references (`ca:<id>`, `pa:<id>`), with the same cast checks as gallery pictures, and adds the person-letter rule to every prompt's pool block, so edited prompts need no changes. |
 | Fix for your PATCH8 | `engine-patch/PATCH8b-marinara-game-image-refs-fix.patch` | Optional. PATCH8 calls `atomicWriteBuffer`, which does not exist on staging, so "use the map picture as the Game background" always fails quietly. This replaces it with `writeFileAtomicSync`. |
 
 ## Requirements
@@ -36,9 +42,20 @@ never chooses, and nothing in the stock Engine accepts arbitrary gallery referen
 
    ```bash
    git apply --check PATCH10-marinara-gallery-reference-pool.patch && git apply PATCH10-marinara-gallery-reference-pool.patch
+   git apply --check PATCH11-gallery-illustrator-identity-and-pool.patch && git apply PATCH11-gallery-illustrator-identity-and-pool.patch
+   git apply --check PATCH12-gallery-illustrator-avatars.patch && git apply PATCH12-gallery-illustrator-avatars.patch
    ```
 
    Optionally do the same for `PATCH8b-marinara-game-image-refs-fix.patch`. Restart Marinara.
+
+   PATCH10 and PATCH11 each add a new source file. `start-termux.sh` runs `git clean -fd` on the source folders at
+   every launch, which deletes untracked files (and leaves the patch half-applied, so the server fails to start).
+   Plain `git clean -fd` keeps ignored files, so list both in `.git/info/exclude`:
+
+   ```bash
+   printf '%s\n' packages/server/src/services/image/gallery-reference-pool.ts \
+     packages/server/src/services/agents/gallery-prompt-pool.ts >> .git/info/exclude
+   ```
 2. **Import the extension.** Start Marinara with `ENABLE_EXTERNAL_EXTENSIONS=true`, then turn on External
    Extensions in **Settings → Advanced → Danger Zone**. In **Settings → Addons → External Extensions**, use
    **Import Extension File** with the ZIP (or **Import Extension Folder**). Review it and approve the exact hash.
@@ -61,10 +78,10 @@ never chooses, and nothing in the stock Engine accepts arbitrary gallery referen
 ## How a picture is made
 
 1. Every **3** messages (the Agent's **Run Interval**), after the reply, the Agent reads the recent chat, the
-   cards, the persona, tracker data (current outfit and place) and its previous output.
+   cards, the persona, tracker data (current outfit and place) and its previous output. PATCH11 filters tagged card, persona and chat pictures for this chat before limiting the catalog to 120 rows. It reserves cast faces first. Global Gallery pictures remain available across chats.
 2. It decides whether the moment is worth a picture. If it is, it picks references from the pool: each visible
    person's face first, then body or outfit pictures that match the scene, then a location and any props or a
-   style guide, **10 at most**. It writes the prompt with people named **person A, person B…** in face order,
+   style guide, **10 at most**. It writes the prompt with people named **person A, person B…** in scene order,
    because image models do not know character names.
 3. PATCH10 checks every pick: the id must exist, a character's picture must belong to someone in this chat's
    cast, a persona's to this chat's persona, and a chat picture to this chat. It loads them, sorts them faces
@@ -72,13 +89,11 @@ never chooses, and nothing in the stock Engine accepts arbitrary gallery referen
    ("Refer to the images as Image 1, Image 2 and so on"), it points each person's first mention at their pictures
    (`person A (Image 1 and Image 3)`, `the location reference (Image 4)`) and appends a line such as:
    `Reference image order: Image 1 is person A's face; Image 2 is person B's face; Image 3 is person A's full body; Image 4 is the location. …`
-   People are matched by name, so Mara's face from her character gallery and her outfit from the Global Gallery
-   (owner "Mara") are both person A. Letters follow the Agent's own face order, so a picture that has since been
-   deleted does not shift everyone after it to the wrong letter. These replace the automatic avatar, map-location and lorebook references for that picture. Names never
+   The Agent assigns each visible person a letter and includes it on their references. A body picture supplies proportions even when the wardrobe or pose changes. Character and persona gallery IDs distinguish same-name people. A rejected pick leaves other people's letters intact. These replace the automatic avatar, map-location and lorebook references for that picture. Names never
    reach the image model; the server log lists them (`face of Mara (person A)`).
 4. The Engine then does everything it does for the Illustrator: your PATCH4 upload path, saving to the chat
    gallery and the depicted characters' galleries, attaching to the reply, clips, and **Regenerate image**.
-   The picks are stored with the picture, so a regeneration reuses the same references.
+   The picks are stored with the picture, so a regeneration reuses the same references in the same order. If one is missing, the Engine identifies it before calling the provider.
 
 ## Prompt modes
 
@@ -114,7 +129,7 @@ node --test tests/agent.test.mjs tests/extension.test.mjs # offline checks
 node tests/extension.browser.mjs                          # the built extension in Chromium against a mock Engine
 # Engine import path (a full Engine checkout plus zod 4.6.x and tsx; see the skill's scripts/README.md):
 MARINARA_ENGINE_ROOT=/path/to/Marinara-Engine node --import tsx tests/check-engine.mts
-node build.mjs --release 1.0.1                            # new release folder with SHA256SUMS
+node build.mjs --release 1.0.2                            # new release folder with SHA256SUMS
 ```
 
 PATCH10 is developed in an Engine checkout at `df60575` with PATCH2–9 applied. Its regression lives in the
